@@ -30,10 +30,6 @@ namespace ToonTown_Rewritten_Bot
         private void startSpamButton_Click(object sender, EventArgs e)//spam message on screen
         {
             bool loopBroken = Misc.sendMessage(messageToType.Text, Convert.ToInt32(numericUpDown2.Value), checkBox1.Checked, numericUpDown2);
-            if(loopBroken)
-            {
-
-            }
         }
 
         private int timeLeft;
@@ -86,9 +82,12 @@ namespace ToonTown_Rewritten_Bot
         private void isTTRRunning()
         {
             ProcessStartInfo startInfo = new ProcessStartInfo("Toontown Rewritten [BETA]");
+            DialogResult confirmation;
             while (!(Process.GetProcessesByName("TTREngine").Length > 0))
             {
-                MessageBox.Show("ToonTown Rewritten is not running!\nPress OK once running.");
+                confirmation = MessageBox.Show("Press OK once running or Cancel.","ToonTown Rewritten is not running!", MessageBoxButtons.OKCancel);
+                if (confirmation.Equals(DialogResult.Cancel))
+                    Environment.Exit(0);
             }
             startInfo.WindowStyle = ProcessWindowStyle.Maximized;
             MessageBox.Show("Make sure your ToonTown Rewritten window is maximized!");
@@ -284,6 +283,7 @@ namespace ToonTown_Rewritten_Bot
         private void button4_Click(object sender, EventArgs e)//button to stop fishing
         {
             startFishingThread(null, 0, 0, true);
+            MessageBox.Show("Fishing stopped!");
         }
     }
 }

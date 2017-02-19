@@ -37,8 +37,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.button4 = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.button4 = new System.Windows.Forms.Button();
             this.randomFishing = new System.Windows.Forms.CheckBox();
             this.smartFishing = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -180,16 +180,6 @@
             this.tabPage2.Text = "Fishing";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(166, 125);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(158, 33);
-            this.button4.TabIndex = 12;
-            this.button4.Text = "Stop Fishing";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.button4);
@@ -207,6 +197,16 @@
             this.groupBox6.TabIndex = 8;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Fishing Locations";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(166, 125);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(158, 33);
+            this.button4.TabIndex = 12;
+            this.button4.Text = "Stop Fishing";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // randomFishing
             // 
