@@ -76,8 +76,18 @@
             this.button6 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button7 = new System.Windows.Forms.Button();
+            this.Golf = new System.Windows.Forms.TabPage();
+            this.button11 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.button15 = new System.Windows.Forms.Button();
+            this.button14 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
+            this.button16 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -97,6 +107,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.tabPage6.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            this.Golf.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -107,12 +118,13 @@
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.Golf);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(354, 309);
+            this.tabControl1.Size = new System.Drawing.Size(384, 309);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
@@ -124,7 +136,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(346, 280);
+            this.tabPage1.Size = new System.Drawing.Size(376, 280);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -175,7 +187,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(346, 280);
+            this.tabPage2.Size = new System.Drawing.Size(376, 280);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Fishing";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -334,7 +346,7 @@
             this.tabPage3.Controls.Add(this.startRacing);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(346, 280);
+            this.tabPage3.Size = new System.Drawing.Size(376, 280);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Racing";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -376,7 +388,7 @@
             this.tabPage4.Controls.Add(this.groupBox3);
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(346, 280);
+            this.tabPage4.Size = new System.Drawing.Size(376, 280);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Gardening";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -467,7 +479,7 @@
             this.tabPage5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(346, 280);
+            this.tabPage5.Size = new System.Drawing.Size(376, 280);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Misc";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -603,7 +615,7 @@
             this.tabPage6.Controls.Add(this.groupBox7);
             this.tabPage6.Location = new System.Drawing.Point(4, 25);
             this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(346, 280);
+            this.tabPage6.Size = new System.Drawing.Size(376, 280);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Dev";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -660,6 +672,69 @@
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
+            // Golf
+            // 
+            this.Golf.Controls.Add(this.label2);
+            this.Golf.Controls.Add(this.button15);
+            this.Golf.Controls.Add(this.button14);
+            this.Golf.Controls.Add(this.button13);
+            this.Golf.Controls.Add(this.button16);
+            this.Golf.Controls.Add(this.button11);
+            this.Golf.Controls.Add(this.button10);
+            this.Golf.Controls.Add(this.button5);
+            this.Golf.Controls.Add(this.button12);
+            this.Golf.Location = new System.Drawing.Point(4, 25);
+            this.Golf.Name = "Golf";
+            this.Golf.Padding = new System.Windows.Forms.Padding(3);
+            this.Golf.Size = new System.Drawing.Size(376, 280);
+            this.Golf.TabIndex = 6;
+            this.Golf.Text = "Golf";
+            this.Golf.UseVisualStyleBackColor = true;
+            // 
+            // button11
+            // 
+            this.button11.BackColor = System.Drawing.Color.LawnGreen;
+            this.button11.Location = new System.Drawing.Point(6, 93);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(137, 23);
+            this.button11.TabIndex = 7;
+            this.button11.Text = "Seeing Green";
+            this.button11.UseVisualStyleBackColor = false;
+            this.button11.Click += new System.EventHandler(this.golfSeeingGreen);
+            // 
+            // button10
+            // 
+            this.button10.BackColor = System.Drawing.Color.GreenYellow;
+            this.button10.Location = new System.Drawing.Point(6, 63);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(137, 23);
+            this.button10.TabIndex = 6;
+            this.button10.Text = "Hole on the Range";
+            this.button10.UseVisualStyleBackColor = false;
+            this.button10.Click += new System.EventHandler(this.golfHoleOnTheRange);
+            // 
+            // button5
+            // 
+            this.button5.BackColor = System.Drawing.Color.LawnGreen;
+            this.button5.Location = new System.Drawing.Point(6, 34);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(137, 23);
+            this.button5.TabIndex = 5;
+            this.button5.Text = "Holey Mackeral";
+            this.button5.UseVisualStyleBackColor = false;
+            this.button5.Click += new System.EventHandler(this.golfHoleyMackeral);
+            // 
+            // button12
+            // 
+            this.button12.BackColor = System.Drawing.Color.LawnGreen;
+            this.button12.Location = new System.Drawing.Point(6, 6);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(137, 23);
+            this.button12.TabIndex = 4;
+            this.button12.Text = "Afternoon Tee";
+            this.button12.UseVisualStyleBackColor = false;
+            this.button12.Click += new System.EventHandler(this.golfAfternoonTee);
+            // 
             // toolTip1
             // 
             this.toolTip1.ShowAlways = true;
@@ -670,11 +745,63 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // button15
+            // 
+            this.button15.BackColor = System.Drawing.Color.Yellow;
+            this.button15.Location = new System.Drawing.Point(8, 209);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(137, 23);
+            this.button15.TabIndex = 11;
+            this.button15.Text = "Left-Swing Time";
+            this.button15.UseVisualStyleBackColor = false;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
+            // 
+            // button14
+            // 
+            this.button14.BackColor = System.Drawing.Color.Yellow;
+            this.button14.Location = new System.Drawing.Point(8, 179);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(137, 23);
+            this.button14.TabIndex = 10;
+            this.button14.Text = "Down the Hatch";
+            this.button14.UseVisualStyleBackColor = false;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
+            // button13
+            // 
+            this.button13.BackColor = System.Drawing.Color.Salmon;
+            this.button13.Location = new System.Drawing.Point(8, 151);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(137, 23);
+            this.button13.TabIndex = 9;
+            this.button13.Text = "Peanut Putter";
+            this.button13.UseVisualStyleBackColor = false;
+            // 
+            // button16
+            // 
+            this.button16.BackColor = System.Drawing.Color.Salmon;
+            this.button16.Location = new System.Drawing.Point(8, 122);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(137, 23);
+            this.button16.TabIndex = 8;
+            this.button16.Text = "Hot Links";
+            this.button16.UseVisualStyleBackColor = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(151, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(222, 224);
+            this.label2.TabIndex = 12;
+            this.label2.Text = resources.GetString("label2.Text");
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(354, 309);
+            this.ClientSize = new System.Drawing.Size(384, 309);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -706,6 +833,8 @@
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
             this.groupBox7.ResumeLayout(false);
+            this.Golf.ResumeLayout(false);
+            this.Golf.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -759,6 +888,16 @@
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.CheckBox randomFishing;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.TabPage Golf;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Label label2;
     }
 }
 
