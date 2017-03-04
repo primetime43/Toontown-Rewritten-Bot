@@ -1,6 +1,6 @@
 Source code for my ToonTown Rewritten Bot. - primetime43
 
-Video of the program here: https://youtu.be/V99R-XxamC0
+Video of the program (Version 1.0) here: https://youtu.be/V99R-XxamC0
 
 Changelog:
 
