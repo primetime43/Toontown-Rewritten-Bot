@@ -138,6 +138,22 @@
   <metadata name="startSpamButton.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Please choose the middle tee 
+spot unless stated otherwise. 
+Then click on the button for 
+the current course after you 
+have chosen the spot.
+
+Do not press any buttons until 
+the swing is completed, other-
+wise it may affect the swing.
+
+Note: 
+Green = Implemented/Accurate
+Yellow = Implementing/Not Accurate
+Red = Unimplemented</value>
+  </data>
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>278, 17</value>
   </metadata>
