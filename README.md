@@ -15,6 +15,6 @@ Version 1.1
 - Fixes to various bugs
 
 Version 1.2
-- Added Golfing Tab (thanks to henrylai for starting golfing/me completing it)
+- Added Golfing Tab (thanks to henrylai for starting golfing & primetime43 completing it)
 - Added/removed multiple behind the scenes things
 - Few bug fixes
