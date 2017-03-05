@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using WindowsInput;
+using ToonTown_Rewritten_Bot;
 
 namespace ToonTown_Rewritten_Bot
 {
@@ -25,7 +24,7 @@ namespace ToonTown_Rewritten_Bot
         //important functions for bot
         private void startSpamButton_Click(object sender, EventArgs e)//spam message on screen
         {
-            bool loopBroken = Misc.sendMessage(messageToType.Text, Convert.ToInt32(numericUpDown2.Value), checkBox1.Checked, numericUpDown2);
+            bool loopBroken = ToonTown_Rewritten_Bot.Misc.sendMessage(messageToType.Text, Convert.ToInt32(numericUpDown2.Value), checkBox1.Checked, numericUpDown2);
         }
 
         private int timeLeft;
@@ -35,7 +34,7 @@ namespace ToonTown_Rewritten_Bot
             MessageBox.Show("Press OK when ready to begin!");
             Thread.Sleep(2000);
             timer1.Start();
-            bool loopBroken = Misc.keepToonAwake(Convert.ToInt32(numericUpDown1.Value));
+            bool loopBroken = ToonTown_Rewritten_Bot.Misc.keepToonAwake(Convert.ToInt32(numericUpDown1.Value));
             if (loopBroken)
             {
                 timer1.Stop();
@@ -85,8 +84,7 @@ namespace ToonTown_Rewritten_Bot
                 if (confirmation.Equals(DialogResult.Cancel))
                     Environment.Exit(0);
             }
-            startInfo.WindowStyle = ProcessWindowStyle.Maximized;
-            MessageBox.Show("Make sure your ToonTown Rewritten window is maximized!");
+            BotFunctions.maximizeTTRWindow();
         }
 
         public static Dictionary<string, string> dataFileMap = new Dictionary<string, string>();
@@ -138,12 +136,12 @@ namespace ToonTown_Rewritten_Bot
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Gardening.waterPlant();
+            ToonTown_Rewritten_Bot.Gardening.waterPlant();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Gardening.removePlant();
+            ToonTown_Rewritten_Bot.Gardening.removePlant();
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -192,6 +190,37 @@ namespace ToonTown_Rewritten_Bot
             startFishingThread(selected, numberOfCasts, numberOfSells, false);
         }
 
+        private void randomFishing_CheckedChanged(object sender, EventArgs e)
+        {
+            if (randomFishing.Checked)
+            {
+                MessageBox.Show("This will add randomness to the line casting!");
+                fishVariance = true;
+            }
+            else
+            {
+                fishVariance = false;
+            }
+        }
+
+        Thread fishingThreading;
+        public void startFishingThread(string selected, int numberOfCasts, int numberOfSells, bool stopCheck)
+        {
+            if (!stopCheck)
+            {
+                fishingThreading = new Thread(() => ToonTown_Rewritten_Bot.Fishing.startFishing(selected, numberOfCasts, numberOfSells, fishVariance));
+                fishingThreading.Start();
+            }
+            else if (stopCheck)
+                fishingThreading.Abort();
+        }
+
+        private void button4_Click(object sender, EventArgs e)//button to stop fishing
+        {
+            startFishingThread(null, 0, 0, true);
+            MessageBox.Show("Fishing stopped!");
+        }
+
         private void smartFishing_CheckedChanged(object sender, EventArgs e)
         {
             if (smartFishing.Checked)
@@ -201,12 +230,12 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void button5_Click(object sender, EventArgs e)//racing test
         {
             MessageBox.Show("Press OK when ready to begin!");
             Thread.Sleep(2000);
             BotFunctions.DoMouseClick();
-            Racing.startRacing();
+            ToonTown_Rewritten_Bot.Racing.startRacing();
 
             Rectangle bounds = Screen.GetWorkingArea(Point.Empty);
             using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
@@ -252,139 +281,70 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private void randomFishing_CheckedChanged(object sender, EventArgs e)
-        {
-            if (randomFishing.Checked)
-            {
-                MessageBox.Show("This will add randomness to the line casting!");
-                fishVariance = true;
-            } else
-            {
-                fishVariance = false;
-            }
-        }
-
-        Thread fishingThreading;
-        public void startFishingThread(string selected, int numberOfCasts, int numberOfSells, bool stopCheck)
-        {
-            if (!stopCheck)
-            {
-                fishingThreading = new Thread(() => Fishing.startFishing(selected, numberOfCasts, numberOfSells, fishVariance));
-                fishingThreading.Start();
-            }
-            else if(stopCheck)
-                fishingThreading.Abort();
-        }
-
-        private void button4_Click(object sender, EventArgs e)//button to stop fishing
-        {
-            startFishingThread(null, 0, 0, true);
-            MessageBox.Show("Fishing stopped!");
-        }
-
-        [DllImport("user32.dll", EntryPoint = "FindWindow")]
-        public static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        // Maximizes and Focuces TTR
-        private void maximizeAndFocus()
-        {
-            IntPtr hwnd = FindWindowByCaption(IntPtr.Zero, "Toontown Rewritten [BETA]");
-            ShowWindow(hwnd, 6);
-            ShowWindow(hwnd, 3);
-        }
-
         // GOLF- Afternoon Tee
         private void golfAfternoonTee(object sender, EventArgs e)
         {
-            maximizeAndFocus();
-            Thread.Sleep(100);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
-            Thread.Sleep(50);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
-            Thread.Sleep(50);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(2120);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
+            ToonTown_Rewritten_Bot.Golf.afternoonTee();
         }
 
         // GOLF - Holey Mackeral
         private void golfHoleyMackeral(object sender, EventArgs e)
         {
-            maximizeAndFocus();
-            Thread.Sleep(100);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
-            Thread.Sleep(50);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
-            Thread.Sleep(50);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(1000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
+            ToonTown_Rewritten_Bot.Golf.holeyMackeral();
         }
 
         // GOLF - Hole on the Range
         private void golfHoleOnTheRange(object sender, EventArgs e)
         {
-            maximizeAndFocus();
-            Thread.Sleep(100);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
-            Thread.Sleep(50);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
-            Thread.Sleep(50);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(1735);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
+            ToonTown_Rewritten_Bot.Golf.holeOnTheRange();
         }
 
         // GOLF - Seeing green
         private void golfSeeingGreen(object sender, EventArgs e)
         {
-            maximizeAndFocus();
-            Thread.Sleep(100);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
-            Thread.Sleep(50);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
-            Thread.Sleep(50);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(1790); // 67%
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
+            ToonTown_Rewritten_Bot.Golf.seeingGreen();
         }
 
         // GOLF - Swing Time
         private void button15_Click(object sender, EventArgs e)
         {
-            maximizeAndFocus();
-            Thread.Sleep(100);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
-            Thread.Sleep(1000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
-            Thread.Sleep(50);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(2000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
+            ToonTown_Rewritten_Bot.Golf.swingTime();
         }
 
         // GOLF - Down the Hatch
         private void button14_Click(object sender, EventArgs e)
         {
-            maximizeAndFocus();
-            Thread.Sleep(100);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
-            Thread.Sleep(50);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
-            Thread.Sleep(50);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            // Thread.Sleep(2350); //82
-            Thread.Sleep(2500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
+            ToonTown_Rewritten_Bot.Golf.downTheHatch();
+        }
+
+        //GOLF - Peanut Putter
+        private void button13_Click(object sender, EventArgs e)
+        {
+            ToonTown_Rewritten_Bot.Golf.peanutPutter();
+        }
+
+        //GOLF - Hot Links
+        private void button16_Click(object sender, EventArgs e)
+        {
+            ToonTown_Rewritten_Bot.Golf.hotLinks();
+        }
+
+        //GOLF - Hole In Fun
+        private void button17_Click(object sender, EventArgs e)
+        {
+            ToonTown_Rewritten_Bot.Golf.holeInFun();
+        }
+
+        //GOLF - Swing-A-Long
+        private void button18_Click(object sender, EventArgs e)
+        {
+            ToonTown_Rewritten_Bot.Golf.swingALong();
+        }
+
+        //GOLF - One Little Birdie
+        private void One_Little_Birdie_Click(object sender, EventArgs e)
+        {
+            ToonTown_Rewritten_Bot.Golf.oneLittleBirdie();
         }
     }
 }

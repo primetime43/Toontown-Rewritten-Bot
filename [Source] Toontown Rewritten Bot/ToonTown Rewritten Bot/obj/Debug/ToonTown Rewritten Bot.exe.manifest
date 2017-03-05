@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ToonTown Rewritten Bot.exe" size="755712">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ToonTown Rewritten Bot.exe" size="757760">
       <assemblyIdentity name="ToonTown Rewritten Bot" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>gBfcIAebkFcd3tyK/Zhhi/V2BPm7x/u593y6zEWNBaA=</dsig:DigestValue>
+        <dsig:DigestValue>PebEHItYXIm6/+UBM/KA+6yZHCqbGidn9ITnCSBtEiU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

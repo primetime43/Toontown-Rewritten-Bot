@@ -76,6 +76,27 @@ namespace ToonTown_Rewritten_Bot
             Cursor.Position = new Point(x, y);
         }
 
+        [DllImport("user32.dll", EntryPoint = "FindWindow")]
+        private static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        // Maximizes and Focuces TTR
+        public static void maximizeAndFocus()
+        {
+            IntPtr hwnd = FindWindowByCaption(IntPtr.Zero, "Toontown Rewritten [BETA]");
+            ShowWindow(hwnd, 6);//6 min
+            ShowWindow(hwnd, 3);//3 max
+        }
+
+        public static void maximizeTTRWindow()
+        {
+            IntPtr hwnd = FindWindowByCaption(IntPtr.Zero, "Toontown Rewritten [BETA]");
+            ShowWindow(hwnd, 3);
+        }
+
         private static string[] lines;
         public static void readTextFile()
         {
