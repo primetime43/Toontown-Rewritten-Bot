@@ -13,3 +13,8 @@ Version 1.1
 - Fixed check for fish/boot caught (thanks to henrylai)
 - Added fishing variance (thanks to henrylai)
 - Fixes to various bugs
+
+Version 1.2
+- Added Golfing Tab
+- Added/removed multiple behind the scenes things
+- Few bug fixes
