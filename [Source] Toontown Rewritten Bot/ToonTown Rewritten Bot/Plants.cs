@@ -177,7 +177,10 @@ namespace ToonTown_Rewritten_Bot
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Make sure you're at the flower bed before pressing OK!");
+            DialogResult confirmation;
+            confirmation = MessageBox.Show("Make sure you're at the flower bed before pressing OK!", "", MessageBoxButtons.OKCancel);
+            if (confirmation.Equals(DialogResult.Cancel))
+                return;
             string selected = (string)comboBox1.SelectedItem;
             Gardening.plantFlower(dictionary[selected]);
         }

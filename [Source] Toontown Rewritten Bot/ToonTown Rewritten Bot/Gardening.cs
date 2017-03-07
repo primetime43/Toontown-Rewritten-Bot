@@ -9,10 +9,13 @@ namespace ToonTown_Rewritten_Bot
         private static int x, y;
         public static void plantFlower(String flowerCombo)
         {
+            DialogResult confirmation;
             //check if plant button is (0,0). True means continue, not (0,0)
-            if(BotFunctions.checkCoordinates("1"))
+            if (BotFunctions.checkCoordinates("1"))
             {
-                MessageBox.Show("Press OK when ready to begin!");
+                confirmation = MessageBox.Show("Press OK when ready to begin!","", MessageBoxButtons.OKCancel);
+                if (confirmation.Equals(DialogResult.Cancel))
+                    return;
                 Thread.Sleep(2000);
                 getCoords("1");
                 BotFunctions.MoveCursor(x,y);
