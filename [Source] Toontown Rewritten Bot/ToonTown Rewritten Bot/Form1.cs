@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using ToonTown_Rewritten_Bot;
 
 namespace ToonTown_Rewritten_Bot
 {
@@ -23,7 +22,7 @@ namespace ToonTown_Rewritten_Bot
 
         //important functions for bot
         private void startSpamButton_Click(object sender, EventArgs e)//spam message on screen
-        {
+        {//if the user presses ALT key, it will break the loop
             bool loopBroken = ToonTown_Rewritten_Bot.Misc.sendMessage(messageToType.Text, Convert.ToInt32(numericUpDown2.Value), checkBox1.Checked, numericUpDown2);
         }
 
@@ -110,6 +109,19 @@ namespace ToonTown_Rewritten_Bot
             dataFileMap.Add("16", "Exit Fishing Button");
             dataFileMap.Add("17", "Blue Sell All Button");
             //Racing Coords
+            //Doodle Training Coords
+            dataFileMap.Add("18", "Feed Doodle Button");
+            dataFileMap.Add("19", "Scratch Doodle Button");
+            dataFileMap.Add("20", "Green SpeedChat Button");
+            dataFileMap.Add("21", "Pets Tab in SpeedChat");
+            dataFileMap.Add("22", "Tricks Tab in SpeedChat");
+            dataFileMap.Add("23", "Jump Trick Option in SpeedChat");
+            dataFileMap.Add("24", "Beg Trick Option in SpeedChat");
+            dataFileMap.Add("25", "Play Dead Trick Option in SpeedChat");
+            dataFileMap.Add("26", "Rollover Trick Option in SpeedChat");
+            dataFileMap.Add("27", "Backflip Trick Option in SpeedChat");
+            dataFileMap.Add("28", "Dance Trick Option in SpeedChat");
+            dataFileMap.Add("29", "Speak Trick Option in SpeedChat");
 
         }
 
@@ -233,8 +245,12 @@ namespace ToonTown_Rewritten_Bot
         private void button5_Click(object sender, EventArgs e)//racing test
         {
             MessageBox.Show("Press OK when ready to begin!");
-            Thread.Sleep(2000);
-            BotFunctions.DoMouseClick();
+            Thread.Sleep(5000);
+            //Point test = BotFunctions.getCursorLocation();
+            //BotFunctions.GetColorAt(test.X, test.Y);
+            //Console.WriteLine("HEX: " + BotFunctions.HexConverter(BotFunctions.GetColorAt(test.X, test.Y)) + " RGB: " + BotFunctions.GetColorAt(test.X, test.Y));
+            //MessageBox.Show("Done"); 
+            /*BotFunctions.DoMouseClick();
             ToonTown_Rewritten_Bot.Racing.startRacing();
 
             Rectangle bounds = Screen.GetWorkingArea(Point.Empty);
@@ -252,7 +268,7 @@ namespace ToonTown_Rewritten_Bot
                     x++;
                     y++;
                 }
-            }
+            }*/
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -345,6 +361,80 @@ namespace ToonTown_Rewritten_Bot
         private void One_Little_Birdie_Click(object sender, EventArgs e)
         {
             ToonTown_Rewritten_Bot.Golf.oneLittleBirdie();
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBox3.Checked)
+            {
+                numericUpDown5.Enabled = false;
+                numericUpDown6.Enabled = false;
+            }
+            else
+            {
+                numericUpDown5.Enabled = true;
+                numericUpDown6.Enabled = true;
+            }
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            string selected = (string)comboBox4.SelectedItem;
+            startDoodleTrainingThread(Convert.ToInt32(numericUpDown6.Value), Convert.ToInt32(numericUpDown5.Value), checkBox3.Checked, false, selected);
+        }
+
+        Thread doodleTrainingThreading;
+        public void startDoodleTrainingThread(int numberOfFeeds, int numberOfScratches, bool checkBoxChecked, bool stopTrainingClicked, string selectedTrick)
+        {
+            if (!stopTrainingClicked)
+            {
+                doodleTrainingThreading = new Thread(() => DoodleTraining.startTrainingDoodle(numberOfFeeds, numberOfScratches, checkBox3.Checked, selectedTrick, checkBox4.Checked, checkBox5.Checked));
+                doodleTrainingThreading.Start();
+            }
+            else if (stopTrainingClicked)
+                doodleTrainingThreading.Abort();
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            startDoodleTrainingThread(0, 0, false, true, "");
+            MessageBox.Show("Doodle Training stopped!");
+        }
+
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox4.Checked)
+            {
+                numericUpDown5.Enabled = false;
+                checkBox5.Checked = false;
+            }
+            else
+            {
+                numericUpDown5.Enabled = true;
+                if(checkBox3.Checked)
+                {
+                    numericUpDown6.Enabled = false;
+                    numericUpDown5.Enabled = false;
+                }
+            }
+        }
+
+        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox5.Checked)
+            {
+                numericUpDown6.Enabled = false;
+                checkBox4.Checked = false;
+            }
+            else
+            {
+                numericUpDown6.Enabled = true;
+                if (checkBox3.Checked)
+                {
+                    numericUpDown6.Enabled = false;
+                    numericUpDown5.Enabled = false;
+                }
+            }
         }
     }
 }

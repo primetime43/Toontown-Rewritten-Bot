@@ -62,8 +62,8 @@ namespace ToonTown_Rewritten_Bot
                         MessageBox.Show("Done!");
                         break;
                 }
-                MessageBox.Show("Done!");
             }
+            MessageBox.Show("Done!");
         }
 
         private static void fishTTCPunchlinePlace()
@@ -222,7 +222,7 @@ namespace ToonTown_Rewritten_Bot
                 Thread.Sleep(1000);
             }
             exitFishing();
-            Thread.Sleep(2000);
+            Thread.Sleep(3000);
         }
 
         private static void sellFish()

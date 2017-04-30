@@ -270,7 +270,7 @@ namespace ToonTown_Rewritten_Bot
                     MessageBox.Show("Fishes in the first dock when you walk in");
                     break;
                 case "DONALD DREAM LAND LULLABY LANE":
-                    MessageBox.Show("Fishes in the dock to the left of the box");
+                    MessageBox.Show("Fishes in the dock to the left of the small box");
                     break;
                 case "BRRRGH POLAR PLACE":
                     MessageBox.Show("Fishes in the top right dock");
