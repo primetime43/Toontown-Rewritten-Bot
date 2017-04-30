@@ -18,3 +18,7 @@ Version 1.2
 - Added Golfing Tab (thanks to henrylai for starting golfing & primetime43 completing it)
 - Added/removed multiple behind the scenes things
 - Few bug fixes
+
+Version 1.3
+- Adds Doodle Trainer (Doodle Tab)
+- Few bug fixes
