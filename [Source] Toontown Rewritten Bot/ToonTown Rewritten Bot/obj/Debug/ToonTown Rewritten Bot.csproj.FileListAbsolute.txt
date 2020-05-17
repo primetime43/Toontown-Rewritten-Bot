@@ -33,23 +33,6 @@ C:\Users\Mike\Documents\Visual Studio 2015\Projects\ToonTown Rewritten Bot\ToonT
 C:\Users\Mike\Documents\Visual Studio 2015\Projects\ToonTown Rewritten Bot\ToonTown Rewritten Bot\bin\Debug\ToonTown Rewritten Bot.application
 C:\Users\Mike\Documents\Visual Studio 2015\Projects\ToonTown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.exe.manifest
 C:\Users\Mike\Documents\Visual Studio 2015\Projects\ToonTown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.application
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\bin\Debug\ToonTown Rewritten Bot.exe.config
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.exe
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.pdb
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\bin\Debug\ToonTown Rewritten Bot.exe.manifest
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\bin\Debug\ToonTown Rewritten Bot.application
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\bin\Debug\ToonTown Rewritten Bot.exe
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\bin\Debug\ToonTown Rewritten Bot.pdb
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.AboutBox1.resources
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.Form1.resources
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.Help.resources
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.Plants.resources
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.Properties.Resources.resources
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.UpdateCoordsHelper.resources
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.csproj.GenerateResource.Cache
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.TrustInfo.xml
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.exe.manifest
-C:\Users\Mike\Documents\GitHub\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.application
 A:\Documents\GitHub\Toontown-Rewritten-Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\bin\Debug\ToonTown Rewritten Bot.exe.config
 A:\Documents\GitHub\Toontown-Rewritten-Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.exe
 A:\Documents\GitHub\Toontown-Rewritten-Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.pdb
@@ -68,7 +51,18 @@ A:\Documents\GitHub\Toontown-Rewritten-Bot\[Source] Toontown Rewritten Bot\ToonT
 A:\Documents\GitHub\Toontown-Rewritten-Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.TrustInfo.xml
 A:\Documents\GitHub\Toontown-Rewritten-Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.exe.manifest
 A:\Documents\GitHub\Toontown-Rewritten-Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.application
-C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.csprojAssemblyReference.cache
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\bin\Debug\ToonTown Rewritten Bot.exe.config
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\bin\Debug\ToonTown Rewritten Bot.exe
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\bin\Debug\ToonTown Rewritten Bot.pdb
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.AboutBox1.resources
 C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.DevForm.resources
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.Form1.resources
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.Help.resources
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.Plants.resources
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.Properties.Resources.resources
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.UpdateCoordsHelper.resources
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.csproj.GenerateResource.cache
 C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.csproj.CoreCompileInputs.cache
 C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.csproj.CopyComplete
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.exe
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.pdb
