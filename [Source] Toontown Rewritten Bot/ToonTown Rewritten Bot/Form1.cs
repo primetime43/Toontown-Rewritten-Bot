@@ -75,7 +75,6 @@ namespace ToonTown_Rewritten_Bot
         }
         private void isTTRRunning()
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo("Toontown Rewritten [BETA]");
             DialogResult confirmation;
             while (!(Process.GetProcessesByName("TTREngine").Length > 0))
             {
