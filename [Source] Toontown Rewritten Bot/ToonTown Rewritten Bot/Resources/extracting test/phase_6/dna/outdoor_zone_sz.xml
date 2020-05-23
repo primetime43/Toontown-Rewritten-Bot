@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene zone="6000">
+	<group name="outdoorZone">
+		<visgroup zone="6000:safe_zone" vis="6000:safe_zone">
+			<group name="props">
+				<prop name="outdoor_zone_DNARoot" code="outdoor_zone">
+					<pos x="-60" y="-20" z="0" />
+					<nhpr h="0" p="0" r="0" />
+				</prop>
+				<flat_building id="tb0:random_DNARoot" width="10">
+					<pos x="94.71" y="174.42" z="10.54" />
+					<nhpr h="-143" p="0" r="0" />
+					<wall height="3" code="wall_basement_rock_ur">
+						<color r="0.57" g="1" b="0.65" a="1" />
+						<windows code="window_sm_pointed_ur" count="0">
+							<color r="0.27" g="1" b="0.42" a="1" />
+						</windows>
+					</wall>
+					<wall height="13" code="wall_md_board_ur">
+						<color r="0.48" g="1" b="0.7" a="1" />
+						<windows code="window_sm_pointed_DG_ur" count="1">
+							<color r="1" g="1" b="1" a="1" />
+						</windows>
+					</wall>
+					<wall height="9" code="wall_md_board_ur">
+						<color r="0.48" g="1" b="0.7" a="1" />
+						<windows code="window_sm_pointed_DG_ur" count="1">
+							<color r="1" g="1" b="1" a="1" />
+						</windows>
+					</wall>
+				</flat_building>
+				<!--  chineseCheckers1 left of entrance -->
+				<node name="game_table_1">
+					<prop name="prop_game_table_DNARoot" code="prop_game_table">
+						<pos x="91.7" y="5.68547" z="0.7" />
+						<nhpr h="30" p="1.45363" r="0" />
+					</prop>
+				</node>
+				<!-- chineseCheckers2 -->
+				<node name="game_table_2">
+					<prop name="prop_game_table_DNARoot" code="prop_game_table">
+						<pos x="-75.439" y="62.507" z="0.55" />
+						<nhpr h="90" p="-1.45363" r="0" />
+					</prop>
+				</node>
+				<!-- chineseCheckers3 -->
+				<node name="game_table_3">
+					<prop name="prop_game_table_DNARoot" code="prop_game_table">
+						<pos x="7.156" y="116.564" z="0.79" />
+						<nhpr h="0" p="-1.45363" r="0" />
+					</prop>
+				</node>
+				<!-- chineseCheckers4 geyser -->
+				<node name="game_table_4">
+					<prop name="prop_game_table_DNARoot" code="prop_game_table">
+						<pos x="13.2" y="-114.5" z="0.03" />
+						<nhpr h="325" p="0" r="0" />
+					</prop>
+				</node>
+				<!-- chineseCheckers5 left of bridge -->
+				<node name="game_table_5">
+					<prop name="prop_game_table_DNARoot" code="prop_game_table">
+						<pos x="-94.8" y="-73.9" z="0.03" />
+						<nhpr h="0" p="0" r="0" />
+					</prop>
+				</node>
+				<!-- chineseCheckers6 left after bridge -->
+				<node name="game_table_6">
+					<prop name="prop_game_table_DNARoot" code="prop_game_table">
+						<pos x="-163.3" y="-106.2" z="0.03" />
+						<nhpr h="0" p="0" r="0" />
+					</prop>
+				</node>
+				<!-- chineseCheckers7 right -->
+				<node name="game_table_7">
+					<prop name="prop_game_table_DNARoot" code="prop_game_table">
+						<pos x="-168.7" y="97.7" z="0.03" />
+						<nhpr h="270" p="0" r="0" />
+					</prop>
+				</node>
+				<!-- picnic1 right -->
+				<node name="picnic_table_1">
+					<prop name="prop_picnic_table_DNARoot" code="prop_picnic_table">
+						<pos x="-22.0614" y="-23.779" z="1.45" />
+						<nhpr h="0" p="0" r="0" />
+					</prop>
+				</node>
+				<!-- picnic2 middle -->
+				<node name="picnic_table_2">
+					<prop name="prop_picnic_table_DNARoot" code="prop_picnic_table">
+						<pos x="35.4114" y="-35.0274" z="0.5" />
+						<nhpr h="0" p="1.10906" r="0" />
+					</prop>
+				</node>
+				<!-- picnic3 left of golf -->
+				<node name="picnic_table_3">
+					<prop name="prop_picnic_table_DNARoot" code="prop_picnic_table">
+						<pos x="-192.0" y="-8.4" z="0.03" />
+						<nhpr h="-30" p="0" r="0" />
+					</prop>
+                </node>
+				<!-- picnic4 left of geyser -->
+				<node name="picnic_table_4">
+					<prop name="prop_picnic_table_DNARoot" code="prop_picnic_table">
+						<pos x="61.0" y="-95.0" z="0.025" />
+						<nhpr h="0" p="0" r="0" />
+					</prop>
+                </node>
+			</group>
+			<group name="fishing_pond_1">
+				<prop name="npc_fisherman_origin_0" code="DCS">
+					<pos x="-116" y="-48" z="0.025" />
+					<nhpr h="340" p="0" r="0" />
+				</prop>
+				<prop name="fishing_spot_DNARoot" code="fishing_spot">
+					<pos x="-115.0" y="-32.4" z="-0.025" />
+					<nhpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="fishing_spot_DNARoot" code="fishing_spot">
+					<pos x="-110.0" y="-25.8" z="0.025" />
+					<nhpr h="60" p="0" r="0" />
+				</prop>
+				<prop name="fishing_spot_DNARoot" code="fishing_spot">
+					<pos x="-105.9" y="-17.0" z="0.025" />
+					<nhpr h="65" p="0" r="0" />
+				</prop>
+				<prop name="fishing_spot_DNARoot" code="fishing_spot">
+					<pos x="-104.3" y="-9.3" z="0.025" />
+					<nhpr h="90" p="0" r="0" />
+				</prop>
+			</group>
+			<node name="buildings">
+				<prop name="linktunnel_gz_17000_DNARoot" code="prop_chip_dale_enterance">
+					<pos x="-264.137" y="-15.4392" z="0.227776" />
+					<nhpr h="105" p="-0.422594" r="0.309814" />
+					<scale x="1.0546" y="1.0546" z="1.0546" />
+				</prop>
+				<prop name="d_linktunnel_ff_7000_DNARoot" code="prop_outdoor_zone_entrance">
+					<pos x="-47.8387" y="-143.259" z="0.1" />
+					<nhpr h="180" p="0" r="0.1" />
+					<scale x="1.0546" y="1.0546" z="1.0546" />
+					<sign code="DD_sign2">
+						<pos x="0" y="0" z="0" />
+						<nhpr h="0" p="0" r="-3.0" />
+						<scale x="1.85" y="1" z="1.35" />
+						<baseline code="TT_Comedy" wiggle="7" stumble="0.1">
+							<color r="0.439216" g="0.247059" b="0.184314" a="1" />
+							<pos x="0" y="0" z="-0.2" />
+							<scale x="1.6" y="1" z="1.7" />
+							<text>ToonFest</text>
+						</baseline>
+						<baseline code="TT_Comedy" wiggle="3" stomp="0.0367716">
+							<color r="0.439216" g="0.247059" b="0.184314" a="1" />
+							<pos x="0" y="0" z="-1.4" />
+							<scale x="1.2" y="1" z="1.2" />
+							<text>Event Grounds</text>
+						</baseline>
+					</sign>
+					<prop name="prop_construction_sign_DNARoot" code="prop_construction_sign">
+						<pos x="0" y="-7" z="0" />
+						<nhpr h="0" p="0" r="0" />
+					</prop>
+				</prop>
+				<prop name="linktunnel_dd_1000_DNARoot" code="prop_outdoor_zone_entrance">
+					<pos x="86.7098" y="148.899" z="0.0205739" />
+					<nhpr h="321.091" p="0" r="0" />
+					<sign code="DD_sign2">
+						<pos x="0" y="0" z="0" />
+						<nhpr h="0" p="0" r="-3.0" />
+						<scale x="1.85" y="1" z="1.35" />
+						<baseline code="TT_Comedy" wiggle="7" stumble="0.1">
+							<color r="0.439216" g="0.247059" b="0.184314" a="1" />
+							<pos x="0" y="0" z="-0.2" />
+							<scale x="1.6" y="1" z="1.7" />
+							<text>Donald's Dock</text>
+						</baseline>
+						<baseline code="TT_Comedy" wiggle="3" stomp="0.0367716">
+							<color r="0.439216" g="0.247059" b="0.184314" a="1" />
+							<pos x="0" y="0" z="-1.4" />
+							<scale x="1.2" y="1" z="1.2" />
+							<text>Playground</text>
+						</baseline>
+					</sign>
+				</prop>
+			</node>
+			<node name="winter_snowpile_0">
+				<prop name="winter_snowpile_DNARoot" code="winter_snowpile">
+					<pos x="73.2" y="65.2" z="1.237" />
+					<nhpr h="-128.4" p="0" r="0" />
+					<scale x="1.6" y="1.2" z="2.1" />
+				</prop>
+			</node>
+			<node name="winter_snowpile_1">
+				<prop name="winter_snowpile_DNARoot" code="winter_snowpile">
+					<pos x="-44.3" y="97.053" z="0.6" />
+					<nhpr h="-272.6" p="0" r="0" />
+					<scale x="1.7" y="1.3" z="1.9" />
+				</prop>
+			</node>
+		</visgroup>
+	</group>
+</scene>

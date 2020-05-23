@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<model path="phase_6/models/karting/tt_m_ara_gfs_leaderBoardCrashed" scope="place">
+		<store_node root="holiday_prop" code="prop_gs_crashed_board" node="" />
+	</model>
+
+	<model path="phase_3.5/models/misc/tt_m_ara_gen_placeholder" scope="place">
+		<store_node root="holiday_prop" code="leader_board" node="" />
+	</model>
+</storage>

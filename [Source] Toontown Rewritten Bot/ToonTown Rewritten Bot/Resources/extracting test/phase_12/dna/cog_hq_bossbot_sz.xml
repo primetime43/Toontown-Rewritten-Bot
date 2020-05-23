@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene zone="10000">
+    <!-- Loop 1 -->
+    <store_suit_point id="1" type="STREET_POINT" x="-26.439" y="-187.66" z="0" />
+    <store_suit_point id="2" type="STREET_POINT" x="8.561" y="-141.66" z="0" />
+    <store_suit_point id="3" type="STREET_POINT" x="-1.439" y="-48.66" z="0" />
+    <store_suit_point id="4" type="STREET_POINT" x="-38.439" y="-9.66" z="0" />
+    <store_suit_point id="5" type="STREET_POINT" x="-91.439" y="-35.66" z="0" />
+    <store_suit_point id="6" type="STREET_POINT" x="-98.470" y="-116.620" z="0" />
+    <store_suit_point id="7" type="STREET_POINT" x="-74.526" y="-195.541" z="0" />
+    <store_suit_point id="8" type="STREET_POINT" x="-59.439" y="-178.66" z="0" />
+    <store_suit_point id="9" type="STREET_POINT" x="-79.693" y="-85.079" z="0" />
+    <store_suit_point id="10" type="STREET_POINT" x="-30.703" y="-72.249" z="0" />
+
+    <!-- Loop 2 -->
+    <store_suit_point id="11" type="STREET_POINT" x="-85.439" y="10.34" z="0" />
+    <store_suit_point id="12" type="STREET_POINT" x="-39.439" y="8.34" z="0" />
+    <store_suit_point id="13" type="STREET_POINT" x="-0.439" y="67.34" z="0" />
+    <store_suit_point id="14" type="STREET_POINT" x="-9.439" y="151.34" z="0" />
+    <store_suit_point id="15" type="STREET_POINT" x="-71.018" y="173.375" z="0" />
+    <store_suit_point id="16" type="STREET_POINT" x="-99.729" y="107.978" z="0" />
+    <store_suit_point id="38" type="STREET_POINT" x="-111.467" y="46.527" z="0" />
+    <store_suit_point id="17" type="STREET_POINT" x="-108.439" y="-6.66" z="0" />
+    <store_suit_point id="18" type="STREET_POINT" x="-74.258" y="100.755" z="0" />
+    <store_suit_point id="19" type="STREET_POINT" x="-29.138" y="95.308" z="0" />
+
+    <!-- Loop 3 -->
+    <store_suit_point id="20" type="STREET_POINT" x="10.561" y="-42.66" z="0" />
+    <store_suit_point id="21" type="STREET_POINT" x="58.561" y="-104.66" z="0" />
+    <store_suit_point id="22" type="STREET_POINT" x="40.561" y="-143.66" z="0" />
+    <store_suit_point id="23" type="STREET_POINT" x="98.561" y="-164.66" z="0" />
+    <store_suit_point id="24" type="STREET_POINT" x="117.561" y="-79.66" z="0" />
+    <store_suit_point id="25" type="STREET_POINT" x="143.561" y="-6.66" z="0" />
+    <store_suit_point id="26" type="STREET_POINT" x="83.561" y="-29.66" z="0" />
+    <store_suit_point id="27" type="STREET_POINT" x="47.561" y="-7.66" z="0" />
+
+    <!-- Loop 4 -->
+    <store_suit_point id="28" type="STREET_POINT" x="43.561" y="11.34" z="0" />
+    <store_suit_point id="29" type="STREET_POINT" x="163.561" y="24.34" z="0" />
+    <store_suit_point id="30" type="STREET_POINT" x="124.561" y="99.34" z="0" />
+    <store_suit_point id="31" type="STREET_POINT" x="98.561" y="79.34" z="0" />
+    <store_suit_point id="32" type="STREET_POINT" x="54.561" y="71.34" z="0" />
+    <store_suit_point id="33" type="STREET_POINT" x="64.561" y="119.34" z="0" />
+    <store_suit_point id="34" type="STREET_POINT" x="121.561" y="135.34" z="0" />
+    <store_suit_point id="35" type="STREET_POINT" x="12.561" y="198.34" z="0" />
+    <store_suit_point id="36" type="STREET_POINT" x="28.561" y="112.34" z="0" />
+    <store_suit_point id="37" type="STREET_POINT" x="16.561" y="37.34" z="0" />
+    <!-- N.B. Suit point 38 was inserted between 16 and 17, so the next point should be 39 -->
+
+    <!-- Battle Cells and Assignments (Assigned by loop, CCW) -->
+    <group name="bossbotHQexterior">
+        <!-- Loop 1 -->
+        <visgroup zone="10000" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <suit_edge a="6" b="7" />
+            <suit_edge a="7" b="8" />
+            <suit_edge a="8" b="9" />
+            <suit_edge a="9" b="10" />
+            <battle_cell width="20" height="20" x="-57.086" y="-136.929" z="0" />
+        </visgroup>
+
+        <visgroup zone="10001" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <suit_edge a="1" b="2" />
+            <suit_edge a="2" b="3" />
+            <suit_edge a="10" b="1" />
+            <!-- This one is sane, but I kinda like it better when it's placed in the center of the three edges
+            <battle_cell width="20" height="20" x="-9.439" y="-164.66" z="0" />
+            -->
+            <battle_cell width="20" height="20" x="-12.464" y="-103.612" z="0" />
+        </visgroup>
+
+        <!-- Loop 2 -->
+        <visgroup zone="10002" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <suit_edge a="11" b="12" />
+            <suit_edge a="12" b="13" /> <!-- FIXME near suit point 13 a battle would transition through a fountain, which is not good -->
+            <!-- These suit edges are from Loop 1, however, it would cause an unseemly transition through models otherwise -->
+            <suit_edge a="3" b="4" />
+            <suit_edge a="4" b="5" />
+            <battle_cell width="20" height="20" x="-88.664" y="-4.820" z="0" />
+        </visgroup>
+
+        <visgroup zone="10003" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <suit_edge a="18" b="19" />
+            <suit_edge a="19" b="11" />
+            <battle_cell width="20" height="20" x="-79.908" y="105.046" z="0" />
+        </visgroup>
+
+        <visgroup zone="10004" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <suit_edge a="14" b="15" />
+            <suit_edge a="15" b="16" />
+            <battle_cell width="20" height="20" x="-51.507" y="146.189" z="0" />
+        </visgroup>
+
+        <visgroup zone="10005" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <!-- This suit edge is from Loop 1, however, it would cause an unseemly transition through models otherwise -->
+            <suit_edge a="5" b="6" />
+            <suit_edge a="38" b="17" />
+            <battle_cell width="20" height="20" x="-90.968" y="-66.064" z="0" />
+        </visgroup>
+
+        <visgroup zone="10006" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <suit_edge a="16" b="38"/>
+            <suit_edge a="17" b="18" />
+            <battle_cell width="20" height="20" x="-62.581" y="70.972" z="0" />
+        </visgroup>
+
+        <!-- Loop 3 -->
+        <visgroup zone="10007" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <suit_edge a="20" b="21" />
+            <suit_edge a="21" b="22" />
+            <suit_edge a="22" b="23" />
+            <battle_cell width="20" height="20" x="58.561" y="-104.66" z="0" />
+        </visgroup>
+
+        <visgroup zone="10008" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <suit_edge a="23" b="24" />
+            <suit_edge a="24" b="25" />
+            <battle_cell width="20" height="20" x="138.561" y="-62.66" z="0" />
+        </visgroup>
+
+        <visgroup zone="10009" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <suit_edge a="25" b="26" />
+            <suit_edge a="26" b="27" />
+            <suit_edge a="27" b="20" />
+            <!-- This suit edge is from Loop 4, however, it would cause an unseemly transition through models otherwise -->
+            <suit_edge a="37" b="28" />
+            <battle_cell width="20" height="20" x="83.561" y="-17.66" z="0" />
+        </visgroup>
+
+        <!-- Loop 4 -->
+        <visgroup zone="10010" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <suit_edge a="28" b="29" />
+            <suit_edge a="29" b="30" />
+            <suit_edge a="30" b="31" />
+            <battle_cell width="20" height="20" x="130.561" y="51.34" z="0" />
+        </visgroup>
+
+        <visgroup zone="10011" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <suit_edge a="31" b="32" />
+            <suit_edge a="32" b="33" />
+            <suit_edge a="33" b="34" />
+            <battle_cell width="20" height="20" x="59.561" y="95.34" z="0" />
+        </visgroup>
+
+        <visgroup zone="10012" vis="10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010 10011 10012">
+            <!-- This suit edge is from Loop 2, however, it would cause an unseemly transition in length otherwise -->
+            <suit_edge a="13" b="14" />
+            <suit_edge a="34" b="35" />
+            <suit_edge a="35" b="36" />
+            <suit_edge a="36" b="37" />
+            <battle_cell width="20" height="20" x="9.561" y="131.34" z="0" />
+        </visgroup>
+    </group>
+</scene>

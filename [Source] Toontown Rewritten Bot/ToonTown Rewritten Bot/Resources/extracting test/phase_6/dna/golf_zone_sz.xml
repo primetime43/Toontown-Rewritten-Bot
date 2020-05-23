@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene zone="17000">
+	<group name="golfZone">
+		<visgroup zone="17000:safe_zone" vis="17000:safe_zone">
+			<node name="level">
+				<node name="golf_kart_0_0">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="133.588" y="47.396" z="-0.05" />
+						<nhpr h="58.732" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="golf_kart_0_1">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="121.484" y="23.65" z="-0.05" />
+						<nhpr h="75.142" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="golf_kart_0_2">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="117.751" y="-1.069" z="-0.05" />
+						<nhpr h="81.928" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="golf_kart_1_0">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="10.725" y="-95.93" z="-0.05" />
+						<nhpr h="-30.762" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="golf_kart_1_1">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="-16.308" y="-86.81" z="-0.05" />
+						<nhpr h="-16.949" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="golf_kart_1_2">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="-41.97" y="-87.26" z="-0.05" />
+						<nhpr h="-9.108" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="golf_kart_2_0">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="-97.77" y="-27.878" z="-0.05" />
+						<nhpr h="-87.415" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="golf_kart_2_1">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="-100.205" y="-2.018" z="-0.05" />
+						<nhpr h="284.36" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="golf_kart_2_2">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="-106.58" y="21.819" z="-0.05" />
+						<nhpr h="-66.64" p="0" r="0" />
+					</prop>
+				</node>
+				<prop name="goofy_speedway_DNARoot" code="goofy_speedway">
+					<pos x="0" y="0" z="0" />
+					<nhpr h="0" p="0" r="0" />
+				</prop>
+                <prop name="linktunnel_bosshq_10000_DNARoot" code="prop_golf_cog_tunnel">
+                    <pos x="100" y="-95" z="0.05" />
+                    <nhpr h="45" p="0" r="0" />
+                </prop>
+
+				<!--
+                The Mystery Tunnel... rip 2013-2015. Harv and Hawkheart's best late night invention.
+
+                <prop name="linktunnel_gz_17000_DNARoot" code="prop_golf_NoSign_entrance">
+					<pos x="100" y="-95" z="0.05" />
+					<scale x="2.5" y="1" z="2.5" />
+					<nhpr h="225" p="0" r="0" />
+					<sign>
+						<baseline code="mickey">
+							<color r="0.705882" g="0.156863" b="0.235294" a="1" />
+							<scale x="2" y="1" z="2" />
+							<text>Chip n' Dale's</text>
+						</baseline>
+						<baseline code="mickey">
+							<color r="0.705882" g="0.156863" b="0.235294" a="1" />
+							<pos x="0" y="0" z="-4" />
+							<scale x="3" y="1" z="3" />
+							<text>Acorn Acres</text>
+						</baseline>
+					</sign>
+				</prop>
+                -->
+
+				<prop name="tunnel_gz_DNARoot" code="prop_golf_tunnel2">
+					<pos x="-20" y="-100" z="0.129929" />
+					<nhpr h="-15" p="0" r="0" />
+					<sign>
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="1" b="0" a="1" />
+							<pos x="-0.3" y="0" z="0" />
+							<nhpr h="0" p="0" r="3.88713" />
+							<scale x="0.7" y="1" z="0.7" />
+							<text>Ho lesom  e    Fun</text>
+						</baseline>
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="1" b="0" a="1" />
+							<pos x="-0.3" y="0" z="-0.5" />
+							<nhpr h="0" p="0" r="4" />
+							<scale x="0.5" y="1" z="0.5" />
+							<text>M  ed ium  - 6 Ho les</text>
+						</baseline>
+					</sign>
+				</prop>
+				<prop name="tunnel_gz_DNARoot" code="prop_golf_tunnel1">
+					<pos x="-129.472" y="37.2723" z="0.129929" />
+					<nhpr h="-54.6042" p="0" r="0" />
+					<sign>
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="0" b="0" a="1" />
+							<pos x="-0.2" y="0" z="0.1" />
+							<nhpr h="0" p="0" r="3" />
+							<scale x="0.43" y="1" z="0.5" />
+							<text>Th e Ho le K it and Ca bood le</text>
+						</baseline>
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="0" b="0" a="1" />
+							<pos x="-0.2" y="0" z="-0.5" />
+							<nhpr h="0" p="0" r="4" />
+							<scale x="0.6" y="1" z="0.5" />
+							<text>Hard  - 9 ho les</text>
+						</baseline>
+					</sign>
+				</prop>
+				<prop name="tunnel_gz_DNARoot" code="prop_golf_tunnel2">
+					<pos x="-110" y="-5" z="0.129929" />
+					<nhpr h="-75" p="0" r="0" />
+					<sign>
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="0" b="0" a="1" />
+							<pos x="-0.2" y="0" z="0.1" />
+							<nhpr h="0" p="0" r="3" />
+							<scale x="0.43" y="1" z="0.5" />
+							<text>Th e Ho le K it and Ca bood le</text>
+						</baseline>
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="0" b="0" a="1" />
+							<pos x="-0.2" y="0" z="-0.5" />
+							<nhpr h="0" p="0" r="4" />
+							<scale x="0.6" y="1" z="0.5" />
+							<text>Hard  - 9 ho les</text>
+						</baseline>
+					</sign>
+				</prop>
+				<prop name="tunnel_gz_DNARoot" code="prop_golf_tunnel1">
+					<pos x="-110" y="-5" z="0.129929" />
+					<nhpr h="-75" p="0" r="0" />
+					<sign>
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="0" b="0" a="1" />
+							<pos x="-0.2" y="0" z="0.1" />
+							<nhpr h="0" p="0" r="3" />
+							<scale x="0.43" y="1" z="0.5" />
+							<text>Th e Ho le K it and Ca bood le</text>
+						</baseline>
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="0" b="0" a="1" />
+							<pos x="-0.2" y="0" z="-0.5" />
+							<nhpr h="0" p="0" r="4" />
+							<scale x="0.6" y="1" z="0.5" />
+							<text>Hard  - 9 ho les</text>
+						</baseline>
+					</sign>
+				</prop>
+				<prop name="tunnel_gz_DNARoot" code="prop_golf_tunnel1">
+					<pos x="-66.3251" y="-96.9588" z="0.129929" />
+					<nhpr h="7.99989" p="0" r="0" />
+					<sign>
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="1" b="0" a="1" />
+							<pos x="-0.3" y="0" z="0" />
+							<nhpr h="0" p="0" r="3.88713" />
+							<scale x="0.7" y="1" z="0.7" />
+							<text>Ho lesom  e    Fun</text>
+						</baseline>
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="1" b="0" a="1" />
+							<pos x="-0.3" y="0" z="-0.5" />
+							<nhpr h="0" p="0" r="4" />
+							<scale x="0.5" y="1" z="0.5" />
+							<text>M  ed ium  - 6 Ho les</text>
+						</baseline>
+					</sign>
+				</prop>
+				<prop name="tunnel_gz_DNARoot" code="prop_golf_tunnel2">
+					<pos x="135" y="20" z="0.129929" />
+					<nhpr h="75" p="0" r="0" />
+					<sign>
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="0" g="0.501961" b="0.25098" a="1" />
+							<pos x="-0.3" y="0" z="0" />
+							<nhpr h="0" p="0" r="3.88713" />
+							<scale x="0.7" y="1" z="0.7" />
+							<text>Wa lk   in  th e  Par</text>
+						</baseline>
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="0" g="0.501961" b="0.25098" a="1" />
+							<pos x="-0.3" y="0" z="-0.5" />
+							<nhpr h="0" p="0" r="4" />
+							<scale x="0.6" y="1" z="0.5" />
+							<text>Easy  -  3 Ho les</text>
+						</baseline>
+					</sign>
+				</prop>
+				<prop name="tunnel_gz_DNARoot" code="prop_golf_tunnel1">
+					<pos x="130.87" y="-26.3261" z="0.129929" />
+					<nhpr h="95.7167" p="0" r="0" />
+					<sign>
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="0" g="0.501961" b="0.25098" a="1" />
+							<pos x="-0.3" y="0" z="0" />
+							<nhpr h="0" p="0" r="3.88713" />
+							<scale x="0.7" y="1" z="0.7" />
+							<text>Wa lk   in  th e  Par</text>
+						</baseline>
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="0" g="0.501961" b="0.25098" a="1" />
+							<pos x="-0.3" y="0" z="-0.5" />
+							<nhpr h="0" p="0" r="4" />
+							<scale x="0.6" y="1" z="0.5" />
+							<text>Easy  -  3 Ho les</text>
+						</baseline>
+					</sign>
+				</prop>
+				<prop name="tunnel_gz_DNARootTest" code="prop_golf_tunnel1">
+					<pos x="135" y="20" z="0.129929" />
+					<nhpr h="75" p="0" r="0" />
+					<sign>
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="0" g="0.501961" b="0.25098" a="1" />
+							<pos x="-0.3" y="0" z="0" />
+							<nhpr h="0" p="0" r="3.88713" />
+							<scale x="0.7" y="1" z="0.7" />
+							<text>Wa lk   in  th e  Par</text>
+						</baseline>
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="0" g="0.501961" b="0.25098" a="1" />
+							<pos x="-0.3" y="0" z="-0.5" />
+							<nhpr h="0" p="0" r="4" />
+							<scale x="0.6" y="1" z="0.5" />
+							<text>Easy  -  3 Ho les</text>
+						</baseline>
+					</sign>
+				</prop>
+				<prop name="tunnel_gz_DNARootTest" code="prop_golf_tunnel1">
+					<pos x="-20" y="-100" z="0.129929" />
+					<nhpr h="-15" p="0" r="0" />
+					<sign>
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="1" b="0" a="1" />
+							<pos x="-0.3" y="0" z="0" />
+							<nhpr h="0" p="0" r="3.88713" />
+							<scale x="0.7" y="1" z="0.7" />
+							<text>Ho lesom  e    Fun</text>
+						</baseline>
+						<baseline code="mickey" width="-8.33333" height="-8.33333">
+							<color r="1" g="1" b="0" a="1" />
+							<pos x="-0.3" y="0" z="-0.5" />
+							<nhpr h="0" p="0" r="4" />
+							<scale x="0.5" y="1" z="0.5" />
+							<text>M  ed ium  - 6 Ho les</text>
+						</baseline>
+					</sign>
+				</prop>
+				<prop name="linktunnel_oz_6000_DNARoot" code="prop_golf_NoSign_entrance">
+					<pos x="5" y="145" z="0" />
+					<nhpr h="0" p="0" r="0" />
+					<sign>
+						<baseline code="mickey">
+							<color r="0.705882" g="0.156863" b="0.235294" a="1" />
+							<scale x="2" y="1" z="2" />
+							<text>Chip n' Dale's</text>
+						</baseline>
+						<baseline code="mickey">
+							<color r="0.705882" g="0.156863" b="0.235294" a="1" />
+							<pos x="0" y="0" z="-4" />
+							<scale x="3" y="1" z="3" />
+							<text>Acorn Acres</text>
+						</baseline>
+					</sign>
+				</prop>
+			</node>
+		</visgroup>
+
+	</group>
+</scene>

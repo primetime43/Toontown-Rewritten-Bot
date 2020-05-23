@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene zone="7000">
+    <group name="toonfest">
+        <visgroup zone="7000:safe_zone" vis="7000:safe_zone">
+            <group name="props">
+                <!-- Geom -->
+                <prop name="toonfest_DNARoot" code="tf_grounds_1">
+                    <pos x="0" y="0" z="0" />
+                    <nhpr h="0" p="0" r="0" />
+                </prop>
+                <!--  chineseCheckers1 -->
+                <node name="game_table_1">
+                    <prop name="prop_game_table_DNARoot" code="prop_game_table">
+                        <pos x="71" y="-135" z="12.85" />
+                        <nhpr h="114" p="4" r="-4" />
+                    </prop>
+                </node>
+                <!-- chineseCheckers2 -->
+                <node name="game_table_2">
+                    <prop name="prop_game_table_DNARoot" code="prop_game_table">
+                        <pos x="109" y="32" z="6.7" />
+                        <nhpr h="-121" p="-8.5" r="0" />
+                    </prop>
+                </node>
+                <!-- chineseCheckers3 -->
+                <node name="game_table_3">
+                    <prop name="prop_game_table_DNARoot" code="prop_game_table">
+                        <pos x="321" y="18" z="8.2" />
+                        <nhpr h="-231" p="-3" r="1" />
+                    </prop>
+                </node>
+                <!-- chineseCheckers4 -->
+                <node name="game_table_4">
+                    <prop name="prop_game_table_DNARoot" code="prop_game_table">
+                        <pos x="415" y="-140" z="9.63" />
+                        <nhpr h="105" p="0" r="0" />
+                    </prop>
+                </node>
+                <!-- chineseCheckers5 -->
+                <node name="game_table_5">
+                    <prop name="prop_game_table_DNARoot" code="prop_game_table">
+                        <pos x="326" y="-514" z="0.93" />
+                        <nhpr h="-260" p="0" r="0" />
+                    </prop>
+                </node>
+                <!-- chineseCheckers6 -->
+                <node name="game_table_6">
+                    <prop name="prop_game_table_DNARoot" code="prop_game_table">
+                        <pos x="100" y="-355" z="8.4" />
+                        <nhpr h="310" p="0" r="0" />
+                    </prop>
+                </node>
+                <!-- Entrance picnic -->
+                <node name="picnic_table_1">
+                    <prop name="prop_picnic_table_DNARoot" code="prop_picnic_table">
+                        <pos x="136" y="-332" z="8.35" />
+                        <nhpr h="10" p="0" r="0" />
+                    </prop>
+                </node>
+                <!-- Fishing picnic -->
+                <node name="picnic_table_2">
+                    <prop name="prop_picnic_table_DNARoot" code="prop_picnic_table">
+                        <pos x="319" y="-535" z="1.0" />
+                        <nhpr h="20" p="0" r="0" />
+                    </prop>
+                </node>
+                <!-- Tower-left picnic -->
+                <node name="picnic_table_3">
+                    <prop name="prop_picnic_table_DNARoot" code="prop_picnic_table">
+                        <pos x="66" y="-180" z="11.15" />
+                        <nhpr h="-75" p="-1" r="3" />
+                    </prop>
+                </node>
+                <!-- Tower-right picnic -->
+                <node name="picnic_table_4">
+                    <prop name="prop_picnic_table_DNARoot" code="prop_picnic_table">
+                        <pos x="227" y="-173" z="4.6" />
+                        <nhpr h="-36" p="0" r="0" />
+                    </prop>
+                </node>
+                <!-- NPCs -->
+                <prop name="npc_prizeclerk_origin_5" code="DCS">
+                    <pos x="220" y="-72" z="8.5" />
+                    <nhpr h="180" p="0" r="0" />
+                </prop>
+                <prop name="npc_prizeclerk_origin_6" code="DCS">
+                    <pos x="216" y="-70" z="8.5" />
+                    <nhpr h="150" p="0" r="0" />
+                </prop>
+                <prop name="npc_prizeclerk_origin_7" code="DCS">
+                    <pos x="210" y="-61" z="8.5" />
+                    <nhpr h="90" p="0" r="0" />
+                </prop>
+                <prop name="npc_prizeclerk_origin_8" code="DCS">
+                    <pos x="211.5" y="-55.5" z="8.5" />
+                    <nhpr h="60" p="0" r="0" />
+                </prop>
+                <prop name="npc_prizeclerk_origin_9" code="DCS">
+                    <pos x="221" y="-50" z="8.5" />
+                    <nhpr h="0" p="0" r="0" />
+                </prop>
+                <prop name="npc_prizeclerk_origin_10" code="DCS">
+                    <pos x="226" y="-51" z="8.5" />
+                    <nhpr h="-30" p="0" r="0" />
+                </prop>
+                <prop name="npc_prizeclerk_origin_11" code="DCS">
+                    <pos x="231.8" y="-61" z="8.5" />
+                    <nhpr h="-90" p="0" r="0" />
+                </prop>
+                <prop name="npc_prizeclerk_origin_12" code="DCS">
+                    <pos x="230" y="-66" z="8.5" />
+                    <nhpr h="-120" p="0" r="0" />
+                </prop>
+            </group>
+            <!-- Fishing Pond -->
+            <group name="fishing_pond_1">
+                <prop name="npc_fisherman_origin_0" code="DCS">
+                    <pos x="311" y="-509" z="0.9" />
+                    <nhpr h="100" p="0" r="0" />
+                </prop>
+                <prop name="fishing_spot_DNARoot" code="fishing_spot">
+                    <pos x="239" y="-551" z="0.9" />
+                    <nhpr h="0" p="0" r="0" />
+                </prop>
+                <prop name="fishing_spot_DNARoot" code="fishing_spot">
+                    <pos x="262" y="-543" z="0.9" />
+                    <nhpr h="40" p="0" r="0" />
+                </prop>
+                <prop name="fishing_spot_DNARoot" code="fishing_spot">
+                    <pos x="275" y="-524" z="0.9" />
+                    <nhpr h="75" p="0" r="0" />
+                </prop>
+                <prop name="fishing_spot_DNARoot" code="fishing_spot">
+                    <pos x="273" y="-503" z="0.9" />
+                    <nhpr h="120" p="0" r="0" />
+                </prop>
+                <prop name="fishing_spot_DNARoot" code="fishing_spot">
+                    <pos x="260" y="-494" z="0.9" />
+                    <nhpr h="170" p="0" r="0" />
+                </prop>
+                <prop name="fishing_spot_DNARoot" code="fishing_spot">
+                    <pos x="245" y="-493" z="0.9" />
+                    <nhpr h="170" p="0" r="0" />
+                </prop>
+            </group>
+            <group name="buildings">
+                <!-- Tunnel to Acorn Acres -->
+                <prop name="d_linktunnel_oz_6000_DNARoot" code="prop_outdoor_zone_entrance">
+                    <pos x="-83.9" y="-303.4" z="18.3" />
+                    <nhpr h="82.5" p="0" r="0" />
+                    <sign code="DD_sign2">
+                        <pos x="0" y="0" z="0" />
+                        <nhpr h="0" p="0" r="-3.0" />
+                        <scale x="1.85" y="1" z="1.35" />
+                        <baseline code="TT_Comedy" wiggle="3" stomp="0.0367716">
+                            <color r="0.439216" g="0.247059" b="0.184314" a="1" />
+                            <scale x="1.5" y="1" z="1.4" />
+                            <text>Chip n' Dale's</text>
+                        </baseline>
+                        <baseline code="TT_Comedy" wiggle="3" stomp="0.0367716">
+                            <color r="0.439216" g="0.247059" b="0.184314" a="1" />
+                            <pos x="0" y="0" z="-1.2" />
+                            <scale x="1.5" y="1" z="1.4" />
+                            <text>Acorn Acres</text>
+                        </baseline>
+                    </sign>
+                </prop>
+                <!-- Tower -->
+                <prop name="toonfest_tower_DNARoot" code="tf_tower">
+                    <pos x="221" y="-61" z="4.5" />
+                    <nhpr h="-30" p="0" r="0" />
+                </prop>
+                <!-- Duck Tank -->
+                <prop name="toonfest_ducktank_DNARoot" code="tf_ducktank">
+                    <pos x="181" y="-249" z="4.6" />
+                    <nhpr h="220" p="0" r="0" />
+                </prop>
+                <!-- Pie Booth -->
+                <prop name="toonfest_piebooth_DNARoot" code="tf_booth">
+                    <pos x="113" y="-330" z="8.35" />
+                    <nhpr h="220" p="0" r="0" />
+                </prop>
+                <prop name="npc_prizeclerk_origin_1" code="DCS">
+                    <pos x="109" y="-329" z="8.35" />
+                    <nhpr h="60" p="0" r="0" />
+                </prop>
+                <prop name="npc_prizeclerk_origin_2" code="DCS">
+                    <pos x="113" y="-326" z="8.35" />
+                    <nhpr h="20" p="0" r="0" />
+                </prop>
+                <!-- XP Booth -->
+                <prop name="toonfest_xpbooth_DNARoot" code="tf_booth">
+                    <pos x="360" y="-115" z="9.63" />
+                    <nhpr h="285" p="0" r="0" />
+                </prop>
+                <prop name="npc_prizeclerk_origin_3" code="DCS">
+                    <pos x="357" y="-112" z="9.63" />
+                    <nhpr h="90" p="0" r="0" />
+                </prop>
+                <prop name="npc_prizeclerk_origin_4" code="DCS">
+                    <pos x="359" y="-118" z="9.63" />
+                    <nhpr h="130" p="0" r="0" />
+                </prop>
+            </group>
+            <group name="trees">
+                <!-- Small Trees -->
+                <prop name="tree58_DNARoot" code="tf_tree_s">
+                    <pos x="261.696014" y="-205.537003" z="7.111520" />
+                    <nhpr h="16.916065" p="-8.930625" r="-4.363521" />
+                    <scale x="1.672333" y="1.672324" z="1.672332" />
+                </prop>
+                <prop name="tree1_DNARoot" code="tf_tree_s">
+                    <pos x="84.966904" y="-110.981003" z="7.446310" />
+                    <nhpr h="-45.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.395509" y="1.395509" z="1.395510" />
+                </prop>
+                <prop name="tree40_DNARoot" code="tf_tree_s">
+                    <pos x="99.798401" y="78.408501" z="13.158400" />
+                    <nhpr h="44.870831" p="4.450197" r="2.210776" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <!-- Medium Trees -->
+                <prop name="tree70_DNARoot" code="tf_tree_m">
+                    <pos x="351.622986" y="-418.990997" z="27.260300" />
+                    <nhpr h="3.480341" p="-8.650455" r="-8.315225" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree71_DNARoot" code="tf_tree_m">
+                    <pos x="391.272003" y="-374.976990" z="27.188601" />
+                    <nhpr h="81.689972" p="-10.848373" r="6.669793" />
+                    <scale x="1.250005" y="1.249999" z="1.249998" />
+                </prop>
+                <prop name="tree72_DNARoot" code="tf_tree_m">
+                    <pos x="422.890991" y="-311.589996" z="27.280701" />
+                    <nhpr h="26.972383" p="-2.549255" r="-4.953341" />
+                    <scale x="1.000000" y="1.000000" z="1.250001" />
+                </prop>
+                <prop name="tree73_DNARoot" code="tf_tree_m">
+                    <pos x="465.411987" y="-282.684998" z="32.582901" />
+                    <nhpr h="-30.026985" p="-3.596591" r="6.186738" />
+                    <scale x="0.750000" y="0.750001" z="1.000000" />
+                </prop>
+                <prop name="tree74_DNARoot" code="tf_tree_m">
+                    <pos x="474.479004" y="-336.144989" z="24.806999" />
+                    <nhpr h="8.721179" p="9.697498" r="17.072887" />
+                    <scale x="0.400000" y="0.400000" z="0.600000" />
+                </prop>
+                <prop name="tree75_DNARoot" code="tf_tree_m">
+                    <pos x="479.976990" y="-387.819000" z="18.186001" />
+                    <nhpr h="-50.001755" p="-9.181873" r="15.262601" />
+                    <scale x="0.250000" y="0.250000" z="0.250000" />
+                </prop>
+                <prop name="tree76_DNARoot" code="tf_tree_m">
+                    <pos x="490.570007" y="-360.467987" z="17.942101" />
+                    <nhpr h="-141.819412" p="-15.176371" r="-9.033970" />
+                    <scale x="0.250000" y="0.250000" z="0.250000" />
+                </prop>
+                <prop name="tree77_DNARoot" code="tf_tree_m">
+                    <pos x="461.282013" y="-219.007996" z="29.394699" />
+                    <nhpr h="-129.909668" p="9.432570" r="4.187253" />
+                    <scale x="0.749999" y="0.750000" z="1.000000" />
+                </prop>
+                <prop name="tree78_DNARoot" code="tf_tree_m">
+                    <pos x="424.408997" y="-374.955994" z="33.199299" />
+                    <nhpr h="-0.861618" p="2.093747" r="10.641893" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree79_DNARoot" code="tf_tree_m">
+                    <pos x="413.911987" y="-460.039001" z="33.859402" />
+                    <nhpr h="105.708305" p="18.559341" r="-7.093150" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree80_DNARoot" code="tf_tree_m">
+                    <pos x="434.865997" y="-525.309998" z="21.276899" />
+                    <nhpr h="-46.532837" p="-14.505884" r="12.167416" />
+                    <scale x="0.250000" y="0.250000" z="0.250000" />
+                </prop>
+                <prop name="tree81_DNARoot" code="tf_tree_m">
+                    <pos x="404.546997" y="-581.218994" z="30.546200" />
+                    <nhpr h="-136.378754" p="-12.696177" r="-15.858256" />
+                    <scale x="0.250000" y="0.250000" z="0.250000" />
+                </prop>
+                <prop name="tree82_DNARoot" code="tf_tree_m">
+                    <pos x="367.078003" y="-641.047974" z="38.749802" />
+                    <nhpr h="-136.210068" p="-8.306233" r="-2.150279" />
+                    <scale x="0.250001" y="0.250000" z="0.250000" />
+                </prop>
+                <prop name="tree83_DNARoot" code="tf_tree_m">
+                    <pos x="345.024994" y="-613.132019" z="43.913399" />
+                    <nhpr h="-34.783520" p="-4.471691" r="11.203048" />
+                    <scale x="0.250000" y="0.250000" z="0.250000" />
+                </prop>
+                <prop name="tree84_DNARoot" code="tf_tree_m">
+                    <pos x="279.536011" y="-635.731995" z="39.452801" />
+                    <nhpr h="-37.390320" p="9.184292" r="6.775064" />
+                    <scale x="0.400000" y="0.400000" z="0.400000" />
+                </prop>
+                <prop name="tree85_DNARoot" code="tf_tree_m">
+                    <pos x="371.906006" y="-501.036987" z="34.267101" />
+                    <nhpr h="-29.144075" p="4.942957" r="-7.951554" />
+                    <scale x="0.750000" y="0.750000" z="1.000000" />
+                </prop>
+                <prop name="tree86_DNARoot" code="tf_tree_m">
+                    <pos x="327.684998" y="-575.328979" z="44.551601" />
+                    <nhpr h="-32.991913" p="-13.268891" r="-15.579994" />
+                    <scale x="0.750000" y="0.750000" z="1.000000" />
+                </prop>
+                <prop name="tree87_DNARoot" code="tf_tree_m">
+                    <pos x="316.488007" y="-617.747986" z="43.961201" />
+                    <nhpr h="-0.000000" p="5.889784" r="-0.000000" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree88_DNARoot" code="tf_tree_m">
+                    <pos x="216.352005" y="-655.232971" z="35.978901" />
+                    <nhpr h="-143.657867" p="-8.715456" r="6.922355" />
+                    <scale x="0.350000" y="0.350000" z="0.350000" />
+                </prop>
+                <prop name="tree89_DNARoot" code="tf_tree_m">
+                    <pos x="255.537003" y="-610.575989" z="44.426899" />
+                    <nhpr h="145.470276" p="-9.351805" r="-4.819005" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree90_DNARoot" code="tf_tree_m">
+                    <pos x="175.365997" y="-617.531006" z="40.365299" />
+                    <nhpr h="40.097713" p="7.183809" r="-7.692630" />
+                    <scale x="0.750001" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree91_DNARoot" code="tf_tree_m">
+                    <pos x="86.174797" y="-611.021973" z="33.481701" />
+                    <nhpr h="-36.875668" p="14.087872" r="-4.219571" />
+                    <scale x="0.250000" y="0.250000" z="0.250000" />
+                </prop>
+                <prop name="tree92_DNARoot" code="tf_tree_m">
+                    <pos x="45.433102" y="-573.716003" z="31.961300" />
+                    <nhpr h="124.917717" p="-12.568492" r="-5.118184" />
+                    <scale x="0.350000" y="0.350000" z="0.350000" />
+                </prop>
+                <prop name="tree93_DNARoot" code="tf_tree_m">
+                    <pos x="33.230598" y="-505.795013" z="45.941898" />
+                    <nhpr h="145.841934" p="-4.446313" r="-2.000968" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree94_DNARoot" code="tf_tree_m">
+                    <pos x="17.171400" y="-441.234009" z="49.187801" />
+                    <nhpr h="-85.018120" p="1.066558" r="-0.528877" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree95_DNARoot" code="tf_tree_m">
+                    <pos x="-34.402500" y="-427.302002" z="48.155201" />
+                    <nhpr h="-178.425583" p="11.968550" r="3.511096" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree96_DNARoot" code="tf_tree_m">
+                    <pos x="153.507996" y="-398.958008" z="27.566601" />
+                    <nhpr h="178.983658" p="11.193089" r="3.323745" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree97_DNARoot" code="tf_tree_m">
+                    <pos x="99.717300" y="-391.079010" z="21.947800" />
+                    <nhpr h="-52.745514" p="-5.795721" r="-9.666697" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree98_DNARoot" code="tf_tree_m">
+                    <pos x="53.757801" y="-401.510986" z="22.406300" />
+                    <nhpr h="62.263191" p="-1.723637" r="8.328566" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree99_DNARoot" code="tf_tree_m">
+                    <pos x="32.088100" y="-408.447998" z="35.392300" />
+                    <nhpr h="-179.560806" p="8.182730" r="-3.082817" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree100_DNARoot" code="tf_tree_m">
+                    <pos x="98.611000" y="-430.067993" z="36.591301" />
+                    <nhpr h="34.999981" p="0.000000" r="-0.000000" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree101_DNARoot" code="tf_tree_m">
+                    <pos x="17.626200" y="-383.402008" z="28.520500" />
+                    <nhpr h="116.403557" p="0.000000" r="-0.000000" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree102_DNARoot" code="tf_tree_m">
+                    <pos x="-22.234699" y="-361.381989" z="28.520599" />
+                    <nhpr h="36.530563" p="-8.264493" r="13.247072" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree103_DNARoot" code="tf_tree_m">
+                    <pos x="-5.320080" y="-501.842010" z="44.922501" />
+                    <nhpr h="32.165459" p="8.372766" r="-10.758060" />
+                    <scale x="0.500000" y="0.500000" z="0.500000" />
+                </prop>
+                <prop name="tree104_DNARoot" code="tf_tree_m">
+                    <pos x="-63.601700" y="-498.549988" z="38.592098" />
+                    <nhpr h="1.959820" p="15.810177" r="-9.789606" />
+                    <scale x="0.350000" y="0.350000" z="0.350000" />
+                </prop>
+                <prop name="tree105_DNARoot" code="tf_tree_m">
+                    <pos x="-82.937401" y="-441.053986" z="46.757198" />
+                    <nhpr h="4.990979" p="-0.529168" r="-1.071481" />
+                    <scale x="0.500000" y="0.500000" z="0.500000" />
+                </prop>
+                <prop name="tree106_DNARoot" code="tf_tree_m">
+                    <pos x="-51.602100" y="-393.984985" z="37.113499" />
+                    <nhpr h="130.742615" p="3.611273" r="13.136638" />
+                    <scale x="0.750000" y="0.750001" z="0.750000" />
+                </prop>
+                <prop name="tree107_DNARoot" code="tf_tree_m">
+                    <pos x="-89.842598" y="-385.536011" z="31.087200" />
+                    <nhpr h="18.046947" p="-2.100506" r="5.016660" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree108_DNARoot" code="tf_tree_m">
+                    <pos x="-78.610001" y="-353.990997" z="26.994699" />
+                    <nhpr h="114.795906" p="14.725063" r="7.283622" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree109_DNARoot" code="tf_tree_m">
+                    <pos x="-135.606995" y="-450.420013" z="36.149502" />
+                    <nhpr h="-98.807693" p="7.384138" r="9.527033" />
+                    <scale x="0.500000" y="0.500000" z="0.500000" />
+                </prop>
+                <prop name="tree110_DNARoot" code="tf_tree_m">
+                    <pos x="-154.462006" y="-417.306000" z="38.163601" />
+                    <nhpr h="64.038765" p="-5.255431" r="-17.815891" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree111_DNARoot" code="tf_tree_m">
+                    <pos x="-121.471001" y="-389.320007" z="42.773300" />
+                    <nhpr h="0.280810" p="-8.944401" r="8.232593" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree112_DNARoot" code="tf_tree_m">
+                    <pos x="-152.781006" y="-357.638000" z="43.701801" />
+                    <nhpr h="99.999985" p="0.000000" r="-0.000000" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree113_DNARoot" code="tf_tree_m">
+                    <pos x="-175.192993" y="-368.886993" z="43.952900" />
+                    <nhpr h="154.999985" p="-8.701108" r="5.440150" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree114_DNARoot" code="tf_tree_m">
+                    <pos x="-176.899002" y="-397.213989" z="40.955299" />
+                    <nhpr h="2.435847" p="8.323061" r="-8.337071" />
+                    <scale x="0.350000" y="0.350000" z="0.350000" />
+                </prop>
+                <prop name="tree115_DNARoot" code="tf_tree_m">
+                    <pos x="-204.389008" y="-363.635986" z="39.347198" />
+                    <nhpr h="-23.663160" p="10.386383" r="-9.212621" />
+                    <scale x="0.500000" y="0.499999" z="0.500000" />
+                </prop>
+                <prop name="tree116_DNARoot" code="tf_tree_m">
+                    <pos x="-222.177994" y="-308.937012" z="39.288601" />
+                    <nhpr h="30.084295" p="-2.420617" r="-10.004584" />
+                    <scale x="0.750000" y="0.750001" z="0.750000" />
+                </prop>
+                <prop name="tree117_DNARoot" code="tf_tree_m">
+                    <pos x="-178.311005" y="-303.039001" z="45.862301" />
+                    <nhpr h="99.029510" p="-7.907139" r="-1.730487" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree118_DNARoot" code="tf_tree_m">
+                    <pos x="-180.854996" y="-335.424011" z="43.952000" />
+                    <nhpr h="59.042110" p="-10.904239" r="-9.610909" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree119_DNARoot" code="tf_tree_m">
+                    <pos x="-142.136993" y="-281.006012" z="34.438999" />
+                    <nhpr h="155.619354" p="-2.566070" r="-0.340449" />
+                    <scale x="1.250004" y="1.250003" z="1.249995" />
+                </prop>
+                <prop name="tree120_DNARoot" code="tf_tree_m">
+                    <pos x="-113.435997" y="-365.976013" z="34.034100" />
+                    <nhpr h="-155.792206" p="8.829426" r="-13.219320" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree121_DNARoot" code="tf_tree_m">
+                    <pos x="-141.001999" y="-312.794006" z="31.322201" />
+                    <nhpr h="-154.921219" p="-1.932450" r="-0.757006" />
+                    <scale x="1.249997" y="1.249996" z="1.250000" />
+                </prop>
+                <prop name="tree122_DNARoot" code="tf_tree_m">
+                    <pos x="-277.817993" y="-164.311005" z="28.872400" />
+                    <nhpr h="-14.357997" p="5.339070" r="-8.764470" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree123_DNARoot" code="tf_tree_m">
+                    <pos x="-260.686005" y="-203.300995" z="27.074301" />
+                    <nhpr h="105.096336" p="-10.297308" r="0.603382" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree124_DNARoot" code="tf_tree_m">
+                    <pos x="-242.858002" y="-218.460007" z="29.690399" />
+                    <nhpr h="0.366097" p="2.052842" r="-4.138033" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree125_DNARoot" code="tf_tree_m">
+                    <pos x="-209.158997" y="-243.503998" z="41.173302" />
+                    <nhpr h="0.169020" p="-0.671998" r="-4.135645" />
+                    <scale x="1.250003" y="1.250001" z="1.250001" />
+                </prop>
+                <prop name="tree126_DNARoot" code="tf_tree_m">
+                    <pos x="-174.623993" y="-264.455994" z="46.048100" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.250000" y="1.250000" z="1.500000" />
+                </prop>
+                <prop name="tree127_DNARoot" code="tf_tree_m">
+                    <pos x="-164.102997" y="-235.578995" z="42.631599" />
+                    <nhpr h="50.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.250001" y="1.250001" z="1.750000" />
+                </prop>
+                <prop name="tree128_DNARoot" code="tf_tree_m">
+                    <pos x="-283.967987" y="-109.264000" z="39.722198" />
+                    <nhpr h="-63.823826" p="7.663162" r="0.000002" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree129_DNARoot" code="tf_tree_m">
+                    <pos x="-302.046997" y="-60.319302" z="39.258499" />
+                    <nhpr h="-14.560653" p="5.020852" r="-5.938203" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree130_DNARoot" code="tf_tree_m">
+                    <pos x="-228.274994" y="-116.541000" z="38.524502" />
+                    <nhpr h="99.427559" p="7.542816" r="2.534478" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree131_DNARoot" code="tf_tree_m">
+                    <pos x="-214.822998" y="-81.939697" z="31.935801" />
+                    <nhpr h="-20.018745" p="-4.298907" r="10.952363" />
+                    <scale x="1.250000" y="1.249998" z="1.250001" />
+                </prop>
+                <prop name="tree132_DNARoot" code="tf_tree_m">
+                    <pos x="-241.744995" y="-18.433701" z="40.439201" />
+                    <nhpr h="44.418053" p="8.115925" r="8.503114" />
+                    <scale x="1.499997" y="1.500003" z="1.499996" />
+                </prop>
+                <prop name="tree134_DNARoot" code="tf_tree_m">
+                    <pos x="-152.908997" y="-192.138000" z="33.701199" />
+                    <nhpr h="155.154541" p="3.002208" r="0.067135" />
+                    <scale x="2.000001" y="2.000002" z="2.500003" />
+                </prop>
+                <prop name="tree135_DNARoot" code="tf_tree_m">
+                    <pos x="-106.737000" y="-203.354004" z="25.444700" />
+                    <nhpr h="155.154541" p="3.002208" r="0.067135" />
+                    <scale x="2.000001" y="2.000002" z="1.999996" />
+                </prop>
+                <prop name="tree136_DNARoot" code="tf_tree_m">
+                    <pos x="-94.316704" y="-254.709000" z="29.596901" />
+                    <nhpr h="-178.455688" p="-3.416779" r="0.000000" />
+                    <scale x="1.250004" y="1.249995" z="1.250002" />
+                </prop>
+                <prop name="tree137_DNARoot" code="tf_tree_m">
+                    <pos x="-127.241997" y="-248.063995" z="40.384399" />
+                    <nhpr h="55.784904" p="2.706628" r="-5.937489" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree138_DNARoot" code="tf_tree_m">
+                    <pos x="-128.557999" y="-340.471985" z="24.602400" />
+                    <nhpr h="134.953323" p="0.362263" r="-2.701203" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree139_DNARoot" code="tf_tree_m">
+                    <pos x="-62.934799" y="-243.483002" z="34.287498" />
+                    <nhpr h="-17.937445" p="7.859944" r="0.514168" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree140_DNARoot" code="tf_tree_m">
+                    <pos x="-44.726398" y="-264.731995" z="27.229000" />
+                    <nhpr h="66.334953" p="1.305626" r="-7.750177" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree141_DNARoot" code="tf_tree_m">
+                    <pos x="-4.106810" y="-279.757996" z="22.799999" />
+                    <nhpr h="0.393161" p="7.671165" r="-2.942749" />
+                    <scale x="0.800000" y="0.800000" z="0.800000" />
+                </prop>
+                <prop name="tree142_DNARoot" code="tf_tree_m">
+                    <pos x="33.115101" y="-277.694000" z="23.447701" />
+                    <nhpr h="132.197571" p="-6.555120" r="-4.344249" />
+                    <scale x="0.999999" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree143_DNARoot" code="tf_tree_m">
+                    <pos x="57.966400" y="-278.859009" z="19.290701" />
+                    <nhpr h="0.417833" p="3.155534" r="5.445542" />
+                    <scale x="0.800000" y="0.800000" z="0.800000" />
+                </prop>
+                <prop name="tree144_DNARoot" code="tf_tree_m">
+                    <pos x="38.997799" y="-254.494995" z="21.685900" />
+                    <nhpr h="29.506369" p="1.288449" r="8.084792" />
+                    <scale x="1.250002" y="1.249999" z="1.249997" />
+                </prop>
+                <prop name="tree145_DNARoot" code="tf_tree_m">
+                    <pos x="2.547200" y="-227.690994" z="26.238899" />
+                    <nhpr h="133.132950" p="9.122508" r="3.543198" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree146_DNARoot" code="tf_tree_m">
+                    <pos x="-28.164200" y="-229.393005" z="29.198000" />
+                    <nhpr h="132.886703" p="2.681313" r="1.292830" />
+                    <scale x="1.250000" y="1.250000" z="1.249996" />
+                </prop>
+                <prop name="tree147_DNARoot" code="tf_tree_m">
+                    <pos x="11.803500" y="-253.636993" z="29.184401" />
+                    <nhpr h="-0.261148" p="2.486501" r="5.997516" />
+                    <scale x="1.000000" y="1.000000" z="1.500005" />
+                </prop>
+                <prop name="tree148_DNARoot" code="tf_tree_m">
+                    <pos x="-12.439100" y="-256.739990" z="34.272598" />
+                    <nhpr h="-122.617905" p="-1.771857" r="3.601395" />
+                    <scale x="1.000000" y="1.000000" z="1.499998" />
+                </prop>
+                <prop name="tree149_DNARoot" code="tf_tree_m">
+                    <pos x="-193.990997" y="-198.682007" z="33.834301" />
+                    <nhpr h="130.048019" p="-2.746168" r="3.141324" />
+                    <scale x="1.500002" y="1.500000" z="1.500004" />
+                </prop>
+                <prop name="tree150_DNARoot" code="tf_tree_m">
+                    <pos x="-235.630005" y="-169.276993" z="35.977001" />
+                    <nhpr h="-112.508560" p="4.053648" r="0.985564" />
+                    <scale x="1.500003" y="1.500003" z="1.500004" />
+                </prop>
+                <prop name="tree2_DNARoot" code="tf_tree_m">
+                    <pos x="95.088097" y="-215.923004" z="6.598060" />
+                    <nhpr h="-45.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree3_DNARoot" code="tf_tree_m">
+                    <pos x="97.904999" y="-170.783005" z="6.151740" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.400000" y="1.400000" z="1.400000" />
+                </prop>
+                <prop name="tree4_DNARoot" code="tf_tree_m">
+                    <pos x="-42.546398" y="-46.708698" z="32.783699" />
+                    <nhpr h="121.413803" p="1.568864" r="2.018539" />
+                    <scale x="1.500001" y="1.500002" z="1.500003" />
+                </prop>
+                <prop name="tree5_DNARoot" code="tf_tree_m">
+                    <pos x="118.196999" y="95.826103" z="10.976000" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.500000" y="1.500000" z="1.500000" />
+                </prop>
+                <prop name="tree6_DNARoot" code="tf_tree_m">
+                    <pos x="153.617004" y="78.664101" z="7.008750" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree7_DNARoot" code="tf_tree_m">
+                    <pos x="47.339401" y="132.369003" z="19.561199" />
+                    <nhpr h="-105.999969" p="0.000000" r="-5.281721" />
+                    <scale x="1.750004" y="1.750002" z="1.750000" />
+                </prop>
+                <prop name="tree8_DNARoot" code="tf_tree_m">
+                    <pos x="191.246002" y="-408.035004" z="2.363810" />
+                    <nhpr h="-45.000000" p="4.580521" r="-0.000000" />
+                    <scale x="1.000000" y="0.999999" z="1.250002" />
+                </prop>
+                <prop name="tree9_DNARoot" code="tf_tree_m">
+                    <pos x="246.606995" y="-389.117004" z="8.408150" />
+                    <nhpr h="25.000027" p="2.387591" r="-0.000002" />
+                    <scale x="1.100000" y="1.100000" z="1.100005" />
+                </prop>
+                <prop name="tree10_DNARoot" code="tf_tree_m">
+                    <pos x="320.634003" y="-392.686005" z="10.259500" />
+                    <nhpr h="24.999981" p="5.124101" r="0.000003" />
+                    <scale x="1.499998" y="1.500001" z="1.500005" />
+                </prop>
+                <prop name="tree11_DNARoot" code="tf_tree_m">
+                    <pos x="300.747986" y="-437.173004" z="8.496370" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.250000" y="1.250000" z="1.250000" />
+                </prop>
+                <prop name="tree12_DNARoot" code="tf_tree_m">
+                    <pos x="155.210007" y="-515.258972" z="0.906343" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="0.600000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree13_DNARoot" code="tf_tree_m">
+                    <pos x="155.261993" y="-484.610992" z="0.906343" />
+                    <nhpr h="39.999973" p="0.000000" r="-0.000000" />
+                    <scale x="0.800000" y="0.800000" z="0.800000" />
+                </prop>
+                <prop name="tree14_DNARoot" code="tf_tree_m">
+                    <pos x="310.394989" y="-491.440002" z="0.906549" />
+                    <nhpr h="-67.000000" p="0.000000" r="-0.000000" />
+                    <scale x="0.860290" y="0.860290" z="0.860290" />
+                </prop>
+                <prop name="tree16_DNARoot" code="tf_tree_m">
+                    <pos x="-17.272400" y="-152.389999" z="19.599100" />
+                    <nhpr h="-0.000000" p="6.948162" r="-0.000000" />
+                    <scale x="1.400000" y="1.400002" z="1.400002" />
+                </prop>
+                <prop name="tree18_DNARoot" code="tf_tree_m">
+                    <pos x="341.824005" y="-237.001999" z="20.903000" />
+                    <nhpr h="-43.333462" p="-10.447237" r="9.115399" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree20_DNARoot" code="tf_tree_m">
+                    <pos x="324.054993" y="-276.753998" z="17.199100" />
+                    <nhpr h="-44.246506" p="3.889758" r="9.551560" />
+                    <scale x="2.000003" y="2.000002" z="2.000000" />
+                </prop>
+                <prop name="tree21_DNARoot" code="tf_tree_m">
+                    <pos x="285.200989" y="-313.864990" z="27.701700" />
+                    <nhpr h="-44.897331" p="-0.651077" r="9.704217" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree22_DNARoot" code="tf_tree_m">
+                    <pos x="341.584015" y="-370.303986" z="10.069500" />
+                    <nhpr h="-44.897331" p="-0.651077" r="5.388865" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree23_DNARoot" code="tf_tree_m">
+                    <pos x="353.648010" y="37.817299" z="9.606790" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.500000" y="1.500000" z="1.500000" />
+                </prop>
+                <prop name="tree25_DNARoot" code="tf_tree_m">
+                    <pos x="400.639008" y="-169.296997" z="9.606790" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="2.000000" y="2.000000" z="2.000000" />
+                </prop>
+                <prop name="tree26_DNARoot" code="tf_tree_m">
+                    <pos x="220.246002" y="-283.433990" z="9.033740" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree27_DNARoot" code="tf_tree_m">
+                    <pos x="203.535995" y="-244.261002" z="4.572000" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree28_DNARoot" code="tf_tree_m">
+                    <pos x="179.973999" y="-304.407990" z="7.375870" />
+                    <nhpr h="-45.000000" p="0.000000" r="-0.000000" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree29_DNARoot" code="tf_tree_m">
+                    <pos x="231.457001" y="-340.703003" z="13.714900" />
+                    <nhpr h="65.000023" p="0.000000" r="-0.000000" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree30_DNARoot" code="tf_tree_m">
+                    <pos x="232.345993" y="67.140900" z="4.572000" />
+                    <nhpr h="73.739281" p="0.000000" r="-0.000000" />
+                    <scale x="1.500004" y="1.500004" z="1.500000" />
+                </prop>
+                <prop name="tree31_DNARoot" code="tf_tree_m">
+                    <pos x="-20.929300" y="94.549103" z="13.143800" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.750000" y="1.750000" z="1.750000" />
+                </prop>
+                <prop name="tree32_DNARoot" code="tf_tree_m">
+                    <pos x="-75.866798" y="67.071701" z="13.240700" />
+                    <nhpr h="-45.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.500000" y="1.500000" z="1.500000" />
+                </prop>
+                <prop name="tree33_DNARoot" code="tf_tree_m">
+                    <pos x="-100.073997" y="-38.132900" z="23.323500" />
+                    <nhpr h="-45.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.500000" y="1.500000" z="1.500000" />
+                </prop>
+                <prop name="tree34_DNARoot" code="tf_tree_m">
+                    <pos x="-63.796902" y="-158.136993" z="13.655900" />
+                    <nhpr h="50.115040" p="0.425398" r="-2.984263" />
+                    <scale x="1.500003" y="1.500002" z="1.499996" />
+                </prop>
+                <prop name="tree35_DNARoot" code="tf_tree_m">
+                    <pos x="103.834000" y="-197.561005" z="7.327840" />
+                    <nhpr h="25.029821" p="3.909796" r="3.329886" />
+                    <scale x="0.600000" y="0.600000" z="0.600000" />
+                </prop>
+                <prop name="tree36_DNARoot" code="tf_tree_m">
+                    <pos x="109.266998" y="-148.703003" z="6.477020" />
+                    <nhpr h="44.834194" p="4.943775" r="2.605560" />
+                    <scale x="0.750000" y="0.750000" z="1.000000" />
+                </prop>
+                <prop name="tree38_DNARoot" code="tf_tree_m">
+                    <pos x="65.330803" y="-75.168800" z="15.000200" />
+                    <nhpr h="90.000000" p="6.808111" r="-0.000000" />
+                    <scale x="0.600000" y="0.600000" z="0.600000" />
+                </prop>
+                <prop name="tree39_DNARoot" code="tf_tree_m">
+                    <pos x="71.930298" y="17.526300" z="13.202700" />
+                    <nhpr h="-0.218679" p="3.027194" r="5.746482" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree41_DNARoot" code="tf_tree_m">
+                    <pos x="53.064201" y="61.826199" z="19.927500" />
+                    <nhpr h="45.000000" p="5.396745" r="-0.000000" />
+                    <scale x="1.000000" y="0.999999" z="1.000000" />
+                </prop>
+                <prop name="tree42_DNARoot" code="tf_tree_m">
+                    <pos x="16.705099" y="97.899002" z="28.496700" />
+                    <nhpr h="-0.027556" p="1.585565" r="-6.177975" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree43_DNARoot" code="tf_tree_m">
+                    <pos x="-32.065300" y="45.435299" z="19.040701" />
+                    <nhpr h="-180.000000" p="0.000000" r="2.296547" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree45_DNARoot" code="tf_tree_m">
+                    <pos x="81.776299" y="-264.028992" z="4.266910" />
+                    <nhpr h="-35.305500" p="2.192364" r="3.919847" />
+                    <scale x="0.750000" y="0.750001" z="0.750000" />
+                </prop>
+                <prop name="tree46_DNARoot" code="tf_tree_m">
+                    <pos x="7.451050" y="-183.018005" z="11.383800" />
+                    <nhpr h="24.999981" p="0.000000" r="-4.258601" />
+                    <scale x="1.000000" y="1.000000" z="1.500001" />
+                </prop>
+                <prop name="tree47_DNARoot" code="tf_tree_m">
+                    <pos x="9.395340" y="-118.986000" z="23.999300" />
+                    <nhpr h="-145.534805" p="-6.245509" r="-4.150913" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree50_DNARoot" code="tf_tree_m">
+                    <pos x="-15.031100" y="-61.093201" z="34.934898" />
+                    <nhpr h="65.035812" p="1.075368" r="4.487526" />
+                    <scale x="0.750000" y="0.750000" z="0.750000" />
+                </prop>
+                <prop name="tree51_DNARoot" code="tf_tree_m">
+                    <pos x="-50.286098" y="-18.306000" z="27.206499" />
+                    <nhpr h="-0.523407" p="-12.806267" r="-0.423769" />
+                    <scale x="1.249998" y="1.250005" z="1.249997" />
+                </prop>
+                <prop name="tree52_DNARoot" code="tf_tree_m">
+                    <pos x="35.321301" y="-196.235992" z="10.479400" />
+                    <nhpr h="-24.999956" p="4.506656" r="3.964687" />
+                    <scale x="1.400001" y="1.400002" z="1.399999" />
+                </prop>
+                <prop name="tree55_DNARoot" code="tf_tree_m">
+                    <pos x="199.757996" y="-329.148010" z="9.476900" />
+                    <nhpr h="23.325365" p="0.398961" r="-8.454705" />
+                    <scale x="0.750000" y="0.750000" z="1.000000" />
+                </prop>
+                <prop name="tree56_DNARoot" code="tf_tree_m">
+                    <pos x="255.733002" y="-310.187988" z="25.877501" />
+                    <nhpr h="149.762039" p="-0.598740" r="7.439257" />
+                    <scale x="1.000000" y="1.000000" z="1.400000" />
+                </prop>
+                <prop name="tree57_DNARoot" code="tf_tree_m">
+                    <pos x="270.894989" y="-237.240005" z="17.924101" />
+                    <nhpr h="16.915989" p="-8.930559" r="-8.727661" />
+                    <scale x="1.250000" y="1.250002" z="1.250002" />
+                </prop>
+                <prop name="tree59_DNARoot" code="tf_tree_m">
+                    <pos x="232.503998" y="-225.166000" z="4.280270" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree60_DNARoot" code="tf_tree_m">
+                    <pos x="144.343002" y="-305.130005" z="7.096830" />
+                    <nhpr h="75.000023" p="0.000000" r="-0.000000" />
+                    <scale x="1.100002" y="1.100002" z="1.100000" />
+                </prop>
+                <prop name="tree61_DNARoot" code="tf_tree_m">
+                    <pos x="92.708199" y="-279.562012" z="3.425250" />
+                    <nhpr h="45.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <prop name="tree62_DNARoot" code="tf_tree_m">
+                    <pos x="324.501007" y="-185.085999" z="9.916780" />
+                    <nhpr h="-90.000000" p="0.000000" r="-6.546524" />
+                    <scale x="1.000000" y="1.000000" z="1.399998" />
+                </prop>
+                <prop name="tree63_DNARoot" code="tf_tree_m">
+                    <pos x="352.828003" y="-201.067001" z="10.494700" />
+                    <nhpr h="0.195348" p="-1.709923" r="6.518397" />
+                    <scale x="1.250003" y="1.250004" z="1.250004" />
+                </prop>
+                <prop name="tree64_DNARoot" code="tf_tree_m">
+                    <pos x="389.544006" y="-125.960999" z="9.716490" />
+                    <nhpr h="-50.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.250001" y="1.250001" z="1.250000" />
+                </prop>
+                <prop name="tree66_DNARoot" code="tf_tree_m">
+                    <pos x="290.791992" y="-339.334991" z="19.287201" />
+                    <nhpr h="-108.561241" p="-7.168286" r="8.380493" />
+                    <scale x="1.000000" y="1.000000" z="1.400005" />
+                </prop>
+                <prop name="tree67_DNARoot" code="tf_tree_m">
+                    <pos x="286.269012" y="-410.183014" z="10.049500" />
+                    <nhpr h="149.597244" p="-5.563904" r="-1.903471" />
+                    <scale x="1.000000" y="1.000000" z="1.400005" />
+                </prop>
+                <prop name="tree68_DNARoot" code="tf_tree_m">
+                    <pos x="272.941986" y="-437.265991" z="4.310200" />
+                    <nhpr h="-6.496003" p="6.122882" r="2.165083" />
+                    <scale x="0.750000" y="0.750000" z="1.000000" />
+                </prop>
+                <prop name="tree69_DNARoot" code="tf_tree_m">
+                    <pos x="220.246002" y="-392.868988" z="6.575000" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="1.000000" y="1.000000" z="1.000000" />
+                </prop>
+                <!-- Large Trees -->
+                <prop name="tree15_DNARoot" code="tf_tree_l">
+                    <pos x="-64.604599" y="-83.133797" z="45.232700" />
+                    <nhpr h="-2.152871" p="0.000000" r="-0.000000" />
+                    <scale x="1.282665" y="1.282665" z="1.750000" />
+                </prop>
+                <prop name="tree53_DNARoot" code="tf_tree_l">
+                    <pos x="-104.115997" y="-127.053001" z="12.233100" />
+                    <nhpr h="-43.976086" p="0.393541" r="1.973998" />
+                    <scale x="2.250000" y="2.250002" z="2.749997" />
+                </prop>
+                <prop name="tree24_DNARoot" code="tf_tree_l">
+                    <pos x="442.454010" y="-39.225800" z="9.606790" />
+                    <nhpr h="-0.000000" p="0.000000" r="-0.000000" />
+                    <scale x="2.000000" y="2.000000" z="2.000000" />
+                </prop>
+            </group>
+        </visgroup>
+    </group>
+</scene>

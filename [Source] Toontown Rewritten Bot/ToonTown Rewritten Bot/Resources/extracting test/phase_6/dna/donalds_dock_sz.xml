@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene zone="1000">
+	<group name="donaldsDock">
+		<visgroup zone="1000:safe_zone" vis="1000:safe_zone">
+			<group name="streets" />
+			<group name="buildings">
+				<flat_building id="sz0:random_DNARoot" width="15">
+					<pos x="-122.3" y="34.38" z="5.67" />
+					<nhpr h="79" p="0" r="0" />
+					<wall height="20" code="wall_md_blank_ur">
+						<color r="0.42" g="0.16" b="0.16" a="1" />
+						<windows code="window_sm_square_ur" count="3">
+							<color r="0.87" g="0.65" b="0.33" a="1" />
+						</windows>
+						<cornice code="cornice_shingles_ur">
+							<color r="0.73" g="0.51" b="0.51" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<flat_building id="sz0:random_DNARoot" width="15.6">
+					<pos x="-124.96" y="-49.96" z="5.67" />
+					<nhpr h="90" p="0" r="0" />
+					<wall height="10" code="wall_md_blank_ur">
+						<color r="0.38" g="0.3" b="0.18" a="1" />
+						<windows code="window_sm_round_ul" count="2">
+							<color r="0.78" g="0.49" b="0.29" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_md_blank_dl">
+						<color r="0.38" g="0.3" b="0.18" a="1" />
+						<windows code="window_sm_round_ur" count="1">
+							<color r="0.78" g="0.49" b="0.29" a="1" />
+						</windows>
+						<cornice code="cornice_shingles_ur">
+							<color r="0.82" g="0.91" b="0.44" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<flat_building id="sz0:random_DNARoot" width="15">
+					<pos x="-112.88" y="-57.6" z="5.67" />
+					<nhpr h="147" p="0" r="0" />
+					<wall height="10" code="wall_md_board_ur">
+						<color r="0.71" g="0.49" b="0.35" a="1" />
+						<windows code="window_sm_shuttered_ul" count="2">
+							<color r="0.87" g="0.55" b="0.33" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_md_blank_ur">
+						<color r="0.38" g="0.31" b="0.19" a="1" />
+						<windows code="window_sm_round_ur" count="1">
+							<color r="0.78" g="0.49" b="0.29" a="1" />
+						</windows>
+						<cornice code="cornice_marble_ur">
+							<color r="0.76" g="0.57" b="0.29" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<flat_building id="sz0:random_DNARoot" width="20.7">
+					<pos x="-64.61" y="-90.2" z="5.67" />
+					<nhpr h="146" p="0" r="0" />
+					<wall height="10" code="wall_md_blank_ur">
+						<color r="0.42" g="0.16" b="0.16" a="1" />
+						<windows code="window_sm_round_ul" count="2">
+							<color r="0" g="0.61" b="0.36" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_md_board_ur">
+						<color r="0.93" g="0.15" b="0.15" a="1" />
+						<windows code="window_sm_round_ul" count="2">
+							<color r="0" g="0.61" b="0.36" a="1" />
+						</windows>
+						<cornice code="cornice_shingles_ur">
+							<color r="0.9" g="0.56" b="0.34" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<flat_building id="sz0:random_DNARoot" width="10">
+					<pos x="-55" y="-90" z="5.67" />
+					<nhpr h="-180" p="0" r="0" />
+					<wall height="10" code="wall_lg_brick_ur">
+						<color r="0.17" g="0.44" b="0.28" a="1" />
+						<windows code="window_md_curtains_ur" count="1">
+							<color r="0.17" g="0.64" b="0.45" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_lg_brick_ur">
+						<color r="0.17" g="0.44" b="0.28" a="1" />
+						<windows code="window_md_curtains_ur" count="1">
+							<color r="0.17" g="0.64" b="0.45" a="1" />
+						</windows>
+						<cornice code="cornice_dental_ur">
+							<color r="0.57" g="0.39" b="0.34" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<flat_building id="sz0:random_DNARoot" width="15">
+					<pos x="-10" y="-90" z="5.67" />
+					<nhpr h="-180" p="0" r="0" />
+					<wall height="10" code="wall_lg_brick_ur">
+						<color r="0.17" g="0.44" b="0.28" a="1" />
+						<windows code="window_md_curtains_ur" count="1">
+							<color r="0.17" g="0.64" b="0.45" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_lg_brick_ur">
+						<color r="0.17" g="0.44" b="0.28" a="1" />
+						<windows code="window_md_curtains_ur" count="1">
+							<color r="0.17" g="0.64" b="0.45" a="1" />
+						</windows>
+						<cornice code="cornice_dental_ur">
+							<color r="0.57" g="0.39" b="0.34" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<flat_building id="sz0:random_DNARoot" width="10">
+					<pos x="5.6" y="-99.86" z="5.67" />
+					<nhpr h="90" p="0" r="0" />
+					<wall height="10" code="wall_md_blank_ur">
+						<color r="0.42" g="0.16" b="0.16" a="1" />
+						<windows code="window_sm_round_ul" count="2">
+							<color r="0" g="0.61" b="0.36" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_md_board_ur">
+						<color r="0.93" g="0.15" b="0.15" a="1" />
+						<windows code="window_sm_round_ul" count="2">
+							<color r="0" g="0.61" b="0.36" a="1" />
+						</windows>
+						<cornice code="cornice_shingles_ur">
+							<color r="0.9" g="0.56" b="0.34" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<flat_building id="sz0:random_DNARoot" width="15.6">
+					<pos x="5.6" y="-90" z="5.67" />
+					<nhpr h="-180" p="0" r="0" />
+					<wall height="10" code="wall_md_blank_ur">
+						<color r="0.42" g="0.16" b="0.16" a="1" />
+						<windows code="window_sm_round_ul" count="2">
+							<color r="0" g="0.61" b="0.36" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_md_board_ur">
+						<color r="0.93" g="0.15" b="0.15" a="1" />
+						<windows code="window_sm_round_ul" count="2">
+							<color r="0" g="0.61" b="0.36" a="1" />
+						</windows>
+						<cornice code="cornice_shingles_ur">
+							<color r="0.9" g="0.56" b="0.34" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<flat_building id="tb0:random_DNARoot" width="15">
+					<pos x="75" y="60" z="5.67" />
+					<nhpr h="-90" p="0" r="0" />
+					<wall height="20" code="wall_sm_wood_ur">
+						<color r="0.874016" g="0.610097" b="0.610097" a="1" />
+						<windows code="window_sm_shuttered_ur" count="1">
+							<color r="0.874016" g="0.548402" b="0.329041" a="1" />
+						</windows>
+					</wall>
+				</flat_building>
+				<flat_building id="tb0:random_DNARoot" width="20">
+					<pos x="75" y="45" z="5.67" />
+					<nhpr h="-90" p="0" r="0" />
+					<wall height="10" code="wall_sm_wood_ur">
+						<color r="0.75" g="0.75" b="0.75" a="1" />
+						<windows code="window_porthole_ur" count="1">
+							<color r="0" g="0.61" b="0.36" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_md_board_ur">
+						<color r="0.93" g="0.15" b="0.15" a="1" />
+						<windows code="window_porthole_ul" count="2">
+							<color r="0" g="0.53" b="0.32" a="1" />
+						</windows>
+						<cornice code="cornice_shingles_ur">
+							<color r="0.57" g="0.38" b="0.34" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<flat_building id="tb0:random_DNARoot" width="15">
+					<pos x="75" y="-10" z="5.67" />
+					<nhpr h="-90" p="0" r="0" />
+					<wall height="10" code="wall_md_board_ur">
+						<color r="0.93" g="0.15" b="0.15" a="1" />
+						<windows code="window_porthole_ul" count="2">
+							<color r="0" g="0.53" b="0.32" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_md_board_ur">
+						<color r="0.93" g="0.15" b="0.15" a="1" />
+						<windows code="window_porthole_ur" count="1">
+							<color r="0" g="0.53" b="0.32" a="1" />
+						</windows>
+						<cornice code="cornice_shingles_ur">
+							<color r="0.73" g="0.51" b="0.51" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<flat_building id="tb0:random_DNARoot" width="15">
+					<pos x="75" y="-25" z="5.67" />
+					<nhpr h="-90" p="0" r="0" />
+					<wall height="10" code="wall_md_blank_ur">
+						<color r="0.38" g="0.31" b="0.19" a="1" />
+						<windows code="window_sm_round_ur" count="1">
+							<color r="0.78" g="0.49" b="0.29" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_sm_wood_ur">
+						<color r="0.87" g="0.61" b="0.61" a="1" />
+						<windows code="window_sm_shuttered_ur" count="1">
+							<color r="0.87" g="0.55" b="0.33" a="1" />
+						</windows>
+						<cornice code="cornice_shingles_ur">
+							<color r="0.94" g="0.72" b="0.66" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<prop name="prop_trolley_station_DNARoot" code="prop_trolley_station">
+					<pos x="-25" y="-90" z="5.67" />
+					<nhpr h="180" p="0" r="0" />
+					<sign>
+						<color r="0.25" g="0.25" b="0.25" a="1" />
+						<baseline code="mickey" kern="-0.09" width="11.1111" height="11.1111">
+							<color r="1" g="0.737255" b="0.501961" a="1" />
+							<pos x="0.5" y="0" z="1.33" />
+							<scale x="1.4" y="1" z="1.4" />
+							<text>TROLLEY</text>
+						</baseline>
+						<baseline code="mickey" kern="-0.22">
+							<color r="1" g="0" b="0" a="1" />
+							<pos x="0.29" y="0" z="-1.9" />
+							<scale x="2.7" y="1" z="2.7" />
+							<text>GAMES</text>
+						</baseline>
+					</sign>
+				</prop>
+				<flat_building id="sz0:random_DNARoot" width="10">
+					<pos x="-124" y="-14.56" z="5.67" />
+					<nhpr h="90" p="0" r="0" />
+					<wall height="10" code="wall_md_blank_dr">
+						<color r="0.384314" g="0.305635" b="0.187618" a="1" />
+						<windows code="window_sm_round_ul" count="1">
+							<color r="0.779528" g="0.489115" b="0.293469" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_md_blank_ul">
+						<color r="0.384314" g="0.305635" b="0.187618" a="1" />
+						<windows code="window_sm_round_ul" count="1">
+							<color r="0.779528" g="0.489115" b="0.293469" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_md_blank_dr">
+						<color r="0.384314" g="0.305635" b="0.187618" a="1" />
+						<windows code="window_sm_round_ul" count="1">
+							<color r="0.779528" g="0.489115" b="0.293469" a="1" />
+						</windows>
+						<cornice code="cornice_dental_ur">
+							<color r="0.574803" g="0.38771" b="0.340374" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<prop name="linktunnel_dd_1101_DNARoot" code="prop_safe_zone_tunnel">
+					<pos x="-198.22" y="-108.72" z="-0.975" />
+					<nhpr h="-34" p="0" r="0" />
+					<sign code="tunnel_sign_red">
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="29.3591" height="29.3591">
+							<color r="0.501961" g="0" b="0.25098" a="1" />
+							<pos x="0" y="0" z="-0.25" />
+							<nhpr h="0" p="0" r="1" />
+							<scale x="1.1" y="1" z="1.1" />
+							<text>BARNACLE </text>
+						</baseline>
+						<baseline code="mickey" width="39.6338" height="39.6338">
+							<color r="0.501961" g="0" b="0.25098" a="1" />
+							<pos x="0" y="0" z="-1.26" />
+							<scale x="1.4" y="1" z="1.1" />
+							<text>BOULEVARD</text>
+						</baseline>
+						<baseline code="mickey" width="29.2886" height="29.2886">
+							<color r="0.501961" g="0" b="0.25098" a="1" />
+							<pos x="0" y="0" z="-1.95" />
+							<scale x="0.8" y="1" z="0.8" />
+							<text>DONALD'S DOCK</text>
+						</baseline>
+						<baseline>
+							<pos x="0" y="0" z="1.77" />
+							<scale x="2.5" y="1" z="2.5" />
+							<graphic code="donaldSZ" />
+						</baseline>
+					</sign>
+				</prop>
+				<prop name="linktunnel_dd_1301_DNARoot" code="prop_safe_zone_tunnel">
+					<pos x="164.82" y="-51.14" z="-0.975" />
+					<nhpr h="90" p="0" r="0" />
+					<sign code="tunnel_sign_red">
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="42.2619" height="42.2619">
+							<color r="0.501961" g="0" b="0.25098" a="1" />
+							<pos x="0" y="0" z="-0.4" />
+							<scale x="1.5" y="1" z="1.1" />
+							<text>LIGHTHOUSE</text>
+						</baseline>
+						<baseline code="mickey" width="46.0023" height="46.0023">
+							<color r="0.501961" g="0" b="0.25098" a="1" />
+							<pos x="0" y="0" z="-1.3" />
+							<scale x="1.4" y="1" z="1.1" />
+							<text>LANE</text>
+						</baseline>
+						<baseline>
+							<pos x="0" y="0" z="1.76" />
+							<scale x="2.5" y="1" z="2.5" />
+							<graphic code="donaldSZ" />
+						</baseline>
+						<baseline code="mickey" width="47.5285" height="47.5285">
+							<color r="0.501961" g="0" b="0.25098" a="1" />
+							<pos x="0" y="0" z="-2.01" />
+							<nhpr h="0" p="0" r="1" />
+							<scale x="0.8" y="1" z="0.8" />
+							<text>DONALD'S DOCK</text>
+						</baseline>
+					</sign>
+				</prop>
+				<prop name="linktunnel_dd_1225_DNARoot" code="prop_safe_zone_tunnel">
+					<pos x="-214.99" y="74.98" z="-0.975" />
+					<nhpr h="-90" p="0" r="0" />
+					<sign code="tunnel_sign_red">
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="39.2357" height="39.2357">
+							<color r="0.501961" g="0" b="0.25098" a="1" />
+							<pos x="0" y="0" z="-0.91" />
+							<nhpr h="0" p="0" r="1" />
+							<scale x="1.3" y="1" z="1.5" />
+							<text>SEAWEED STREET</text>
+						</baseline>
+						<baseline code="mickey" width="38.8969" height="38.8969">
+							<color r="0.501961" g="0" b="0.25098" a="1" />
+							<pos x="-0.12" y="0" z="-1.9" />
+							<scale x="0.8" y="1" z="0.8" />
+							<text>DONALD'S DOCK</text>
+						</baseline>
+						<baseline>
+							<pos x="0" y="0" z="1.76" />
+							<scale x="2.5" y="1" z="2.5" />
+							<graphic code="donaldSZ" />
+						</baseline>
+					</sign>
+				</prop>
+				<flat_building id="tb0:random_DNARoot" width="15">
+					<pos x="75" y="-40" z="5.67" />
+					<nhpr h="0" p="0" r="0" />
+					<wall height="10" code="wall_md_blank_ur">
+						<color r="0.38" g="0.31" b="0.19" a="1" />
+						<windows code="window_sm_round_ul" count="2">
+							<color r="0.78" g="0.49" b="0.29" a="1" />
+						</windows>
+					</wall>
+					<wall height="10" code="wall_sm_wood_ur">
+						<color r="0.87" g="0.61" b="0.61" a="1" />
+						<windows code="window_sm_shuttered_ur" count="1">
+							<color r="0.87" g="0.55" b="0.33" a="1" />
+						</windows>
+						<cornice code="cornice_shingles_ur">
+							<color r="0.94" g="0.72" b="0.66" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<flat_building id="tb0:random_DNARoot" width="15">
+					<pos x="90" y="60" z="5.67" />
+					<nhpr h="180" p="0" r="0" />
+					<wall height="20" code="wall_sm_wood_ur">
+						<color r="0.874016" g="0.610097" b="0.610097" a="1" />
+						<windows code="window_sm_shuttered_ul" count="2">
+							<color r="0.874016" g="0.548402" b="0.329041" a="1" />
+						</windows>
+					</wall>
+				</flat_building>
+				<flat_building id="tb0:random_DNARoot" width="15">
+					<pos x="-119.44" y="49.1" z="5.67" />
+					<nhpr h="165" p="0" r="0" />
+					<wall height="20" code="wall_md_blank_ur">
+						<color r="0.42" g="0.16" b="0.16" a="1" />
+						<windows code="window_sm_square_ur" count="1">
+							<color r="0.87" g="0.65" b="0.33" a="1" />
+						</windows>
+						<cornice code="cornice_shingles_ur">
+							<color r="0.73" g="0.51" b="0.51" a="1" />
+						</cornice>
+					</wall>
+				</flat_building>
+				<landmark_building id="tb8:toon_landmark_DD_clothes_shop_DNARoot" code="toon_landmark_DD_clothes_shop" type="clotheshop">
+					<title>Clothing Shop</title>
+					<pos x="-88.0457" y="115.078" z="3.25565" />
+					<nhpr h="45" p="0" r="0" />
+					<door code="door_double_clothesshop_ur">
+						<color r="0.91" g="0.34" b="0.34" a="1" />
+					</door>
+					<sign>
+						<pos x="0" y="0" z="-0.5" />
+						<baseline code="mickey">
+							<color r="0.701961" g="0" b="0" a="1" />
+							<scale x="1.5" y="1" z="1.5" />
+							<text>Clothing Store</text>
+						</baseline>
+					</sign>
+				</landmark_building>
+				<prop name="linktunnel_oz_6000_DNARoot" code="prop_outdoor_zone_entrance">
+					<pos x="-53.1974" y="172.046" z="3.27967" />
+					<nhpr h="52.125" p="0" r="0" />
+					<sign code="DD_sign2">
+						<scale x="2" y="1" z="1.4" />
+						<baseline code="TT_Comedy" wiggle="3" stomp="0.0367716">
+							<color r="0.439216" g="0.247059" b="0.184314" a="1" />
+							<scale x="1.5" y="1" z="1.4" />
+							<text>Chip n' Dale's</text>
+						</baseline>
+						<baseline code="TT_Comedy" wiggle="3" stomp="0.0367716">
+							<color r="0.439216" g="0.247059" b="0.184314" a="1" />
+							<pos x="0" y="0" z="-1.2" />
+							<scale x="1.5" y="1" z="1.4" />
+							<text>Acorn Acres</text>
+						</baseline>
+					</sign>
+				</prop>
+			</group>
+			<group name="props">
+				<prop name="donalds_dock" code="donalds_dock">
+					<pos x="-25" y="10" z="0" />
+					<nhpr h="180" p="0" r="0" />
+				</prop>
+				<prop name="streetlight_DD_left_DNARoot" code="streetlight_DD_left">
+					<pos x="-103.41" y="40.92" z="5.69" />
+					<nhpr h="-180" p="0" r="0" />
+				</prop>
+				<prop name="streetlight_DD_left_DNARoot" code="streetlight_DD_left">
+					<pos x="-106.95" y="-41.49" z="5.67" />
+					<nhpr h="-165" p="0" r="0" />
+				</prop>
+				<prop name="streetlight_DD_left_DNARoot" code="streetlight_DD_left">
+					<pos x="-60.98" y="-71.34" z="5.73" />
+					<nhpr h="-120" p="0" r="0" />
+				</prop>
+				<prop name="streetlight_DD_left_DNARoot" code="streetlight_DD_left">
+					<pos x="2.52" y="-74.03" z="5.67" />
+					<nhpr h="-135" p="0" r="0" />
+				</prop>
+				<prop name="streetlight_DD_left_DNARoot" code="streetlight_DD_left">
+					<pos x="58.21" y="-37.67" z="5.68" />
+					<nhpr h="45" p="0" r="0" />
+				</prop>
+				<prop name="streetlight_DD_left_DNARoot" code="streetlight_DD_left">
+					<pos x="57.15" y="57.28" z="5.71" />
+					<nhpr h="-45" p="0" r="0" />
+				</prop>
+				<prop name="prop_stovepipe_DNARoot" code="prop_stovepipe">
+					<pos x="75.92" y="-27.01" z="26.4" />
+					<nhpr h="-90" p="0" r="0" />
+					<color r="0.75" g="0.75" b="0.75" a="1" />
+				</prop>
+				<prop name="prop_stovepipe_DNARoot" code="prop_stovepipe">
+					<pos x="-125.73" y="-48.23" z="25.21" />
+					<nhpr h="90" p="0" r="0" />
+					<color r="0.71" g="0.49" b="0.35" a="1" />
+				</prop>
+				<prop name="prop_chimney_DNARoot" code="prop_chimney">
+					<pos x="-69" y="-89.96" z="25.67" />
+					<nhpr h="150" p="0" r="0" />
+					<color r="0.5" g="0.5" b="0.5" a="1" />
+				</prop>
+				<prop name="prop_nets_DNARoot" code="prop_nets">
+					<pos x="-122.68" y="-38.45" z="5.57" />
+					<nhpr h="60" p="2" r="0" />
+					<scale x="0.7" y="0.7" z="0.7" />
+				</prop>
+				<prop name="prop_crate_DNARoot" code="prop_crate">
+					<pos x="-108.75" y="44.58" z="5.7" />
+					<nhpr h="45" p="0" r="0" />
+				</prop>
+				<prop name="prop_crate_DNARoot" code="prop_crate">
+					<pos x="-108.87" y="41.47" z="5.7" />
+					<nhpr h="105" p="0" r="0" />
+				</prop>
+				<prop name="prop_crate_DNARoot" code="prop_crate">
+					<pos x="1.33" y="-75.44" z="5.71" />
+					<nhpr h="105" p="0" r="0" />
+				</prop>
+				<prop name="prop_crate_DNARoot" code="prop_crate">
+					<pos x="-1.26" y="-72.98" z="5.8" />
+					<nhpr h="60" p="0" r="0" />
+				</prop>
+				<prop name="prop_crate_DNARoot" code="prop_crate">
+					<pos x="-71.17" y="-77.38" z="5.65" />
+					<nhpr h="90" p="0" r="0" />
+				</prop>
+				<prop name="prop_crate_DNARoot" code="prop_crate">
+					<pos x="-74.57" y="-74.96" z="5.69" />
+					<nhpr h="45" p="0" r="0" />
+				</prop>
+				<prop name="prop_ship_wheel_DNARoot" code="prop_ship_wheel">
+					<pos x="-79.04" y="-78.04" z="5.67" />
+					<nhpr h="90" p="0" r="0" />
+					<scale x="0.5" y="0.5" z="0.5" />
+				</prop>
+				<prop name="prop_crate_DNARoot" code="prop_crate">
+					<pos x="61.03" y="55.59" z="5.65" />
+					<nhpr h="-75" p="0" r="0" />
+				</prop>
+				<prop name="prop_crate_DNARoot" code="prop_crate">
+					<pos x="58.24" y="51.29" z="5.7" />
+					<nhpr h="-120" p="0" r="0" />
+				</prop>
+				<prop name="prop_crate_DNARoot" code="prop_crate">
+					<pos x="-71.02" y="-69.91" z="5.67" />
+					<nhpr h="-90" p="0" r="0" />
+				</prop>
+				<prop name="prop_chimney_DNARoot" code="prop_chimney">
+					<pos x="77.77" y="44.8" z="23.71" />
+					<nhpr h="-90" p="0" r="0" />
+					<color r="0.63" g="0.47" b="0.24" a="1" />
+				</prop>
+				<prop name="prop_chimney_DNARoot" code="prop_chimney">
+					<pos x="-6" y="-94" z="25" />
+					<nhpr h="180" p="0" r="0" />
+					<color r="0.63" g="0.47" b="0.24" a="1" />
+				</prop>
+				<prop name="neighborhood_sign_TT_DNARoot" code="neighborhood_sign_TT">
+					<pos x="-82.34" y="-70.8" z="5.67" />
+					<nhpr h="146" p="0" r="0" />
+					<scale x="1.5" y="1.5" z="1.5" />
+				</prop>
+				<prop name="neighborhood_sign_TT_DNARoot" code="neighborhood_sign_TT">
+					<pos x="-107.27" y="-53.79" z="5.67" />
+					<nhpr h="-35" p="0" r="0" />
+					<scale x="1.5" y="1.5" z="1.5" />
+				</prop>
+				<prop name="neighborhood_sign_DG_DNARoot" code="neighborhood_sign_DG">
+					<pos x="-118.81" y="-0.75" z="5.67" />
+					<nhpr h="89" p="0" r="0" />
+					<scale x="1.5" y="1.5" z="1.5" />
+				</prop>
+				<prop name="neighborhood_sign_DG_DNARoot" code="neighborhood_sign_DG">
+					<pos x="-118.86" y="30.91" z="5.67" />
+					<nhpr h="-90" p="0" r="0" />
+					<scale x="1.5" y="1.5" z="1.5" />
+				</prop>
+				<prop name="neighborhood_sign_BR_DNARoot" code="neighborhood_sign_BR">
+					<pos x="69.03" y="24.96" z="5.67" />
+					<nhpr h="-90" p="0" r="0" />
+					<scale x="1.5" y="1.5" z="1.5" />
+				</prop>
+				<prop name="neighborhood_sign_BR_DNARoot" code="neighborhood_sign_BR">
+					<pos x="68.83" y="-6.93" z="5.67" />
+					<nhpr h="90" p="0" r="0" />
+					<scale x="1.5" y="1.5" z="1.5" />
+				</prop>
+				<prop name="prop_palm_tree_topflat_DNARoot" code="prop_palm_tree_topflat">
+					<pos x="-55" y="115" z="3.25331" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="1.3" y="1.3" z="1.3" />
+				</prop>
+				<prop name="prop_palm_tree_topflat_DNARoot" code="prop_palm_tree_topflat">
+					<pos x="-59.7445" y="135.255" z="3.30638" />
+					<nhpr h="135" p="0" r="0" />
+					<scale x="0.7" y="0.7" z="0.7" />
+				</prop>
+				<prop name="prop_palm_tree_topflat_DNARoot" code="prop_palm_tree_topflat">
+					<pos x="-100" y="85" z="3.2338" />
+					<nhpr h="-75" p="0" r="0" />
+					<scale x="1.1" y="1.1" z="1.1" />
+				</prop>
+				<prop name="prop_palm_tree_topflat_DNARoot" code="prop_palm_tree_topflat">
+					<pos x="64.4875" y="91.0424" z="3.25886" />
+					<nhpr h="285" p="0" r="0" />
+					<scale x="1.1" y="1.1" z="1.1" />
+				</prop>
+				<prop name="prop_palm_tree_topflat_DNARoot" code="prop_palm_tree_topflat">
+					<pos x="59.0938" y="-64.9951" z="3.29744" />
+					<nhpr h="-159" p="0" r="0" />
+					<scale x="1.5304" y="1.5304" z="1.5304" />
+				</prop>
+				<prop name="prop_palm_tree_topflat_DNARoot" code="prop_palm_tree_topflat">
+					<pos x="51.4007" y="-72.6317" z="3.29744" />
+					<nhpr h="-18" p="0" r="0" />
+					<scale x="0.8" y="0.8" z="0.8" />
+				</prop>
+				<prop name="prop_palm_tree_topflat_DNARoot" code="prop_palm_tree_topflat">
+					<pos x="19.2" y="-83.3846" z="3.29744" />
+					<nhpr h="91" p="0" r="0" />
+					<scale x="1.3" y="1.3" z="1.3" />
+				</prop>
+				<prop name="prop_palm_tree_topflat_DNARoot" code="prop_palm_tree_topflat">
+					<pos x="-10.8767" y="181.675" z="3.23742" />
+					<nhpr h="-120" p="0" r="0" />
+					<scale x="1.40798" y="1.40798" z="1.40798" />
+				</prop>
+				<prop name="prop_palm_tree_topflat_DNARoot" code="prop_palm_tree_topflat">
+					<pos x="-15" y="180" z="3.23697" />
+					<nhpr h="45" p="0" r="0" />
+				</prop>
+			</group>
+			<landmark_building id="tb6:toon_landmark_DD_gag_shop_DNARoot" code="toon_landmark_DD_gag_shop" type="gagshop">
+				<title>Gag Shop</title>
+				<pos x="-121.761" y="-24.113" z="5.66699" />
+				<nhpr h="-90" p="0" r="0" />
+				<door code="door_double_wood_ur">
+					<color r="1" g="1" b="1" a="1" />
+				</door>
+			</landmark_building>
+			<landmark_building id="tb7:toon_landmark_hqDD_SZ_DNARoot" code="toon_landmark_hqDD_SZ" type="hq">
+				<title>Toon HQ</title>
+				<pos x="-8.4986" y="104.147" z="1.66701" />
+				<nhpr h="-90" p="0" r="0" />
+				<prop name="animated_prop_HQPeriscopeAnimatedProp_DNARoot" code="animated_prop_HQPeriscopeAnimatedProp">
+					<pos x="7.17" y="-7.67" z="14.07" />
+					<nhpr h="110" p="0" r="0" />
+					<scale x="4" y="4" z="4" />
+				</prop>
+			</landmark_building>
+			<group name="fishing_pond_1">
+				<prop name="npc_fisherman_origin_2" code="DCS">
+					<pos x="-12.5" y="178" z="3.28" />
+					<nhpr h="180" p="0" r="0" />
+				</prop>
+				<prop name="fishing_spot_DNARoot" code="fishing_spot">
+					<pos x="-1.79822" y="139.984" z="3.59855" />
+					<nhpr h="135" p="0" r="0" />
+				</prop>
+				<prop name="fishing_spot_DNARoot" code="fishing_spot">
+					<pos x="-11.6229" y="148.498" z="3.64751" />
+					<nhpr h="165" p="0" r="0" />
+				</prop>
+				<prop name="fishing_spot_DNARoot" code="fishing_spot">
+					<pos x="-23.6427" y="149.15" z="3.59725" />
+					<nhpr h="-165" p="0" r="0" />
+				</prop>
+				<prop name="fishing_spot_DNARoot" code="fishing_spot">
+					<pos x="-31.3754" y="141.368" z="3.56653" />
+					<nhpr h="-135" p="0" r="0" />
+				</prop>
+			</group>
+			<landmark_building id="tb10:toon_landmark_DD_pet_shop_DNARoot" code="toon_landmark_DD_pet_shop" type="petshop">
+				<title />
+				<pos x="40.2718" y="-89.8663" z="3.28834" />
+				<nhpr h="-165" p="0" r="0" />
+				<door code="door_double_square_ur">
+					<color r="0.86" g="0.48" b="0.23" a="1" />
+				</door>
+				<prop name="animated_prop_PetShopFishAnimatedProp_DNARoot" code="animated_prop_PetShopFishAnimatedProp">
+					<pos x="0" y="0" z="0" />
+					<nhpr h="0" p="0" r="0" />
+				</prop>
+				<sign>
+					<baseline code="mickey" width="15.3614" height="15.3614">
+						<color r="1" g="1" b="0" a="1" />
+						<pos x="0" y="0" z="0.180612" />
+						<scale x="1.51565" y="1" z="3.00508" />
+						<text>Pet Shop</text>
+					</baseline>
+				</sign>
+			</landmark_building>
+			<prop name="prop_party_gate_DNARoot" code="prop_party_gate">
+				<pos x="36.9924" y="113.67" z="3.28138" />
+				<nhpr h="315" p="0" r="0" />
+			</prop>
+			<!-- ToonFest Task Givers -->
+			<prop name="npc_questgiver_origin_0" code="DCS">
+				<pos x="-106" y="-74.4" z="3.281" />
+				<nhpr h="-151" p="0" r="0" />
+			</prop>
+			<prop name="npc_questgiver_origin_1" code="DCS">
+				<pos x="-100.3" y="-81.8" z="3.281" />
+				<nhpr h="-82" p="0" r="0" />
+			</prop>
+		</visgroup>
+	</group>
+</scene>

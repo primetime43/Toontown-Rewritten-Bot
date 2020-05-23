@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene zone="30000">
+	<group name="Estate">
+		<visgroup zone="30000:estate" vis="30000:estate">
+			<node name="level">
+				<group name="fishing_pond_1">
+					<prop name="fishing_spot_DNARoot" code="fishing_spot">
+						<pos x="49.1029" y="-124.805" z="0.344704" />
+						<hpr h="90" p="0" r="0" />
+					</prop>
+					<prop name="fishing_spot_DNARoot" code="fishing_spot">
+						<pos x="46.5222" y="-134.739" z="0.390713" />
+						<hpr h="75" p="0" r="0" />
+					</prop>
+					<prop name="fishing_spot_DNARoot" code="fishing_spot">
+						<pos x="41.31" y="-144.559" z="0.375978" />
+						<hpr h="45" p="0" r="0" />
+					</prop>
+					<prop name="fishing_spot_DNARoot" code="fishing_spot">
+						<pos x="46.8254" y="-113.682" z="0.46015" />
+						<hpr h="135" p="0" r="0" />
+					</prop>
+				</group>
+				<prop name="terrain_DNARoot" code="terrain">
+					<pos x="-4.99989" y="-0.000152588" z="2.28882e-005" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ur_DNARoot" code="prop_tree_small_ur">
+					<pos x="-51.4214" y="-24.6363" z="4.02119" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ur_DNARoot" code="prop_tree_small_ur">
+					<pos x="-63.7942" y="5.18094" z="2.61119" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="-58.2389" y="22.6873" z="2.35777" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_fat_ur_DNARoot" code="prop_tree_fat_ur">
+					<pos x="127.118" y="41.6667" z="-0.018425" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_fat_ur_DNARoot" code="prop_tree_fat_ur">
+					<pos x="-123.438" y="-61.7798" z="-0.0212231" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ul_DNARoot" code="prop_tree_small_ul">
+					<pos x="-5.39423" y="-18.9763" z="7.15569" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ul_DNARoot" code="prop_tree_small_ul">
+					<pos x="-4.92633" y="-30.2208" z="7.08492" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ur_DNARoot" code="prop_tree_small_ur">
+					<pos x="-65.0909" y="-28.2464" z="4.00514" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ur_DNARoot" code="prop_tree_small_ur">
+					<pos x="-140.916" y="-118.105" z="0.46346" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_fat_ur_DNARoot" code="prop_tree_fat_ur">
+					<pos x="-33.3073" y="-226.712" z="-0.227959" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_fat_ur_DNARoot" code="prop_tree_fat_ur">
+					<pos x="-89.2946" y="155.887" z="-5.88637" />
+					<hpr h="30" p="0" r="0" />
+					<scale x="1.39228" y="1.39228" z="1.39228" />
+				</prop>
+				<prop name="prop_tree_fat_ur_DNARoot" code="prop_tree_fat_ur">
+					<pos x="130.934" y="-112.295" z="0.87703" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="91.8022" y="151.809" z="0.25066" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_fat_ur_DNARoot" code="prop_tree_fat_ur">
+					<pos x="-19.0631" y="94.8639" z="0.251884" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="-108.708" y="-179.715" z="-0.88939" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="172.91" y="27.0758" z="-0.424359" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ur_DNARoot" code="prop_tree_small_ur">
+					<pos x="-168.464" y="111.89" z="2.8051" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ur_DNARoot" code="prop_tree_small_ur">
+					<pos x="54.3968" y="150.639" z="-0.865251" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ur_DNARoot" code="prop_tree_small_ur">
+					<pos x="53.3863" y="-192.501" z="8.15125" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ur_DNARoot" code="prop_tree_small_ur">
+					<pos x="-61.57" y="-191.095" z="8.61497" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ul_DNARoot" code="prop_tree_small_ul">
+					<pos x="-50.9591" y="15.1061" z="2.76965" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="48.166" y="-157.726" z="0.00427294" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="7.15445" y="-172.415" z="0.00508118" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ul_DNARoot" code="prop_tree_small_ul">
+					<pos x="74.6897" y="-96.6978" z="0.0356426" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="48.8133" y="-4.20992" z="8.10629" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="-93.9252" y="46.3882" z="0.163597" />
+					<hpr h="15" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="-87.9846" y="38.8645" z="0.038681" />
+					<hpr h="15" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ur_DNARoot" code="prop_tree_small_ur">
+					<pos x="29.1518" y="86.819" z="0.062892" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ul_DNARoot" code="prop_tree_small_ul">
+					<pos x="23.4233" y="80.1862" z="0.0406952" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="58.2562" y="73.7532" z="0.0911045" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="98.8038" y="-66.3475" z="0.0390043" />
+					<hpr h="30" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="-49.0482" y="-129.666" z="0.329399" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ur_DNARoot" code="prop_tree_small_ur">
+					<pos x="-58.1199" y="-141" z="0.0263481" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_small_ur_DNARoot" code="prop_tree_small_ur">
+					<pos x="42.2373" y="9.56175" z="8.36716" />
+					<hpr h="0" p="0" r="0" />
+				</prop>
+			</node>
+		</visgroup>
+	</group>
+</scene>

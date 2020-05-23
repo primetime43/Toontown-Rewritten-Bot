@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<!--  the highest phase in this file should be phase 4 -->
+
+	<model path="phase_3.5/models/modules/TT_A1" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_TT_A1" node="TT_A1" />
+	</model>
+
+	<model path="phase_3.5/models/modules/hqTT" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_hqTT" node="" />
+	</model>
+
+	<model path="phase_3.5/models/props/HQ_periscope-mod" scope="hood">
+		<store_node root="prop" code="animated_prop_HQPeriscopeAnimatedProp" node="periscope" />
+	</model>
+
+	<model path="phase_3.5/models/props/HQ_telescope-mod" scope="hood">
+		<store_node root="prop" code="animated_prop_HQTelescopeAnimatedProp" node="telescope" />
+	</model>
+
+	<model path="phase_5/models/char/tt_r_ara_ttc_hydrant" scope="hood">
+		<store_node root="anim_prop" code="animated_prop_generic_phase_5_models_char__ttc_hydrant" node="" />
+	</model>
+
+	<model path="phase_5/models/char/tt_r_ara_ttc_mailbox" scope="hood">
+		<store_node root="anim_prop" code="animated_prop_generic_phase_5_models_char__ttc_mailbox" node="" />
+	</model>
+
+	<model path="phase_5/models/char/tt_r_ara_ttc_trashcan" scope="hood">
+		<store_node root="anim_prop" code="animated_prop_generic_phase_5_models_char__ttc_trashcan" node="" />
+	</model>
+
+	<model path="phase_3.5/models/props/trees" scope="hood">
+		<store_node root="holiday_prop" code="prop_tree_large_brickbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_large_brickbox_ul" />
+		<store_node root="holiday_prop" code="prop_tree_small_brickbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_small_brickbox_ul" />
+		<store_node root="holiday_prop" code="prop_tree_fat_brickbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_fat_brickbox_ul" />
+
+		<store_node root="holiday_prop" code="prop_tree_large_woodbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_large_woodbox_ul" />
+		<store_node root="holiday_prop" code="prop_tree_small_woodbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_small_woodbox_ul" />
+
+		<store_node root="holiday_prop" code="prop_tree_large_ur" node="prop_tree_large_no_box_ur" />
+		<store_node root="holiday_prop" code="prop_tree_large_ul" node="prop_tree_large_no_box_ul" />
+		<store_node root="holiday_prop" code="prop_tree_small_ur" node="prop_tree_small_nobox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_small_ul" node="prop_tree_small_no_box_ul" />
+		<store_node root="holiday_prop" code="prop_tree_fat_ur" node="prop_tree_fat_no_box_ur" />
+		<store_node root="holiday_prop" code="prop_tree_fat_ul" node="prop_tree_fat_no_box_ul" />
+	</model>
+
+	<store_texture root="texture" code="street_street_TT_tex" path="phase_3.5/maps/sidewalkbrown.jpg" />
+	<store_texture root="texture" code="street_sidewalk_TT_tex" path="phase_3.5/maps/sidewalk_4cont_brown.jpg" />
+	<store_texture root="texture" code="street_curb_TT_tex" path="phase_3.5/maps/curb_brown_even.jpg" />
+
+	<store_font root="font" code="TT_Comedy" path="phase_3/fonts/Comedy.ttf" />
+
+	<model path="phase_4/models/props/signs_TTC" scope="hood">
+		<store_node root="sign" code="TTC_sign1" />
+		<store_node root="sign" code="TTC_sign2" />
+		<store_node root="sign" code="TTC_sign3" />
+	</model>
+
+	<model path="phase_3.5/models/props/streetlight_TT" scope="hood">
+		<store_node root="holiday_prop" code="prop_post_sign" />
+		<store_node root="holiday_prop" code="prop_post_one_light" />
+		<store_node root="holiday_prop" code="prop_post_three_light" />
+	</model>
+
+	<model path="phase_3.5/models/modules/wood_fence" scope="hood">
+		<store_node root="prop" code="prop_wood_fence" node="" />
+	</model>
+
+	<model path="phase_3.5/models/props/big_planter" scope="hood">
+		<store_node root="prop" code="prop_big_planter" node="" />
+	</model>
+
+	<model path="phase_4/models/props/toontown_central_fountain" scope="hood">
+		<store_node root="prop" code="prop_toontown_central_fountain" node="" />
+	</model>
+
+	<model path="phase_4/models/props/mickey_on_horse" scope="hood">
+		<store_node root="prop" code="prop_mickey_on_horse" node="" />
+	</model>
+
+	<model path="phase_4/models/props/goofy_statue" scope="hood">
+		<store_node root="prop" code="prop_goofy_statue" node="" />
+	</model>
+
+	<model path="phase_4/models/props/tt_m_ara_ttc_sillyMeterSign_groupA" scope="hood">
+		<store_node root="prop" code="prop_tt_m_ara_ttc_sillyMeterSign_groupA" node="" />
+	</model>
+
+	<model path="phase_4/models/props/tt_m_ara_ttc_sillyMeterSign_groupB" scope="hood">
+		<store_node root="prop" code="prop_tt_m_ara_ttc_sillyMeterSign_groupB" node="" />
+	</model>
+
+	<model path="phase_4/models/props/tt_m_ara_gen_tunnelAheadSign" scope="hood">
+		<store_node root="prop" code="prop_tt_m_ara_gen_tunnelAheadSign" node="" />
+	</model>
+</storage>

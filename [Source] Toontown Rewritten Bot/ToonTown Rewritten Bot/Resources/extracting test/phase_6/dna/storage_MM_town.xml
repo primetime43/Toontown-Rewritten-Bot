@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<model path="phase_6/models/props/piano" scope="place">
+		<store_node root="prop" code="prop_piano" node="" />
+	</model>
+
+	<model path="phase_6/models/modules/neighborhood_tunnel_MM" scope="place">
+		<store_node root="prop" code="prop_neighborhood_tunnel" />
+	</model>
+
+	<model path="phase_6/models/modules/safe_zone_entrance_tunnel_MM" scope="place">
+		<store_node root="prop" code="prop_safe_zone_entrance_tunnel" />
+	</model>
+
+	<model path="phase_6/models/modules/MM_pond" scope="place">
+		<store_node root="street" code="street_MM_pond" node="" />
+	</model>
+
+
+
+
+</storage>

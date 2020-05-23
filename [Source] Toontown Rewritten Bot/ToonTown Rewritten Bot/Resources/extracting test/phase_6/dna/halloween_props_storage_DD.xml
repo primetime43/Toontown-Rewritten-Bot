@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<model path="phase_6/models/props/tt_m_ara_DD_palmtree_topflat_halloween" scope="hood">
+		<store_node root="holiday_prop" code="prop_palm_tree_topflat" />
+	</model>
+
+	<model path="phase_6/models/props/tt_m_ara_DD_streetlight_halloween" scope="hood">
+		<store_node root="holiday_prop" code="streetlight_DD_left" />
+		<store_node root="holiday_prop" code="streetlight_DD_right" />
+	</model>
+</storage>

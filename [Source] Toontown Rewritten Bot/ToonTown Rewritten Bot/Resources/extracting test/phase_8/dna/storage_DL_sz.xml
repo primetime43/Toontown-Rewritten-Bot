@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<!--  Parties -->
+	<model path="phase_8/models/modules/partyGate_DL">
+		<store_node root="prop" code="prop_party_gate" node="" />
+	</model>
+
+	<model path="phase_8/models/neighborhoods/donalds_dreamland" scope="place">
+		<store_node root="prop" code="donalds_dreamland" node="" />
+	</model>
+	<model path="phase_8/models/modules/safe_zone_tunnel_DL" scope="place">
+		<store_node root="prop" code="prop_safe_zone_tunnel" />
+	</model>
+
+	<model path="phase_8/models/modules/trolley_station_DL" scope="place">
+		<store_node root="prop" code="prop_trolley_station" />
+	</model>
+	<model path="phase_8/models/modules/gagShop_DL" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_DL_gag_shop" node="" />
+	</model>
+	<model path="phase_8/models/modules/PetShopExterior_DL" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_DL_pet_shop" node="" />
+	</model>
+
+	<model path="phase_8/models/modules/clothshopDL" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_DL_clothes_shop" node="" />
+	</model>
+
+	<model path="phase_4/models/props/exteriorfish-zero" scope="place">
+		<store_node root="prop" code="animated_prop_PetShopFishAnimatedProp" node="exteriorfish" />
+	</model>
+</storage>

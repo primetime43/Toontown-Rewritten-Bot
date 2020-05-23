@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<!--  pre-built toon interiors -->
+	<model path="phase_3.5/models/modules/toon_interior">
+		<store_node root="prop" code="TI_room" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/toon_interior_2">
+		<store_node root="prop" code="TI_room_2" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/toon_interior_L">
+		<store_node root="prop" code="TI_room_L" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/toon_interior_T">
+		<store_node root="prop" code="TI_room_T" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/tt_m_ara_int_toonhall">
+		<store_node root="prop" code="TI_hall" node="" />
+	</model>
+
+
+	<store_texture root="TI_wallpaper" code="wall_paper_a1" path="phase_3.5/maps/wall_paper_a1.jpg" />
+	<store_texture root="TI_wallpaper" code="wall_paper_a2" path="phase_3.5/maps/wall_paper_a2.jpg" />
+	<store_texture root="TI_wallpaper" code="wall_paper_a3" path="phase_3.5/maps/wall_paper_a3.jpg" />
+	<store_texture root="TI_wallpaper" code="wall_paper_a4" path="phase_3.5/maps/wall_paper_a4.jpg" />
+	<store_texture root="TI_wallpaper" code="wall_paper_a5" path="phase_3.5/maps/wall_paper_a5.jpg" />
+
+	<store_texture root="TI_wainscotting" code="wall_paper_b3" path="phase_3.5/maps/wall_paper_b3.jpg" />
+	<store_texture root="TI_wainscotting" code="wall_paper_b4" path="phase_3.5/maps/wall_paper_b4.jpg" />
+
+	<store_texture root="TI_floor" code="floor_wood" path="phase_3/maps/floor_create_toon.jpg" />
+	<store_texture root="TI_floor" code="floor_carpet" path="phase_3.5/maps/carpet.jpg" />
+
+	<store_texture root="TI_molding" code="molding_wood1" path="phase_3.5/maps/molding_wood1.jpg" />
+	<store_texture root="TI_molding" code="molding_wood2" path="phase_3.5/maps/molding_wood2.jpg" />
+
+
+	<store_texture root="TI_couch" code="couch1" path="phase_3.5/maps/couch.jpg" />
+	<store_texture root="TI_couch" code="couch2" path="phase_3.5/maps/couch2.jpg" />
+	<store_texture root="TI_couch" code="couch3" path="phase_3.5/maps/couch3.jpg" />
+
+
+
+	<model path="phase_3.5/models/modules/paper_trashcan">
+		<store_node root="prop" code="paper_trashcan" node="" />
+	</model>
+	<model path="phase_3.5/models/props/big_planter">
+		<store_node root="prop" code="big_planter" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/bookcase">
+		<store_node root="prop" code="bookcase" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/bookcase_low">
+		<store_node root="prop" code="bookcase_low" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/chair">
+		<store_node root="prop" code="chair" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/coatrack">
+		<store_node root="prop" code="coatrack" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/counter">
+		<store_node root="prop" code="counter" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/counterShort">
+		<store_node root="prop" code="counterShort" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/desk">
+		<store_node root="prop" code="desk" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/desk_only">
+		<store_node root="prop" code="desk_only" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/desk_only_wo_phone">
+		<store_node root="prop" code="desk_only_wo_phone" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/int_door">
+		<store_node root="prop" code="int_door" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/lamp_short">
+		<store_node root="prop" code="lamp_short" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/lamp_tall">
+		<store_node root="prop" code="lamp_tall" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/rug">
+		<store_node root="prop" code="rug" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/tie_rack">
+		<store_node root="prop" code="tie_rack" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/umbrella_stand">
+		<store_node root="prop" code="umbrella_stand" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/couch_1person">
+		<store_node root="prop" code="couch_1person" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/couch_2person">
+		<store_node root="prop" code="couch_2person" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/ending_table">
+		<store_node root="prop" code="ending_table" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/GardenA">
+		<store_node root="prop" code="GardenA" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/Garden1">
+		<store_node root="prop" code="Garden1" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/cabinetYwood">
+		<store_node root="prop" code="cabinetYwood" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/cabinetRwood">
+		<store_node root="prop" code="cabinetRwood" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/rugB">
+		<store_node root="prop" code="rugB" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/rugA">
+		<store_node root="prop" code="rugA" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/regular_bed">
+		<store_node root="prop" code="regular_bed" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/chairA">
+		<store_node root="prop" code="chairA" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/jellybeanBank">
+		<store_node root="prop" code="jellybeanBank" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/closetGirl">
+		<store_node root="prop" code="closetGirl" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/closetBoy">
+		<store_node root="prop" code="closetBoy" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/tt_m_ara_est_accessoryTrunkBoy">
+		<store_node root="prop" code="trunkGirl" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/tt_m_ara_est_accessoryTrunkGirl">
+		<store_node root="prop" code="trunkBoy" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/Piano">
+		<store_node root="prop" code="Piano" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/Organ">
+		<store_node root="prop" code="Organ" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/tt_m_ara_int_estateHouseA">
+		<store_node root="prop" code="tt_m_ara_int_estateHouseA" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/girly_bed">
+		<store_node root="prop" code="girly_bed" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/bathtub_bed">
+		<store_node root="prop" code="bathtub_bed" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/FireplaceSq">
+		<store_node root="prop" code="FireplaceSq" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/FireplaceRound">
+		<store_node root="prop" code="FireplaceRound" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/FireplaceGirlee">
+		<store_node root="prop" code="FireplaceGirlee" node="" />
+	</model>
+</storage>

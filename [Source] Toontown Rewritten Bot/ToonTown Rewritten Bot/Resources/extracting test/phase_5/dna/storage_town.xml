@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+
+	<!--  This file is for putting generic things that all town use -->
+	<!--  but are not used in any safe zones. It gets loaded and  -->
+	<!--  unloaded every time we enter/leave the Town state data -->
+
+	<model path="phase_5/models/modules/suit_walls" scope="place">
+		<store_node root="suit_wall" code="wall_suit_build1_ur" />
+		<store_node root="suit_wall" code="wall_suit_build1_ul" />
+
+		<store_node root="suit_wall" code="wall_suit_build2_ur" />
+		<store_node root="suit_wall" code="wall_suit_build2_ul" />
+
+		<store_node root="suit_wall" code="wall_suit_build3_ur" />
+		<store_node root="suit_wall" code="wall_suit_build3_ul" />
+
+		<store_node root="suit_wall" code="wall_suit_build4_ur" />
+		<store_node root="suit_wall" code="wall_suit_build4_ul" />
+
+		<store_node root="suit_wall" code="wall_suit_build5_ur" />
+		<store_node root="suit_wall" code="wall_suit_build5_ul" />
+	</model>
+
+	<model path="phase_5/models/modules/suit_door" scope="place">
+		<store_node root="suit_door" code="suit_door" node="" />
+	</model>
+
+	<!--  Each track will have 5 building references (one for each difficulty level) -->
+	<!--  It is ok for these to point to the same node if we do not have custom -->
+	<!--  models for every single difficulty level -->
+	<model path="phase_4/models/modules/suit_landmark_corp" scope="hood">
+		<store_node root="suit_landmark" code="suit_landmark_c1" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_c2" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_c3" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_c4" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_c5" node="" />
+	</model>
+	<model path="phase_4/models/modules/suit_landmark_legal" scope="hood">
+		<store_node root="suit_landmark" code="suit_landmark_l1" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_l2" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_l3" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_l4" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_l5" node="" />
+	</model>
+	<model path="phase_4/models/modules/suit_landmark_sales" scope="hood">
+		<store_node root="suit_landmark" code="suit_landmark_s1" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_s2" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_s3" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_s4" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_s5" node="" />
+	</model>
+	<model path="phase_4/models/modules/suit_landmark_money" scope="hood">
+		<store_node root="suit_landmark" code="suit_landmark_m1" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_m2" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_m3" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_m4" node="" />
+		<store_node root="suit_landmark" code="suit_landmark_m5" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/elevator" scope="hood">
+		<store_node root="elevator" code="elevator" node="" />
+	</model>
+
+	<!--  New field office building exteriors -->
+	<model path="phase_5/models/cogdominium/tt_m_ara_cbe_walls" scope="place">
+		<store_node root="cogdo_wall" code="wall_cogdo_build1_ur" />
+		<store_node root="cogdo_wall" code="wall_cogdo_build1_ul" />
+
+		<store_node root="cogdo_wall" code="wall_cogdo_build2_ur" />
+		<store_node root="cogdo_wall" code="wall_cogdo_build2_ul" />
+
+		<store_node root="cogdo_wall" code="wall_cogdo_build3_ur" />
+		<store_node root="cogdo_wall" code="wall_cogdo_build3_ul" />
+
+		<store_node root="cogdo_wall" code="wall_cogdo_build4_ur" />
+		<store_node root="cogdo_wall" code="wall_cogdo_build4_ul" />
+
+		<store_node root="cogdo_wall" code="wall_cogdo_build5_ur" />
+		<store_node root="cogdo_wall" code="wall_cogdo_build5_ul" />
+	</model>
+
+	<model path="phase_5/models/cogdominium/tt_m_ara_cbe_fieldOfficeMoverShaker" scope="hood">
+		<store_node root="tt_m_ara_cbe_fieldOfficeMoverShaker" code="tt_m_ara_cbe_fieldOfficeMoverShaker" node="" />
+	</model>
+</storage>

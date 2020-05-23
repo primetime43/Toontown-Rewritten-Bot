@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<!--  Parties -->
+	<model path="phase_4/models/modules/partyGate_TT">
+		<store_node root="prop" code="prop_party_gate" node="" />
+	</model>
+
+	<model path="phase_4/models/neighborhoods/toontown_central" scope="place">
+		<store_node root="prop" code="toontown_central" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/trolley_station_TT" scope="place">
+		<store_node root="prop" code="prop_trolley_station" />
+	</model>
+
+	<model path="phase_4/models/modules/safe_zone_tunnel_TT" scope="place">
+		<store_node root="prop" code="prop_safe_zone_tunnel" />
+	</model>
+
+	<model path="phase_4/models/modules/Speedway_Tunnel" scope="place">
+		<store_node root="prop" code="prop_GS_tunnel" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/bank" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_bank" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/library" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_library" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/school_house" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_school_house" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/mercantile" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_mercantile" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/gagShop_TT" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_gag_shop" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/PetShopExterior_TT" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_pet_shop" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/clothshopTT" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_clothes_shop" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/gazebo" scope="place">
+		<store_node root="prop" code="prop_gazebo" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/tt_m_ara_ttc_toonHall" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_toonhall" node="" />
+	</model>
+
+	<model path="phase_4/models/props/exteriorfish-zero" scope="place">
+		<store_node root="prop" code="animated_prop_PetShopFishAnimatedProp" node="exteriorfish" />
+	</model>
+</storage>

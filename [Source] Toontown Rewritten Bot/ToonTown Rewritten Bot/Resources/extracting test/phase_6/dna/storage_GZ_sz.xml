@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<model path="phase_6/models/golf/golf_hub2" scope="place">
+		<store_node root="prop" code="goofy_speedway" node="" />
+	</model>
+
+	<model path="phase_6/models/golf/golf_hub_tunnel_ent" scope="place">
+		<store_node root="prop" code="prop_golf_hub_tunnel_ent" node="" />
+	</model>
+
+	<model path="phase_6/models/golf/golf_tunnel2" scope="place">
+		<store_node root="prop" code="prop_golf_tunnel2" node="" />
+	</model>
+
+	<model path="phase_6/models/golf/chip_dale_NoSign_enterance" scope="place">
+		<store_node root="prop" code="prop_golf_NoSign_entrance" node="" />
+	</model>
+
+	<model path="phase_6/models/golf/golf_tunnel1" scope="place">
+		<store_node root="prop" code="prop_golf_tunnel1" node="" />
+	</model>
+
+
+	<model path="phase_4/models/modules/safe_zone_tunnel_TT" scope="place">
+		<store_node root="prop" code="prop_safe_zone_tunnel" />
+	</model>
+
+	<model path="phase_3.5/models/modules/safe_zone_entrance_tunnel_TT" scope="place">
+		<store_node root="prop" code="prop_safe_zone_entrance_tunnel" />
+	</model>
+
+	<model path="phase_6/models/karting/Parkingspot" scope="place">
+		<store_node root="prop" code="gs_parkingspot" node="" />
+	</model>
+
+	<model path="phase_6/models/golf/Golfzone_To_Bossbot_Tunnel" scope="place">
+		<store_node root="prop" code="prop_golf_cog_tunnel" node="" />
+	</model>
+</storage>

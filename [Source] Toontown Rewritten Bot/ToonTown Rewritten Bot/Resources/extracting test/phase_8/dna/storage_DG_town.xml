@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+
+
+	<model path="phase_8/models/modules/street_modules_enhanced_DG" scope="place">
+		<store_node root="street" code="DG_street_interior_corner_slope" node="DG_interior_corner_slope" />
+		<store_node root="street" code="DG_street_slope_transition_R" />
+		<store_node root="street" code="DG_street_slope_transition_L" node="DG_street_slope_transitionL" />
+		<store_node root="street" code="DG_street_exterior_corner_slope" node="DG_exterior_corner_slope" />
+		<store_node root="street" code="DG_street_slope_30x20" />
+		<store_node root="street" code="DG_street_slope_60x10" />
+		<store_node root="street" code="DG_street_slope_60x20" />
+		<store_node root="street" code="DG_street_slope_60x30" />
+		<store_node root="street" code="DG_street_slope_60x40" />
+		<store_node root="street" code="DG_street_slope_30x10" />
+		<store_node root="street" code="DG_street_slope_30x20" />
+		<store_node root="street" code="DG_street_slope_30x30" />
+		<store_node root="street" code="DG_street_slope_30x40" />
+		<store_node root="street" code="DG_street_slope_pathway_30x20" />
+		<store_node root="street" code="DG_street_park_straight_20" node="DG_park_straight_20" />
+		<store_node root="street" code="DG_street_park_straight_10" node="DG_park_straight_10" />
+		<store_node root="street" code="DG_street_park_sidewalk_transitionL" node="DG_park_sidewalk_transitionL" />
+		<store_node root="street" code="DG_street_park_sidewalk_transitionR" node="DG_park_sidewalk_transitionR" />
+		<store_node root="street" code="DG_street_park_straight_sidewalk_corner" node="DG_park_straightsidewk_corner" />
+		<store_node root="street" code="DG_street_park_straight_sidewalk_20" node="DG_park_straightsidewk_20" />
+		<store_node root="street" code="DG_street_park_straight_sidewalk_10" node="DG_park_straightsidewk_10" />
+		<store_node root="street" code="DG_street_park_interior_10x10" node="DG_park_interior_10x10" />
+		<store_node root="street" code="DG_street_park_interior_20x20" node="DG_park_interior_20x20" />
+		<store_node root="street" code="DG_street_park_interior_40x40" node="DG_park_interior_40x40" />
+		<store_node root="street" code="DG_street_park_corner" node="DG_park_corner" />
+		<store_node root="street" code="DG_street_grass_transitionL_30x10" />
+		<store_node root="street" code="DG_street_grass_transitionR_30x10" />
+		<store_node root="street" code="DG_street_grass_transitionL_30x20" />
+		<store_node root="street" code="DG_street_grass_transitionR_30x20" />
+		<store_node root="street" code="DG_street_grass_transition_60x20" />
+		<store_node root="street" code="DG_street_w_grass_divided_30x20" />
+		<store_node root="street" code="DG_street_w_grass_60x60" />
+		<store_node root="street" code="DG_street_w_grass_60x40" />
+		<store_node root="street" code="DG_street_w_grass_60x20" />
+		<store_node root="street" code="DG_street_w_grass_60x10" />
+		<store_node root="street" code="DG_street_w_grass_30x60" />
+		<store_node root="street" code="DG_street_w_grass_30x40" />
+		<store_node root="street" code="DG_street_w_grass_30x20" />
+		<store_node root="street" code="DG_street_w_grass_30x10" />
+		<store_node root="street" code="DG_street_courtyard_w_grass" />
+		<store_node root="street" code="DG_street_Tcourtyard_w_grass" />
+		<store_node root="street" code="DG_street_exterior_whole_corner_w_grass" node="DG_exterior_wholecorner_w_grass" />
+		<store_node root="street" code="DG_street_exterior_corner_w_grass" node="DG_exterior_corner_w_grass" />
+		<store_node root="street" code="DG_street_exterior_corner_grass_transition" node="DG_exterior_corner_grass_transition" />
+		<store_node root="street" code="DG_street_interior_corner_w_grass" node="DG_interior_corner_w_grass" />
+		<store_node root="street" code="DG_street_courtyard_w_grass_endL" />
+		<store_node root="street" code="DG_street_courtyard_w_grass_endR" />
+	</model>
+
+	<model path="phase_8/models/props/window_flowerbox_woven" scope="place">
+		<store_node root="prop" code="prop_window_flowerbox_woven" node="" />
+	</model>
+
+	<model path="phase_8/models/modules/neighborhood_tunnel_DG" scope="place">
+		<store_node root="prop" code="prop_neighborhood_tunnel" />
+	</model>
+
+
+	<model path="phase_8/models/modules/safe_zone_entrance_tunnel_DG" scope="place">
+		<store_node root="prop" code="prop_safe_zone_entrance_tunnel" />
+	</model>
+
+	<model path="phase_8/models/props/daisys_flower_bed" scope="place">
+		<store_node root="prop" code="prop_DG_flower_bed" node="" />
+	</model>
+
+	<model path="phase_8/models/props/DG_flats" scope="place">
+		<store_node root="prop" code="prop_DG_flat_trashcan" node="g1" />
+	</model>
+
+
+	<model path="phase_5/models/props/trashcan_TT" scope="place">
+		<store_node root="prop" code="prop_trashcan_metal" />
+	</model>
+
+	<model path="phase_8/models/modules/DG_pond" scope="place">
+		<store_node root="street" code="street_DG_pond" node="" />
+	</model>
+
+	<model path="phase_6/models/cogHQ/Cog_Tunnel" scope="place">
+		<store_node root="prop" code="prop_cog_tunnel" node="" />
+	</model>
+
+	<model path="phase_6/models/cogHQ/SmokeStack_simple" scope="place">
+		<store_node root="prop" code="prop_cog_smoke_stack" node="" />
+	</model>
+
+	<model path="phase_6/models/cogHQ/WaterTowerSimple" scope="place">
+		<store_node root="prop" code="prop_cog_water_tower" node="" />
+	</model>
+
+	<model path="phase_4/models/props/neighborhood_sign_sellBotHQ" scope="place">
+		<store_node root="prop" code="neighborhood_sign_sellBotHQ" node="" />
+	</model>
+</storage>

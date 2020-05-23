@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<model path="phase_6/models/props/winter_trees_MM" scope="hood">
+		<store_node root="holiday_prop" code="prop_tree_small_ur_MM" node="prop_tree_small_ur" />
+		<store_node root="holiday_prop" code="prop_tree_small_ul_MM" node="prop_tree_small_ul" />
+	</model>
+
+	<model path="phase_6/models/props/tt_m_ara_MM_streetlight_winter" scope="hood">
+		<store_node root="holiday_prop" code="prop_MM_flute_lamp" node="MM_flute_lamp" />
+		<store_node root="holiday_prop" code="prop_MM_trumpets_lamp" node="MM_trumpets_lamp" />
+	</model>
+</storage>

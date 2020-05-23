@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+
+	<model path="phase_5.5/models/estate/terrain">
+		<store_node root="prop" code="terrain" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/houseB">
+		<store_node root="prop" code="houseB" node="" />
+	</model>
+
+	<model path="phase_5.5/models/estate/house">
+		<store_node root="prop" code="house" node="" />
+	</model>
+
+	<model path="phase_4/models/props/SZ_fish-mod" scope="hood">
+		<store_node root="prop" code="animated_prop_FishAnimatedProp" node="fish" />
+	</model>
+
+	<model path="phase_4/models/props/piers_tt">
+		<store_node root="prop" code="fishing_spot" node="" />
+	</model>
+
+	<model path="phase_3.5/models/props/trees" scope="hood">
+		<store_node root="holiday_prop" code="prop_tree_large_brickbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_large_brickbox_ul" />
+		<store_node root="holiday_prop" code="prop_tree_small_brickbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_small_brickbox_ul" />
+		<store_node root="holiday_prop" code="prop_tree_fat_brickbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_fat_brickbox_ul" />
+
+		<store_node root="holiday_prop" code="prop_tree_large_woodbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_large_woodbox_ul" />
+		<store_node root="holiday_prop" code="prop_tree_small_woodbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_small_woodbox_ul" />
+
+		<store_node root="holiday_prop" code="prop_tree_large_ur" node="prop_tree_large_no_box_ur" />
+		<store_node root="holiday_prop" code="prop_tree_large_ul" node="prop_tree_large_no_box_ul" />
+		<store_node root="holiday_prop" code="prop_tree_small_ur" node="prop_tree_small_nobox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_small_ul" node="prop_tree_small_no_box_ul" />
+		<store_node root="holiday_prop" code="prop_tree_fat_ur" node="prop_tree_fat_no_box_ur" />
+		<store_node root="holiday_prop" code="prop_tree_fat_ul" node="prop_tree_fat_no_box_ul" />
+	</model>
+
+	<!--  We switched the interface font from impress to humanist -->
+	<!--  Warning!  This is overridden in PlayGame.py -->
+	<store_font root="font" code="humanist" path="phase_3/fonts/ImpressBT.ttf" />
+
+	<!--  Warning!  This is overridden in PlayGame.py -->
+	<store_font root="font" code="mickey" path="SignFont" />
+
+</storage>

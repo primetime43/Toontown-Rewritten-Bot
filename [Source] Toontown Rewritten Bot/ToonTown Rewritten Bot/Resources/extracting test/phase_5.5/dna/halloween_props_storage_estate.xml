@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<model path="phase_3.5/models/props/tt_m_ara_TT_trees_halloween" scope="hood">
+		<store_node root="holiday_prop" code="prop_tree_large_brickbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_large_brickbox_ul" />
+		<store_node root="holiday_prop" code="prop_tree_small_brickbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_small_brickbox_ul" />
+		<store_node root="holiday_prop" code="prop_tree_fat_brickbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_fat_brickbox_ul" />
+
+		<store_node root="holiday_prop" code="prop_tree_large_woodbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_large_woodbox_ul" />
+		<store_node root="holiday_prop" code="prop_tree_small_woodbox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_small_woodbox_ul" />
+
+		<store_node root="holiday_prop" code="prop_tree_large_ur" node="prop_tree_large_no_box_ur" />
+		<store_node root="holiday_prop" code="prop_tree_large_ul" node="prop_tree_large_no_box_ul" />
+		<store_node root="holiday_prop" code="prop_tree_small_ur" node="prop_tree_small_nobox_ur" />
+		<store_node root="holiday_prop" code="prop_tree_small_ul" node="prop_tree_small_no_box_ul" />
+		<store_node root="holiday_prop" code="prop_tree_fat_ur" node="prop_tree_fat_no_box_ur" />
+		<store_node root="holiday_prop" code="prop_tree_fat_ul" node="prop_tree_fat_no_box_ul" />
+	</model>
+</storage>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<!--  Parties -->
+	<model path="phase_6/models/modules/partyGate_DD">
+		<store_node root="prop" code="prop_party_gate" node="" />
+	</model>
+
+	<model path="phase_6/models/modules/safe_zone_tunnel_DD" scope="place">
+		<store_node root="prop" code="prop_safe_zone_tunnel" />
+	</model>
+
+	<model path="phase_6/models/modules/trolley_station_DD" scope="place">
+		<store_node root="prop" code="prop_trolley_station" />
+	</model>
+
+	<model path="phase_6/models/neighborhoods/donalds_dock" scope="place">
+		<store_node root="prop" code="donalds_dock" />
+	</model>
+
+	<model path="phase_6/models/modules/gagShop_DD" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_DD_gag_shop" node="" />
+	</model>
+
+	<model path="phase_6/models/modules/PetShopExterior_DD" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_DD_pet_shop" node="" />
+	</model>
+
+	<model path="phase_6/models/modules/clothshopDD" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_DD_clothes_shop" node="" />
+	</model>
+
+	<model path="phase_6/models/modules/tt_m_ara_dod_SZ_hq" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_hqDD_SZ" node="" />
+	</model>
+	<model path="phase_3.5/models/props/HQ_periscope-mod" scope="hood">
+		<store_node root="prop" code="animated_prop_HQPeriscopeAnimatedProp" node="periscope" />
+	</model>
+
+	<model path="phase_4/models/props/exteriorfish-zero" scope="place">
+		<store_node root="prop" code="animated_prop_PetShopFishAnimatedProp" node="exteriorfish" />
+	</model>
+
+	<model path="phase_6/models/golf/outdoor_zone_entrance" scope="place">
+		<store_node root="prop" code="prop_outdoor_zone_entrance" node="" />
+	</model>
+</storage>

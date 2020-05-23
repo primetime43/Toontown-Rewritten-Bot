@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+
+	<model path="phase_6/models/events/ttr_m_ww_grounds" scope="place">
+		<store_node root="prop" code="tf_grounds_1" node="" />
+	</model>
+	<model path="phase_6/models/events/ttr_m_ww_tree_s" scope="place">
+			<store_node root="prop" code="tf_tree_s" node="" />
+	</model>
+	<model path="phase_6/models/events/ttr_m_ww_tree_m" scope="place">
+			<store_node root="prop" code="tf_tree_m" node="" />
+	</model>
+	<model path="phase_6/models/events/ttr_m_ww_tree_l" scope="place">
+			<store_node root="prop" code="tf_tree_l" node="" />
+	</model>
+	<model path="phase_6/models/golf/picnic_table" scope="place">
+		<store_node root="prop" code="prop_picnic_table" node="" />
+	</model>
+	<model path="phase_6/models/golf/game_table" scope="place">
+		<store_node root="prop" code="prop_game_table" node="" />
+	</model>
+	<model path="phase_6/models/golf/outdoor_zone_entrance" scope="place">
+		<store_node root="prop" code="prop_outdoor_zone_entrance" node="" />
+	</model>
+	<model path="phase_6/models/props/signs_DD" scope="hood">
+		<store_node root="sign" code="DD_sign2" />
+	</model>
+	<model path="phase_6/models/events/ttr_m_tf_tower" scope="place">
+		<store_node root="prop" code="tf_tower" node="" />
+	</model>
+	<model path="phase_6/models/events/ttr_m_tf_ducktank" scope="place">
+		<store_node root="prop" code="tf_ducktank" node="" />
+	</model>
+	<model path="phase_6/models/events/ttr_m_tf_booth" scope="place">
+		<store_node root="prop" code="tf_booth" node="" />
+	</model>
+
+</storage>

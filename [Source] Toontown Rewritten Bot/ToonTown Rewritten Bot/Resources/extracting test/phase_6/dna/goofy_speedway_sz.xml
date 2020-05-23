@@ -1,0 +1,787 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene zone="8000">
+	<group name="goofySpeedway">
+		<visgroup zone="8000:safe_zone" vis="8000:safe_zone">
+			<node name="level">
+				<node name="racing_pad_2_town">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="73.0385" y="-117.178" z="-0.73" />
+						<nhpr h="75" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="71.7178" y="-121.868" z="-0.73" />
+						<nhpr h="75" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="66.7986" y="-115.568" z="-0.73" />
+						<nhpr h="75" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="65.5021" y="-120.238" z="-0.73" />
+						<nhpr h="75" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="racing_pad_3_town">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="59.4843" y="-132.151" z="-0.73" />
+						<nhpr h="30" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="55.2478" y="-134.588" z="-0.73" />
+						<nhpr h="30" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="56.2809" y="-126.578" z="-0.73" />
+						<nhpr h="30" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="51.9502" y="-129.195" z="-0.73" />
+						<nhpr h="30" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="racing_pad_1_town">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="72.1652" y="-96.0857" z="-0.73" />
+						<nhpr h="105" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="73.3705" y="-100.877" z="-0.73" />
+						<nhpr h="105" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="65.3432" y="-97.8303" z="-0.73" />
+						<nhpr h="105" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="66.6576" y="-102.722" z="-0.73" />
+						<nhpr h="105" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="racing_pad_0_town">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="55.027" y="-84.6514" z="-0.73" />
+						<nhpr h="150" p="6.67011e-009" r="0" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="59.104" y="-86.9306" z="-0.727414" />
+						<nhpr h="150" p="0" r="1.86792e-007" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="51.586" y="-90.5975" z="-0.73" />
+						<nhpr h="150" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="55.6422" y="-93.1141" z="-0.73" />
+						<nhpr h="150" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="racing_pad_4_stadium">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="23.3" y="-168.6" z="-0.73" />
+						<nhpr h="60" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="21.31" y="-172.08" z="-0.73" />
+						<nhpr h="60" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="17.5084" y="-165.257" z="-0.73" />
+						<nhpr h="60" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="15.4951" y="-168.767" z="-0.73" />
+						<nhpr h="60" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="racing_pad_5_stadium">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="9.05689" y="-182.789" z="-0.73" />
+						<nhpr h="30" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="5.41506" y="-184.871" z="-0.73" />
+						<nhpr h="30" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="5.56268" y="-176.864" z="-0.73" />
+						<nhpr h="30" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="1.85977" y="-178.936" z="-0.734695" />
+						<nhpr h="30" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="racing_pad_6_stadium">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="-10.4275" y="-183.285" z="-0.73" />
+						<nhpr h="-15" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="-14.3288" y="-182.142" z="-0.73" />
+						<nhpr h="-15" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="-8.54365" y="-176.376" z="-0.73" />
+						<nhpr h="-15" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="-12.5286" y="-175.2" z="-0.73" />
+						<nhpr h="-15" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="racing_pad_7_stadium">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="-24.2997" y="-170.514" z="-0.73" />
+						<nhpr h="-60" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="-26.4587" y="-166.589" z="-0.73" />
+						<nhpr h="-60" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="-18.2461" y="-167.033" z="-0.73" />
+						<nhpr h="-60" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="-20.4443" y="-163.069" z="-0.73" />
+						<nhpr h="-60" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="viewing_pad_0">
+					<pos x="0" y="0" z="0.08" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="1" y="1" z="1" />
+					<prop name="starting_block_0" code="gs_showblock">
+						<pos x="34.7799" y="61.6369" z="0" />
+						<nhpr h="55.49" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+					<prop name="starting_block_2" code="gs_showblock">
+						<pos x="48.4554" y="47.8536" z="0" />
+						<nhpr h="35" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+					<prop name="starting_block_4" code="gs_showblock">
+						<pos x="57.4133" y="29.7905" z="0" />
+						<nhpr h="17.33" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+					<prop name="starting_block_6" code="gs_showblock">
+						<pos x="57.3092" y="-6.08025" z="0" />
+						<nhpr h="341.7" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+					<prop name="starting_block_8" code="gs_showblock">
+						<pos x="48.6874" y="-22.9098" z="0" />
+						<nhpr h="324.49" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+					<prop name="starting_block_10" code="gs_showblock">
+						<pos x="34.9595" y="-36.4749" z="0" />
+						<nhpr h="304.99" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+				</node>
+				<node name="viewing_pad_1">
+					<pos x="0" y="0" z="0.08" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="1" y="1" z="1" />
+					<prop name="starting_block_0" code="gs_showblock">
+						<pos x="-33.6555" y="62.01" z="0" />
+						<nhpr h="124.7" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+					<prop name="starting_block_2" code="gs_showblock">
+						<pos x="-48.2099" y="48.43" z="0" />
+						<nhpr h="145.01" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+					<prop name="starting_block_4" code="gs_showblock">
+						<pos x="-57.8004" y="29.5893" z="0" />
+						<nhpr h="161.57" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+					<prop name="starting_block_6" code="gs_showblock">
+						<pos x="-57.0908" y="-6.61133" z="0" />
+						<nhpr h="196.57" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+					<prop name="starting_block_8" code="gs_showblock">
+						<pos x="-48.8114" y="-22.8225" z="0" />
+						<nhpr h="216.87" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+					<prop name="starting_block_10" code="gs_showblock">
+						<pos x="-35.0038" y="-36.5645" z="0" />
+						<nhpr h="235.3" p="0" r="0" />
+						<scale x="15" y="15" z="15" />
+					</prop>
+				</node>
+				<prop name="goofy_speedway_DNARoot" code="goofy_speedway">
+					<pos x="0" y="0" z="0" />
+					<nhpr h="0" p="0" r="0" />
+				</prop>
+				<landmark_building id="tb1:toon_landmark_GS_kart_shop_DNARoot" code="toon_landmark_GS_kart_shop" type="kartshop">
+					<title />
+					<pos x="0" y="14.56" z="0.121307" />
+					<nhpr h="0" p="0" r="0" />
+				</landmark_building>
+				<node name="Trees">
+					<prop name="gs_treebase_01" code="gs_treebase">
+						<pos x="13.0862" y="60.3313" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="14.0091" y="14.0091" z="14.0091" />
+					</prop>
+					<prop name="gs_treebase_02" code="gs_treebase">
+						<pos x="-12.7559" y="60.6068" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="14.0091" y="14.0091" z="14.0091" />
+					</prop>
+					<prop name="gs_treebase_03" code="gs_treebase">
+						<pos x="13.3112" y="-35.3729" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="14.0091" y="14.0091" z="14.0091" />
+					</prop>
+					<prop name="gs_treebase_04" code="gs_treebase">
+						<pos x="-13.8737" y="-34.803" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="14.0091" y="14.0091" z="14.0091" />
+					</prop>
+					<prop name="gs_treebase_05" code="gs_treebase">
+						<pos x="17.1844" y="-58.7125" z="0" />
+						<nhpr h="-120" p="0" r="0" />
+						<scale x="14.0091" y="14.0091" z="14.0091" />
+					</prop>
+					<prop name="gs_treebase_06" code="gs_treebase">
+						<pos x="-16.5338" y="-59.6159" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="14.0091" y="14.0091" z="14.0091" />
+					</prop>
+					<prop name="gs_treebase_07" code="gs_treebase">
+						<pos x="33.5348" y="-77.524" z="-0.986076" />
+						<nhpr h="15" p="0" r="0" />
+						<scale x="14.0091" y="14.0091" z="14.0091" />
+					</prop>
+					<prop name="gs_treebase_08" code="gs_treebase">
+						<pos x="-34.0546" y="-79.0192" z="-0.95" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="14.0091" y="14.0091" z="14.0091" />
+					</prop>
+					<prop name="gs_treebase_09" code="gs_treebase">
+						<pos x="-33.9526" y="-142.334" z="-0.912308" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="14.0091" y="14.0091" z="14.0091" />
+					</prop>
+					<prop name="gs_treebase_10" code="gs_treebase">
+						<pos x="32.1423" y="-145.064" z="-1.14349" />
+						<nhpr h="-75" p="0" r="0" />
+						<scale x="14.0091" y="14.0091" z="14.0091" />
+					</prop>
+				</node>
+				<node name="crashedBoards">
+					<pos x="0" y="0" z="0.1" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="1" y="1" z="1" />
+					<prop name="prop_gs_crashed_board_01" code="prop_gs_crashed_board">
+						<pos x="0.970987" y="-110.599" z="-0.0135054" />
+						<nhpr h="60" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="lampPosts">
+					<pos x="0" y="0" z="0.1" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="1" y="1" z="1" />
+					<prop name="gs_lamppost_01" code="gs_lamppost">
+						<pos x="64.2319" y="3.13617" z="0" />
+						<nhpr h="-180" p="0" r="0" />
+						<scale x="16" y="16" z="16" />
+					</prop>
+					<prop name="gs_lamppost_02" code="gs_lamppost">
+						<pos x="64.2387" y="21.0899" z="0" />
+						<nhpr h="180" p="0" r="0" />
+						<scale x="16" y="16" z="16" />
+					</prop>
+					<prop name="gs_lamppost_03" code="gs_lamppost">
+						<pos x="-64.2312" y="20.5462" z="0" />
+						<nhpr h="180" p="0" r="0" />
+						<scale x="16" y="16" z="16" />
+					</prop>
+					<prop name="gs_lamppost_04" code="gs_lamppost">
+						<pos x="-64.0807" y="4.25428" z="0" />
+						<nhpr h="180" p="359.223" r="0" />
+						<scale x="16" y="16" z="16" />
+					</prop>
+					<prop name="gs_lamppost_05" code="gs_lamppost">
+						<pos x="-12.6411" y="-54.3133" z="0" />
+						<nhpr h="-120" p="0" r="0" />
+						<scale x="16" y="16" z="16" />
+					</prop>
+					<prop name="gs_lamppost_06" code="gs_lamppost">
+						<pos x="12.5559" y="-53.8343" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="16" y="16" z="16" />
+					</prop>
+					<prop name="gs_lamppost_07" code="gs_lamppost">
+						<pos x="11.4847" y="-72.3553" z="0" />
+						<nhpr h="135" p="0" r="0" />
+						<scale x="16" y="16" z="16" />
+					</prop>
+					<prop name="gs_lamppost_08" code="gs_lamppost">
+						<pos x="-12.2492" y="-71.7945" z="0" />
+						<nhpr h="225" p="0" r="0" />
+						<scale x="16" y="16" z="16" />
+					</prop>
+				</node>
+				<node name="announcers">
+					<prop name="gs_announcer_01" code="gs_announcer">
+						<pos x="36.9082" y="-137.074" z="-0.718405" />
+						<nhpr h="60" p="0" r="0" />
+						<scale x="1.4" y="1.4" z="1.4" />
+					</prop>
+					<prop name="gs_announcer_02" code="gs_announcer">
+						<pos x="25.0413" y="-148.413" z="-0.745812" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="1.4" y="1.4" z="1.4" />
+					</prop>
+					<prop name="gs_announcer_03" code="gs_announcer">
+						<pos x="-26.1674" y="-146.864" z="-0.721916" />
+						<nhpr h="150" p="1.28066e-006" r="5.08889e-014" />
+						<scale x="1.4" y="1.4" z="1.4" />
+					</prop>
+					<prop name="gs_announcer_04" code="gs_announcer">
+						<pos x="-37.404" y="-135.235" z="-0.77696" />
+						<nhpr h="120" p="0" r="0" />
+						<scale x="1.4" y="1.4" z="1.4" />
+					</prop>
+					<prop name="gs_announcer_05" code="gs_announcer">
+						<pos x="36.8472" y="-85.2043" z="-0.749627" />
+						<nhpr h="120" p="0" r="0" />
+						<scale x="1.4" y="1.4" z="1.4" />
+					</prop>
+					<prop name="gs_announcer_06" code="gs_announcer">
+						<pos x="-37.6279" y="-87.5084" z="-0.747403" />
+						<nhpr h="60" p="0" r="5.33706e-008" />
+						<scale x="1.4" y="1.4" z="1.4" />
+					</prop>
+				</node>
+				<node name="cones">
+					<prop name="gs_cone_01" code="gs_cone">
+						<pos x="13.9778" y="4.96125" z="0" />
+						<nhpr h="0" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_02" code="gs_cone">
+						<pos x="13.9777" y="20.2565" z="0" />
+						<nhpr h="0" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_03" code="gs_cone">
+						<pos x="-29.6418" y="8.66831" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_04" code="gs_cone">
+						<pos x="-32.9107" y="23.0442" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_05" code="gs_cone">
+						<pos x="-13.5526" y="21.9477" z="0" />
+						<nhpr h="0" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_06" code="gs_cone">
+						<pos x="-8.50098" y="-107.548" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_07" code="gs_cone">
+						<pos x="-21.2906" y="-130.285" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_08" code="gs_cone">
+						<pos x="-18.3939" y="-130.38" z="1.95211" />
+						<nhpr h="90" p="0" r="0" />
+						<scale x="1.1" y="1.1" z="1.1" />
+					</prop>
+					<prop name="gs_cone_09" code="gs_cone">
+						<pos x="23.6111" y="-111.615" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_10" code="gs_cone">
+						<pos x="23.8284" y="-108.171" z="0" />
+						<nhpr h="-15" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_11" code="gs_cone">
+						<pos x="45.5463" y="-80.2441" z="-0.782309" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_12" code="gs_cone">
+						<pos x="41.8548" y="-80.6942" z="-0.777281" />
+						<nhpr h="120" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_13" code="gs_cone">
+						<pos x="79.336" y="-111.145" z="-0.778327" />
+						<nhpr h="15" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_14" code="gs_cone">
+						<pos x="79.7556" y="-109.163" z="0.0892836" />
+						<nhpr h="-90" p="-65.6429" r="179.698" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_15" code="gs_cone">
+						<pos x="26.3967" y="-152.37" z="-0.785851" />
+						<nhpr h="75" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_17" code="gs_cone">
+						<pos x="-66.588" y="-129.773" z="-0.77" />
+						<nhpr h="315" p="1.44729e-007" r="9.68138e-006" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_18" code="gs_cone">
+						<pos x="45.7352" y="-140.211" z="-0.780145" />
+						<nhpr h="0" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_19" code="gs_cone">
+						<pos x="43.2261" y="-139.872" z="-0.781728" />
+						<nhpr h="15" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_20" code="gs_cone">
+						<pos x="-40.7592" y="-137.471" z="-0.774723" />
+						<nhpr h="-15" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_21" code="gs_cone">
+						<pos x="-2.4526" y="-189.738" z="-0.727055" />
+						<nhpr h="-180" p="0.380735" r="0.529366" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_22" code="gs_cone">
+						<pos x="-15.0527" y="1.83079" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+					<prop name="gs_cone_16" code="prop_3ftdockpiling">
+						<pos x="-53.7762" y="-82.0762" z="-0.8" />
+						<nhpr h="285" p="0" r="0" />
+						<scale x="1.35" y="1.35" z="1.35" />
+					</prop>
+				</node>
+				<node name="crates">
+					<prop name="gs_krate_01" code="gs_krate">
+						<pos x="-18.4133" y="-130.325" z="0" />
+						<nhpr h="75" p="0" r="0" />
+						<scale x="1.2" y="1.2" z="1.2" />
+					</prop>
+					<prop name="gs_krate_03" code="gs_krate">
+						<pos x="-43.2279" y="-128.323" z="-0.77" />
+						<nhpr h="15" p="0" r="0" />
+					</prop>
+					<prop name="gs_krate_04" code="gs_krate">
+						<pos x="-45.2487" y="-128.575" z="-0.77" />
+						<nhpr h="30" p="0" r="0" />
+					</prop>
+					<prop name="gs_krate_05" code="gs_krate">
+						<pos x="0" y="-189.543" z="-0.740014" />
+						<nhpr h="270" p="0" r="0" />
+						<scale x="1.3" y="1.3" z="1.3" />
+					</prop>
+					<prop name="gs_krate_02" code="gs_krate">
+						<pos x="-44.1964" y="-128.433" z="0.86" />
+						<nhpr h="30" p="0" r="0" />
+						<scale x="0.8" y="0.8" z="0.8" />
+					</prop>
+				</node>
+				<node name="mailboxes">
+					<prop name="gs_mailbox_01" code="gs_mailbox">
+						<pos x="20.124" y="-49.9769" z="0.04" />
+						<nhpr h="210" p="0" r="0" />
+						<scale x="10" y="10" z="10" />
+					</prop>
+					<prop name="gs_mailbox_02" code="gs_mailbox">
+						<pos x="17.3915" y="-76.0454" z="0" />
+						<nhpr h="-45" p="0" r="0" />
+						<scale x="10" y="10" z="10" />
+					</prop>
+				</node>
+				<prop name="gs_wrench" code="gs_wrench">
+					<pos x="-42.0194" y="7.93055" z="4.19378" />
+					<nhpr h="15" p="-29.3964" r="57.2829" />
+				</prop>
+				<prop name="gs_tireiron" code="gs_tireIron">
+					<pos x="-40.9225" y="13.4848" z="-0.348712" />
+					<nhpr h="-30" p="1.98438e-007" r="-3.39793e-008" />
+					<scale x="1.3" y="1.3" z="1.3" />
+				</prop>
+				<prop name="gs_tires" code="gs_tires">
+					<pos x="34.3452" y="-1.20382" z="-0.331983" />
+					<nhpr h="15" p="0" r="0" />
+				</prop>
+				<node name="flags">
+					<prop name="gs_flag_01" code="gs_flag">
+						<pos x="19.1008" y="6.4803" z="0" />
+						<nhpr h="0" p="0" r="0" />
+						<scale x="0.8" y="0.8" z="0.8" />
+					</prop>
+					<prop name="gs_flag_02" code="gs_flag">
+						<pos x="-17.2657" y="6.4803" z="0" />
+						<nhpr h="0" p="0" r="0" />
+						<scale x="0.8" y="0.8" z="0.8" />
+					</prop>
+					<prop name="gs_flag_03" code="gs_flag">
+						<pos x="-75.8772" y="-90.7048" z="0" />
+						<nhpr h="0" p="0" r="0" />
+					</prop>
+					<prop name="gs_flag_04" code="gs_flag">
+						<pos x="-75.3548" y="-132.856" z="0" />
+						<nhpr h="0" p="0" r="0" />
+					</prop>
+					<prop name="gs_flag_05" code="gs_flag">
+						<pos x="-22.0346" y="-185.934" z="0" />
+						<nhpr h="0" p="0" r="0" />
+					</prop>
+					<prop name="gs_flag_06" code="gs_flag">
+						<pos x="18.2062" y="-186.257" z="0" />
+						<nhpr h="0" p="0" r="0" />
+					</prop>
+					<prop name="gs_flag_07" code="gs_flag">
+						<pos x="76.063" y="-130.147" z="0" />
+						<nhpr h="0" p="0" r="0" />
+					</prop>
+					<prop name="gs_flag_08" code="gs_flag">
+						<pos x="75.2066" y="-88.5278" z="0" />
+						<nhpr h="0" p="0" r="0" />
+					</prop>
+				</node>
+				<prop name="linktunnel_tt_2000_DNARoot" code="prop_safe_zone_entrance_tunnel">
+					<pos x="-20" y="78.1" z="0.56" />
+					<nhpr h="0" p="0" r="0" />
+					<sign code="tunnel_sign_orange">
+						<pos x="0" y="0" z="-2.84" />
+						<scale x="1.5" y="1" z="1.5" />
+						<baseline code="mickey" width="38.4394" height="38.4394">
+							<color r="0" g="0.501961" b="0.25098" a="1" />
+							<pos x="0.09" y="0" z="-0.99" />
+							<scale x="1.5" y="1" z="1.5" />
+							<text>PLAYGROUND</text>
+						</baseline>
+						<baseline>
+							<pos x="0" y="0" z="1.5" />
+							<scale x="2.5" y="1" z="2.5" />
+							<graphic code="mickeySZ" />
+						</baseline>
+						<baseline code="mickey" width="50" height="50">
+							<color r="0" g="0.501961" b="0.25098" a="1" />
+							<pos x="0" y="0" z="-1.94" />
+							<nhpr h="0" p="0" r="1" />
+							<scale x="0.8" y="1" z="0.8" />
+							<text>TOONTOWN CENTRAL</text>
+						</baseline>
+					</sign>
+				</prop>
+				<node name="BuildingFacade">
+					<flat_building id="tb0:random_DNARoot" width="15">
+						<pos x="54.172" y="87.5718" z="0" />
+						<nhpr h="30" p="0" r="0" />
+						<wall height="20" code="wall_md_blank_ur">
+							<color r="1" g="0.9" b="0.33" a="1" />
+							<windows code="window_sm_pointed_ur" count="4">
+								<color r="0.11" g="0.67" b="0.33" a="1" />
+							</windows>
+							<cornice code="cornice_curved_ur">
+								<color r="0.21" g="0.73" b="0.31" a="1" />
+							</cornice>
+						</wall>
+					</flat_building>
+					<flat_building id="tb0:random_DNARoot" width="20">
+						<pos x="34.7946" y="81.0034" z="0" />
+						<nhpr h="15" p="0" r="0" />
+						<wall height="10" code="wall_md_pillars_ur">
+							<color r="1" g="1" b="0.59" a="1" />
+							<windows code="window_sm_pointed_ul" count="2">
+								<color r="1" g="0.63" b="0.38" a="1" />
+							</windows>
+						</wall>
+						<wall height="10" code="wall_md_dental_ur">
+							<color r="0.91" g="0.63" b="0.44" a="1" />
+							<windows code="window_sm_round_ur" count="1">
+								<color r="0.6" g="0.66" b="0.27" a="1" />
+							</windows>
+							<cornice code="cornice_dental_ur">
+								<color r="1" g="0.84" b="0.59" a="1" />
+							</cornice>
+						</wall>
+					</flat_building>
+					<flat_building id="tb0:20_DNARoot" width="15">
+						<pos x="19.8333" y="80.9249" z="0" />
+						<nhpr h="0" p="0" r="0" />
+						<wall height="20" code="wall_md_blank_ur">
+							<color r="1" g="0.7" b="0.27" a="1" />
+							<windows code="window_sm_curved_ul" count="2">
+								<color r="0.95" g="0.89" b="0.17" a="1" />
+							</windows>
+							<cornice code="cornice_curved_ur">
+								<color r="0.79" g="0.36" b="0.19" a="1" />
+							</cornice>
+						</wall>
+					</flat_building>
+					<flat_building id="tb0:20_DNARoot" width="20">
+						<pos x="-53.6004" y="96.1594" z="0" />
+						<nhpr h="-45" p="0" r="0" />
+						<wall height="20" code="wall_md_blank_ur">
+							<color r="1" g="0.7" b="0.27" a="1" />
+							<windows code="window_sm_curved_ul" count="2">
+								<color r="0.95" g="0.89" b="0.17" a="1" />
+							</windows>
+							<cornice code="cornice_curved_ur">
+								<color r="0.79" g="0.36" b="0.19" a="1" />
+							</cornice>
+						</wall>
+					</flat_building>
+					<flat_building id="tb0:20_DNARoot" width="20">
+						<pos x="-39.6008" y="82.004" z="0" />
+						<nhpr h="0" p="0" r="0" />
+						<wall height="20" code="wall_md_pillars_ur">
+							<color r="1" g="1" b="0.59" a="1" />
+							<windows code="window_sm_pointed_ur" count="4">
+								<color r="0.1" g="0.59" b="0.39" a="1" />
+							</windows>
+							<cornice code="cornice_stone_ur">
+								<color r="1" g="1" b="0.59" a="1" />
+							</cornice>
+						</wall>
+					</flat_building>
+				</node>
+				<node name="UseKartHereSigns">
+					<pos x="-177.409" y="-1.26947" z="0" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="20" y="20" z="20" />
+				</node>
+				<node name="leader_boards">
+					<prop name="leaderBoard_stadium" code="leader_board">
+						<pos x="1.40398" y="-105.379" z="0" />
+						<nhpr h="179.126" p="0" r="0" />
+					</prop>
+					<prop name="leaderBoard_city" code="leader_board">
+						<pos x="-3.54519" y="-113.659" z="0" />
+						<nhpr h="-58.0988" p="0" r="0" />
+					</prop>
+					<prop name="leaderBoard_country" code="leader_board">
+						<pos x="6.30172" y="-113.738" z="0" />
+						<nhpr h="60.2947" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="racing_pad_9_country">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="-71.682" y="-124.238" z="-0.73" />
+						<nhpr h="-75" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="-72.8028" y="-119.873" z="-0.73" />
+						<nhpr h="-75" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="-65.2119" y="-122.469" z="-0.73" />
+						<nhpr h="-75" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="-66.1926" y="-118.067" z="-0.73" />
+						<nhpr h="-75" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="racing_pad_10_country">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="-73.2471" y="-104.146" z="-0.729938" />
+						<nhpr h="-105" p="0.0356288" r="-5.56654e-005" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="-72.0614" y="-99.9108" z="-0.73" />
+						<nhpr h="-105" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="-66.5596" y="-105.873" z="-0.73" />
+						<nhpr h="-105" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="-65.3765" y="-101.588" z="-0.73" />
+						<nhpr h="-105" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="racing_pad_11_country">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="-61.2631" y="-89.9246" z="-0.73" />
+						<nhpr h="-150" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="-57.3379" y="-87.6031" z="-0.73" />
+						<nhpr h="-150" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="-57.7913" y="-96.0109" z="-0.73" />
+						<nhpr h="-150" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="-53.7315" y="-93.7394" z="-0.73" />
+						<nhpr h="-150" p="0" r="0" />
+					</prop>
+				</node>
+				<node name="racing_pad_8_country">
+					<prop name="starting_block_0" code="gs_parkingspot">
+						<pos x="-56.6638" y="-135.053" z="-0.73" />
+						<nhpr h="-30" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_1" code="gs_parkingspot">
+						<pos x="-60.2216" y="-132.82" z="-0.73" />
+						<nhpr h="-30" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_2" code="gs_parkingspot">
+						<pos x="-56.7835" y="-126.841" z="-0.73" />
+						<nhpr h="-30" p="0" r="0" />
+					</prop>
+					<prop name="starting_block_3" code="gs_parkingspot">
+						<pos x="-53.0094" y="-128.959" z="-0.73" />
+						<nhpr h="-30" p="0" r="0" />
+					</prop>
+				</node>
+			</node>
+			<!-- Winter Snowball Piles -->
+			<node name="winter_snowpile_0">
+				<prop name="winter_snowpile_DNARoot" code="winter_snowpile">
+					<pos x="-23.0" y="40.8" z="0" />
+					<nhpr h="-181.6" p="0" r="0" />
+					<scale x="1.6" y="1.2" z="2.1" />
+				</prop>
+			</node>
+			<node name="winter_snowpile_1">
+				<prop name="winter_snowpile_DNARoot" code="winter_snowpile">
+					<pos x="-27.6" y="-13.8" z="0" />
+					<nhpr h="-11.4" p="0" r="0" />
+					<scale x="1.7" y="1.3" z="1.9" />
+				</prop>
+			</node>
+			<node name="winter_snowpile_3">
+				<prop name="winter_snowpile_DNARoot" code="winter_snowpile">
+					<pos x="33.4" y="-99.2" z="0.0" />
+					<nhpr h="-248.5" p="0" r="0" />
+					<scale x="1.8" y="1.5" z="2.4" />
+				</prop>
+			</node>
+			<node name="winter_snowpile_4">
+				<prop name="winter_snowpile_DNARoot" code="winter_snowpile">
+					<pos x="-32.6" y="-116.0" z="0.0" />
+					<nhpr h="-72.5" p="0" r="0" />
+					<scale x="1.7" y="1.6" z="2.2" />
+				</prop>
+			</node>
+		</visgroup>
+	</group>
+</scene>

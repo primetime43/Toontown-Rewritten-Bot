@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+
+	<model path="phase_5/models/modules/street_low_fence" scope="place">
+		<store_node root="prop" code="post_sandstone" node="p_sandstone" />
+		<store_node root="prop" code="post_sandstone2" node="p_sandstone2" />
+		<store_node root="prop" code="post_stuccobrick" node="p_stuccobrick" />
+		<store_node root="prop" code="post_brick" node="p_brick" />
+		<store_node root="prop" code="post_brick2" node="p_brick2" />
+		<store_node root="prop" code="post_brick3" node="p_brick3" />
+
+		<store_node root="prop" code="fence_woodflower_sandstone" node="f_woodflower_sandstone" />
+		<store_node root="prop" code="fence_woodflower_brickstucco" node="f_woodflower_brickstucco" />
+		<store_node root="prop" code="fence_ironbar_stuccobrick" node="f_ironbar_stuccobrick" />
+		<store_node root="prop" code="fence_ironbar_brick" node="f_ironbar_brick" />
+		<store_node root="prop" code="fence_woodbrush_sandstone" node="f_woodbrush_sandstone" />
+		<store_node root="prop" code="fence_woodbrush_brick" node="f_woodbrush_brick" />
+	</model>
+
+	<model path="phase_3.5/models/modules/walls_basement" scope="place">
+		<store_node root="wall" code="wall_basement_brick_ur" />
+		<store_node root="wall" code="wall_basement_brick_ul" />
+		<store_node root="wall" code="wall_basement_brick_dr" />
+		<store_node root="wall" code="wall_basement_brick_dl" />
+
+		<store_node root="wall" code="wall_basement_rock_ur" />
+		<store_node root="wall" code="wall_basement_rock_ul" />
+		<store_node root="wall" code="wall_basement_rock_dr" />
+		<store_node root="wall" code="wall_basement_rock_dl" />
+	</model>
+
+	<model path="phase_5/models/modules/TT_A2" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_A2" node="TT_A2" />
+	</model>
+	<model path="phase_5/models/modules/TT_A3" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_A3" node="TT_A3" />
+	</model>
+	<model path="phase_5/models/modules/TT_B1" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_B1" node="TT_B1" />
+	</model>
+	<model path="phase_5/models/modules/TT_B2" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_B2" node="TT_B2" />
+	</model>
+	<model path="phase_5/models/modules/TT_C1" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_C1" node="TT_C1" />
+	</model>
+
+
+	<model path="phase_5/models/modules/TT_A1_raised" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_A1_raised" node="TT_A1" />
+	</model>
+	<model path="phase_5/models/modules/TT_A2_raised" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_A2_raised" node="TT_A2" />
+	</model>
+	<model path="phase_5/models/modules/TT_B1_raised" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_B1_raised" node="TT_B1" />
+	</model>
+	<model path="phase_5/models/modules/TT_B2_raised" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_B2_raised" node="TT_B2" />
+	</model>
+	<model path="phase_5/models/modules/TT_C1_raised" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_C1_raised" node="TT_C1" />
+	</model>
+
+	<model path="phase_5/models/props/marquee" scope="place">
+		<store_node root="prop" code="prop_marquee" node="" />
+	</model>
+
+	<model path="phase_5/models/props/diner_entrance" scope="place">
+		<store_node root="prop" code="prop_diner_entrance" node="" />
+	</model>
+
+	<model path="phase_3.5/models/props/cellar_door" scope="place">
+		<store_node root="prop" code="prop_cellar_door" node="" />
+	</model>
+
+	<model path="phase_5/models/props/landmark_signs" scope="place">
+		<store_node root="prop" code="prop_anvil_sign" node="anvil" />
+		<store_node root="prop" code="prop_drycleaner_sign" node="drycleaner" />
+		<store_node root="prop" code="prop_post_office_sign" node="post_office" />
+		<store_node root="prop" code="prop_dentist" node="dentist" />
+	</model>
+
+	<model path="phase_5/models/props/roman_entrance" scope="place">
+		<store_node root="prop" code="prop_roman_entrance" node="" />
+	</model>
+
+	<model path="phase_5/models/props/billboard_ads" scope="place">
+		<store_node root="prop" code="prop_signpost" />
+		<store_node root="prop" code="prop_billboard" />
+	</model>
+
+	<model path="phase_5/models/props/wall_lanterns" scope="place">
+		<store_node root="prop" code="prop_light_square" />
+		<store_node root="prop" code="prop_light_round" />
+	</model>
+
+	<model path="phase_5/models/props/roof_access" scope="place">
+		<store_node root="prop" code="prop_roof_access" node="" />
+	</model>
+
+	<model path="phase_5/models/props/chimneys" scope="place">
+		<store_node root="prop" code="prop_chimney" />
+		<store_node root="prop" code="prop_stovepipe" />
+		<store_node root="prop" code="prop_smokestack" />
+	</model>
+
+	<model path="phase_5/models/props/safe" scope="place">
+		<store_node root="prop" code="prop_TT_safe" node="safe" />
+	</model>
+
+	<model path="phase_5/models/props/stairs" scope="place">
+		<store_node root="prop" code="prop_TT_stairs" node="" />
+	</model>
+
+	<model path="phase_5/models/modules/neighborhood_tunnel_TT" scope="place">
+		<store_node root="prop" code="prop_neighborhood_tunnel" />
+	</model>
+
+
+	<model path="phase_3.5/models/modules/safe_zone_entrance_tunnel_TT" scope="place">
+		<store_node root="prop" code="prop_safe_zone_entrance_tunnel" />
+	</model>
+
+
+	<model path="phase_5/models/props/crate" scope="place">
+		<store_node root="prop" code="prop_crate" node="crate" />
+	</model>
+
+	<model path="phase_3.5/models/modules/facade_a" scope="place">
+		<store_node root="prop" code="prop_facade_a" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/facade_aN" scope="place">
+		<store_node root="prop" code="prop_facade_aN" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/facade_b" scope="place">
+		<store_node root="prop" code="prop_facade_b" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/facade_bN" scope="place">
+		<store_node root="prop" code="prop_facade_bN" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/facade_c" scope="place">
+		<store_node root="prop" code="prop_facade_c" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/facade_cN" scope="place">
+		<store_node root="prop" code="prop_facade_cN" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/facade_d" scope="place">
+		<store_node root="prop" code="prop_facade_d" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/facade_dM" scope="place">
+		<store_node root="prop" code="prop_facade_dM" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/facade_dN" scope="place">
+		<store_node root="prop" code="prop_facade_dN" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/facade_e" scope="place">
+		<store_node root="prop" code="prop_facade_e" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/facade_eN" scope="place">
+		<store_node root="prop" code="prop_facade_eN" node="" />
+	</model>
+
+	<model path="phase_5/models/props/store_display_items" scope="place">
+		<store_node root="prop" code="cloth_1" />
+		<store_node root="prop" code="cloth" />
+		<store_node root="prop" code="music_inst" />
+		<store_node root="prop" code="office_furniture" />
+		<store_node root="prop" code="toys" />
+		<store_node root="prop" code="house_needs" />
+		<store_node root="prop" code="tailor_shop" />
+		<store_node root="prop" code="art_store" />
+		<store_node root="prop" code="winter_sports" />
+		<store_node root="prop" code="sport_store" node="sport_sotre" />
+		<store_node root="prop" code="flower_shop" />
+		<store_node root="prop" code="gallery1" />
+		<store_node root="prop" code="gallery2" />
+	</model>
+
+	<model path="phase_4/models/modules/TT_pond" scope="place">
+		<store_node root="street" code="street_TT_pond" node="" />
+	</model>
+
+
+	<model path="phase_5/models/char/tt_r_ara_ttc_B2" scope="hood">
+		<store_node root="anim_building" code="animated_building_phase_5_models_char__ttc_B2" node="" />
+	</model>
+
+	<model path="phase_5/models/char/tt_r_ara_ttc_hydrant" scope="hood">
+		<store_node root="interactive_prop" code="interactive_prop_phase_5_models_char__ttc_hydrant" node="" />
+	</model>
+
+	<model path="phase_5/models/char/tt_r_ara_ttc_mailbox" scope="hood">
+		<store_node root="interactive_prop" code="interactive_prop_phase_5_models_char__ttc_mailbox" node="" />
+	</model>
+
+	<model path="phase_5/models/char/tt_r_ara_ttc_trashcan" scope="hood">
+		<store_node root="interactive_prop" code="interactive_prop_phase_5_models_char__ttc_trashcan" node="" />
+	</model>
+</storage>

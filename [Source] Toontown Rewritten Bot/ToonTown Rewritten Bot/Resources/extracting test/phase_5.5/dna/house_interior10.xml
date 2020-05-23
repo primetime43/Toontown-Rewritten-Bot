@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene>
+	<node name="interior">
+		<prop name="house_interiorA_DNARoot" code="house_interiorA">
+			<pos x="0" y="0" z="0" />
+			<hpr h="0" p="-0.00553272" r="0" />
+		</prop>
+		<prop name="regular_bed_DNARoot" code="regular_bed">
+			<pos x="-23.618" y="16.1823" z="0" />
+			<hpr h="90" p="0" r="0" />
+		</prop>
+		<prop name="closetBoy_DNARoot" code="closetBoy">
+			<pos x="-22.5835" y="21.8784" z="0" />
+			<hpr h="90" p="0.0102469" r="-0.0154266" />
+		</prop>
+		<prop name="trunkBoy_DNARoot" code="trunkBoy">
+			<pos x="-24" y="21.4" z="0" />
+			<hpr h="90" p="0" r="0" />
+		</prop>
+		<prop name="jellybeanBank_DNARoot" code="jellybeanBank">
+			<pos x="-21.4932" y="5.76027" z="0" />
+			<hpr h="120" p="-0.0501863" r="-0.0440521" />
+		</prop>
+		<prop name="rugB_DNARoot" code="rugB">
+			<pos x="-20.2738" y="6.77053" z="0" />
+			<hpr h="135" p="-0.0357293" r="-0.0257721" />
+			<scale x="2.3354" y="2.3354" z="2.3354" />
+		</prop>
+		<prop name="FireplaceSq_DNARoot" code="FireplaceSq">
+			<pos x="-18.8" y="-13" z="0" />
+			<hpr h="90" p="0" r="0" />
+		</prop>
+		<prop name="chairA_DNARoot" code="chairA">
+			<pos x="-18.9539" y="-20.5105" z="0" />
+			<hpr h="90" p="90" r="90" />
+		</prop>
+		<prop name="chairA_DNARoot" code="chairA">
+			<pos x="-18.7863" y="-6.21361" z="0" />
+			<hpr h="90" p="-1.49067e-005" r="9.20725e-006" />
+		</prop>
+		<prop name="GardenA_DNARoot" code="GardenA">
+			<pos x="16.0223" y="-11.8833" z="5.38406" />
+			<hpr h="-90" p="89.7263" r="-90" />
+			<scale x="0.889117" y="0.889117" z="0.889117" />
+		</prop>
+		<prop name="rugB_DNARoot" code="rugA">
+			<pos x="-10" y="16" z="0" />
+			<hpr h="90" p="0" r="0" />
+			<scale x="2.25031" y="2.25031" z="2.25031" />
+		</prop>
+		<prop name="couch_1person_DNARoot" code="couch_1person">
+			<pos x="-3.34375" y="22.3644" z="0" />
+			<hpr h="-90" p="2.18531e-005" r="0" />
+		</prop>
+		<prop name="rug_DNARoot" code="rug">
+			<pos x="0" y="-12" z="0" />
+			<hpr h="90" p="0" r="0" />
+		</prop>
+		<prop name="couch_2person_DNARoot" code="couch_2person">
+			<pos x="0" y="-23" z="0" />
+			<hpr h="180" p="0" r="0" />
+		</prop>
+		<prop name="couch_1person_DNARoot" code="couch_1person">
+			<pos x="4.44649" y="-0.463924" z="0" />
+			<hpr h="0" p="4.27765e-005" r="0" />
+		</prop>
+		<prop name="GardenA_DNARoot" code="GardenA">
+			<pos x="-11.8686" y="25.9911" z="5.56263" />
+			<hpr h="0" p="-0.000419333" r="-1.27222e-014" />
+			<scale x="0.954281" y="0.954281" z="0.954281" />
+		</prop>
+	</node>
+</scene>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene zone="18000">
+	<group name="Party">
+		<visgroup zone="18000:party" vis="18000:party">
+			<node name="level">
+				<prop name="terrain_DNARoot" code="terrain">
+					<pos x="0" y="0" z="0" />
+					<nhpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="-120" y="80" z="0" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="0.5" y="0.5" z="0.5" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="-20" y="160" z="0" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="0.5" y="0.5" z="0.5" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="165" y="80" z="0" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="0.8" y="0.8" z="0.8" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="165" y="65" z="0" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="0.7" y="0.7" z="0.7" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="165" y="-15" z="0" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="0.7" y="0.7" z="0.7" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="5" y="-170" z="0" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="0.8" y="0.8" z="0.8" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="-155" y="30" z="0" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="0.6" y="0.6" z="0.6" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="-40" y="140" z="0" />
+					<nhpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="45" y="140" z="0" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="0.9" y="0.9" z="0.9" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="85" y="150" z="0" />
+					<nhpr h="0" p="0" r="0" />
+					<scale x="0.7" y="0.7" z="0.7" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="105" y="115" z="0" />
+					<nhpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="170" y="-5" z="0" />
+					<nhpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="175" y="-60" z="0" />
+					<nhpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="130" y="-120" z="0" />
+					<nhpr h="0" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="-50" y="-145" z="0" />
+					<nhpr h="90" p="0" r="0" />
+					<scale x="0.9" y="0.9" z="0.9" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="-100" y="-120" z="0" />
+					<nhpr h="90" p="0" r="0" />
+					<scale x="0.8" y="0.8" z="0.8" />
+				</prop>
+				<prop name="prop_tree_large_ur_DNARoot" code="prop_tree_large_ur">
+					<pos x="-115" y="-105" z="0" />
+					<nhpr h="90" p="0" r="0" />
+				</prop>
+				<prop name="prop_tree_large_ul_DNARoot" code="prop_tree_large_ul">
+					<pos x="-160" y="-10" z="0" />
+					<nhpr h="0" p="0" r="0" />
+				</prop>
+			</node>
+		</visgroup>
+	</group>
+</scene>

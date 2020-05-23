@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+
+
+	<model path="phase_6/models/props/ship_masts" scope="place">
+		<store_node root="prop" code="prop_shipmasts" node="" />
+	</model>
+
+	<model path="phase_6/models/props/mailbox_DD" scope="place">
+		<store_node root="prop" code="prop_mailbox_DD" node="" />
+	</model>
+
+	<model path="phase_6/models/props/trashcan_DD" scope="place">
+		<store_node root="prop" code="prop_trashcan_DD" node="" />
+	</model>
+
+	<model path="phase_6/models/modules/neighborhood_tunnel_DD" scope="place">
+		<store_node root="prop" code="prop_neighborhood_tunnel" />
+	</model>
+
+	<model path="phase_6/models/modules/safe_zone_entrance_tunnel_DD" scope="place">
+		<store_node root="prop" code="prop_safe_zone_entrance_tunnel" />
+	</model>
+
+	<model path="phase_5/models/char/tt_r_ara_ttc_hydrant" scope="hood">
+		<store_node root="anim_prop" code="animated_prop_generic_phase_5_models_char__ttc_hydrant" node="" />
+	</model>
+
+	<model path="phase_5/models/props/billboard_ads" scope="place">
+		<store_node root="prop" code="prop_signpost" />
+		<store_node root="prop" code="prop_billboard" />
+	</model>
+
+	<model path="phase_5/models/props/roof_access" scope="place">
+		<store_node root="prop" code="prop_roof_access" node="" />
+	</model>
+
+	<model path="phase_6/models/props/DD_lighthouse" scope="place">
+		<store_node root="prop" code="prop_DD_lighthouse" node="" />
+	</model>
+
+	<model path="phase_6/models/props/DD_street_water" scope="place">
+		<store_node root="prop" code="prop_DD_street_water" node="" />
+	</model>
+
+	<model path="phase_6/models/modules/tt_m_ara_dod_hq" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_hqDD" node="" />
+	</model>
+
+	<model path="phase_6/models/modules/DD_pond" scope="place">
+		<store_node root="street" code="street_DD_pond" node="" />
+	</model>
+</storage>

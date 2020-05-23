@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene zone="11200">
+	<store_suit_point id="1" type="STREET_POINT" x="27" y="-341" z="0.05" />
+	<store_suit_point id="2" type="STREET_POINT" x="0" y="-341" z="0.05" />
+	<store_suit_point id="3" type="STREET_POINT" x="-27" y="-341" z="0.05" />
+	<store_suit_point id="4" type="STREET_POINT" x="-27" y="-300" z="0.05" />
+	<store_suit_point id="5" type="STREET_POINT" x="13" y="-300" z="0.05" />
+	<store_suit_point id="6" type="STREET_POINT" x="13" y="-278" z="0.05" />
+	<store_suit_point id="7" type="STREET_POINT" x="-27" y="-278" z="0.05" />
+	<store_suit_point id="8" type="STREET_POINT" x="-27" y="-260" z="0.05" />
+	<store_suit_point id="9" type="STREET_POINT" x="-27" y="-236" z="0.05" />
+	<store_suit_point id="10" type="STREET_POINT" x="-27" y="-212" z="0.05" />
+	<store_suit_point id="11" type="STREET_POINT" x="-34" y="-204" z="0.05" />
+	<store_suit_point id="12" type="STREET_POINT" x="-60" y="-200" z="0.05" />
+	<store_suit_point id="13" type="STREET_POINT" x="-90" y="-200" z="0.05" />
+	<store_suit_point id="14" type="STREET_POINT" x="-145" y="-200" z="0.05" />
+	<store_suit_point id="15" type="STREET_POINT" x="-188" y="-200" z="0.05" />
+	<store_suit_point id="16" type="STREET_POINT" x="-188" y="-167" z="0.05" />
+	<store_suit_point id="17" type="STREET_POINT" x="-137" y="-167" z="0.05" />
+	<store_suit_point id="18" type="STREET_POINT" x="-41" y="-167" z="0.05" />
+	<store_suit_point id="19" type="STREET_POINT" x="-37" y="-191" z="0.05" />
+	<store_suit_point id="20" type="STREET_POINT" x="-31" y="-200" z="0.05" />
+	<store_suit_point id="21" type="STREET_POINT" x="-13" y="-212" z="0.05" />
+	<store_suit_point id="22" type="STREET_POINT" x="13" y="-212" z="0.05" />
+	<store_suit_point id="23" type="STREET_POINT" x="31" y="-200" z="0.05" />
+	<store_suit_point id="24" type="STREET_POINT" x="55" y="-182" z="0.05" />
+	<store_suit_point id="25" type="STREET_POINT" x="112" y="-182" z="0.05" />
+	<store_suit_point id="26" type="STREET_POINT" x="165" y="-182" z="0.05" />
+	<store_suit_point id="27" type="STREET_POINT" x="165" y="-200" z="0.05" />
+	<store_suit_point id="28" type="STREET_POINT" x="112" y="-200" z="0.05" />
+	<store_suit_point id="29" type="STREET_POINT" x="55" y="-200" z="0.05" />
+	<store_suit_point id="30" type="STREET_POINT" x="34" y="-206" z="0.05" />
+	<store_suit_point id="31" type="STREET_POINT" x="27" y="-212" z="0.05" />
+	<store_suit_point id="32" type="STREET_POINT" x="27" y="-236" z="0.05" />
+	<store_suit_point id="33" type="STREET_POINT" x="-13" y="-236" z="0.05" />
+	<store_suit_point id="34" type="STREET_POINT" x="-13" y="-260" z="0.05" />
+	<store_suit_point id="35" type="STREET_POINT" x="27" y="-260" z="0.05" />
+	<store_suit_point id="36" type="STREET_POINT" x="27" y="-278" z="0.05" />
+	<store_suit_point id="37" type="STREET_POINT" x="27" y="-300" z="0.05" />
+
+	<store_suit_point id="101" type="STREET_POINT" x="0" y="-143" z="0.05" />
+	<store_suit_point id="102" type="STREET_POINT" x="96" y="-143" z="0.05" />
+	<store_suit_point id="103" type="STREET_POINT" x="96" y="-120" z="0.05" />
+	<store_suit_point id="104" type="STREET_POINT" x="159" y="-120" z="0.05" />
+	<store_suit_point id="105" type="STREET_POINT" x="159" y="18" z="0.05" />
+	<store_suit_point id="106" type="STREET_POINT" x="159" y="120" z="0.05" />
+	<store_suit_point id="107" type="STREET_POINT" x="0" y="111" z="0.05" />
+	<store_suit_point id="108" type="STREET_POINT" x="-193" y="103" z="0.05" />
+	<store_suit_point id="109" type="STREET_POINT" x="-187" y="0" z="0.05" />
+	<store_suit_point id="110" type="STREET_POINT" x="-182" y="-144" z="0.05" />
+	<store_suit_point id="111" type="STREET_POINT" x="-110" y="-144" z="0.05" />
+	<store_suit_point id="112" type="STREET_POINT" x="-110" y="-80" z="0.05" />
+	<store_suit_point id="113" type="STREET_POINT" x="-170" y="-80" z="0.05" />
+	<store_suit_point id="114" type="STREET_POINT" x="-170" y="-24" z="0.05" />
+	<store_suit_point id="115" type="STREET_POINT" x="-73" y="-24" z="0.05" />
+	<store_suit_point id="116" type="STREET_POINT" x="-73" y="5" z="0.05" />
+	<store_suit_point id="117" type="STREET_POINT" x="-23" y="5" z="0.05" />
+	<store_suit_point id="118" type="STREET_POINT" x="-23" y="-24" z="0.05" />
+	<store_suit_point id="119" type="STREET_POINT" x="-23" y="-120" z="0.05" />
+	<store_suit_point id="120" type="STREET_POINT" x="-80" y="-120" z="0.05" />
+	<store_suit_point id="121" type="STREET_POINT" x="-80" y="-143" z="0.05" />
+
+	<store_suit_point id="122" type="STREET_POINT" x="-23" y="18" z="0.05" />
+	<store_suit_point id="123" type="STREET_POINT" x="63" y="18" z="0.05" />
+	<store_suit_point id="124" type="STREET_POINT" x="147" y="18" z="0.05" />
+	<store_suit_point id="125" type="STREET_POINT" x="147" y="-96" z="0.05" />
+	<store_suit_point id="126" type="STREET_POINT" x="-23" y="-96" z="0.05" />
+
+
+	<group name="sellbotHQFactoryExterior">
+		<visgroup zone="11200" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263" />
+
+		<visgroup zone="11201" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="2" b="3" />
+			<suit_edge a="3" b="4" />
+			<battle_cell width="20" height="20" x="-27" y="-320" z="0.05" />
+		</visgroup>
+		<visgroup zone="11202" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="1" b="2" />
+			<suit_edge a="37" b="1" />
+			<battle_cell width="20" height="20" x="27" y="-320" z="0.05" />
+		</visgroup>
+		<visgroup zone="11203" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="4" b="5" />
+			<suit_edge a="5" b="6" />
+			<battle_cell width="20" height="20" x="0" y="-289" z="0.05" />
+		</visgroup>
+		<visgroup zone="11204" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="6" b="7" />
+			<suit_edge a="7" b="8" />
+			<suit_edge a="8" b="9" />
+			<battle_cell width="20" height="20" x="-27" y="-268" z="0.05" />
+		</visgroup>
+		<visgroup zone="11205" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="34" b="35" />
+			<suit_edge a="35" b="36" />
+			<suit_edge a="36" b="37" />
+			<battle_cell width="20" height="20" x="27" y="-268" z="0.05" />
+		</visgroup>
+		<visgroup zone="11206" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="32" b="33" />
+			<suit_edge a="33" b="34" />
+			<battle_cell width="20" height="20" x="0" y="-248" z="0.05" />
+		</visgroup>
+		<visgroup zone="11207" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="9" b="10" />
+			<suit_edge a="10" b="11" />
+			<suit_edge a="20" b="21" />
+			<battle_cell width="20" height="20" x="-23" y="-214" z="0.05" />
+		</visgroup>
+		<visgroup zone="11208" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="21" b="22" />
+			<suit_edge a="22" b="23" />
+			<suit_edge a="30" b="31" />
+			<suit_edge a="31" b="32" />
+			<battle_cell width="20" height="20" x="23" y="-214" z="0.05" />
+		</visgroup>
+		<visgroup zone="11209" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="11" b="12" />
+			<suit_edge a="12" b="13" />
+			<suit_edge a="18" b="19" />
+			<suit_edge a="19" b="20" />
+			<battle_cell width="20" height="20" x="-47" y="-193" z="0.05" />
+		</visgroup>
+		<visgroup zone="11210" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="23" b="24" />
+			<suit_edge a="24" b="25" />
+			<suit_edge a="28" b="29" />
+			<suit_edge a="29" b="30" />
+			<battle_cell width="20" height="20" x="47" y="-193" z="0.05" />
+		</visgroup>
+		<visgroup zone="11211" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="14" b="15" />
+			<suit_edge a="15" b="16" />
+			<suit_edge a="16" b="17" />
+			<battle_cell width="20" height="20" x="-164" y="-173" z="0.05" />
+		</visgroup>
+		<visgroup zone="11212" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="17" b="18" />
+			<battle_cell width="20" height="20" x="-105" y="-173" z="0.05" />
+		</visgroup>
+		<visgroup zone="11213" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="25" b="26" />
+			<suit_edge a="26" b="27" />
+			<suit_edge a="27" b="28" />
+			<battle_cell width="20" height="20" x="120" y="-191" z="0.05" />
+		</visgroup>
+		<visgroup zone="11214" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="13" b="14" />
+			<battle_cell width="20" height="20" x="-124" y="-200" z="0.05" />
+		</visgroup>
+
+		<visgroup zone="11251" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="101" b="102" />
+			<suit_edge a="121" b="101" />
+			<battle_cell width="20" height="20" x="31" y="-141" z="0.05" />
+		</visgroup>
+		<visgroup zone="11252" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="102" b="103" />
+			<suit_edge a="103" b="104" />
+			<suit_edge a="125" b="126" />
+			<battle_cell width="20" height="20" x="96" y="-120" z="0.05" />
+		</visgroup>
+		<visgroup zone="11253" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="104" b="105" />
+			<suit_edge a="124" b="125" />
+			<battle_cell width="20" height="20" x="147" y="-96" z="0.05" />
+		</visgroup>
+		<visgroup zone="11254" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="105" b="106" />
+			<suit_edge a="123" b="124" />
+			<battle_cell width="20" height="20" x="147" y="18" z="0.05" />
+		</visgroup>
+		<visgroup zone="11255" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="106" b="107" />
+			<battle_cell width="20" height="20" x="101" y="116" z="0.05" />
+		</visgroup>
+		<visgroup zone="11256" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="107" b="108" />
+			<battle_cell width="20" height="20" x="-59" y="109" z="0.05" />
+		</visgroup>
+		<visgroup zone="11257" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="108" b="109" />
+			<battle_cell width="20" height="20" x="-191" y="65" z="0.05" />
+		</visgroup>
+		<visgroup zone="11258" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="109" b="110" />
+			<suit_edge a="113" b="114" />
+			<suit_edge a="114" b="115" />
+			<battle_cell width="20" height="20" x="-170" y="-24" z="0.05" />
+		</visgroup>
+		<visgroup zone="11259" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="112" b="113" />
+			<battle_cell width="20" height="20" x="-143" y="-73" z="0.05" />
+		</visgroup>
+		<visgroup zone="11260" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="110" b="111" />
+			<suit_edge a="111" b="112" />
+			<suit_edge a="115" b="116" />
+			<suit_edge a="116" b="117" />
+			<suit_edge a="120" b="121" />
+			<battle_cell width="20" height="20" x="-109" y="-138" z="0.05" />
+		</visgroup>
+		<visgroup zone="11261" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="115" b="118" />
+			<battle_cell width="20" height="20" x="-53" y="-10" z="0.05" />
+		</visgroup>
+		<visgroup zone="11262" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="117" b="122" />
+			<suit_edge a="122" b="123" />
+			<battle_cell width="20" height="20" x="-18" y="18" z="0.05" />
+		</visgroup>
+		<visgroup zone="11263" vis="11201 11202 11203 11204 11205 11206 11207 11208 11209 11210 11211 11212 11213 11214 11251 11252 11253 11254 11255 11256 11257 11258 11259 11260 11261 11262 11263">
+			<suit_edge a="126" b="119" />
+			<suit_edge a="119" b="120" />
+			<suit_edge a="118" b="126" />
+			<battle_cell width="20" height="20" x="-28" y="-108" z="0.05" />
+		</visgroup>
+
+	</group>
+</scene>

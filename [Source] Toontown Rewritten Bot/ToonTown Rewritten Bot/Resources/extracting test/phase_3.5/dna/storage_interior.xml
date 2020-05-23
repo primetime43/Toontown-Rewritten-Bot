@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+
+	<!--  Toon interior category for pre-built toon interiors -->
+	<model path="phase_3.5/models/modules/toon_interior">
+		<store_node root="TI_room" code="TI_room" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/toon_interior_2">
+		<store_node root="TI_room" code="TI_room_2" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/toon_interior_L">
+		<store_node root="TI_room" code="TI_room_L" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/toon_interior_T">
+		<store_node root="TI_room" code="TI_room_T" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/tt_m_ara_int_toonhall">
+		<store_node root="TI_hall" code="TI_hall" node="" />
+	</model>
+
+
+	<!--  store_texture [ "TI_wallpaper" "wall_paper_a1" -->
+	<!--                  "phase_3.5/maps/wall_paper_a1.jpg" ] -->
+	<!--  store_texture [ "TI_wallpaper" "wall_paper_a2" -->
+	<!--                  "phase_3.5/maps/wall_paper_a2.jpg" ] -->
+	<!--  store_texture [ "TI_wallpaper" "wall_paper_a3" -->
+	<!--                  "phase_3.5/maps/wall_paper_a3.jpg" ] -->
+	<!--  store_texture [ "TI_wallpaper" "wall_paper_a4" -->
+	<!--                  "phase_3.5/maps/wall_paper_a4.jpg" ] -->
+	<!--  store_texture [ "TI_wallpaper" "wall_paper_a5" -->
+	<!--                  "phase_3.5/maps/wall_paper_a5.jpg" ] -->
+
+	<store_texture root="TI_wallpaper" code="stripeB5" path="phase_3.5/maps/stripeB5.jpg" />
+
+	<store_texture root="TI_wallpaper_border" code="stripeB5" path="phase_3.5/maps/stripeB5.jpg" />
+
+	<store_texture root="TI_wainscotting" code="wall_paper_b3" path="phase_3.5/maps/wall_paper_b3.jpg" />
+	<store_texture root="TI_wainscotting" code="wall_paper_b4" path="phase_3.5/maps/wall_paper_b4.jpg" />
+
+	<store_texture root="TI_floor" code="floor_wood" path="phase_3/maps/floor_create_toon.jpg" />
+	<store_texture root="TI_floor" code="floor_carpet" path="phase_3.5/maps/carpet.jpg" />
+
+	<store_texture root="TI_molding" code="molding_wood1" path="phase_3.5/maps/molding_wood1.jpg" />
+	<store_texture root="TI_molding" code="molding_wood2" path="phase_3.5/maps/molding_wood2.jpg" />
+
+
+	<store_texture root="TI_couch" code="couch1" path="phase_3.5/maps/couch.jpg" />
+	<store_texture root="TI_couch" code="couch2" path="phase_3.5/maps/couch2.jpg" />
+	<store_texture root="TI_couch" code="couch3" path="phase_3.5/maps/couch3.jpg" />
+
+
+
+	<model path="phase_3.5/models/modules/paper_trashcan">
+		<store_node root="TI_paper_trashcan" code="TI_paper_trashcan" node="" />
+	</model>
+	<model path="phase_3.5/models/props/big_planter">
+		<store_node root="TI_big_planter" code="TI_big_planter" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/bookcase">
+		<store_node root="TI_bookcase" code="TI_bookcase" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/bookcase_low">
+		<store_node root="TI_bookcase_low" code="TI_bookcase_low" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/chair">
+		<store_node root="TI_chair" code="TI_chair" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/coatrack">
+		<store_node root="TI_coatrack" code="TI_coatrack" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/counter">
+		<store_node root="TI_counter" code="TI_counter" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/counterShort">
+		<store_node root="TI_counterShort" code="TI_counterShort" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/desk">
+		<store_node root="TI_desk" code="TI_desk" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/desk_only">
+		<store_node root="TI_desk_only" code="TI_desk_only" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/desk_only_wo_phone">
+		<store_node root="TI_desk_only_wo_phone" code="TI_desk_only_wo_phone" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/int_door">
+		<store_node root="TI_int_door" code="TI_int_door" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/lamp_short">
+		<store_node root="TI_lamp_short" code="TI_lamp_short" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/lamp_tall">
+		<store_node root="TI_lamp_tall" code="TI_lamp_tall" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/rug">
+		<store_node root="TI_rug" code="TI_rug" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/tie_rack">
+		<store_node root="TI_tie_rack" code="TI_tie_rack" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/umbrella_stand">
+		<store_node root="TI_umbrella_stand" code="TI_umbrella_stand" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/couch_1person">
+		<store_node root="TI_couch_1person" code="TI_couch_1person" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/couch_2person">
+		<store_node root="TI_couch_2person" code="TI_couch_2person" node="" />
+	</model>
+	<model path="phase_3.5/models/modules/ending_table">
+		<store_node root="TI_ending_table" code="TI_ending_table" node="" />
+	</model>
+
+
+</storage>

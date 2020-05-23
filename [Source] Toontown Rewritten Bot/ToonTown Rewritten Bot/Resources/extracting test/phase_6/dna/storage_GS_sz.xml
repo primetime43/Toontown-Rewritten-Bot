@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<model path="phase_6/models/karting/GasolineAlley_TT" scope="place">
+		<store_node root="prop" code="goofy_speedway" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/kartShop" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_GS_kart_shop" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/cone" scope="place">
+		<store_node root="prop" code="gs_cone" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/KartArea_WrenchJack" scope="place">
+		<store_node root="prop" code="gs_tireIron" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/KartArea_Tires" scope="place">
+		<store_node root="prop" code="gs_tires" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/GoofyStadium_Lamppost_Base1" scope="place">
+		<store_node root="holiday_prop" code="gs_lamppost" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/GoofyStadium_TreeBase" scope="place">
+		<store_node root="holiday_prop" code="gs_treebase" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/GoofyStadium_Mailbox" scope="place">
+		<store_node root="prop" code="gs_mailbox" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/krate" scope="place">
+		<store_node root="prop" code="gs_krate" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/announcer" scope="place">
+		<store_node root="prop" code="gs_announcer" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/Parkingspot" scope="place">
+		<store_node root="prop" code="gs_parkingspot" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/KartShowBlock" scope="place">
+		<store_node root="prop" code="gs_showblock" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/flag" scope="place">
+		<store_node root="prop" code="gs_flag" node="" />
+	</model>
+
+	<model path="phase_6/models/karting/KartShowBlockSign" scope="place">
+		<store_node root="prop" code="gs_showblocksign" node="" />
+	</model>
+
+	<model path="phase_4/models/modules/safe_zone_tunnel_TT" scope="place">
+		<store_node root="prop" code="prop_safe_zone_tunnel" />
+	</model>
+
+	<model path="phase_3.5/models/modules/safe_zone_entrance_tunnel_TT" scope="place">
+		<store_node root="prop" code="prop_safe_zone_entrance_tunnel" />
+	</model>
+</storage>

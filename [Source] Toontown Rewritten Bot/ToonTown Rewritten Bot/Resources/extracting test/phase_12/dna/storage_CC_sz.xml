@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+
+	<model path="phase_4/models/modules/bank" scope="place">
+		<store_node root="toon_landmark" code="toon_landmark_TT_bank" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/CogGolfCourtyard" scope="place">
+		<store_node root="prop" code="CogGolfCourtyard" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BB_Elevator" scope="place">
+		<store_node root="prop" code="BB_Elevator" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/Coggolf_cart3" scope="place">
+		<store_node root="prop" code="Coggolf_cart3" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BossbotEntranceRoom" scope="place">
+		<store_node root="prop" code="BossbotEntranceRoom" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/Connector_Tunnel_A" scope="place">
+		<store_node root="prop" code="Connector_Tunnel_A" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/Connector_Tunnel_B" scope="place">
+		<store_node root="prop" code="Connector_Tunnel_B" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BossbotTeeOffRoom" scope="place">
+		<store_node root="prop" code="BossbotTeeOffRoom" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BossbotFairwayRoom_A" scope="place">
+		<store_node root="prop" code="BossbotFairwayRoom_A" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BossbotKartBoardingRm" scope="place">
+		<store_node root="prop" code="BossbotKartBoardingRm" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BanquetInterior_1" scope="place">
+		<store_node root="prop" code="BanquetInterior_1" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BossbotMazex4_C" scope="place">
+		<store_node root="prop" code="BossbotMazex4_C" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BossbotMazex3_straight_C" scope="place">
+		<store_node root="prop" code="BossbotMazex3_straight_C" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BossbotMazex2_straight_C" scope="place">
+		<store_node root="prop" code="BossbotMazex2_straight_C" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BossbotMazex1_C" scope="place">
+		<store_node root="prop" code="BossbotMazex1_C" node="" />
+	</model>
+
+	<model path="phase_6/models/golf/Golfzone_To_Bossbot_Tunnel" scope="place">
+		<store_node root="prop" code="Golfzone_To_Bossbot_Tunnel" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/CogGolfHub" scope="place">
+		<store_node root="prop" code="CogGolfHub" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BossbotGreenRoom_A" scope="place">
+		<store_node root="prop" code="BossbotGreenRoom_A" node="" />
+	</model>
+
+	<model path="phase_12/models/bossbotHQ/BossbotPresidentsRm" scope="place">
+		<store_node root="prop" code="BossbotPresidentsRm" node="" />
+	</model>
+</storage>

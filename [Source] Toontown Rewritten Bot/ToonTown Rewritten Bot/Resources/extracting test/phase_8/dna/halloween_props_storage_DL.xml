@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<model path="phase_3.5/models/props/tt_m_ara_ddl_tree_halloween" scope="hood">
+		<store_node root="holiday_prop" code="prop_tree_DL_brickbox_ul" node="" />
+		<store_node root="holiday_prop" code="prop_tree_DL_brickbox_ur" node="" />
+	</model>
+
+
+	<model path="phase_8/models/props/tt_m_ara_DL_streetlight_halloween" scope="hood">
+		<store_node root="holiday_prop" code="prop_DL_post_one_light" node="prop_post_one_light" />
+		<store_node root="holiday_prop" code="prop_DL_post_three_light" node="prop_post_three_light" />
+	</model>
+</storage>

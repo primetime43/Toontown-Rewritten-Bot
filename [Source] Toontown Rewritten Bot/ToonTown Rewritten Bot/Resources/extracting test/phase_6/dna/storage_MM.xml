@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+
+	<model path="phase_6/models/modules/MM_A1" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_MM_A1" node="MM_A1" />
+	</model>
+	<model path="phase_6/models/modules/MM_A2" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_MM_A2" node="MM_A2" />
+	</model>
+	<model path="phase_6/models/modules/MM_B1" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_MM_B1" node="MM_B1" />
+	</model>
+	<model path="phase_6/models/modules/MM_B2" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_MM_B2" node="MM_B2" />
+	</model>
+	<model path="phase_6/models/modules/MM_C1" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_MM_C1" node="MM_C1" />
+	</model>
+	<model path="phase_6/models/modules/MM_D1" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_MM_D1" node="MM_D1" />
+	</model>
+	<model path="phase_6/models/modules/MM_E1" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_MM_E1" node="MM_E1" />
+	</model>
+
+	<model path="phase_6/models/props/streetlight_MM" scope="hood">
+		<store_node root="holiday_prop" code="prop_MM_flute_lamp" node="MM_flute_lamp" />
+		<store_node root="holiday_prop" code="prop_MM_trumpets_lamp" node="MM_trumpets_lamp" />
+	</model>
+
+	<model path="phase_6/models/modules/MM_windows" scope="hood">
+		<store_node root="window" code="window_MM_sm_curved_ur" node="window_sm_curved_ur" />
+		<store_node root="window" code="window_MM_sm_curved_ul" node="window_sm_curved_ul" />
+
+		<store_node root="window" code="window_MM_sm_round_ur" node="window_sm_round_ur" />
+		<store_node root="window" code="window_MM_sm_round_ul" node="window_sm_round_ul" />
+	</model>
+
+	<store_texture root="texture" code="street_street_MM_tex" path="phase_3.5/maps/cobblestone_pink.jpg" />
+	<store_texture root="texture" code="street_sidewalk_MM_tex" path="phase_3.5/maps/sidewalk_4cont_red.jpg" />
+	<store_texture root="texture" code="street_curb_MM_tex" path="phase_3.5/maps/curb_red_even.jpg" />
+	<store_texture root="texture" code="street_sidewalk_MM_keyboard_tex" path="phase_3.5/maps/keyboard_segment.jpg" />
+
+
+	<store_font root="font" code="MM_Musicals" path="phase_3/fonts/Musicals.ttf" />
+
+	<model path="phase_6/models/props/signs_MM" scope="hood">
+		<store_node root="sign" code="MM_sign1" />
+		<store_node root="sign" code="MM_sign2" />
+		<store_node root="sign" code="MM_sign3" />
+		<store_node root="sign" code="MM_sign4" />
+	</model>
+
+	<model path="phase_5/models/props/awnings_round" scope="hood">
+		<store_node root="prop" code="prop_awning_large_pinkblue" />
+		<store_node root="prop" code="prop_awning_large_purple" />
+		<store_node root="prop" code="prop_awning_small_pinkblue" />
+		<store_node root="prop" code="prop_awning_small_purple" />
+	</model>
+
+	<model path="phase_5/models/props/awnings_square" scope="hood">
+		<store_node root="prop" code="prop_keyboard_small" />
+		<store_node root="prop" code="prop_keyboard_large" />
+	</model>
+
+	<model path="phase_6/models/props/minnie_planter" scope="hood">
+		<store_node root="prop" code="prop_minnie_planter" node="" />
+	</model>
+
+	<model path="phase_6/models/props/MM_flats" scope="hood">
+		<store_node root="prop" code="prop_drums_flat" node="drums" />
+		<store_node root="prop" code="prop_cello_flat" node="cello" />
+		<store_node root="prop" code="prop_trumpet_flat" node="trumpet" />
+	</model>
+
+	<model path="phase_6/models/props/trashcan_MM" scope="hood">
+		<store_node root="prop" code="prop_trashcan_MM" node="" />
+	</model>
+
+
+	<model path="phase_6/models/props/mailbox_MM" scope="hood">
+		<store_node root="prop" code="prop_mailbox_MM" node="" />
+	</model>
+
+
+	<model path="phase_6/models/props/trees_MM" scope="hood">
+		<store_node root="holiday_prop" code="prop_tree_small_ur_MM" node="prop_tree_small_ur" />
+		<store_node root="holiday_prop" code="prop_tree_small_ul_MM" node="prop_tree_small_ul" />
+	</model>
+
+
+	<model path="phase_5/models/props/chimneys" scope="hood">
+		<store_node root="prop" code="prop_chimney" />
+		<store_node root="prop" code="prop_stovepipe" />
+		<store_node root="prop" code="prop_smokestack" />
+	</model>
+
+	<model path="phase_5/models/props/roof_access" scope="hood">
+		<store_node root="prop" code="prop_roof_access" node="" />
+	</model>
+	<model path="phase_6/models/modules/hqMM" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_hqMM" node="" />
+	</model>
+	<model path="phase_3.5/models/props/HQ_periscope-mod" scope="hood">
+		<store_node root="prop" code="animated_prop_HQPeriscopeAnimatedProp" node="periscope" />
+	</model>
+
+	<model path="phase_6/models/char/tt_r_ara_mml_hydrant" scope="hood">
+		<store_node root="anim_prop" code="animated_prop_generic_phase_6_models_char__mml_hydrant" node="" />
+	</model>
+
+	<model path="phase_6/models/char/tt_r_ara_mml_hydrant" scope="hood">
+		<store_node root="interactive_prop" code="interactive_prop_phase_6_models_char__mml_hydrant" node="" />
+	</model>
+
+	<model path="phase_6/models/char/tt_r_ara_mml_mailbox" scope="hood">
+		<store_node root="anim_prop" code="animated_prop_generic_phase_6_models_char__mml_mailbox" node="" />
+	</model>
+
+	<model path="phase_6/models/char/tt_r_ara_mml_mailbox" scope="hood">
+		<store_node root="interactive_prop" code="interactive_prop_phase_6_models_char__mml_mailbox" node="" />
+	</model>
+
+	<model path="phase_6/models/char/tt_r_ara_mml_trashcan" scope="hood">
+		<store_node root="anim_prop" code="animated_prop_generic_phase_6_models_char__mml_trashcan" node="" />
+	</model>
+
+	<model path="phase_6/models/char/tt_r_ara_mml_trashcan" scope="hood">
+		<store_node root="interactive_prop" code="interactive_prop_phase_6_models_char__mml_trashcan" node="" />
+	</model>
+
+	<model path="phase_4/models/props/tt_m_ara_gen_tunnelAheadSign" scope="hood">
+		<store_node root="prop" code="prop_tt_m_ara_gen_tunnelAheadSign" node="" />
+	</model>
+</storage>

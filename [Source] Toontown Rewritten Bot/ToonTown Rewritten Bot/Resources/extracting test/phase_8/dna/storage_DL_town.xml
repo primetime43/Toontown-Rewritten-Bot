@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+
+	<model path="phase_6/models/cogHQ/Cog_Tunnel" scope="place">
+		<store_node root="prop" code="prop_cog_tunnel" node="" />
+	</model>
+
+	<model path="phase_6/models/cogHQ/SmokeStack_simple" scope="place">
+		<store_node root="prop" code="prop_cog_smoke_stack" node="" />
+	</model>
+
+	<model path="phase_6/models/cogHQ/WaterTowerSimple" scope="place">
+		<store_node root="prop" code="prop_cog_water_tower" node="" />
+	</model>
+
+
+	<model path="phase_4/models/props/mickey_on_horse" scope="place">
+		<store_node root="prop" code="prop_mickey_on_horse" node="" />
+	</model>
+
+	<model path="phase_5/models/modules/street_low_fence" scope="place">
+		<store_node root="prop" code="post_sandstone" node="p_sandstone" />
+		<store_node root="prop" code="post_sandstone2" node="p_sandstone2" />
+		<store_node root="prop" code="post_stuccobrick" node="p_stuccobrick" />
+		<store_node root="prop" code="post_brick" node="p_brick" />
+		<store_node root="prop" code="post_brick2" node="p_brick2" />
+		<store_node root="prop" code="post_brick3" node="p_brick3" />
+
+		<store_node root="prop" code="fence_woodflower_sandstone" node="f_woodflower_sandstone" />
+		<store_node root="prop" code="fence_woodflower_brickstucco" node="f_woodflower_brickstucco" />
+		<store_node root="prop" code="fence_ironbar_stuccobrick" node="f_ironbar_stuccobrick" />
+		<store_node root="prop" code="fence_ironbar_brick" node="f_ironbar_brick" />
+		<store_node root="prop" code="fence_woodbrush_sandstone" node="f_woodbrush_sandstone" />
+		<store_node root="prop" code="fence_woodbrush_brick" node="f_woodbrush_brick" />
+	</model>
+
+	<model path="phase_8/models/props/mailbox_DL" scope="place">
+		<store_node root="prop" code="prop_DL_mailbox" node="" />
+	</model>
+
+	<model path="phase_8/models/modules/neighborhood_tunnel_DL" scope="place">
+		<store_node root="prop" code="prop_neighborhood_tunnel" />
+	</model>
+
+	<model path="phase_8/models/modules/safe_zone_entrance_tunnel_DL" scope="place">
+		<store_node root="prop" code="prop_safe_zone_entrance_tunnel" />
+	</model>
+
+	<model path="phase_8/models/props/DL_hydrant" scope="place">
+		<store_node root="prop" code="prop_DL_hydrant" node="" />
+	</model>
+
+	<model path="phase_8/models/props/DL_weathervane" scope="place">
+		<store_node root="prop" code="prop_DL_weathervane" node="" />
+	</model>
+
+	<model path="phase_8/models/props/DL_flats" scope="place">
+		<store_node root="prop" code="prop_DL_flat_owl" node="owl" />
+		<store_node root="prop" code="prop_DL_flat_pillows" node="pillows" />
+	</model>
+
+	<model path="phase_5/models/props/diner_entrance" scope="place">
+		<store_node root="prop" code="prop_diner_entrance" node="" />
+	</model>
+
+	<model path="phase_3.5/models/props/cellar_door" scope="place">
+		<store_node root="prop" code="prop_cellar_door" node="" />
+	</model>
+
+	<model path="phase_5/models/props/roman_entrance" scope="place">
+		<store_node root="prop" code="prop_roman_entrance" node="" />
+	</model>
+
+	<model path="phase_5/models/props/crate" scope="place">
+		<store_node root="prop" code="prop_crate" node="crate" />
+	</model>
+
+	<model path="phase_5/models/props/chimneys" scope="place">
+		<store_node root="prop" code="prop_chimney" />
+		<store_node root="prop" code="prop_stovepipe" />
+		<store_node root="prop" code="prop_smokestack" />
+	</model>
+
+	<model path="phase_5/models/props/roof_access" scope="place">
+		<store_node root="prop" code="prop_roof_access" node="" />
+	</model>
+
+	<model path="phase_5/models/props/trashcan_TT" scope="place">
+		<store_node root="prop" code="prop_trashcan_metal" />
+	</model>
+
+	<model path="phase_5/models/props/marquee" scope="place">
+		<store_node root="prop" code="prop_marquee" node="" />
+	</model>
+
+	<model path="phase_5/models/props/billboard_ads" scope="place">
+		<store_node root="prop" code="prop_signpost" />
+
+		<store_node root="prop" code="prop_billboard" />
+	</model>
+
+	<model path="phase_8/models/modules/DL_pond" scope="place">
+		<store_node root="street" code="street_DL_pond" node="" />
+	</model>
+</storage>

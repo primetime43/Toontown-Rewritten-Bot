@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+
+
+	<model path="phase_6/models/modules/DD_doors_practical" scope="hood">
+		<!--  hood_model "phase_6/models/modules/DD_doors" [ -->
+		<store_node root="door_double" code="door_double_wood_ur" />
+		<store_node root="door_double" code="door_double_wood_ul" />
+	</model>
+
+	<model path="phase_6/models/modules/DD_A1" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_DD_A1" node="DD_A1" />
+	</model>
+	<model path="phase_6/models/modules/DD_A2" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_DD_A2" node="DD_A2" />
+	</model>
+	<model path="phase_6/models/modules/DD_B1" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_DD_B1" node="DD_B1" />
+	</model>
+	<model path="phase_6/models/modules/DD_B2" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_DD_B2" node="DD_B2" />
+	</model>
+	<model path="phase_6/models/modules/DD_C1" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_DD_C1" node="DD_C1" />
+	</model>
+	<model path="phase_6/models/modules/DD_D1" scope="hood">
+		<store_node root="toon_landmark" code="toon_landmark_DD_D1" node="DD_D1" />
+	</model>
+
+	<model path="phase_6/models/props/palm_tree_topflat" scope="hood">
+		<store_node root="holiday_prop" code="prop_palm_tree_topflat" />
+	</model>
+
+	<model path="phase_6/models/props/dockpilings" scope="hood">
+		<store_node root="prop" code="prop_2ftdockpiling" />
+		<store_node root="prop" code="prop_3ftdockpiling" />
+		<store_node root="prop" code="prop_4ftdockpiling" />
+	</model>
+
+	<store_font root="font" code="TT_Comedy" path="phase_3/fonts/Comedy.ttf" />
+
+
+	<model path="phase_6/models/props/signs_DD" scope="hood">
+		<store_node root="sign" code="DD_sign1" />
+		<store_node root="sign" code="DD_sign2" />
+		<store_node root="sign" code="DD_sign3" />
+	</model>
+
+	<model path="phase_6/models/props/small_round_barrel" scope="hood">
+		<store_node root="prop" code="DD_barrel" node="" />
+	</model>
+
+	<store_texture root="texture" code="street_street_DD_tex" path="phase_3.5/maps/boardwalk_floor.jpg" />
+	<store_texture root="texture" code="street_sidewalk_DD_tex" path="phase_3.5/maps/boardwalk_floor_dark.jpg" />
+	<store_texture root="texture" code="street_curb_DD_tex" path="phase_3.5/maps/curb_boardwalk.jpg" />
+
+	<store_font root="font" code="DD_Portago" path="phase_3/fonts/Portago.ttf" />
+
+	<model path="phase_6/models/props/streetlight_DD" scope="hood">
+		<store_node root="holiday_prop" code="streetlight_DD_left" />
+		<store_node root="holiday_prop" code="streetlight_DD_right" />
+	</model>
+
+	<model path="phase_5/models/props/crate" scope="hood">
+		<store_node root="prop" code="prop_crate" node="crate" />
+	</model>
+
+	<model path="phase_6/models/props/DD_flats" scope="hood">
+		<store_node root="prop" code="prop_lifesaver" node="g3" />
+		<store_node root="prop" code="prop_nets" node="g4" />
+		<store_node root="prop" code="prop_ship_wheel" node="g5" />
+	</model>
+
+	<model path="phase_5/models/props/chimneys" scope="hood">
+		<store_node root="prop" code="prop_chimney" />
+		<store_node root="prop" code="prop_stovepipe" />
+		<store_node root="prop" code="prop_smokestack" />
+	</model>
+
+	<model path="phase_5/models/char/tt_r_ara_ttc_hydrant" scope="hood">
+		<store_node root="anim_prop" code="animated_prop_generic_phase_5_models_char__ttc_hydrant" node="" />
+	</model>
+
+	<model path="phase_5/models/char/tt_r_ara_ttc_hydrant" scope="hood">
+		<store_node root="interactive_prop" code="interactive_prop_phase_5_models_char__ttc_hydrant" node="" />
+	</model>
+
+	<model path="phase_6/models/char/tt_r_ara_dod_mailbox" scope="hood">
+		<store_node root="anim_prop" code="animated_prop_generic_phase_6_models_char__dod_mailbox" node="" />
+	</model>
+
+	<model path="phase_6/models/char/tt_r_ara_dod_mailbox" scope="hood">
+		<store_node root="interactive_prop" code="interactive_prop_phase_6_models_char__dod_mailbox" node="" />
+	</model>
+
+	<model path="phase_6/models/char/tt_r_ara_dod_trashcan" scope="hood">
+		<store_node root="anim_prop" code="animated_prop_generic_phase_6_models_char__dod_trashcan" node="" />
+	</model>
+
+	<model path="phase_6/models/char/tt_r_ara_dod_trashcan" scope="hood">
+		<store_node root="interactive_prop" code="interactive_prop_phase_6_models_char__dod_trashcan" node="" />
+	</model>
+
+	<model path="phase_4/models/props/tt_m_ara_gen_tunnelAheadSign" scope="hood">
+		<store_node root="prop" code="prop_tt_m_ara_gen_tunnelAheadSign" node="" />
+	</model>
+</storage>

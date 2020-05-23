@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage scope="global">
+	<!--  Christmas decoration -->
+	<model path="phase_4/models/props/winter_tree_Christmas" scope="place">
+		<store_node root="holiday_prop" code="prop_christmas_tree" node="" />
+	</model>
+
+</storage>
