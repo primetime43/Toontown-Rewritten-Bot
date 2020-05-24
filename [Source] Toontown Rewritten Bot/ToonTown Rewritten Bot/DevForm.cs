@@ -44,7 +44,8 @@ namespace ToonTown_Rewritten_Bot
                     graphics.CopyFromScreen(pnt, Point.Empty, size);
                 }
 
-                result.Save("C:/Users/Mike/Documents/Github/Toontown Rewritten Bot/[Source] Toontown Rewritten Bot/ToonTown Rewritten Bot/Resources/screenCapture.png");
+                //result.Save("C:/Users/Mike/Documents/Github/Toontown Rewritten Bot/[Source] Toontown Rewritten Bot/ToonTown Rewritten Bot/Resources/screenCapture.bmp");
+                //result.ToImage<Bgr, byte>();
 
                 var image = result;
                 //readText(image);
@@ -53,15 +54,19 @@ namespace ToonTown_Rewritten_Bot
                 //previousImage?.Dispose();
 
                 //testing
-                testImageCapture();
+                //testImageCapture(result.ToImage<Bgr, byte>());
+                testImageCapture(result);
             }
         }
 
-        private void testImageCapture()
+        Image<Bgr, byte> template = new Image<Bgr, byte>("C:/Users/Mike/Documents/Github/Toontown Rewritten Bot/[Source] Toontown Rewritten Bot/ToonTown Rewritten Bot/Resources/Capture.png"); // Image A
+        private void testImageCapture(Bitmap test)
         {
+            var t = test.ToImage<Bgr, byte>();
             //find image a in b
-            Image<Bgr, byte> source = new Image<Bgr, byte>("C:/Users/Mike/Documents/Github/Toontown Rewritten Bot/[Source] Toontown Rewritten Bot/ToonTown Rewritten Bot/Resources/screenCapture.png"); // Image B
-            Image<Bgr, byte> template = new Image<Bgr, byte>("C:/Users/Mike/Documents/Github/Toontown Rewritten Bot/[Source] Toontown Rewritten Bot/ToonTown Rewritten Bot/Resources/friendsButton.png"); // Image A
+            Image<Bgr, byte> source = new Image<Bgr, byte>(t.Data);
+            //Image<Bgr, byte> source = new Image<Bgr, byte>("C:/Users/Mike/Documents/Github/Toontown Rewritten Bot/[Source] Toontown Rewritten Bot/ToonTown Rewritten Bot/Resources/screenCapture.bmp"); // Image B
+            //Image<Bgr, byte> template = new Image<Bgr, byte>("C:/Users/Mike/Documents/Github/Toontown Rewritten Bot/[Source] Toontown Rewritten Bot/ToonTown Rewritten Bot/Resources/toonLaughBottomLeft.png"); // Image A
             Image<Bgr, byte> imageToShow = source.Copy();
 
             using (Image<Gray, float> result = source.MatchTemplate(template, Emgu.CV.CvEnum.TemplateMatchingType.CcoeffNormed))
@@ -76,6 +81,7 @@ namespace ToonTown_Rewritten_Bot
                     // This is a match. Do something with it, for example draw a rectangle around it.
                     Rectangle match = new Rectangle(maxLocations[0], template.Size);
                     imageToShow.Draw(match, new Bgr(Color.Red), 3);
+                    Console.WriteLine(match);
                 }
             }
 

@@ -65,7 +65,7 @@ namespace ToonTown_Rewritten_Bot.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap _12_5_13_welcome {
             get {
-                object obj = ResourceManager.GetObject("12-5-13_welcome", resourceCulture);
+                object obj = ResourceManager.GetObject("_12_5_13_welcome", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -75,7 +75,7 @@ namespace ToonTown_Rewritten_Bot.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap _12_5_13_welcome1 {
             get {
-                object obj = ResourceManager.GetObject("12-5-13_welcome1", resourceCulture);
+                object obj = ResourceManager.GetObject("_12_5_13_welcome1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

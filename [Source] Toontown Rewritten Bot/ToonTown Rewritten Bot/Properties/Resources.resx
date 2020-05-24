@@ -130,9 +130,6 @@
   <data name="Green-0" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Green-0.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="12-5-13_welcome" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\12-5-13_welcome.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Orangejellybean" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Orangejellybean.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -151,7 +148,10 @@
   <data name="Pinkjellybean" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Pinkjellybean.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="12-5-13_welcome1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="_12_5_13_welcome" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\12-5-13_welcome.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_12_5_13_welcome1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\12-5-13_welcome1.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
