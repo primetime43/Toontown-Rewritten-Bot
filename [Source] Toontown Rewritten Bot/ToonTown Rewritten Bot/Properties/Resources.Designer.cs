@@ -63,9 +63,9 @@ namespace ToonTown_Rewritten_Bot.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _12_5_13_welcome {
+        internal static System.Drawing.Bitmap _12_5_13_welcome1 {
             get {
-                object obj = ResourceManager.GetObject("_12_5_13_welcome", resourceCulture);
+                object obj = ResourceManager.GetObject("_12_5_13_welcome1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace ToonTown_Rewritten_Bot.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _12_5_13_welcome1 {
+        internal static System.Drawing.Bitmap _12_5_13_welcome2 {
             get {
-                object obj = ResourceManager.GetObject("_12_5_13_welcome1", resourceCulture);
+                object obj = ResourceManager.GetObject("_12_5_13_welcome2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -105,7 +105,7 @@ namespace ToonTown_Rewritten_Bot.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap Green_0 {
             get {
-                object obj = ResourceManager.GetObject("Green-0", resourceCulture);
+                object obj = ResourceManager.GetObject("Green_0", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -156,6 +156,16 @@ namespace ToonTown_Rewritten_Bot.Properties {
         internal static System.Drawing.Bitmap Silver {
             get {
                 object obj = ResourceManager.GetObject("Silver", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap stickerBook {
+            get {
+                object obj = ResourceManager.GetObject("stickerBook", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
