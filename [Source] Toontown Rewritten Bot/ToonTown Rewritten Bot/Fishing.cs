@@ -236,7 +236,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                BotFunctions.updateCoordinates("17");
+                BotFunctions.manualUpdateCoordinates("17");
                 sellFish();
             }
             Thread.Sleep(2000);
@@ -252,7 +252,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                BotFunctions.updateCoordinates("16");
+                BotFunctions.manualUpdateCoordinates("16");
                 exitFishing();
             }
         }
@@ -288,7 +288,9 @@ namespace ToonTown_Rewritten_Bot
 
         private static void locateRedFishingButton()
         {
-            BotFunctions.updateCoordinates("15");//update the red fishing button coords
+            if(Properties.Settings.Default["fishingCastBtn"].ToString() == "")
+
+            BotFunctions.manualUpdateCoordinates("15");//update the red fishing button coords
         }
 
         private static void getCoords(String item)

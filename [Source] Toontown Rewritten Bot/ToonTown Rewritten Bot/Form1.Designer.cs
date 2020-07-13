@@ -108,6 +108,10 @@
             this.button7 = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.updateImagesBtn = new System.Windows.Forms.Button();
+            this.resetImagesBtn = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -135,6 +139,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.Dev.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -211,7 +216,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::ToonTown_Rewritten_Bot.Properties.Resources.TTR_Logo;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(75, 3);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(332, 110);
@@ -228,6 +233,7 @@
             this.Fishing.Size = new System.Drawing.Size(467, 280);
             this.Fishing.TabIndex = 1;
             this.Fishing.Text = "Fishing";
+            this.toolTip1.SetToolTip(this.Fishing, "These are the images being used for the bot to fish with image recognition");
             this.Fishing.UseVisualStyleBackColor = true;
             // 
             // groupBox6
@@ -1015,6 +1021,7 @@
             // 
             // Dev
             // 
+            this.Dev.Controls.Add(this.groupBox9);
             this.Dev.Controls.Add(this.label5);
             this.Dev.Controls.Add(this.groupBox7);
             this.Dev.Location = new System.Drawing.Point(4, 25);
@@ -1086,6 +1093,49 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.label11);
+            this.groupBox9.Controls.Add(this.updateImagesBtn);
+            this.groupBox9.Controls.Add(this.resetImagesBtn);
+            this.groupBox9.Location = new System.Drawing.Point(249, 3);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(210, 135);
+            this.groupBox9.TabIndex = 8;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Image Rec";
+            // 
+            // updateImagesBtn
+            // 
+            this.updateImagesBtn.Location = new System.Drawing.Point(34, 51);
+            this.updateImagesBtn.Name = "updateImagesBtn";
+            this.updateImagesBtn.Size = new System.Drawing.Size(140, 33);
+            this.updateImagesBtn.TabIndex = 2;
+            this.updateImagesBtn.Text = "Update Images";
+            this.updateImagesBtn.UseVisualStyleBackColor = true;
+            this.updateImagesBtn.Click += new System.EventHandler(this.updateImagesBtn_Click);
+            // 
+            // resetImagesBtn
+            // 
+            this.resetImagesBtn.Location = new System.Drawing.Point(34, 90);
+            this.resetImagesBtn.Name = "resetImagesBtn";
+            this.resetImagesBtn.Size = new System.Drawing.Size(140, 33);
+            this.resetImagesBtn.TabIndex = 0;
+            this.resetImagesBtn.Text = "Reset All Images";
+            this.toolTip1.SetToolTip(this.resetImagesBtn, "This will reset all of your coordinates!");
+            this.resetImagesBtn.UseVisualStyleBackColor = true;
+            this.resetImagesBtn.Click += new System.EventHandler(this.resetImagesBtn_Click);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(31, 18);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(154, 30);
+            this.label11.TabIndex = 3;
+            this.label11.Text = "Update the images the bot \r\nuses for image recognition";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1130,6 +1180,8 @@
             this.Dev.ResumeLayout(false);
             this.Dev.PerformLayout();
             this.groupBox7.ResumeLayout(false);
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1213,6 +1265,10 @@
         private System.Windows.Forms.CheckBox checkBox5;
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button updateImagesBtn;
+        private System.Windows.Forms.Button resetImagesBtn;
     }
 }
 

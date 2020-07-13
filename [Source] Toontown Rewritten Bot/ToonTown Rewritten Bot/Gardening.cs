@@ -31,7 +31,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                BotFunctions.updateCoordinates("1");//update the plant flower button coords
+                BotFunctions.manualUpdateCoordinates("1");//update the plant flower button coords
                 plantFlower(flowerCombo);
                 Thread.Sleep(2000);
             }
@@ -83,7 +83,7 @@ namespace ToonTown_Rewritten_Bot
             {
                 if (!BotFunctions.checkCoordinates(location))//if they're 0,0
                 {
-                    BotFunctions.updateCoordinates(location);
+                    BotFunctions.manualUpdateCoordinates(location);
                     checkBeans(Convert.ToString(Convert.ToInt32(location) + 1));
                 }
                 else
@@ -104,7 +104,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                BotFunctions.updateCoordinates("11");
+                BotFunctions.manualUpdateCoordinates("11");
                 Thread.Sleep(2000);
                 pressPlantButton();
             }
@@ -121,7 +121,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                BotFunctions.updateCoordinates("12");
+                BotFunctions.manualUpdateCoordinates("12");
                 Thread.Sleep(2000);
                 clickOKAfterPlant();
             }
@@ -141,7 +141,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                BotFunctions.updateCoordinates("13");
+                BotFunctions.manualUpdateCoordinates("13");
                 Thread.Sleep(2000);
                 waterPlant();
             }
@@ -160,7 +160,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                BotFunctions.updateCoordinates("1");//update the plant flower button coords
+                BotFunctions.manualUpdateCoordinates("1");//update the plant flower button coords
                 removePlant();
                 Thread.Sleep(2000);
             }
@@ -177,7 +177,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                BotFunctions.updateCoordinates("14");//update the plant flower button coords
+                BotFunctions.manualUpdateCoordinates("14");//update the plant flower button coords
                 selectYESToRemove();
                 Thread.Sleep(2000);
             }

@@ -174,7 +174,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        public static void updateCoordinates(String locationToUpdate)
+        public static void manualUpdateCoordinates(String locationToUpdate)
         {
             UpdateCoordsHelper updateCoordsWindow = new UpdateCoordsHelper();
             try

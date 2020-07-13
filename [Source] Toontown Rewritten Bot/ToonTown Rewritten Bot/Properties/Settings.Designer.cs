@@ -22,5 +22,41 @@ namespace ToonTown_Rewritten_Bot.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string fishingCastBtn {
+            get {
+                return ((string)(this["fishingCastBtn"]));
+            }
+            set {
+                this["fishingCastBtn"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string exitFishingBtn {
+            get {
+                return ((string)(this["exitFishingBtn"]));
+            }
+            set {
+                this["exitFishingBtn"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string sellFishBtn {
+            get {
+                return ((string)(this["sellFishBtn"]));
+            }
+            set {
+                this["sellFishBtn"] = value;
+            }
+        }
     }
 }

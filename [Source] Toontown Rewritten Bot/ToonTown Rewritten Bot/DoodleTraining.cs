@@ -158,21 +158,21 @@ namespace ToonTown_Rewritten_Bot
                     }
                     else
                     {
-                        BotFunctions.updateCoordinates("22");
+                        BotFunctions.manualUpdateCoordinates("22");
                         Thread.Sleep(2000);
                         openSpeedChat();
                     }
                 }
                 else
                 {
-                    BotFunctions.updateCoordinates("21");
+                    BotFunctions.manualUpdateCoordinates("21");
                     Thread.Sleep(2000);
                     openSpeedChat();
                 }
             }
             else//means it was (0,0) and needs updated
             {
-                BotFunctions.updateCoordinates("20");
+                BotFunctions.manualUpdateCoordinates("20");
                 Thread.Sleep(2000);
                 openSpeedChat();
             }
@@ -190,7 +190,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else//means it was (0,0) and needs updated
             {
-                BotFunctions.updateCoordinates("24");
+                BotFunctions.manualUpdateCoordinates("24");
                 Thread.Sleep(2000);
                 trainBeg();
             }
@@ -208,7 +208,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else//means it was (0,0) and needs updated
             {
-                BotFunctions.updateCoordinates("25");
+                BotFunctions.manualUpdateCoordinates("25");
                 Thread.Sleep(2000);
                 trainPlayDead();
             }
@@ -226,7 +226,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else//means it was (0,0) and needs updated
             {
-                BotFunctions.updateCoordinates("26");
+                BotFunctions.manualUpdateCoordinates("26");
                 Thread.Sleep(2000);
                 trainRollover();
             }
@@ -244,7 +244,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else//means it was (0,0) and needs updated
             {
-                BotFunctions.updateCoordinates("27");
+                BotFunctions.manualUpdateCoordinates("27");
                 Thread.Sleep(2000);
                 trainBackflip();
             }
@@ -262,7 +262,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else//means it was (0,0) and needs updated
             {
-                BotFunctions.updateCoordinates("28");
+                BotFunctions.manualUpdateCoordinates("28");
                 Thread.Sleep(2000);
                 trainDance();
             }
@@ -280,7 +280,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else//means it was (0,0) and needs updated
             {
-                BotFunctions.updateCoordinates("29");
+                BotFunctions.manualUpdateCoordinates("29");
                 Thread.Sleep(2000);
                 trainSpeak();
             }
@@ -298,7 +298,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else//means it was (0,0) and needs updated
             {
-                BotFunctions.updateCoordinates("23");
+                BotFunctions.manualUpdateCoordinates("23");
                 Thread.Sleep(2000);
                 trainJump();
             }
@@ -316,7 +316,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else//means it was (0,0) and needs updated
             {
-                BotFunctions.updateCoordinates("18");
+                BotFunctions.manualUpdateCoordinates("18");
                 Thread.Sleep(2000);
                 feedDoodle();
             }
@@ -333,7 +333,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                BotFunctions.updateCoordinates("19");
+                BotFunctions.manualUpdateCoordinates("19");
                 Thread.Sleep(2000);
                 scratchDoodle();
             }

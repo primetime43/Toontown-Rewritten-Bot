@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
-using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -181,7 +182,7 @@ namespace ToonTown_Rewritten_Bot
                 for (int i = 0; i < words.Length; i++)
                 {
                     if (words[i].Equals(selected))
-                        BotFunctions.updateCoordinates(Convert.ToString(i + 1));
+                        BotFunctions.manualUpdateCoordinates(Convert.ToString(i + 1));
                 }
             }
             catch
@@ -434,6 +435,61 @@ namespace ToonTown_Rewritten_Bot
                     numericUpDown5.Enabled = false;
                 }
             }
+        }
+
+        /*private void fishingCastImg_Click(object sender, EventArgs e)//holds the location of the casting button image
+        {
+            MessageBox.Show(Properties.Settings.Default["fishingCastBtn"].ToString());
+            if (Properties.Settings.Default.fishingCastBtn == "")//has no path set, so set path
+            {
+                string test = tempTestingDir();
+                fishingCastImg.Text = test.Substring(test.LastIndexOf(@"\", test.Length) + 1);//removes the entire path so its just the file name
+                tip.Show(fishingCastImg.Text, fishingCastImg, 1000);
+                Properties.Settings.Default.fishingCastBtn = test;
+                Properties.Settings.Default.Save(); // Saves settings in application configuration file
+            }
+            else
+                fishingCastImg.Text = Properties.Settings.Default.fishingCastBtn;
+        }*/
+
+        private string tempTestingDir()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                string filePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @".\Search_Images"));
+                openFileDialog.InitialDirectory = filePath;
+                openFileDialog.Filter = "PNG files (*.png)|*.png";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    return openFileDialog.FileName;//returns entire path to the file
+                }
+                return "";
+            }
+        }
+
+        private void updateImagesBtn_Click(object sender, EventArgs e)
+        {
+            UpdateImages updateRecImages = new UpdateImages();
+            try
+            {
+                updateRecImages.ShowDialog();
+            }
+            catch
+            {
+                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+        }
+
+        private void resetImagesBtn_Click(object sender, EventArgs e)
+        {
+            foreach (SettingsProperty currentProperty in Properties.Settings.Default.Properties)
+            {
+                Properties.Settings.Default[currentProperty.Name] = "";
+            }
+            Properties.Settings.Default.Save();
         }
     }
 }

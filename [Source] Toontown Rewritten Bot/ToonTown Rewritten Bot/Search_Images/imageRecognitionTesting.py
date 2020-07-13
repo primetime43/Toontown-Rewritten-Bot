@@ -80,8 +80,6 @@ if hasattr(regionOnScreen, 'left'):
     #time.sleep(1)
     #if img:
         #img.show()
-else:
-    print('Unable to find image')
 
 #argv[0] will be the this file's name
 #argv[1] image to find
