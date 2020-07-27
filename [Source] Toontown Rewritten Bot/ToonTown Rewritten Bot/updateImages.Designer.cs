@@ -39,6 +39,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -76,6 +77,8 @@
             this.fishingSellImg.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.fishingSellImg.Size = new System.Drawing.Size(379, 20);
             this.fishingSellImg.TabIndex = 4;
+            this.fishingSellImg.Text = "Click to set image";
+            this.fishingSellImg.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.fishingSellImg.Click += new System.EventHandler(this.fishingSellImg_Click);
             // 
             // label3
@@ -96,6 +99,8 @@
             this.fishingExitImg.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.fishingExitImg.Size = new System.Drawing.Size(379, 20);
             this.fishingExitImg.TabIndex = 2;
+            this.fishingExitImg.Text = "Click to set image";
+            this.fishingExitImg.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.fishingExitImg.Click += new System.EventHandler(this.fishingExitImg_Click);
             // 
             // label2
@@ -116,6 +121,8 @@
             this.fishingCastImg.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.fishingCastImg.Size = new System.Drawing.Size(379, 20);
             this.fishingCastImg.TabIndex = 0;
+            this.fishingCastImg.Text = "Click to set image";
+            this.fishingCastImg.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.fishingCastImg.Click += new System.EventHandler(this.fishingCastImg_Click);
             // 
             // pictureBox1
@@ -145,15 +152,27 @@
             this.label5.TabIndex = 3;
             this.label5.Text = "Click a textbox below to view or set the image if the textbox is empty";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(672, 418);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(115, 28);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Advanced Settings";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // UpdateImages
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "UpdateImages";
             this.Text = "Image Recognition Settings";
@@ -177,5 +196,6 @@
         private System.Windows.Forms.TextBox fishingExitImg;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button1;
     }
 }

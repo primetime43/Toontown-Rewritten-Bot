@@ -114,7 +114,15 @@
     <Compile Include="AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
-    <Compile Include="BotFunctions.cs" />
+    <Compile Include="AdvancedSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdvancedSettings.Designer.cs">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BotFunctions.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DevForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,7 +130,9 @@
       <DependentUpon>DevForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DoodleTraining.cs" />
-    <Compile Include="Fishing.cs" />
+    <Compile Include="Fishing.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -169,6 +179,9 @@
     <EmbeddedResource Include="AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AdvancedSettings.resx">
+      <DependentUpon>AdvancedSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DevForm.resx">
       <DependentUpon>DevForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -211,42 +224,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Orangejellybean.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Pinkjellybean.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Purplejellybean.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Redjellybean.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Silver.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Yellowjellybean.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Bluejellybean.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Cyan.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Green-0.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\TTR_Logo.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\12-5-13_welcome.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\12-5-13_welcome1.jpeg" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Converted_file_e317bd25.ico" />
     <None Include="Resources\program UI images\Yellowjellybean.jpeg" />
     <None Include="Resources\program UI images\TTR_Logo.jpeg" />
@@ -260,9 +237,7 @@
     <None Include="Resources\program UI images\Bluejellybean.jpeg" />
     <None Include="Resources\program UI images\12-5-13_welcome1.jpeg" />
     <None Include="Resources\program UI images\12-5-13_welcome.jpeg" />
-    <None Include="Resources\Fishing Button Image.png" />
     <None Include="Resources\stickerBook.PNG" />
-    <None Include="Resources\BlueChatBtn.PNG" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

@@ -71,7 +71,7 @@ if hasattr(regionOnScreen, 'left'):
     #print(centerOfBox)
     print('x=',centerOfBox.x)
     print('y=',centerOfBox.y)
-    pyautogui.moveTo(centerOfBox)
+    #pyautogui.moveTo(centerOfBox)
 
     #display debug view if
     if(sys.argv[3] == 'True'):

@@ -194,12 +194,12 @@ namespace ToonTown_Rewritten_Bot
 
         private void startFishing_Click(object sender, EventArgs e)//button to start fishing
         {
-            string selected = (string)comboBox3.SelectedItem;
-            int numberOfCasts = Convert.ToInt32(numericUpDown3.Value);
-            int numberOfSells = Convert.ToInt32(numericUpDown4.Value);
-            BotFunctions.tellFishingLocation(selected);
+            string selected = (string)comboBox3.SelectedItem;//fishing location
+            int numberOfCasts = Convert.ToInt32(numericUpDown3.Value);//number of casts
+            int numberOfSells = Convert.ToInt32(numericUpDown4.Value);//number of sells
+            BotFunctions.tellFishingLocation(selected);//tell the bot what location were fishing at to provide instructions
             MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
-            startFishingThread(selected, numberOfCasts, numberOfSells, false);
+            startFishingThread(selected, numberOfCasts, numberOfSells, false);//begin fishing
         }
 
         private void randomFishing_CheckedChanged(object sender, EventArgs e)
@@ -216,7 +216,7 @@ namespace ToonTown_Rewritten_Bot
         }
 
         Thread fishingThreading;
-        public void startFishingThread(string selected, int numberOfCasts, int numberOfSells, bool stopCheck)
+        public void startFishingThread(string selected, int numberOfCasts, int numberOfSells, bool stopCheck)//fishing location, num of casts, num of sells, check if the user clicked stop button
         {
             if (!stopCheck)
             {
@@ -437,39 +437,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        /*private void fishingCastImg_Click(object sender, EventArgs e)//holds the location of the casting button image
-        {
-            MessageBox.Show(Properties.Settings.Default["fishingCastBtn"].ToString());
-            if (Properties.Settings.Default.fishingCastBtn == "")//has no path set, so set path
-            {
-                string test = tempTestingDir();
-                fishingCastImg.Text = test.Substring(test.LastIndexOf(@"\", test.Length) + 1);//removes the entire path so its just the file name
-                tip.Show(fishingCastImg.Text, fishingCastImg, 1000);
-                Properties.Settings.Default.fishingCastBtn = test;
-                Properties.Settings.Default.Save(); // Saves settings in application configuration file
-            }
-            else
-                fishingCastImg.Text = Properties.Settings.Default.fishingCastBtn;
-        }*/
-
-        private string tempTestingDir()
-        {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                string filePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @".\Search_Images"));
-                openFileDialog.InitialDirectory = filePath;
-                openFileDialog.Filter = "PNG files (*.png)|*.png";
-                openFileDialog.FilterIndex = 2;
-                openFileDialog.RestoreDirectory = true;
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    return openFileDialog.FileName;//returns entire path to the file
-                }
-                return "";
-            }
-        }
-
+        //Settings page, button to open update images setting
         private void updateImagesBtn_Click(object sender, EventArgs e)
         {
             UpdateImages updateRecImages = new UpdateImages();
@@ -483,6 +451,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
+        //Settings page, button to reset all images
         private void resetImagesBtn_Click(object sender, EventArgs e)
         {
             foreach (SettingsProperty currentProperty in Properties.Settings.Default.Properties)

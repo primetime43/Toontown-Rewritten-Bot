@@ -23,9 +23,9 @@ namespace ToonTown_Rewritten_Bot
         private void createDataMap()
         {
             //fishing
-            dataMap.Add("fishingCastBtn", fishingCastImg);
-            dataMap.Add("exitFishingBtn", fishingExitImg);
-            dataMap.Add("sellFishBtn", fishingSellImg);
+            dataMap["fishingCastBtn"] = fishingCastImg;//do this instead of add method so it will just overwrite
+            dataMap["exitFishingBtn"] = fishingExitImg;
+            dataMap["sellFishBtn"] = fishingSellImg;
             //
         }
 
@@ -84,6 +84,18 @@ namespace ToonTown_Rewritten_Bot
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             updateImage();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                new AdvancedSettings().ShowDialog();
+            }
+            catch
+            {
+                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
         }
 
         private void updateImage()

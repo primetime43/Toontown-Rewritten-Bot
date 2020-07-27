@@ -198,3 +198,4 @@ C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritte
 C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown Rewritten Bot.pdb
 C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\bin\Debug\Search_Images\imageRecognitionTesting.py
 C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.UpdateImages.resources
+C:\Users\Mike\Documents\Github\Toontown Rewritten Bot\[Source] Toontown Rewritten Bot\ToonTown Rewritten Bot\obj\Debug\ToonTown_Rewritten_Bot.AdvancedSettings.resources

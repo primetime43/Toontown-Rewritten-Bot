@@ -1,26 +1,28 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using WindowsInput;
 
 namespace ToonTown_Rewritten_Bot
 {
-    class Fishing
+    class Fishing : AdvancedSettings
     {
         /** The random variance of casting the fishing rod (if enabled).*/
         public static int VARIANCE = 20;
-        private static int x, y;
+        private new static int x, y;
         private static Random rand = new Random();
 
-
+        //location, num of casts, num of sells
         public static void startFishing(String location, int numberOfCasts, int numberOfTimesToMeetFisherman, bool randomCasting)
         {
             if (numberOfTimesToMeetFisherman != 0)
             {
                 Thread.Sleep(3000);
                 if (!BotFunctions.checkCoordinates("15"))//if they're 0,0, enter. Checks the red fishing button
-                    locateRedFishingButton();
+                    imgRecLocateRedCastBtn();//use the image rec to locate the image and set the coordinates
                 //start fishing
                 startFishing(numberOfCasts, randomCasting);
                 //walking to fisherman
@@ -59,7 +61,6 @@ namespace ToonTown_Rewritten_Bot
                         startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
                         break;
                     case "FISH ANYWHERE":
-                        MessageBox.Show("Done!");
                         break;
                 }
             }
@@ -227,6 +228,7 @@ namespace ToonTown_Rewritten_Bot
 
         private static void sellFish()
         {
+            retry:
             if (BotFunctions.checkCoordinates("17"))//returns true if they are not 0,0
             {
                 Thread.Sleep(2100);
@@ -236,14 +238,16 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                BotFunctions.manualUpdateCoordinates("17");
-                sellFish();
+                //BotFunctions.manualUpdateCoordinates("17");
+                imgRecLocateSellBtn();
+                goto retry;
             }
             Thread.Sleep(2000);
         }
 
         private static void exitFishing()
         {
+            retry:
             if (BotFunctions.checkCoordinates("16"))//returns true if they are not 0,0
             {
                 getCoords("16");
@@ -252,8 +256,9 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                BotFunctions.manualUpdateCoordinates("16");
-                exitFishing();
+                //BotFunctions.manualUpdateCoordinates("16");
+                imgRecLocateExitBtn();//use image rec to find the exit fishing button
+                goto retry;
             }
         }
 
@@ -286,10 +291,183 @@ namespace ToonTown_Rewritten_Bot
             return result;
         }
 
-        private static void locateRedFishingButton()
+        private static AdvancedSettings imgRec;
+        private static void imgRecLocateExitBtn()
         {
-            if(Properties.Settings.Default["fishingCastBtn"].ToString() == "")
+            retry:
+            imgRec = new AdvancedSettings();
+            if (Properties.Settings.Default["exitFishingBtn"].ToString() == "")//no image has been set to the property
+            {
+                MessageBox.Show("Exit Fishing Button Image Not Set. Set it in Settings.");
+                openImageSettingsForm();
+            }
+            else
+                imgRec.callImageRecScript("exitFishingBtn");//run the script to try to find the imate and update/set them
 
+            //eventually make this a function to use less code, just pass through the numerical value of the coordinate
+            if (imgRec.message == "")//coordinates were found
+            {
+                Point coords = new Point(Convert.ToInt16(imgRec.x), Convert.ToInt16(imgRec.y));
+                string x = imgRec.x;
+                string y = imgRec.y;
+                string[] lines = File.ReadAllLines(Path.GetFullPath("Coordinates Data File.txt"));
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i].Contains("."))
+                    {
+                        if ("16".Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
+                        {
+                            lines[i] = "16" + "." + "(" + x + "," + y + ")";
+                            updateTextFile(lines);//changes the coordinate values in the data file
+                        }
+                    }
+                }
+            }
+            else//coordinates were not found, try to update them manually instead
+            {
+                DialogResult dialogResult = MessageBox.Show(imgRec.message + ". Select Yes to try again or No to update the coordinate manually", imgRec.message, MessageBoxButtons.YesNoCancel);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    goto retry;
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    BotFunctions.manualUpdateCoordinates("16");
+                }
+                else//cancel
+                    return;
+            }
+        }
+
+        private static void imgRecLocateSellBtn()
+        {
+            retry:
+            imgRec = new AdvancedSettings();
+            if (Properties.Settings.Default["sellFishBtn"].ToString() == "")//no image has been set to the property
+            {
+                MessageBox.Show("Sell Fish Button Image Not Set. Set it in Settings.");
+                openImageSettingsForm();
+            }
+            else
+                imgRec.callImageRecScript("sellFishBtn");//run the script to try to find the imate and update/set them
+
+            //eventually make this a function to use less code, just pass through the numerical value of the coordinate
+            if (imgRec.message == "")//coordinates were found
+            {
+                Point coords = new Point(Convert.ToInt16(imgRec.x), Convert.ToInt16(imgRec.y));
+                string x = imgRec.x;
+                string y = imgRec.y;
+                string[] lines = File.ReadAllLines(Path.GetFullPath("Coordinates Data File.txt"));
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i].Contains("."))
+                    {
+                        if ("17".Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
+                        {
+                            lines[i] = "17" + "." + "(" + x + "," + y + ")";
+                            updateTextFile(lines);//changes the coordinate values in the data file
+                        }
+                    }
+                }
+            }
+            else//coordinates were not found, try to update them manually instead
+            {
+                DialogResult dialogResult = MessageBox.Show(imgRec.message + ". Select Yes to try again or No to update the coordinate manually", imgRec.message, MessageBoxButtons.YesNoCancel);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    goto retry;
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    BotFunctions.manualUpdateCoordinates("17");
+                }
+                else//cancel
+                    return;
+            }
+        }
+
+        private static void imgRecLocateRedCastBtn()
+        {
+            retry:
+            imgRec = new AdvancedSettings();
+            if (Properties.Settings.Default["fishingCastBtn"].ToString() == "")//no image has been set to the property
+            {
+                MessageBox.Show("Red Fishing Button Image Not Set. Set it in Settings.");
+                openImageSettingsForm();
+            }
+            else
+                imgRec.callImageRecScript("fishingCastBtn");//run the script to try to find the imate and update/set them
+
+            //eventually make this a function to use less code, just pass through the numerical value of the coordinate
+            if (imgRec.message == "")//coordinates were found
+            {
+                Point coords = new Point(Convert.ToInt16(imgRec.x), Convert.ToInt16(imgRec.y));
+                string x = imgRec.x;
+                string y = imgRec.y;
+                string[] lines = File.ReadAllLines(Path.GetFullPath("Coordinates Data File.txt"));
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i].Contains("."))
+                    {
+                        if ("15".Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
+                        {
+                            lines[i] = "15" + "." + "(" + x + "," + y + ")";
+                            updateTextFile(lines);//changes the coordinate values in the data file
+                        }
+                    }
+                }
+            }
+            else//coordinates were not found, try to update them manually instead
+            {
+                DialogResult dialogResult = MessageBox.Show(imgRec.message + ". Select Yes to try again or No to update the coordinate manually", imgRec.message, MessageBoxButtons.YesNoCancel);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    goto retry;
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    manuallyLocateRedFishingButton();//manually locate/show the bot where the red fishing button is
+                }
+                else//cancel
+                    return;
+            }
+        }
+
+        private static void updateTextFile(string[] lines)//fix eventually so theres not one in BotFunctions and here, but use this one for now for updating with the img rec
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(Path.GetFullPath("Coordinates Data File.txt")))
+                {
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        writer.WriteLine(lines[i]);
+                    }
+                    writer.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The file could not be written to:");
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        private static void openImageSettingsForm()
+        {
+            UpdateImages updateRecImages = new UpdateImages();
+            try
+            {
+                updateRecImages.ShowDialog();
+            }
+            catch
+            {
+                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+            }
+        }
+
+        private static void manuallyLocateRedFishingButton()
+        {
             BotFunctions.manualUpdateCoordinates("15");//update the red fishing button coords
         }
 

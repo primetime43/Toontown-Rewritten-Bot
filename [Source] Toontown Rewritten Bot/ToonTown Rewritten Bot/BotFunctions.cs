@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -7,7 +8,7 @@ using System.Windows.Forms;
 
 namespace ToonTown_Rewritten_Bot
 {
-    class BotFunctions
+    class BotFunctions : AdvancedSettings
     {
         public static void DoMouseClick()
         {
@@ -66,7 +67,7 @@ namespace ToonTown_Rewritten_Bot
             return cursorLocation;
         }
 
-        public static String HexConverter(System.Drawing.Color c)
+        public static String HexConverter(Color c)
         {
             return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         }
@@ -152,7 +153,6 @@ namespace ToonTown_Rewritten_Bot
                 Console.WriteLine(e.Message);
             }
         }
-
 
         private static void updateTextFile()
         {
