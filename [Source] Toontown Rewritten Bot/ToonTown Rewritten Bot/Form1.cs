@@ -14,7 +14,7 @@ namespace ToonTown_Rewritten_Bot
 
         public Form1()
         {
-            isTTRRunning();
+            //isTTRRunning();
             InitializeComponent();
             BotFunctions.readTextFile();
             createDataFileMap();
