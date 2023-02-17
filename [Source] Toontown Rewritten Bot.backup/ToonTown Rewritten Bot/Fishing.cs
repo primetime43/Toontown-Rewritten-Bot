@@ -1,5 +1,4 @@
-﻿using InputSimulatorEx.Native;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
@@ -70,140 +69,140 @@ namespace ToonTown_Rewritten_Bot
         private static void fishTTCPunchlinePlace()
         {
             //Go to fisherman
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
             Thread.Sleep(2000);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.DOWN);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
             Thread.Sleep(800);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.RIGHT);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
             Thread.Sleep(700);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
             Thread.Sleep(2000);
             sellFish();//sell fish
             //Go back to dock
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
             Thread.Sleep(700);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.DOWN);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(750);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
             Thread.Sleep(2000);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
         }
 
         private static void fishDDLLullabyLane()
         {
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
             Thread.Sleep(4000);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
             sellFish();
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
             Thread.Sleep(6500);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
         }
 
         private static void fishBrrrghPolarPlace()
         {
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
             Thread.Sleep(800);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.RIGHT);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP); ;
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP); ;
             Thread.Sleep(2000);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
             sellFish();
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
             Thread.Sleep(2000);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
         }
 
         private static void fishMMTenorTerrace()
         {
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(1090);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP); ;
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP); ;
             Thread.Sleep(2200);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
             sellFish();
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
             Thread.Sleep(3000);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
         }
 
         private static void fishBrrrghWalrusWay()
         {
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP); ;
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP); ;
             Thread.Sleep(100);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(730);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP); ;
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP); ;
             Thread.Sleep(2000);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
             sellFish();
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
             Thread.Sleep(2100);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.DOWN);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
             Thread.Sleep(700);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.RIGHT);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
             Thread.Sleep(1000);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
         }
 
         private static void fishBrrrghSleetSt()
         {
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
             Thread.Sleep(600);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.DOWN);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
             Thread.Sleep(850);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.RIGHT);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP); ;
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP); ;
             Thread.Sleep(1000);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
             sellFish();
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
             Thread.Sleep(1700);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.DOWN);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(850);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP); ;
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP); ;
             Thread.Sleep(600);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
         }
 
         private static void fishDaisyGardenElmSt()
         {
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(80);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP); ;
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP); ;
             Thread.Sleep(2000);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
             sellFish();
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
             Thread.Sleep(4500);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
         }
 
         private static void fishDDLighthouseLane()
         {
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
             Thread.Sleep(330);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.RIGHT);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP); ;
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP); ;
             Thread.Sleep(2200);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
             sellFish();
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
             Thread.Sleep(4500);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.DOWN);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
         }
 
         private static void startFishing(int numberOfCasts, bool fishVariance)

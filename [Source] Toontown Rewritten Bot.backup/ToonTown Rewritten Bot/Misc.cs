@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using WindowsInput;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -44,7 +49,7 @@ namespace ToonTown_Rewritten_Bot
         {
             BotFunctions.DoMouseClick();
             Thread.Sleep(500);
-            InputManager.InputSim.Keyboard.TextEntry(text);
+            InputSimulator.SimulateTextEntry(text);
             Thread.Sleep(500);
             SendKeys.SendWait("{ENTER}");
         }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using InputSimulatorEx.Native;
 using System.Threading;
-using System.Threading.Tasks;
-using WindowsInput;
 
 namespace ToonTown_Rewritten_Bot
 {
@@ -22,117 +17,117 @@ namespace ToonTown_Rewritten_Bot
         private static void makeFirstBendScrewball()
         {
             //straight away
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(6000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //turn left
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //go straight more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //turn left more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //go straight more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //turn left more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //go straight more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(800);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //turn left more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //go straight more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(1000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //short turn left
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //go straight more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(1000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //short turn left
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(450);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //straight away
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(7000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
         }
 
         private static void makeSecondBendScrewball()
         {
             //straight away
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(6000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //turn left
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(800);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //go straight more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //turn left more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(800);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //go straight more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //turn left more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(600);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //go straight more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(800);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //turn left more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //go straight more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(1000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             /*//short turn left
             robot.keyPress(KeyEvent.VK_LEFT);
@@ -140,43 +135,43 @@ namespace ToonTown_Rewritten_Bot
             robot.keyRelease(KeyEvent.VK_LEFT);*/
 
             //go straight more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(500);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //short turn left
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(100);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //straight away
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(7000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
         }
 
         private static void makeThirdBendScrewball()
         {
             Thread.Sleep(1300);
             //short turn left
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(700);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //straight away
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(1000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
 
             //turn left
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.LEFT);
             Thread.Sleep(700);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.LEFT);
 
             //go straight more
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
             Thread.Sleep(2000);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
         }
     }
 }
