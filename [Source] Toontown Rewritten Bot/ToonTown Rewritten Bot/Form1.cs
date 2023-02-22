@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
+using System.Windows;
 using System.Windows.Forms;
+using OpenCvSharp;
 
 namespace ToonTown_Rewritten_Bot
 {
@@ -30,7 +35,7 @@ namespace ToonTown_Rewritten_Bot
         private void keepToonAwakeButton_Click(object sender, EventArgs e)//keep toon 
         {
             timeLeft = Convert.ToInt32(numericUpDown1.Value) * 60;
-            MessageBox.Show("Press OK when ready to begin!");
+            System.Windows.Forms.MessageBox.Show("Press OK when ready to begin!");
             Thread.Sleep(2000);
             timer1.Start();
             bool loopBroken = ToonTown_Rewritten_Bot.Misc.keepToonAwake(Convert.ToInt32(numericUpDown1.Value));
@@ -52,7 +57,7 @@ namespace ToonTown_Rewritten_Bot
             }
             catch
             {
-                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                System.Windows.Forms.MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
             plantsForm.comboBox1.Items.Clear();
         }
@@ -79,7 +84,7 @@ namespace ToonTown_Rewritten_Bot
             DialogResult confirmation;
             while (!(Process.GetProcessesByName("TTREngine").Length > 0))
             {
-                confirmation = MessageBox.Show("Press OK once running or Cancel.","ToonTown Rewritten is not running!", MessageBoxButtons.OKCancel);
+                confirmation = System.Windows.Forms.MessageBox.Show("Press OK once running or Cancel.","ToonTown Rewritten is not running!", MessageBoxButtons.OKCancel);
                 if (confirmation.Equals(DialogResult.Cancel))
                     Environment.Exit(0);
             }
@@ -159,7 +164,7 @@ namespace ToonTown_Rewritten_Bot
         private void button7_Click(object sender, EventArgs e)
         {
             BotFunctions.resetAllCoordinates();
-            MessageBox.Show("All coordinates reset!");
+            System.Windows.Forms.MessageBox.Show("All coordinates reset!");
         }
 
         private void loadCoordsIntoResetBox()
@@ -187,9 +192,9 @@ namespace ToonTown_Rewritten_Bot
             }
             catch
             {
-                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                System.Windows.Forms.MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
-            MessageBox.Show("Coordinate's updated for " + selected);
+            System.Windows.Forms.MessageBox.Show("Coordinate's updated for " + selected);
         }
 
         private void startFishing_Click(object sender, EventArgs e)//button to start fishing
@@ -198,7 +203,7 @@ namespace ToonTown_Rewritten_Bot
             int numberOfCasts = Convert.ToInt32(numericUpDown3.Value);
             int numberOfSells = Convert.ToInt32(numericUpDown4.Value);
             BotFunctions.tellFishingLocation(selected);
-            MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
+            System.Windows.Forms.MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
             startFishingThread(selected, numberOfCasts, numberOfSells, false);
         }
 
@@ -206,7 +211,7 @@ namespace ToonTown_Rewritten_Bot
         {
             if (randomFishing.Checked)
             {
-                MessageBox.Show("This will add randomness to the line casting!");
+                System.Windows.Forms.MessageBox.Show("This will add randomness to the line casting!");
                 fishVariance = true;
             }
             else
@@ -230,21 +235,21 @@ namespace ToonTown_Rewritten_Bot
         private void button4_Click(object sender, EventArgs e)//button to stop fishing
         {
             startFishingThread(null, 0, 0, true);
-            MessageBox.Show("Fishing stopped!");
+            System.Windows.Forms.MessageBox.Show("Fishing stopped!");
         }
 
         private void smartFishing_CheckedChanged(object sender, EventArgs e)
         {
             if (smartFishing.Checked)
             {
-                MessageBox.Show("Will be added later!");
+                System.Windows.Forms.MessageBox.Show("Will be added later!");
                 smartFishing.Checked = false;
             }
         }
 
         private void button5_Click(object sender, EventArgs e)//racing test
         {
-            MessageBox.Show("Press OK when ready to begin!");
+            System.Windows.Forms.MessageBox.Show("Press OK when ready to begin!");
             Thread.Sleep(5000);
             //Point test = BotFunctions.getCursorLocation();
             //BotFunctions.GetColorAt(test.X, test.Y);
@@ -280,7 +285,7 @@ namespace ToonTown_Rewritten_Bot
             }
             catch
             {
-                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                System.Windows.Forms.MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
         }
 
@@ -293,7 +298,7 @@ namespace ToonTown_Rewritten_Bot
             }
             catch
             {
-                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                System.Windows.Forms.MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
         }
 
@@ -398,7 +403,7 @@ namespace ToonTown_Rewritten_Bot
         private void button19_Click(object sender, EventArgs e)
         {
             startDoodleTrainingThread(0, 0, false, true, "");
-            MessageBox.Show("Doodle Training stopped!");
+            System.Windows.Forms.MessageBox.Show("Doodle Training stopped!");
         }
 
         private void checkBox4_CheckedChanged(object sender, EventArgs e)
@@ -435,6 +440,15 @@ namespace ToonTown_Rewritten_Bot
                     numericUpDown5.Enabled = false;
                 }
             }
+        }
+
+
+        //testing image rec below
+
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
