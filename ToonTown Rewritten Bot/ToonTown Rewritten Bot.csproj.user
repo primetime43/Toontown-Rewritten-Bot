@@ -13,4 +13,36 @@
   <PropertyGroup>
     <EnableSecurityDebugging>false</EnableSecurityDebugging>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="AboutBox1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AdvancedSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="BotFunctions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="DevForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fishing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Help.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Plants.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UpdateCoordsHelper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="updateImages.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>

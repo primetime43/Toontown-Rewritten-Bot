@@ -186,7 +186,7 @@ namespace ToonTown_Rewritten_Bot
         public const string TESS_LANGUAGE = "eng";
         private static TesseractEngine engine;
 
-        public static void readText(Image inputImage)
+        /*public static void readText(Image inputImage)
         {
             using (engine = new TesseractEngine(TESS_PATH, TESS_LANGUAGE))
             {
@@ -202,7 +202,7 @@ namespace ToonTown_Rewritten_Bot
                     }
                 }
             }
-        }
+        }*/
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
