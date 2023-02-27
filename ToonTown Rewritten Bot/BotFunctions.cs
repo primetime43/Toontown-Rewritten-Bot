@@ -269,14 +269,30 @@ namespace ToonTown_Rewritten_Bot
 
         public static void resetAllCoordinates()
         {
-            lines = File.ReadAllLines(Path.GetFullPath("Coordinates Data File.txt"));
-            String[] test = new String[lines.Length]; 
-            for(int i = 0; i < Form1.dataFileMap.Count; i++)
+            string filePath = "Coordinates Data File.txt";
+            if (!File.Exists(filePath))
             {
-                test[i] = ((i+1) + ".(0,0)");
+                // Create the file and write the default coordinates
+                using (StreamWriter sw = File.CreateText(filePath))
+                {
+                    for (int i = 1; i <= Form1.dataFileMap.Count; i++)
+                    {
+                        sw.WriteLine($"{i}.(0,0)");
+                    }
+                }
             }
-            writeDefaultCords(test);
+            else
+            {
+                // Read the existing file and overwrite with default coordinates
+                string[] lines = File.ReadAllLines(filePath);
+                for (int i = 0; i < Form1.dataFileMap.Count; i++)
+                {
+                    lines[i] = $"{i + 1}.(0,0)";
+                }
+                writeDefaultCords(lines);
+            }
         }
+
 
         public static void tellFishingLocation(string location)
         {
