@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Windows.Forms;
-using InputSimulatorEx.Native;
+using WindowsInput;
 
 namespace ToonTown_Rewritten_Bot
 {
@@ -13,9 +13,9 @@ namespace ToonTown_Rewritten_Bot
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(2120);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         // GOLF - Holey Mackeral
@@ -25,9 +25,9 @@ namespace ToonTown_Rewritten_Bot
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(1000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         // GOLF - Hole on the Range
@@ -37,9 +37,9 @@ namespace ToonTown_Rewritten_Bot
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(1800); // 68%
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         // GOLF - Seeing green
@@ -49,9 +49,9 @@ namespace ToonTown_Rewritten_Bot
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(1790); // 67%
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         // GOLF - Swing Time
@@ -60,14 +60,14 @@ namespace ToonTown_Rewritten_Bot
             BotFunctions.maximizeAndFocus();
             Thread.Sleep(100);
             //move toon to the right location
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
             Thread.Sleep(50);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
             Thread.Sleep(100);
             Thread.Sleep(15000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(2000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         // GOLF - Down the Hatch
@@ -75,9 +75,9 @@ namespace ToonTown_Rewritten_Bot
         {
             BotFunctions.maximizeAndFocus();
             Thread.Sleep(15000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(2340);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         //GOLF - Peanut Putter
@@ -87,9 +87,9 @@ namespace ToonTown_Rewritten_Bot
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(1860); // 69-70% ?
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         //GOLF - Hot Links
@@ -99,9 +99,9 @@ namespace ToonTown_Rewritten_Bot
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(1800); // 67%
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         //GOLF - Hole In Fun
@@ -111,9 +111,9 @@ namespace ToonTown_Rewritten_Bot
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(1300);// 52%
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         //GOLF - Swing-A-Long
@@ -121,9 +121,9 @@ namespace ToonTown_Rewritten_Bot
         {
             BotFunctions.maximizeAndFocus();
             Thread.Sleep(15000);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(2340);// 82%
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         public static void oneLittleBirdie()
@@ -131,26 +131,26 @@ namespace ToonTown_Rewritten_Bot
             BotFunctions.maximizeAndFocus();
             Thread.Sleep(15000);
             //rotate the toon right
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
             Thread.Sleep(700);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.RIGHT);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(1870); // 69-70% ?
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         private static void confirmLocation()
         {
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(50);
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         private static void toonLookAtHole()//this is just to stop the timer
         {
-            InputManager.InputSim.Keyboard.KeyDown(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
             Thread.Sleep(50);
-            InputManager.InputSim.Keyboard.KeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
         }
     }
 }

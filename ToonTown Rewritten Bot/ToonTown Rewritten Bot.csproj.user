@@ -10,7 +10,27 @@
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
+<<<<<<< HEAD:ToonTown Rewritten Bot/ToonTown Rewritten Bot.csproj.user
   <PropertyGroup>
     <EnableSecurityDebugging>false</EnableSecurityDebugging>
   </PropertyGroup>
+=======
+  <ItemGroup>
+    <Compile Update="AboutBox1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Help.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Plants.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UpdateCoordsHelper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+>>>>>>> 26d8c76 (- Upgraded the project to target framework .net 7):[Source] Toontown Rewritten Bot/ToonTown Rewritten Bot/ToonTown Rewritten Bot.csproj.user
 </Project>
