@@ -82,7 +82,7 @@ namespace ToonTown_Rewritten_Bot
             DialogResult confirmation;
             while (!(Process.GetProcessesByName("TTREngine").Length > 0))
             {
-                confirmation = MessageBox.Show("Press OK once running or Cancel.","ToonTown Rewritten is not running!", MessageBoxButtons.OKCancel);
+                confirmation = MessageBox.Show("Press OK once running or Cancel.", "ToonTown Rewritten is not running!", MessageBoxButtons.OKCancel);
                 if (confirmation.Equals(DialogResult.Cancel))
                     Environment.Exit(0);
             }
@@ -239,10 +239,9 @@ namespace ToonTown_Rewritten_Bot
         private void smartFishing_CheckedChanged(object sender, EventArgs e)
         {
             if (smartFishing.Checked)
-            {
-                MessageBox.Show("Will be added later!");
-                smartFishing.Checked = false;
-            }
+                BotFunctions.isAutoDetectFishingBtnActive = true;
+            else
+                BotFunctions.isAutoDetectFishingBtnActive = false;
         }
 
         private async void button5_Click(object sender, EventArgs e)//racing test
@@ -257,7 +256,7 @@ namespace ToonTown_Rewritten_Bot
             MessageBox.Show("Done");
 
             BotFunctions.maximizeAndFocus();
-            
+
             Image screenshot = ImageRecognition.GetWindowScreenshot();
             /*PictureBox pictureBox = new PictureBox();
             pictureBox.Image = screenshot;
@@ -390,7 +389,7 @@ namespace ToonTown_Rewritten_Bot
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
-            if(checkBox3.Checked)
+            if (checkBox3.Checked)
             {
                 numericUpDown5.Enabled = false;
                 numericUpDown6.Enabled = false;
@@ -436,7 +435,7 @@ namespace ToonTown_Rewritten_Bot
             else
             {
                 numericUpDown5.Enabled = true;
-                if(checkBox3.Checked)
+                if (checkBox3.Checked)
                 {
                     numericUpDown6.Enabled = false;
                     numericUpDown5.Enabled = false;

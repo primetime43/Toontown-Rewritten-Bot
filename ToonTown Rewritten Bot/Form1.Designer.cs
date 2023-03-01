@@ -28,1162 +28,1161 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.Main = new System.Windows.Forms.TabPage();
-            this.label8 = new System.Windows.Forms.Label();
-            this.button9 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.Fishing = new System.Windows.Forms.TabPage();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.randomFishing = new System.Windows.Forms.CheckBox();
-            this.smartFishing = new System.Windows.Forms.CheckBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
-            this.startFishing = new System.Windows.Forms.Button();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.Racing = new System.Windows.Forms.TabPage();
-            this.label6 = new System.Windows.Forms.Label();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.startRacing = new System.Windows.Forms.Button();
-            this.Gardening = new System.Windows.Forms.TabPage();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.Golf = new System.Windows.Forms.TabPage();
-            this.label2 = new System.Windows.Forms.Label();
-            this.Near_Hole = new System.Windows.Forms.GroupBox();
-            this.One_Little_Birdie = new System.Windows.Forms.Button();
-            this.button14 = new System.Windows.Forms.Button();
-            this.button18 = new System.Windows.Forms.Button();
-            this.button15 = new System.Windows.Forms.Button();
-            this.button13 = new System.Windows.Forms.Button();
-            this.button16 = new System.Windows.Forms.Button();
-            this.Hole_In_One = new System.Windows.Forms.GroupBox();
-            this.button12 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button17 = new System.Windows.Forms.Button();
-            this.button10 = new System.Windows.Forms.Button();
-            this.button11 = new System.Windows.Forms.Button();
-            this.Doodles = new System.Windows.Forms.TabPage();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.button19 = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
-            this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
-            this.button20 = new System.Windows.Forms.Button();
-            this.Misc = new System.Windows.Forms.TabPage();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.keepToonAwakeButton = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.messageToType = new System.Windows.Forms.TextBox();
-            this.startSpamButton = new System.Windows.Forms.Button();
-            this.Dev = new System.Windows.Forms.TabPage();
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.updateImagesBtn = new System.Windows.Forms.Button();
-            this.resetImagesBtn = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.button6 = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.button7 = new System.Windows.Forms.Button();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.tabControl1.SuspendLayout();
-            this.Main.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.Fishing.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            this.Racing.SuspendLayout();
-            this.Gardening.SuspendLayout();
-            this.groupBox5.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.Golf.SuspendLayout();
-            this.Near_Hole.SuspendLayout();
-            this.Hole_In_One.SuspendLayout();
-            this.Doodles.SuspendLayout();
-            this.groupBox8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
-            this.Misc.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            this.Dev.SuspendLayout();
-            this.groupBox9.SuspendLayout();
-            this.groupBox7.SuspendLayout();
-            this.SuspendLayout();
+            tabControl1 = new System.Windows.Forms.TabControl();
+            Main = new System.Windows.Forms.TabPage();
+            label8 = new System.Windows.Forms.Label();
+            button9 = new System.Windows.Forms.Button();
+            button8 = new System.Windows.Forms.Button();
+            label7 = new System.Windows.Forms.Label();
+            pictureBox1 = new System.Windows.Forms.PictureBox();
+            Fishing = new System.Windows.Forms.TabPage();
+            groupBox6 = new System.Windows.Forms.GroupBox();
+            button4 = new System.Windows.Forms.Button();
+            randomFishing = new System.Windows.Forms.CheckBox();
+            smartFishing = new System.Windows.Forms.CheckBox();
+            label4 = new System.Windows.Forms.Label();
+            numericUpDown4 = new System.Windows.Forms.NumericUpDown();
+            label3 = new System.Windows.Forms.Label();
+            numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            startFishing = new System.Windows.Forms.Button();
+            comboBox3 = new System.Windows.Forms.ComboBox();
+            Racing = new System.Windows.Forms.TabPage();
+            label6 = new System.Windows.Forms.Label();
+            richTextBox1 = new System.Windows.Forms.RichTextBox();
+            startRacing = new System.Windows.Forms.Button();
+            Gardening = new System.Windows.Forms.TabPage();
+            groupBox5 = new System.Windows.Forms.GroupBox();
+            button3 = new System.Windows.Forms.Button();
+            groupBox4 = new System.Windows.Forms.GroupBox();
+            button2 = new System.Windows.Forms.Button();
+            groupBox3 = new System.Windows.Forms.GroupBox();
+            comboBox2 = new System.Windows.Forms.ComboBox();
+            button1 = new System.Windows.Forms.Button();
+            Golf = new System.Windows.Forms.TabPage();
+            label2 = new System.Windows.Forms.Label();
+            Near_Hole = new System.Windows.Forms.GroupBox();
+            One_Little_Birdie = new System.Windows.Forms.Button();
+            button14 = new System.Windows.Forms.Button();
+            button18 = new System.Windows.Forms.Button();
+            button15 = new System.Windows.Forms.Button();
+            button13 = new System.Windows.Forms.Button();
+            button16 = new System.Windows.Forms.Button();
+            Hole_In_One = new System.Windows.Forms.GroupBox();
+            button12 = new System.Windows.Forms.Button();
+            button5 = new System.Windows.Forms.Button();
+            button17 = new System.Windows.Forms.Button();
+            button10 = new System.Windows.Forms.Button();
+            button11 = new System.Windows.Forms.Button();
+            Doodles = new System.Windows.Forms.TabPage();
+            richTextBox2 = new System.Windows.Forms.RichTextBox();
+            groupBox8 = new System.Windows.Forms.GroupBox();
+            checkBox5 = new System.Windows.Forms.CheckBox();
+            checkBox4 = new System.Windows.Forms.CheckBox();
+            comboBox4 = new System.Windows.Forms.ComboBox();
+            pictureBox2 = new System.Windows.Forms.PictureBox();
+            checkBox3 = new System.Windows.Forms.CheckBox();
+            button19 = new System.Windows.Forms.Button();
+            label9 = new System.Windows.Forms.Label();
+            numericUpDown5 = new System.Windows.Forms.NumericUpDown();
+            label10 = new System.Windows.Forms.Label();
+            numericUpDown6 = new System.Windows.Forms.NumericUpDown();
+            button20 = new System.Windows.Forms.Button();
+            Misc = new System.Windows.Forms.TabPage();
+            checkBox2 = new System.Windows.Forms.CheckBox();
+            groupBox2 = new System.Windows.Forms.GroupBox();
+            label1 = new System.Windows.Forms.Label();
+            numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            keepToonAwakeButton = new System.Windows.Forms.Button();
+            groupBox1 = new System.Windows.Forms.GroupBox();
+            numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            checkBox1 = new System.Windows.Forms.CheckBox();
+            messageToType = new System.Windows.Forms.TextBox();
+            startSpamButton = new System.Windows.Forms.Button();
+            Dev = new System.Windows.Forms.TabPage();
+            groupBox9 = new System.Windows.Forms.GroupBox();
+            label11 = new System.Windows.Forms.Label();
+            updateImagesBtn = new System.Windows.Forms.Button();
+            resetImagesBtn = new System.Windows.Forms.Button();
+            label5 = new System.Windows.Forms.Label();
+            groupBox7 = new System.Windows.Forms.GroupBox();
+            button6 = new System.Windows.Forms.Button();
+            comboBox1 = new System.Windows.Forms.ComboBox();
+            button7 = new System.Windows.Forms.Button();
+            toolTip1 = new System.Windows.Forms.ToolTip(components);
+            timer1 = new System.Windows.Forms.Timer(components);
+            tabControl1.SuspendLayout();
+            Main.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            Fishing.SuspendLayout();
+            groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown3).BeginInit();
+            Racing.SuspendLayout();
+            Gardening.SuspendLayout();
+            groupBox5.SuspendLayout();
+            groupBox4.SuspendLayout();
+            groupBox3.SuspendLayout();
+            Golf.SuspendLayout();
+            Near_Hole.SuspendLayout();
+            Hole_In_One.SuspendLayout();
+            Doodles.SuspendLayout();
+            groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown5).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown6).BeginInit();
+            Misc.SuspendLayout();
+            groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
+            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
+            Dev.SuspendLayout();
+            groupBox9.SuspendLayout();
+            groupBox7.SuspendLayout();
+            SuspendLayout();
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.Main);
-            this.tabControl1.Controls.Add(this.Fishing);
-            this.tabControl1.Controls.Add(this.Racing);
-            this.tabControl1.Controls.Add(this.Gardening);
-            this.tabControl1.Controls.Add(this.Golf);
-            this.tabControl1.Controls.Add(this.Doodles);
-            this.tabControl1.Controls.Add(this.Misc);
-            this.tabControl1.Controls.Add(this.Dev);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(475, 309);
-            this.tabControl1.TabIndex = 5;
+            tabControl1.Controls.Add(Main);
+            tabControl1.Controls.Add(Fishing);
+            tabControl1.Controls.Add(Racing);
+            tabControl1.Controls.Add(Gardening);
+            tabControl1.Controls.Add(Golf);
+            tabControl1.Controls.Add(Doodles);
+            tabControl1.Controls.Add(Misc);
+            tabControl1.Controls.Add(Dev);
+            tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            tabControl1.Location = new System.Drawing.Point(0, 0);
+            tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new System.Drawing.Size(554, 357);
+            tabControl1.TabIndex = 5;
             // 
             // Main
             // 
-            this.Main.Controls.Add(this.label8);
-            this.Main.Controls.Add(this.button9);
-            this.Main.Controls.Add(this.button8);
-            this.Main.Controls.Add(this.label7);
-            this.Main.Controls.Add(this.pictureBox1);
-            this.Main.Location = new System.Drawing.Point(4, 25);
-            this.Main.Name = "Main";
-            this.Main.Padding = new System.Windows.Forms.Padding(3);
-            this.Main.Size = new System.Drawing.Size(467, 280);
-            this.Main.TabIndex = 0;
-            this.Main.Text = "Main";
-            this.Main.UseVisualStyleBackColor = true;
+            Main.Controls.Add(label8);
+            Main.Controls.Add(button9);
+            Main.Controls.Add(button8);
+            Main.Controls.Add(label7);
+            Main.Controls.Add(pictureBox1);
+            Main.Location = new System.Drawing.Point(4, 25);
+            Main.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Main.Name = "Main";
+            Main.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Main.Size = new System.Drawing.Size(546, 328);
+            Main.TabIndex = 0;
+            Main.Text = "Main";
+            Main.UseVisualStyleBackColor = true;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(75, 201);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(311, 16);
-            this.label8.TabIndex = 6;
-            this.label8.Text = "Note: Keep Toontown Rewritten\'s screen full screen";
+            label8.AutoSize = true;
+            label8.Location = new System.Drawing.Point(88, 232);
+            label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new System.Drawing.Size(311, 16);
+            label8.TabIndex = 6;
+            label8.Text = "Note: Keep Toontown Rewritten's screen full screen";
             // 
             // button9
             // 
-            this.button9.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button9.Location = new System.Drawing.Point(246, 220);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(161, 52);
-            this.button9.TabIndex = 5;
-            this.button9.Text = "Help";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
+            button9.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            button9.Location = new System.Drawing.Point(287, 254);
+            button9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button9.Name = "button9";
+            button9.Size = new System.Drawing.Size(188, 60);
+            button9.TabIndex = 5;
+            button9.Text = "Help";
+            button9.UseVisualStyleBackColor = true;
+            button9.Click += button9_Click;
             // 
             // button8
             // 
-            this.button8.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button8.Location = new System.Drawing.Point(75, 220);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(157, 52);
-            this.button8.TabIndex = 4;
-            this.button8.Text = "About";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
+            button8.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            button8.Location = new System.Drawing.Point(88, 254);
+            button8.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button8.Name = "button8";
+            button8.Size = new System.Drawing.Size(183, 60);
+            button8.TabIndex = 4;
+            button8.Text = "About";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(35, 131);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(0, 16);
-            this.label7.TabIndex = 3;
+            label7.AutoSize = true;
+            label7.Location = new System.Drawing.Point(41, 151);
+            label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(0, 16);
+            label7.TabIndex = 3;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(75, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(332, 110);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
+            pictureBox1.Image = (System.Drawing.Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new System.Drawing.Point(88, 3);
+            pictureBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new System.Drawing.Size(387, 127);
+            pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 2;
+            pictureBox1.TabStop = false;
             // 
             // Fishing
             // 
-            this.Fishing.Controls.Add(this.groupBox6);
-            this.Fishing.Location = new System.Drawing.Point(4, 25);
-            this.Fishing.Name = "Fishing";
-            this.Fishing.Padding = new System.Windows.Forms.Padding(3);
-            this.Fishing.Size = new System.Drawing.Size(467, 280);
-            this.Fishing.TabIndex = 1;
-            this.Fishing.Text = "Fishing";
-            this.Fishing.UseVisualStyleBackColor = true;
+            Fishing.Controls.Add(groupBox6);
+            Fishing.Location = new System.Drawing.Point(4, 25);
+            Fishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Fishing.Name = "Fishing";
+            Fishing.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Fishing.Size = new System.Drawing.Size(546, 328);
+            Fishing.TabIndex = 1;
+            Fishing.Text = "Fishing";
+            Fishing.UseVisualStyleBackColor = true;
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.button4);
-            this.groupBox6.Controls.Add(this.randomFishing);
-            this.groupBox6.Controls.Add(this.smartFishing);
-            this.groupBox6.Controls.Add(this.label4);
-            this.groupBox6.Controls.Add(this.numericUpDown4);
-            this.groupBox6.Controls.Add(this.label3);
-            this.groupBox6.Controls.Add(this.numericUpDown3);
-            this.groupBox6.Controls.Add(this.startFishing);
-            this.groupBox6.Controls.Add(this.comboBox3);
-            this.groupBox6.Location = new System.Drawing.Point(8, 6);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(330, 170);
-            this.groupBox6.TabIndex = 8;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Fishing Locations";
+            groupBox6.Controls.Add(button4);
+            groupBox6.Controls.Add(randomFishing);
+            groupBox6.Controls.Add(smartFishing);
+            groupBox6.Controls.Add(label4);
+            groupBox6.Controls.Add(numericUpDown4);
+            groupBox6.Controls.Add(label3);
+            groupBox6.Controls.Add(numericUpDown3);
+            groupBox6.Controls.Add(startFishing);
+            groupBox6.Controls.Add(comboBox3);
+            groupBox6.Location = new System.Drawing.Point(9, 7);
+            groupBox6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox6.Name = "groupBox6";
+            groupBox6.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox6.Size = new System.Drawing.Size(385, 196);
+            groupBox6.TabIndex = 8;
+            groupBox6.TabStop = false;
+            groupBox6.Text = "Fishing Locations";
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(166, 125);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(158, 33);
-            this.button4.TabIndex = 12;
-            this.button4.Text = "Stop Fishing";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            button4.Location = new System.Drawing.Point(194, 144);
+            button4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button4.Name = "button4";
+            button4.Size = new System.Drawing.Size(184, 38);
+            button4.TabIndex = 12;
+            button4.Text = "Stop Fishing";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // randomFishing
             // 
-            this.randomFishing.AutoSize = true;
-            this.randomFishing.Location = new System.Drawing.Point(166, 95);
-            this.randomFishing.Name = "randomFishing";
-            this.randomFishing.Size = new System.Drawing.Size(135, 20);
-            this.randomFishing.TabIndex = 11;
-            this.randomFishing.Text = "Random Variance";
-            this.toolTip1.SetToolTip(this.randomFishing, "This add some randomness and will make it so you \r\nwon\'t cast your line at the sa" +
-        "me spot every time!");
-            this.randomFishing.UseVisualStyleBackColor = true;
-            this.randomFishing.CheckedChanged += new System.EventHandler(this.randomFishing_CheckedChanged);
+            randomFishing.AutoSize = true;
+            randomFishing.Location = new System.Drawing.Point(194, 110);
+            randomFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            randomFishing.Name = "randomFishing";
+            randomFishing.Size = new System.Drawing.Size(135, 20);
+            randomFishing.TabIndex = 11;
+            randomFishing.Text = "Random Variance";
+            toolTip1.SetToolTip(randomFishing, "This add some randomness and will make it so you \r\nwon't cast your line at the same spot every time!");
+            randomFishing.UseVisualStyleBackColor = true;
+            randomFishing.CheckedChanged += randomFishing_CheckedChanged;
             // 
             // smartFishing
             // 
-            this.smartFishing.AutoSize = true;
-            this.smartFishing.Location = new System.Drawing.Point(166, 61);
-            this.smartFishing.Name = "smartFishing";
-            this.smartFishing.Size = new System.Drawing.Size(107, 20);
-            this.smartFishing.TabIndex = 10;
-            this.smartFishing.Text = "Smart Fishing";
-            this.toolTip1.SetToolTip(this.smartFishing, "Fishes by searching for the shadows, instead of just casting the line");
-            this.smartFishing.UseVisualStyleBackColor = true;
-            this.smartFishing.CheckedChanged += new System.EventHandler(this.smartFishing_CheckedChanged);
+            smartFishing.AutoSize = true;
+            smartFishing.Checked = true;
+            smartFishing.CheckState = System.Windows.Forms.CheckState.Checked;
+            smartFishing.Location = new System.Drawing.Point(194, 70);
+            smartFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            smartFishing.Name = "smartFishing";
+            smartFishing.Size = new System.Drawing.Size(183, 20);
+            smartFishing.TabIndex = 10;
+            smartFishing.Text = "Auto Detect Casting Button";
+            toolTip1.SetToolTip(smartFishing, "Detects the red casting button itself");
+            smartFishing.UseVisualStyleBackColor = true;
+            smartFishing.CheckedChanged += smartFishing_CheckedChanged;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 99);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(105, 16);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Number of Sells:";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(4, 114);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(105, 16);
+            label4.TabIndex = 9;
+            label4.Text = "Number of Sells:";
             // 
             // numericUpDown4
             // 
-            this.numericUpDown4.Location = new System.Drawing.Point(119, 97);
-            this.numericUpDown4.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDown4.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(41, 22);
-            this.numericUpDown4.TabIndex = 8;
-            this.toolTip1.SetToolTip(this.numericUpDown4, "This number indicates the number of times to go to the fisherman to sell the fish" +
-        "");
-            this.numericUpDown4.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            numericUpDown4.Location = new System.Drawing.Point(139, 112);
+            numericUpDown4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDown4.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
+            numericUpDown4.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown4.Name = "numericUpDown4";
+            numericUpDown4.Size = new System.Drawing.Size(48, 22);
+            numericUpDown4.TabIndex = 8;
+            toolTip1.SetToolTip(numericUpDown4, "This number indicates the number of times to go to the fisherman to sell the fish");
+            numericUpDown4.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 61);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(109, 16);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Number of Casts:";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(4, 70);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(109, 16);
+            label3.TabIndex = 7;
+            label3.Text = "Number of Casts:";
             // 
             // numericUpDown3
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(119, 59);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.numericUpDown3.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(41, 22);
-            this.numericUpDown3.TabIndex = 6;
-            this.toolTip1.SetToolTip(this.numericUpDown3, "This number indicates the number of times to cast your fishing rod");
-            this.numericUpDown3.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            numericUpDown3.Location = new System.Drawing.Point(139, 68);
+            numericUpDown3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDown3.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
+            numericUpDown3.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown3.Name = "numericUpDown3";
+            numericUpDown3.Size = new System.Drawing.Size(48, 22);
+            numericUpDown3.TabIndex = 6;
+            toolTip1.SetToolTip(numericUpDown3, "This number indicates the number of times to cast your fishing rod");
+            numericUpDown3.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // startFishing
             // 
-            this.startFishing.Location = new System.Drawing.Point(6, 125);
-            this.startFishing.Name = "startFishing";
-            this.startFishing.Size = new System.Drawing.Size(158, 33);
-            this.startFishing.TabIndex = 2;
-            this.startFishing.Text = "Start Fishing";
-            this.startFishing.UseVisualStyleBackColor = true;
-            this.startFishing.Click += new System.EventHandler(this.startFishing_Click);
+            startFishing.Location = new System.Drawing.Point(7, 144);
+            startFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            startFishing.Name = "startFishing";
+            startFishing.Size = new System.Drawing.Size(184, 38);
+            startFishing.TabIndex = 2;
+            startFishing.Text = "Start Fishing";
+            startFishing.UseVisualStyleBackColor = true;
+            startFishing.Click += startFishing_Click;
             // 
             // comboBox3
             // 
-            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.Items.AddRange(new object[] {
-            "TOONTOWN CENTRAL PUNCHLINE PLACE",
-            "DONALD DREAM LAND LULLABY LANE",
-            "BRRRGH POLAR PLACE",
-            "BRRRGH WALRUS WAY",
-            "BRRRGH SLEET STREET",
-            "MINNIE\'S MELODYLAND TENOR TERRACE",
-            "DONALD DOCK LIGHTHOUSE LANE",
-            "DAISY\'S GARDEN ELM STREET",
-            "FISH ANYWHERE"});
-            this.comboBox3.Location = new System.Drawing.Point(6, 21);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(318, 24);
-            this.comboBox3.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.comboBox3, "Select the location you wish to fish at");
+            comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBox3.Items.AddRange(new object[] { "TOONTOWN CENTRAL PUNCHLINE PLACE", "DONALD DREAM LAND LULLABY LANE", "BRRRGH POLAR PLACE", "BRRRGH WALRUS WAY", "BRRRGH SLEET STREET", "MINNIE'S MELODYLAND TENOR TERRACE", "DONALD DOCK LIGHTHOUSE LANE", "DAISY'S GARDEN ELM STREET", "FISH ANYWHERE" });
+            comboBox3.Location = new System.Drawing.Point(7, 24);
+            comboBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBox3.Name = "comboBox3";
+            comboBox3.Size = new System.Drawing.Size(370, 24);
+            comboBox3.TabIndex = 1;
+            toolTip1.SetToolTip(comboBox3, "Select the location you wish to fish at");
             // 
             // Racing
             // 
-            this.Racing.Controls.Add(this.label6);
-            this.Racing.Controls.Add(this.richTextBox1);
-            this.Racing.Controls.Add(this.startRacing);
-            this.Racing.Location = new System.Drawing.Point(4, 25);
-            this.Racing.Name = "Racing";
-            this.Racing.Size = new System.Drawing.Size(467, 280);
-            this.Racing.TabIndex = 2;
-            this.Racing.Text = "Racing";
-            this.Racing.UseVisualStyleBackColor = true;
+            Racing.Controls.Add(label6);
+            Racing.Controls.Add(richTextBox1);
+            Racing.Controls.Add(startRacing);
+            Racing.Location = new System.Drawing.Point(4, 25);
+            Racing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Racing.Name = "Racing";
+            Racing.Size = new System.Drawing.Size(546, 328);
+            Racing.TabIndex = 2;
+            Racing.Text = "Racing";
+            Racing.UseVisualStyleBackColor = true;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(33, 24);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(100, 16);
-            this.label6.TabIndex = 2;
-            this.label6.Text = "Coming Soon....";
+            label6.AutoSize = true;
+            label6.Location = new System.Drawing.Point(38, 28);
+            label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(100, 16);
+            label6.TabIndex = 2;
+            label6.Text = "Coming Soon....";
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Enabled = false;
-            this.richTextBox1.Location = new System.Drawing.Point(36, 142);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(250, 108);
-            this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "";
-            this.richTextBox1.Visible = false;
+            richTextBox1.Enabled = false;
+            richTextBox1.Location = new System.Drawing.Point(42, 164);
+            richTextBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new System.Drawing.Size(291, 124);
+            richTextBox1.TabIndex = 1;
+            richTextBox1.Text = "";
+            richTextBox1.Visible = false;
             // 
             // startRacing
             // 
-            this.startRacing.Location = new System.Drawing.Point(89, 49);
-            this.startRacing.Name = "startRacing";
-            this.startRacing.Size = new System.Drawing.Size(140, 54);
-            this.startRacing.TabIndex = 0;
-            this.startRacing.Text = "Race Screwball Stadium";
-            this.startRacing.UseVisualStyleBackColor = true;
-            this.startRacing.Visible = false;
-            this.startRacing.Click += new System.EventHandler(this.button5_Click);
+            startRacing.Location = new System.Drawing.Point(104, 57);
+            startRacing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            startRacing.Name = "startRacing";
+            startRacing.Size = new System.Drawing.Size(163, 62);
+            startRacing.TabIndex = 0;
+            startRacing.Text = "Race Screwball Stadium";
+            startRacing.UseVisualStyleBackColor = true;
+            startRacing.Visible = false;
+            startRacing.Click += button5_Click;
             // 
             // Gardening
             // 
-            this.Gardening.Controls.Add(this.groupBox5);
-            this.Gardening.Controls.Add(this.groupBox4);
-            this.Gardening.Controls.Add(this.groupBox3);
-            this.Gardening.Location = new System.Drawing.Point(4, 25);
-            this.Gardening.Name = "Gardening";
-            this.Gardening.Size = new System.Drawing.Size(467, 280);
-            this.Gardening.TabIndex = 3;
-            this.Gardening.Text = "Gardening";
-            this.Gardening.UseVisualStyleBackColor = true;
+            Gardening.Controls.Add(groupBox5);
+            Gardening.Controls.Add(groupBox4);
+            Gardening.Controls.Add(groupBox3);
+            Gardening.Location = new System.Drawing.Point(4, 25);
+            Gardening.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Gardening.Name = "Gardening";
+            Gardening.Size = new System.Drawing.Size(546, 328);
+            Gardening.TabIndex = 3;
+            Gardening.Text = "Gardening";
+            Gardening.UseVisualStyleBackColor = true;
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.button3);
-            this.groupBox5.Location = new System.Drawing.Point(8, 171);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(167, 67);
-            this.groupBox5.TabIndex = 5;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Remove Plant";
+            groupBox5.Controls.Add(button3);
+            groupBox5.Location = new System.Drawing.Point(9, 197);
+            groupBox5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox5.Size = new System.Drawing.Size(195, 77);
+            groupBox5.TabIndex = 5;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "Remove Plant";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(29, 21);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(99, 36);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "Remove";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            button3.Location = new System.Drawing.Point(34, 24);
+            button3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button3.Name = "button3";
+            button3.Size = new System.Drawing.Size(115, 42);
+            button3.TabIndex = 0;
+            button3.Text = "Remove";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.button2);
-            this.groupBox4.Location = new System.Drawing.Point(8, 98);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(167, 67);
-            this.groupBox4.TabIndex = 4;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Water Plant";
+            groupBox4.Controls.Add(button2);
+            groupBox4.Location = new System.Drawing.Point(9, 113);
+            groupBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox4.Size = new System.Drawing.Size(195, 77);
+            groupBox4.TabIndex = 4;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Water Plant";
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(29, 21);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(99, 36);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "Water";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            button2.Location = new System.Drawing.Point(34, 24);
+            button2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button2.Name = "button2";
+            button2.Size = new System.Drawing.Size(115, 42);
+            button2.TabIndex = 0;
+            button2.Text = "Water";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.comboBox2);
-            this.groupBox3.Controls.Add(this.button1);
-            this.groupBox3.Location = new System.Drawing.Point(8, 3);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(167, 89);
-            this.groupBox3.TabIndex = 3;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Plant Flower";
+            groupBox3.Controls.Add(comboBox2);
+            groupBox3.Controls.Add(button1);
+            groupBox3.Location = new System.Drawing.Point(9, 3);
+            groupBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox3.Size = new System.Drawing.Size(195, 103);
+            groupBox3.TabIndex = 3;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Plant Flower";
             // 
             // comboBox2
             // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.Items.AddRange(new object[] {
-            "1 Bean Plant",
-            "2 Bean Plant",
-            "3 Bean Plant",
-            "4 Bean Plant",
-            "5 Bean Plant",
-            "6 Bean Plant",
-            "7 Bean Plant",
-            "8 Bean Plant"});
-            this.comboBox2.Location = new System.Drawing.Point(17, 21);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(121, 24);
-            this.comboBox2.TabIndex = 0;
+            comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBox2.Items.AddRange(new object[] { "1 Bean Plant", "2 Bean Plant", "3 Bean Plant", "4 Bean Plant", "5 Bean Plant", "6 Bean Plant", "7 Bean Plant", "8 Bean Plant" });
+            comboBox2.Location = new System.Drawing.Point(20, 24);
+            comboBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBox2.Name = "comboBox2";
+            comboBox2.Size = new System.Drawing.Size(140, 24);
+            comboBox2.TabIndex = 0;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(29, 51);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(99, 25);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Select";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            button1.Location = new System.Drawing.Point(34, 59);
+            button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(115, 29);
+            button1.TabIndex = 1;
+            button1.Text = "Select";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // Golf
             // 
-            this.Golf.Controls.Add(this.label2);
-            this.Golf.Controls.Add(this.Near_Hole);
-            this.Golf.Controls.Add(this.Hole_In_One);
-            this.Golf.Location = new System.Drawing.Point(4, 25);
-            this.Golf.Name = "Golf";
-            this.Golf.Padding = new System.Windows.Forms.Padding(3);
-            this.Golf.Size = new System.Drawing.Size(467, 280);
-            this.Golf.TabIndex = 6;
-            this.Golf.Text = "Golf";
-            this.Golf.UseVisualStyleBackColor = true;
+            Golf.Controls.Add(label2);
+            Golf.Controls.Add(Near_Hole);
+            Golf.Controls.Add(Hole_In_One);
+            Golf.Location = new System.Drawing.Point(4, 25);
+            Golf.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Golf.Name = "Golf";
+            Golf.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Golf.Size = new System.Drawing.Size(546, 328);
+            Golf.TabIndex = 6;
+            Golf.Text = "Golf";
+            Golf.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(6, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(272, 32);
-            this.label2.TabIndex = 16;
-            this.label2.Text = "Walk In The Par - Easy";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label2.Location = new System.Drawing.Point(7, 10);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(317, 37);
+            label2.TabIndex = 16;
+            label2.Text = "Walk In The Par - Easy";
+            label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Near_Hole
             // 
-            this.Near_Hole.Controls.Add(this.One_Little_Birdie);
-            this.Near_Hole.Controls.Add(this.button14);
-            this.Near_Hole.Controls.Add(this.button18);
-            this.Near_Hole.Controls.Add(this.button15);
-            this.Near_Hole.Controls.Add(this.button13);
-            this.Near_Hole.Controls.Add(this.button16);
-            this.Near_Hole.Location = new System.Drawing.Point(6, 161);
-            this.Near_Hole.Name = "Near_Hole";
-            this.Near_Hole.Size = new System.Drawing.Size(300, 111);
-            this.Near_Hole.TabIndex = 15;
-            this.Near_Hole.TabStop = false;
-            this.Near_Hole.Text = "Near Hole";
-            this.toolTip1.SetToolTip(this.Near_Hole, "On these courses, you will get near the hole, then you need to shoot the ball in " +
-        "yourself afterwards.");
+            Near_Hole.Controls.Add(One_Little_Birdie);
+            Near_Hole.Controls.Add(button14);
+            Near_Hole.Controls.Add(button18);
+            Near_Hole.Controls.Add(button15);
+            Near_Hole.Controls.Add(button13);
+            Near_Hole.Controls.Add(button16);
+            Near_Hole.Location = new System.Drawing.Point(7, 186);
+            Near_Hole.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Near_Hole.Name = "Near_Hole";
+            Near_Hole.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Near_Hole.Size = new System.Drawing.Size(350, 128);
+            Near_Hole.TabIndex = 15;
+            Near_Hole.TabStop = false;
+            Near_Hole.Text = "Near Hole";
+            toolTip1.SetToolTip(Near_Hole, "On these courses, you will get near the hole, then you need to shoot the ball in yourself afterwards.");
             // 
             // One_Little_Birdie
             // 
-            this.One_Little_Birdie.BackColor = System.Drawing.Color.Yellow;
-            this.One_Little_Birdie.Location = new System.Drawing.Point(149, 79);
-            this.One_Little_Birdie.Name = "One_Little_Birdie";
-            this.One_Little_Birdie.Size = new System.Drawing.Size(137, 23);
-            this.One_Little_Birdie.TabIndex = 14;
-            this.One_Little_Birdie.Text = "One Little Birdie";
-            this.One_Little_Birdie.UseVisualStyleBackColor = false;
-            this.One_Little_Birdie.Click += new System.EventHandler(this.One_Little_Birdie_Click);
+            One_Little_Birdie.BackColor = System.Drawing.Color.Yellow;
+            One_Little_Birdie.Location = new System.Drawing.Point(174, 91);
+            One_Little_Birdie.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            One_Little_Birdie.Name = "One_Little_Birdie";
+            One_Little_Birdie.Size = new System.Drawing.Size(160, 27);
+            One_Little_Birdie.TabIndex = 14;
+            One_Little_Birdie.Text = "One Little Birdie";
+            One_Little_Birdie.UseVisualStyleBackColor = false;
+            One_Little_Birdie.Click += One_Little_Birdie_Click;
             // 
             // button14
             // 
-            this.button14.BackColor = System.Drawing.Color.Yellow;
-            this.button14.Location = new System.Drawing.Point(6, 21);
-            this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(137, 23);
-            this.button14.TabIndex = 10;
-            this.button14.Text = "Down the Hatch";
-            this.button14.UseVisualStyleBackColor = false;
-            this.button14.Click += new System.EventHandler(this.button14_Click);
+            button14.BackColor = System.Drawing.Color.Yellow;
+            button14.Location = new System.Drawing.Point(7, 24);
+            button14.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button14.Name = "button14";
+            button14.Size = new System.Drawing.Size(160, 27);
+            button14.TabIndex = 10;
+            button14.Text = "Down the Hatch";
+            button14.UseVisualStyleBackColor = false;
+            button14.Click += button14_Click;
             // 
             // button18
             // 
-            this.button18.BackColor = System.Drawing.Color.Yellow;
-            this.button18.Location = new System.Drawing.Point(149, 50);
-            this.button18.Name = "button18";
-            this.button18.Size = new System.Drawing.Size(137, 23);
-            this.button18.TabIndex = 13;
-            this.button18.Text = "Swing-A-Long";
-            this.button18.UseVisualStyleBackColor = false;
-            this.button18.Click += new System.EventHandler(this.button18_Click);
+            button18.BackColor = System.Drawing.Color.Yellow;
+            button18.Location = new System.Drawing.Point(174, 58);
+            button18.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button18.Name = "button18";
+            button18.Size = new System.Drawing.Size(160, 27);
+            button18.TabIndex = 13;
+            button18.Text = "Swing-A-Long";
+            button18.UseVisualStyleBackColor = false;
+            button18.Click += button18_Click;
             // 
             // button15
             // 
-            this.button15.BackColor = System.Drawing.Color.Yellow;
-            this.button15.Location = new System.Drawing.Point(6, 79);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(137, 23);
-            this.button15.TabIndex = 11;
-            this.button15.Text = "Swing Time";
-            this.toolTip1.SetToolTip(this.button15, "You must select this course befoer the first timer runs out!");
-            this.button15.UseVisualStyleBackColor = false;
-            this.button15.Click += new System.EventHandler(this.button15_Click);
+            button15.BackColor = System.Drawing.Color.Yellow;
+            button15.Location = new System.Drawing.Point(7, 91);
+            button15.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button15.Name = "button15";
+            button15.Size = new System.Drawing.Size(160, 27);
+            button15.TabIndex = 11;
+            button15.Text = "Swing Time";
+            toolTip1.SetToolTip(button15, "You must select this course befoer the first timer runs out!");
+            button15.UseVisualStyleBackColor = false;
+            button15.Click += button15_Click;
             // 
             // button13
             // 
-            this.button13.BackColor = System.Drawing.Color.Yellow;
-            this.button13.Location = new System.Drawing.Point(6, 50);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(137, 23);
-            this.button13.TabIndex = 9;
-            this.button13.Text = "Peanut Putter";
-            this.button13.UseVisualStyleBackColor = false;
-            this.button13.Click += new System.EventHandler(this.button13_Click);
+            button13.BackColor = System.Drawing.Color.Yellow;
+            button13.Location = new System.Drawing.Point(7, 58);
+            button13.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button13.Name = "button13";
+            button13.Size = new System.Drawing.Size(160, 27);
+            button13.TabIndex = 9;
+            button13.Text = "Peanut Putter";
+            button13.UseVisualStyleBackColor = false;
+            button13.Click += button13_Click;
             // 
             // button16
             // 
-            this.button16.BackColor = System.Drawing.Color.Yellow;
-            this.button16.Location = new System.Drawing.Point(149, 21);
-            this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(137, 23);
-            this.button16.TabIndex = 8;
-            this.button16.Text = "Hot Links";
-            this.button16.UseVisualStyleBackColor = false;
-            this.button16.Click += new System.EventHandler(this.button16_Click);
+            button16.BackColor = System.Drawing.Color.Yellow;
+            button16.Location = new System.Drawing.Point(174, 24);
+            button16.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button16.Name = "button16";
+            button16.Size = new System.Drawing.Size(160, 27);
+            button16.TabIndex = 8;
+            button16.Text = "Hot Links";
+            button16.UseVisualStyleBackColor = false;
+            button16.Click += button16_Click;
             // 
             // Hole_In_One
             // 
-            this.Hole_In_One.Controls.Add(this.button12);
-            this.Hole_In_One.Controls.Add(this.button5);
-            this.Hole_In_One.Controls.Add(this.button17);
-            this.Hole_In_One.Controls.Add(this.button10);
-            this.Hole_In_One.Controls.Add(this.button11);
-            this.Hole_In_One.Location = new System.Drawing.Point(6, 44);
-            this.Hole_In_One.Name = "Hole_In_One";
-            this.Hole_In_One.Size = new System.Drawing.Size(300, 111);
-            this.Hole_In_One.TabIndex = 14;
-            this.Hole_In_One.TabStop = false;
-            this.Hole_In_One.Text = "Hole In One";
-            this.toolTip1.SetToolTip(this.Hole_In_One, "On these courses, you will get a hole in one.");
+            Hole_In_One.Controls.Add(button12);
+            Hole_In_One.Controls.Add(button5);
+            Hole_In_One.Controls.Add(button17);
+            Hole_In_One.Controls.Add(button10);
+            Hole_In_One.Controls.Add(button11);
+            Hole_In_One.Location = new System.Drawing.Point(7, 51);
+            Hole_In_One.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Hole_In_One.Name = "Hole_In_One";
+            Hole_In_One.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Hole_In_One.Size = new System.Drawing.Size(350, 128);
+            Hole_In_One.TabIndex = 14;
+            Hole_In_One.TabStop = false;
+            Hole_In_One.Text = "Hole In One";
+            toolTip1.SetToolTip(Hole_In_One, "On these courses, you will get a hole in one.");
             // 
             // button12
             // 
-            this.button12.BackColor = System.Drawing.Color.LawnGreen;
-            this.button12.Location = new System.Drawing.Point(6, 21);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(137, 23);
-            this.button12.TabIndex = 4;
-            this.button12.Text = "Afternoon Tee";
-            this.button12.UseVisualStyleBackColor = false;
-            this.button12.Click += new System.EventHandler(this.golfAfternoonTee);
+            button12.BackColor = System.Drawing.Color.LawnGreen;
+            button12.Location = new System.Drawing.Point(7, 24);
+            button12.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button12.Name = "button12";
+            button12.Size = new System.Drawing.Size(160, 27);
+            button12.TabIndex = 4;
+            button12.Text = "Afternoon Tee";
+            button12.UseVisualStyleBackColor = false;
+            button12.Click += golfAfternoonTee;
             // 
             // button5
             // 
-            this.button5.BackColor = System.Drawing.Color.LawnGreen;
-            this.button5.Location = new System.Drawing.Point(6, 50);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(137, 23);
-            this.button5.TabIndex = 5;
-            this.button5.Text = "Holey Mackeral";
-            this.button5.UseVisualStyleBackColor = false;
-            this.button5.Click += new System.EventHandler(this.golfHoleyMackeral);
+            button5.BackColor = System.Drawing.Color.LawnGreen;
+            button5.Location = new System.Drawing.Point(7, 58);
+            button5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button5.Name = "button5";
+            button5.Size = new System.Drawing.Size(160, 27);
+            button5.TabIndex = 5;
+            button5.Text = "Holey Mackeral";
+            button5.UseVisualStyleBackColor = false;
+            button5.Click += golfHoleyMackeral;
             // 
             // button17
             // 
-            this.button17.BackColor = System.Drawing.Color.LawnGreen;
-            this.button17.Location = new System.Drawing.Point(149, 50);
-            this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(137, 23);
-            this.button17.TabIndex = 12;
-            this.button17.Text = "Hole In Fun";
-            this.button17.UseVisualStyleBackColor = false;
-            this.button17.Click += new System.EventHandler(this.button17_Click);
+            button17.BackColor = System.Drawing.Color.LawnGreen;
+            button17.Location = new System.Drawing.Point(174, 58);
+            button17.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button17.Name = "button17";
+            button17.Size = new System.Drawing.Size(160, 27);
+            button17.TabIndex = 12;
+            button17.Text = "Hole In Fun";
+            button17.UseVisualStyleBackColor = false;
+            button17.Click += button17_Click;
             // 
             // button10
             // 
-            this.button10.BackColor = System.Drawing.Color.LawnGreen;
-            this.button10.Location = new System.Drawing.Point(6, 79);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(137, 23);
-            this.button10.TabIndex = 6;
-            this.button10.Text = "Hole on the Range";
-            this.button10.UseVisualStyleBackColor = false;
-            this.button10.Click += new System.EventHandler(this.golfHoleOnTheRange);
+            button10.BackColor = System.Drawing.Color.LawnGreen;
+            button10.Location = new System.Drawing.Point(7, 91);
+            button10.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button10.Name = "button10";
+            button10.Size = new System.Drawing.Size(160, 27);
+            button10.TabIndex = 6;
+            button10.Text = "Hole on the Range";
+            button10.UseVisualStyleBackColor = false;
+            button10.Click += golfHoleOnTheRange;
             // 
             // button11
             // 
-            this.button11.BackColor = System.Drawing.Color.LawnGreen;
-            this.button11.Location = new System.Drawing.Point(149, 21);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(137, 23);
-            this.button11.TabIndex = 7;
-            this.button11.Text = "Seeing Green";
-            this.button11.UseVisualStyleBackColor = false;
-            this.button11.Click += new System.EventHandler(this.golfSeeingGreen);
+            button11.BackColor = System.Drawing.Color.LawnGreen;
+            button11.Location = new System.Drawing.Point(174, 24);
+            button11.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button11.Name = "button11";
+            button11.Size = new System.Drawing.Size(160, 27);
+            button11.TabIndex = 7;
+            button11.Text = "Seeing Green";
+            button11.UseVisualStyleBackColor = false;
+            button11.Click += golfSeeingGreen;
             // 
             // Doodles
             // 
-            this.Doodles.Controls.Add(this.richTextBox2);
-            this.Doodles.Controls.Add(this.groupBox8);
-            this.Doodles.Location = new System.Drawing.Point(4, 25);
-            this.Doodles.Name = "Doodles";
-            this.Doodles.Size = new System.Drawing.Size(467, 280);
-            this.Doodles.TabIndex = 7;
-            this.Doodles.Text = "Doodles";
-            this.Doodles.UseVisualStyleBackColor = true;
+            Doodles.Controls.Add(richTextBox2);
+            Doodles.Controls.Add(groupBox8);
+            Doodles.Location = new System.Drawing.Point(4, 25);
+            Doodles.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Doodles.Name = "Doodles";
+            Doodles.Size = new System.Drawing.Size(546, 328);
+            Doodles.TabIndex = 7;
+            Doodles.Text = "Doodles";
+            Doodles.UseVisualStyleBackColor = true;
             // 
             // richTextBox2
             // 
-            this.richTextBox2.Location = new System.Drawing.Point(350, 16);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.ReadOnly = true;
-            this.richTextBox2.Size = new System.Drawing.Size(114, 221);
-            this.richTextBox2.TabIndex = 10;
-            this.richTextBox2.Text = resources.GetString("richTextBox2.Text");
+            richTextBox2.Location = new System.Drawing.Point(408, 18);
+            richTextBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            richTextBox2.Name = "richTextBox2";
+            richTextBox2.ReadOnly = true;
+            richTextBox2.Size = new System.Drawing.Size(132, 254);
+            richTextBox2.TabIndex = 10;
+            richTextBox2.Text = resources.GetString("richTextBox2.Text");
             // 
             // groupBox8
             // 
-            this.groupBox8.Controls.Add(this.checkBox5);
-            this.groupBox8.Controls.Add(this.checkBox4);
-            this.groupBox8.Controls.Add(this.comboBox4);
-            this.groupBox8.Controls.Add(this.pictureBox2);
-            this.groupBox8.Controls.Add(this.checkBox3);
-            this.groupBox8.Controls.Add(this.button19);
-            this.groupBox8.Controls.Add(this.label9);
-            this.groupBox8.Controls.Add(this.numericUpDown5);
-            this.groupBox8.Controls.Add(this.label10);
-            this.groupBox8.Controls.Add(this.numericUpDown6);
-            this.groupBox8.Controls.Add(this.button20);
-            this.groupBox8.Location = new System.Drawing.Point(8, 3);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(330, 234);
-            this.groupBox8.TabIndex = 9;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Doodle Training";
+            groupBox8.Controls.Add(checkBox5);
+            groupBox8.Controls.Add(checkBox4);
+            groupBox8.Controls.Add(comboBox4);
+            groupBox8.Controls.Add(pictureBox2);
+            groupBox8.Controls.Add(checkBox3);
+            groupBox8.Controls.Add(button19);
+            groupBox8.Controls.Add(label9);
+            groupBox8.Controls.Add(numericUpDown5);
+            groupBox8.Controls.Add(label10);
+            groupBox8.Controls.Add(numericUpDown6);
+            groupBox8.Controls.Add(button20);
+            groupBox8.Location = new System.Drawing.Point(9, 3);
+            groupBox8.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox8.Name = "groupBox8";
+            groupBox8.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox8.Size = new System.Drawing.Size(385, 270);
+            groupBox8.TabIndex = 9;
+            groupBox8.TabStop = false;
+            groupBox8.Text = "Doodle Training";
             // 
             // checkBox5
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(9, 166);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(146, 20);
-            this.checkBox5.TabIndex = 15;
-            this.checkBox5.Text = "Just Scratch Doodle";
-            this.toolTip1.SetToolTip(this.checkBox5, "Select this if you only want to train using scratching");
-            this.checkBox5.UseVisualStyleBackColor = true;
-            this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
+            checkBox5.AutoSize = true;
+            checkBox5.Location = new System.Drawing.Point(10, 192);
+            checkBox5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkBox5.Name = "checkBox5";
+            checkBox5.Size = new System.Drawing.Size(146, 20);
+            checkBox5.TabIndex = 15;
+            checkBox5.Text = "Just Scratch Doodle";
+            toolTip1.SetToolTip(checkBox5, "Select this if you only want to train using scratching");
+            checkBox5.UseVisualStyleBackColor = true;
+            checkBox5.CheckedChanged += checkBox5_CheckedChanged;
             // 
             // checkBox4
             // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(9, 140);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(133, 20);
-            this.checkBox4.TabIndex = 14;
-            this.checkBox4.Text = "Just Feed Doodle";
-            this.toolTip1.SetToolTip(this.checkBox4, "Select this if you only want to train using feeding");
-            this.checkBox4.UseVisualStyleBackColor = true;
-            this.checkBox4.CheckedChanged += new System.EventHandler(this.checkBox4_CheckedChanged);
+            checkBox4.AutoSize = true;
+            checkBox4.Location = new System.Drawing.Point(10, 162);
+            checkBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkBox4.Name = "checkBox4";
+            checkBox4.Size = new System.Drawing.Size(133, 20);
+            checkBox4.TabIndex = 14;
+            checkBox4.Text = "Just Feed Doodle";
+            toolTip1.SetToolTip(checkBox4, "Select this if you only want to train using feeding");
+            checkBox4.UseVisualStyleBackColor = true;
+            checkBox4.CheckedChanged += checkBox4_CheckedChanged;
             // 
             // comboBox4
             // 
-            this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox4.Items.AddRange(new object[] {
-            "Jump (5 - 10 laff)",
-            "Beg (6 - 12 laff)",
-            "Play Dead (7 - 14 laff)",
-            "Rollover (8 - 16 laff)",
-            "Backflip (9 - 18 laff)",
-            "Dance (10 - 20 laff)",
-            "Speak (11 - 22 laff)"});
-            this.comboBox4.Location = new System.Drawing.Point(9, 21);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(171, 24);
-            this.comboBox4.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.comboBox4, "Select the trick you wish to train.");
+            comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBox4.Items.AddRange(new object[] { "Jump (5 - 10 laff)", "Beg (6 - 12 laff)", "Play Dead (7 - 14 laff)", "Rollover (8 - 16 laff)", "Backflip (9 - 18 laff)", "Dance (10 - 20 laff)", "Speak (11 - 22 laff)" });
+            comboBox4.Location = new System.Drawing.Point(10, 24);
+            comboBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBox4.Name = "comboBox4";
+            comboBox4.Size = new System.Drawing.Size(199, 24);
+            comboBox4.TabIndex = 11;
+            toolTip1.SetToolTip(comboBox4, "Select the trick you wish to train.");
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(210, 21);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(114, 113);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 10;
-            this.pictureBox2.TabStop = false;
+            pictureBox2.Image = (System.Drawing.Image)resources.GetObject("pictureBox2.Image");
+            pictureBox2.Location = new System.Drawing.Point(245, 24);
+            pictureBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new System.Drawing.Size(133, 130);
+            pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            pictureBox2.TabIndex = 10;
+            pictureBox2.TabStop = false;
             // 
             // checkBox3
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(9, 114);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(194, 20);
-            this.checkBox3.TabIndex = 13;
-            this.checkBox3.Text = "Train until I click stop training";
-            this.toolTip1.SetToolTip(this.checkBox3, "Has no feed or scratch limit, it will go forever until you click the stop trainin" +
-        "g button.");
-            this.checkBox3.UseVisualStyleBackColor = true;
-            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
+            checkBox3.AutoSize = true;
+            checkBox3.Location = new System.Drawing.Point(10, 132);
+            checkBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkBox3.Name = "checkBox3";
+            checkBox3.Size = new System.Drawing.Size(194, 20);
+            checkBox3.TabIndex = 13;
+            checkBox3.Text = "Train until I click stop training";
+            toolTip1.SetToolTip(checkBox3, "Has no feed or scratch limit, it will go forever until you click the stop training button.");
+            checkBox3.UseVisualStyleBackColor = true;
+            checkBox3.CheckedChanged += checkBox3_CheckedChanged;
             // 
             // button19
             // 
-            this.button19.Location = new System.Drawing.Point(166, 192);
-            this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(158, 33);
-            this.button19.TabIndex = 12;
-            this.button19.Text = "Stop Training";
-            this.button19.UseVisualStyleBackColor = true;
-            this.button19.Click += new System.EventHandler(this.button19_Click);
+            button19.Location = new System.Drawing.Point(194, 222);
+            button19.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button19.Name = "button19";
+            button19.Size = new System.Drawing.Size(184, 38);
+            button19.TabIndex = 12;
+            button19.Text = "Stop Training";
+            button19.UseVisualStyleBackColor = true;
+            button19.Click += button19_Click;
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 88);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(135, 16);
-            this.label9.TabIndex = 9;
-            this.label9.Text = "Number of Scratches:";
+            label9.AutoSize = true;
+            label9.Location = new System.Drawing.Point(7, 102);
+            label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(135, 16);
+            label9.TabIndex = 9;
+            label9.Text = "Number of Scratches:";
             // 
             // numericUpDown5
             // 
-            this.numericUpDown5.Location = new System.Drawing.Point(148, 86);
-            this.numericUpDown5.Maximum = new decimal(new int[] {
-            900,
-            0,
-            0,
-            0});
-            this.numericUpDown5.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(41, 22);
-            this.numericUpDown5.TabIndex = 8;
-            this.toolTip1.SetToolTip(this.numericUpDown5, "This number indicates the number of times to go to the fisherman to sell the fish" +
-        "");
-            this.numericUpDown5.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            numericUpDown5.Location = new System.Drawing.Point(173, 99);
+            numericUpDown5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDown5.Maximum = new decimal(new int[] { 900, 0, 0, 0 });
+            numericUpDown5.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown5.Name = "numericUpDown5";
+            numericUpDown5.Size = new System.Drawing.Size(48, 22);
+            numericUpDown5.TabIndex = 8;
+            toolTip1.SetToolTip(numericUpDown5, "This number indicates the number of times to go to the fisherman to sell the fish");
+            numericUpDown5.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 60);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(114, 16);
-            this.label10.TabIndex = 7;
-            this.label10.Text = "Number of Feeds:";
+            label10.AutoSize = true;
+            label10.Location = new System.Drawing.Point(7, 69);
+            label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new System.Drawing.Size(114, 16);
+            label10.TabIndex = 7;
+            label10.Text = "Number of Feeds:";
             // 
             // numericUpDown6
             // 
-            this.numericUpDown6.Location = new System.Drawing.Point(127, 58);
-            this.numericUpDown6.Maximum = new decimal(new int[] {
-            900,
-            0,
-            0,
-            0});
-            this.numericUpDown6.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(41, 22);
-            this.numericUpDown6.TabIndex = 6;
-            this.toolTip1.SetToolTip(this.numericUpDown6, "This number indicates the number of times to cast your fishing rod");
-            this.numericUpDown6.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            numericUpDown6.Location = new System.Drawing.Point(148, 67);
+            numericUpDown6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDown6.Maximum = new decimal(new int[] { 900, 0, 0, 0 });
+            numericUpDown6.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown6.Name = "numericUpDown6";
+            numericUpDown6.Size = new System.Drawing.Size(48, 22);
+            numericUpDown6.TabIndex = 6;
+            toolTip1.SetToolTip(numericUpDown6, "This number indicates the number of times to cast your fishing rod");
+            numericUpDown6.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // button20
             // 
-            this.button20.Location = new System.Drawing.Point(6, 192);
-            this.button20.Name = "button20";
-            this.button20.Size = new System.Drawing.Size(158, 33);
-            this.button20.TabIndex = 2;
-            this.button20.Text = "Start Training";
-            this.button20.UseVisualStyleBackColor = true;
-            this.button20.Click += new System.EventHandler(this.button20_Click);
+            button20.Location = new System.Drawing.Point(7, 222);
+            button20.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button20.Name = "button20";
+            button20.Size = new System.Drawing.Size(184, 38);
+            button20.TabIndex = 2;
+            button20.Text = "Start Training";
+            button20.UseVisualStyleBackColor = true;
+            button20.Click += button20_Click;
             // 
             // Misc
             // 
-            this.Misc.Controls.Add(this.checkBox2);
-            this.Misc.Controls.Add(this.groupBox2);
-            this.Misc.Controls.Add(this.groupBox1);
-            this.Misc.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Misc.Location = new System.Drawing.Point(4, 25);
-            this.Misc.Name = "Misc";
-            this.Misc.Size = new System.Drawing.Size(467, 280);
-            this.Misc.TabIndex = 4;
-            this.Misc.Text = "Misc";
-            this.Misc.UseVisualStyleBackColor = true;
+            Misc.Controls.Add(checkBox2);
+            Misc.Controls.Add(groupBox2);
+            Misc.Controls.Add(groupBox1);
+            Misc.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            Misc.Location = new System.Drawing.Point(4, 25);
+            Misc.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Misc.Name = "Misc";
+            Misc.Size = new System.Drawing.Size(546, 328);
+            Misc.TabIndex = 4;
+            Misc.Text = "Misc";
+            Misc.UseVisualStyleBackColor = true;
             // 
             // checkBox2
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(8, 217);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(161, 20);
-            this.checkBox2.TabIndex = 6;
-            this.checkBox2.Text = "Keep Program On Top";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged_1);
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new System.Drawing.Point(9, 250);
+            checkBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new System.Drawing.Size(161, 20);
+            checkBox2.TabIndex = 6;
+            checkBox2.Text = "Keep Program On Top";
+            checkBox2.UseVisualStyleBackColor = true;
+            checkBox2.CheckedChanged += checkBox2_CheckedChanged_1;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.numericUpDown1);
-            this.groupBox2.Controls.Add(this.keepToonAwakeButton);
-            this.groupBox2.Location = new System.Drawing.Point(8, 119);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(185, 92);
-            this.groupBox2.TabIndex = 5;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Keep Toon Awake";
+            groupBox2.Controls.Add(label1);
+            groupBox2.Controls.Add(numericUpDown1);
+            groupBox2.Controls.Add(keepToonAwakeButton);
+            groupBox2.Location = new System.Drawing.Point(9, 137);
+            groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox2.Size = new System.Drawing.Size(216, 106);
+            groupBox2.TabIndex = 5;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Keep Toon Awake";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(91, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 16);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "label1";
-            this.label1.Visible = false;
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(106, 28);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(44, 16);
+            label1.TabIndex = 5;
+            label1.Text = "label1";
+            label1.Visible = false;
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(15, 22);
-            this.numericUpDown1.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(46, 22);
-            this.numericUpDown1.TabIndex = 4;
-            this.toolTip1.SetToolTip(this.numericUpDown1, "How many minutes do you wish to keep your toon awake for?");
-            this.numericUpDown1.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            numericUpDown1.Location = new System.Drawing.Point(18, 25);
+            numericUpDown1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDown1.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new System.Drawing.Size(54, 22);
+            numericUpDown1.TabIndex = 4;
+            toolTip1.SetToolTip(numericUpDown1, "How many minutes do you wish to keep your toon awake for?");
+            numericUpDown1.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // keepToonAwakeButton
             // 
-            this.keepToonAwakeButton.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            this.keepToonAwakeButton.Location = new System.Drawing.Point(15, 50);
-            this.keepToonAwakeButton.Name = "keepToonAwakeButton";
-            this.keepToonAwakeButton.Size = new System.Drawing.Size(121, 34);
-            this.keepToonAwakeButton.TabIndex = 3;
-            this.keepToonAwakeButton.Text = "Start Stay Awake";
-            this.toolTip1.SetToolTip(this.keepToonAwakeButton, "Press the ALT key to stop the jumping loop at any time!");
-            this.keepToonAwakeButton.UseVisualStyleBackColor = true;
-            this.keepToonAwakeButton.Click += new System.EventHandler(this.keepToonAwakeButton_Click);
+            keepToonAwakeButton.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            keepToonAwakeButton.Location = new System.Drawing.Point(18, 58);
+            keepToonAwakeButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            keepToonAwakeButton.Name = "keepToonAwakeButton";
+            keepToonAwakeButton.Size = new System.Drawing.Size(141, 39);
+            keepToonAwakeButton.TabIndex = 3;
+            keepToonAwakeButton.Text = "Start Stay Awake";
+            toolTip1.SetToolTip(keepToonAwakeButton, "Press the ALT key to stop the jumping loop at any time!");
+            keepToonAwakeButton.UseVisualStyleBackColor = true;
+            keepToonAwakeButton.Click += keepToonAwakeButton_Click;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.numericUpDown2);
-            this.groupBox1.Controls.Add(this.checkBox1);
-            this.groupBox1.Controls.Add(this.messageToType);
-            this.groupBox1.Controls.Add(this.startSpamButton);
-            this.groupBox1.Location = new System.Drawing.Point(8, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(185, 110);
-            this.groupBox1.TabIndex = 4;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Send Message";
+            groupBox1.Controls.Add(numericUpDown2);
+            groupBox1.Controls.Add(checkBox1);
+            groupBox1.Controls.Add(messageToType);
+            groupBox1.Controls.Add(startSpamButton);
+            groupBox1.Location = new System.Drawing.Point(9, 3);
+            groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox1.Size = new System.Drawing.Size(216, 127);
+            groupBox1.TabIndex = 4;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Send Message";
             // 
             // numericUpDown2
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(138, 84);
-            this.numericUpDown2.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(41, 22);
-            this.numericUpDown2.TabIndex = 5;
-            this.numericUpDown2.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown2.Visible = false;
+            numericUpDown2.Location = new System.Drawing.Point(161, 97);
+            numericUpDown2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDown2.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown2.Name = "numericUpDown2";
+            numericUpDown2.Size = new System.Drawing.Size(48, 22);
+            numericUpDown2.TabIndex = 5;
+            numericUpDown2.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown2.Visible = false;
             // 
             // checkBox1
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(6, 84);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(129, 20);
-            this.checkBox1.TabIndex = 4;
-            this.checkBox1.Text = "Spam Message?";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new System.Drawing.Point(7, 97);
+            checkBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new System.Drawing.Size(129, 20);
+            checkBox1.TabIndex = 4;
+            checkBox1.Text = "Spam Message?";
+            checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
             // 
             // messageToType
             // 
-            this.messageToType.AcceptsTab = true;
-            this.messageToType.Location = new System.Drawing.Point(9, 21);
-            this.messageToType.Name = "messageToType";
-            this.messageToType.Size = new System.Drawing.Size(156, 22);
-            this.messageToType.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.messageToType, "Enter the message to send");
+            messageToType.AcceptsTab = true;
+            messageToType.Location = new System.Drawing.Point(10, 24);
+            messageToType.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            messageToType.Name = "messageToType";
+            messageToType.Size = new System.Drawing.Size(181, 22);
+            messageToType.TabIndex = 2;
+            toolTip1.SetToolTip(messageToType, "Enter the message to send");
             // 
             // startSpamButton
             // 
-            this.startSpamButton.Location = new System.Drawing.Point(25, 49);
-            this.startSpamButton.Name = "startSpamButton";
-            this.startSpamButton.Size = new System.Drawing.Size(111, 34);
-            this.startSpamButton.TabIndex = 3;
-            this.startSpamButton.Text = "Send Message";
-            this.toolTip1.SetToolTip(this.startSpamButton, "Press the ALT key to stop the spamming loop at any time!");
-            this.startSpamButton.UseVisualStyleBackColor = true;
-            this.startSpamButton.Click += new System.EventHandler(this.startSpamButton_Click);
+            startSpamButton.Location = new System.Drawing.Point(29, 57);
+            startSpamButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            startSpamButton.Name = "startSpamButton";
+            startSpamButton.Size = new System.Drawing.Size(130, 39);
+            startSpamButton.TabIndex = 3;
+            startSpamButton.Text = "Send Message";
+            toolTip1.SetToolTip(startSpamButton, "Press the ALT key to stop the spamming loop at any time!");
+            startSpamButton.UseVisualStyleBackColor = true;
+            startSpamButton.Click += startSpamButton_Click;
             // 
             // Dev
             // 
-            this.Dev.Controls.Add(this.groupBox9);
-            this.Dev.Controls.Add(this.label5);
-            this.Dev.Controls.Add(this.groupBox7);
-            this.Dev.Location = new System.Drawing.Point(4, 25);
-            this.Dev.Name = "Dev";
-            this.Dev.Size = new System.Drawing.Size(467, 280);
-            this.Dev.TabIndex = 5;
-            this.Dev.Text = "Dev";
-            this.Dev.UseVisualStyleBackColor = true;
+            Dev.Controls.Add(groupBox9);
+            Dev.Controls.Add(label5);
+            Dev.Controls.Add(groupBox7);
+            Dev.Location = new System.Drawing.Point(4, 25);
+            Dev.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Dev.Name = "Dev";
+            Dev.Size = new System.Drawing.Size(546, 328);
+            Dev.TabIndex = 5;
+            Dev.Text = "Dev";
+            Dev.UseVisualStyleBackColor = true;
             // 
             // groupBox9
             // 
-            this.groupBox9.Controls.Add(this.label11);
-            this.groupBox9.Controls.Add(this.updateImagesBtn);
-            this.groupBox9.Controls.Add(this.resetImagesBtn);
-            this.groupBox9.Location = new System.Drawing.Point(249, 3);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(210, 135);
-            this.groupBox9.TabIndex = 8;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "Image Rec";
-            this.groupBox9.Visible = false;
+            groupBox9.Controls.Add(label11);
+            groupBox9.Controls.Add(updateImagesBtn);
+            groupBox9.Controls.Add(resetImagesBtn);
+            groupBox9.Location = new System.Drawing.Point(290, 3);
+            groupBox9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox9.Name = "groupBox9";
+            groupBox9.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox9.Size = new System.Drawing.Size(245, 156);
+            groupBox9.TabIndex = 8;
+            groupBox9.TabStop = false;
+            groupBox9.Text = "Image Rec";
+            groupBox9.Visible = false;
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(31, 18);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(154, 30);
-            this.label11.TabIndex = 3;
-            this.label11.Text = "Update the images the bot \r\nuses for image recognition";
+            label11.AutoSize = true;
+            label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            label11.Location = new System.Drawing.Point(36, 21);
+            label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new System.Drawing.Size(154, 30);
+            label11.TabIndex = 3;
+            label11.Text = "Update the images the bot \r\nuses for image recognition";
             // 
             // updateImagesBtn
             // 
-            this.updateImagesBtn.Location = new System.Drawing.Point(34, 51);
-            this.updateImagesBtn.Name = "updateImagesBtn";
-            this.updateImagesBtn.Size = new System.Drawing.Size(140, 33);
-            this.updateImagesBtn.TabIndex = 2;
-            this.updateImagesBtn.Text = "Update Images";
-            this.updateImagesBtn.UseVisualStyleBackColor = true;
-            this.updateImagesBtn.Click += new System.EventHandler(this.updateImagesBtn_Click);
+            updateImagesBtn.Location = new System.Drawing.Point(40, 59);
+            updateImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            updateImagesBtn.Name = "updateImagesBtn";
+            updateImagesBtn.Size = new System.Drawing.Size(163, 38);
+            updateImagesBtn.TabIndex = 2;
+            updateImagesBtn.Text = "Update Images";
+            updateImagesBtn.UseVisualStyleBackColor = true;
+            updateImagesBtn.Click += updateImagesBtn_Click;
             // 
             // resetImagesBtn
             // 
-            this.resetImagesBtn.Location = new System.Drawing.Point(34, 90);
-            this.resetImagesBtn.Name = "resetImagesBtn";
-            this.resetImagesBtn.Size = new System.Drawing.Size(140, 33);
-            this.resetImagesBtn.TabIndex = 0;
-            this.resetImagesBtn.Text = "Reset All Images";
-            this.toolTip1.SetToolTip(this.resetImagesBtn, "This will reset all of your images!");
-            this.resetImagesBtn.UseVisualStyleBackColor = true;
-            this.resetImagesBtn.Click += new System.EventHandler(this.resetImagesBtn_Click);
+            resetImagesBtn.Location = new System.Drawing.Point(40, 104);
+            resetImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            resetImagesBtn.Name = "resetImagesBtn";
+            resetImagesBtn.Size = new System.Drawing.Size(163, 38);
+            resetImagesBtn.TabIndex = 0;
+            resetImagesBtn.Text = "Reset All Images";
+            toolTip1.SetToolTip(resetImagesBtn, "This will reset all of your images!");
+            resetImagesBtn.UseVisualStyleBackColor = true;
+            resetImagesBtn.Click += resetImagesBtn_Click;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(5, 141);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(282, 32);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Only use this if the bot is not working \r\nproperly or the coordinates need reconf" +
-    "igured!";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(6, 163);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(282, 32);
+            label5.TabIndex = 8;
+            label5.Text = "Only use this if the bot is not working \r\nproperly or the coordinates need reconfigured!";
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.button6);
-            this.groupBox7.Controls.Add(this.comboBox1);
-            this.groupBox7.Controls.Add(this.button7);
-            this.groupBox7.Location = new System.Drawing.Point(8, 3);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(235, 135);
-            this.groupBox7.TabIndex = 7;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Coordinates";
+            groupBox7.Controls.Add(button6);
+            groupBox7.Controls.Add(comboBox1);
+            groupBox7.Controls.Add(button7);
+            groupBox7.Location = new System.Drawing.Point(9, 3);
+            groupBox7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox7.Name = "groupBox7";
+            groupBox7.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox7.Size = new System.Drawing.Size(274, 156);
+            groupBox7.TabIndex = 7;
+            groupBox7.TabStop = false;
+            groupBox7.Text = "Coordinates";
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(48, 51);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(140, 33);
-            this.button6.TabIndex = 2;
-            this.button6.Text = "Update Coordinate";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            button6.Location = new System.Drawing.Point(56, 59);
+            button6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button6.Name = "button6";
+            button6.Size = new System.Drawing.Size(163, 38);
+            button6.TabIndex = 2;
+            button6.Text = "Update Coordinate";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
             // 
             // comboBox1
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.Location = new System.Drawing.Point(6, 21);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(223, 24);
-            this.comboBox1.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.comboBox1, "Select the one you wish to reset the coordiates of...");
+            comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBox1.Location = new System.Drawing.Point(7, 24);
+            comboBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new System.Drawing.Size(259, 24);
+            comboBox1.TabIndex = 1;
+            toolTip1.SetToolTip(comboBox1, "Select the one you wish to reset the coordiates of...");
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(48, 90);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(140, 33);
-            this.button7.TabIndex = 0;
-            this.button7.Text = "Reset All";
-            this.toolTip1.SetToolTip(this.button7, "This will reset all of your coordinates!");
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            button7.Location = new System.Drawing.Point(56, 104);
+            button7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button7.Name = "button7";
+            button7.Size = new System.Drawing.Size(163, 38);
+            button7.TabIndex = 0;
+            button7.Text = "Reset All";
+            toolTip1.SetToolTip(button7, "This will reset all of your coordinates!");
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
             // 
             // toolTip1
             // 
-            this.toolTip1.ShowAlways = true;
-            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            toolTip1.ShowAlways = true;
+            toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
             // timer1
             // 
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            timer1.Interval = 1000;
+            timer1.Tick += timer1_Tick;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(475, 309);
-            this.Controls.Add(this.tabControl1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
-            this.Text = "Toontown Rewritten Bot by primetime43";
-            this.tabControl1.ResumeLayout(false);
-            this.Main.ResumeLayout(false);
-            this.Main.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.Fishing.ResumeLayout(false);
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            this.Racing.ResumeLayout(false);
-            this.Racing.PerformLayout();
-            this.Gardening.ResumeLayout(false);
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.Golf.ResumeLayout(false);
-            this.Near_Hole.ResumeLayout(false);
-            this.Hole_In_One.ResumeLayout(false);
-            this.Doodles.ResumeLayout(false);
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
-            this.Misc.ResumeLayout(false);
-            this.Misc.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            this.Dev.ResumeLayout(false);
-            this.Dev.PerformLayout();
-            this.groupBox9.ResumeLayout(false);
-            this.groupBox9.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(554, 357);
+            Controls.Add(tabControl1);
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "Form1";
+            Text = "Toontown Rewritten Bot by primetime43";
+            tabControl1.ResumeLayout(false);
+            Main.ResumeLayout(false);
+            Main.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            Fishing.ResumeLayout(false);
+            groupBox6.ResumeLayout(false);
+            groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown3).EndInit();
+            Racing.ResumeLayout(false);
+            Racing.PerformLayout();
+            Gardening.ResumeLayout(false);
+            groupBox5.ResumeLayout(false);
+            groupBox4.ResumeLayout(false);
+            groupBox3.ResumeLayout(false);
+            Golf.ResumeLayout(false);
+            Near_Hole.ResumeLayout(false);
+            Hole_In_One.ResumeLayout(false);
+            Doodles.ResumeLayout(false);
+            groupBox8.ResumeLayout(false);
+            groupBox8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown5).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown6).EndInit();
+            Misc.ResumeLayout(false);
+            Misc.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown2).EndInit();
+            Dev.ResumeLayout(false);
+            Dev.PerformLayout();
+            groupBox9.ResumeLayout(false);
+            groupBox9.PerformLayout();
+            groupBox7.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
@@ -1220,7 +1219,6 @@
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button startFishing;
         private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.CheckBox smartFishing;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown numericUpDown4;
         private System.Windows.Forms.Label label3;
@@ -1269,6 +1267,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button updateImagesBtn;
         private System.Windows.Forms.Button resetImagesBtn;
+        public System.Windows.Forms.CheckBox smartFishing;
     }
 }
 

@@ -12,6 +12,8 @@ namespace ToonTown_Rewritten_Bot
     {
         //eventually clean up repetative code
 
+        public static bool isAutoDetectFishingBtnActive = true;
+
         public static void DoMouseClick()
         {
             DoMouseClick(getCursorLocation());
@@ -246,6 +248,13 @@ namespace ToonTown_Rewritten_Bot
 
         public static bool checkCoordinates(String checkCoords)
         {
+            string filePath = "Coordinates Data File.txt";
+            if (!File.Exists(filePath))
+            {
+                // Create the file and write the default coordinates
+                createFreshCoordinatesFile();
+            }
+
             lines = File.ReadAllLines(Path.GetFullPath("Coordinates Data File.txt"));
             for (int i = 0; i < lines.Length; i++)
             {
@@ -273,13 +282,7 @@ namespace ToonTown_Rewritten_Bot
             if (!File.Exists(filePath))
             {
                 // Create the file and write the default coordinates
-                using (StreamWriter sw = File.CreateText(filePath))
-                {
-                    for (int i = 1; i <= Form1.dataFileMap.Count; i++)
-                    {
-                        sw.WriteLine($"{i}.(0,0)");
-                    }
-                }
+                createFreshCoordinatesFile();
             }
             else
             {
@@ -293,6 +296,18 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
+        public static void createFreshCoordinatesFile()
+        {
+            string filePath = "Coordinates Data File.txt";
+            // Create the file and write the default coordinates
+            using (StreamWriter sw = File.CreateText(filePath))
+            {
+                for (int i = 1; i <= Form1.dataFileMap.Count; i++)
+                {
+                    sw.WriteLine($"{i}.(0,0)");
+                }
+            }
+        }
 
         public static void tellFishingLocation(string location)
         {
