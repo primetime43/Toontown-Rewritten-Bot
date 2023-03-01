@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using WindowsInput;
@@ -21,6 +22,7 @@ namespace ToonTown_Rewritten_Bot
         {
             if (numberOfTimesToMeetFisherman != 0)
             {
+                BotFunctions.maximizeAndFocus();
                 Thread.Sleep(3000);
                 if (!BotFunctions.checkCoordinates("15"))//if they're 0,0, enter. Checks the red fishing button
                 {
@@ -28,17 +30,27 @@ namespace ToonTown_Rewritten_Bot
 
                     //manuallyLocateRedFishingButton();
 
-                    //do the image search for color here. Make it so you can use the search or manual set (temp code testing)
-                    Image screenshot = ImageRecognition.GetWindowScreenshot();
-                    Point coords = await ImageRecognition.locateColorInImage(screenshot, redFishingButtonColor, 10);
-
-                    if(coords.X == 0 && coords.Y == 0)//color not found, manually update
+                    if (BotFunctions.isAutoDetectFishingBtnActive)
                     {
-                        manuallyLocateRedFishingButton();
+                        //do the image search for color here. Make it so you can use the search or manual set (temp code testing)
+                        Image screenshot = ImageRecognition.GetWindowScreenshot();
+                        Point coords = await ImageRecognition.locateColorInImage(screenshot, redFishingButtonColor, 10);
+
+                        //debugColorCoords(screenshot, coords);
+
+                        if (coords.X == 0 && coords.Y == 0)//color not found, manually update
+                        {
+                            MessageBox.Show("Unable to detect red fishing button.");
+                            manuallyLocateRedFishingButton();
+                        }
+                        else
+                            BotFunctions.manuallyUpdateCoordinatesNoUI("15", coords);
                     }
                     else
-                        BotFunctions.manuallyUpdateCoordinatesNoUI("15", coords);
+                        manuallyLocateRedFishingButton();
+
                 }
+
                 //start fishing
                 startFishing(numberOfCasts, randomCasting);
                 //walking to fisherman
@@ -472,6 +484,31 @@ namespace ToonTown_Rewritten_Bot
             int[] coordinates = BotFunctions.getCoordinates(item);
             x = coordinates[0];
             y = coordinates[1];
+        }
+
+        private static void debugColorCoords(Image screenshot, Point coords)
+        {
+            // Create a new Bitmap object from the screenshot image
+            Bitmap bitmap = new Bitmap(screenshot);
+
+            // Create a new Graphics object from the Bitmap object
+            Graphics graphics = Graphics.FromImage(bitmap);
+
+            // Create a new Pen object for drawing the red square
+            Pen pen = new Pen(Color.Green, 3);
+
+            // Draw a red square around the point
+            graphics.DrawRectangle(pen, new Rectangle(coords.X - 10, coords.Y - 10, 20, 20));
+
+            // Display the image with the red square
+            using (var form = new Form())
+            {
+                form.StartPosition = FormStartPosition.CenterScreen;
+                form.ClientSize = new Size(bitmap.Width, bitmap.Height);
+                form.BackgroundImage = bitmap;
+                form.BackgroundImageLayout = ImageLayout.Zoom;
+                form.ShowDialog();
+            }
         }
     }
 }
