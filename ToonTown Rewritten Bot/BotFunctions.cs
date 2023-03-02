@@ -81,13 +81,6 @@ namespace ToonTown_Rewritten_Bot
             Cursor.Position = new Point(x, y);
         }
 
-        [DllImport("user32.dll", EntryPoint = "FindWindow")]
-        private static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
         // Maximizes and Focuces TTR
         public static void maximizeAndFocus()
         {
@@ -96,44 +89,23 @@ namespace ToonTown_Rewritten_Bot
             ShowWindow(hwnd, 3);//3 max
         }
 
-        public static void maximizeTTRWindow()
-        {
-            IntPtr hwnd = FindWindowByCaption(IntPtr.Zero, "Toontown Rewritten");
-            ShowWindow(hwnd, 3);
-        }
-
         private static string[] lines;
         public static void readTextFile()
         {
-            try
+            if (!File.Exists("Coordinates Data File.txt"))
             {
-                lines = File.ReadAllLines(Path.GetFullPath("Coordinates Data File.txt"));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(e.Message);
-            }
-        }
-
-        private static void writeDefaultCords(String[] line)
-        {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(Path.GetFullPath("Coordinates Data File.txt")))
+                try
                 {
-                    for (int i = 0; i < line.Length; i++)
-                    {
-                        writer.WriteLine(line[i]);
-                    }
-                    writer.Close();
+                    lines = File.ReadAllLines(Path.GetFullPath("Coordinates Data File.txt"));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("The file could not be read:");
+                    Console.WriteLine(e.Message);
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("The file could not be written to:");
-                Console.WriteLine(e.Message);
-            }
+            else
+                createFreshCoordinatesFile();
         }
 
         private static void updateTextFile()
@@ -343,12 +315,40 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
+        //probably delete eventually. Use createFreshCoordinatesFile func
+        private static void writeDefaultCords(String[] line)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(Path.GetFullPath("Coordinates Data File.txt")))
+                {
+                    for (int i = 0; i < line.Length; i++)
+                    {
+                        writer.WriteLine(line[i]);
+                    }
+                    writer.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The file could not be written to:");
+                Console.WriteLine(e.Message);
+            }
+        }
+
 
 
 
         //ignore .dll imports below
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(ref Point lpPoint);
+
+        [DllImport("user32.dll", EntryPoint = "FindWindow")]
+        private static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
         private static extern int BitBlt(IntPtr hDC, int x, int y, int nWidth, int nHeight, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
