@@ -86,7 +86,7 @@ namespace ToonTown_Rewritten_Bot
                 if (confirmation.Equals(DialogResult.Cancel))
                     Environment.Exit(0);
             }
-            BotFunctions.maximizeTTRWindow();
+            BotFunctions.maximizeAndFocus();
         }
 
         public static Dictionary<string, string> dataFileMap = new Dictionary<string, string>();

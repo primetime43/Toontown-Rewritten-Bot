@@ -53,11 +53,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Search_Images\imageRecognitionTesting.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Converted_file_e317bd25.ico" />
     <Content Include="Resources\Red_Fishing_Button.png" />
   </ItemGroup>

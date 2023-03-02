@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Diagnostics;
+using System.Threading;
 using System.Windows.Forms;
 using WindowsInput;
 
@@ -9,13 +10,17 @@ namespace ToonTown_Rewritten_Bot
         // GOLF- Afternoon Tee
         public static void afternoonTee()//works, finished
         {
+            Debug.WriteLine("1");
             BotFunctions.maximizeAndFocus();
             Thread.Sleep(15000);
+            Debug.WriteLine("2");
             toonLookAtHole();
             Thread.Sleep(3000);
+            Debug.WriteLine("3");
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(2120);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
+            Debug.WriteLine("4");
         }
 
         // GOLF - Holey Mackeral
