@@ -2,3 +2,9 @@
 */**/bin/Release
 */**/obj/Debug
 */**/obj/Release
+.vs/
+*/**/obj/
+/ToonTown Rewritten Bot/obj/project.assets.json
+/ToonTown Rewritten Bot/obj/project.nuget.cache
+/ToonTown Rewritten Bot/obj/ToonTown Rewritten Bot.csproj.nuget.dgspec.json
+/ToonTown Rewritten Bot/obj/ToonTown Rewritten Bot.csproj.nuget.g.props
