@@ -9,6 +9,7 @@ namespace ToonTown_Rewritten_Bot
         public static int numberOfFeeds, numberOfScratches;
         private static string selectedTrick;
         private static bool infiniteTimeCheckBox, justFeedCheckBox, justScratchCheckBox;
+        public static bool shouldStopTraining = false;
         public static void startTrainingDoodle(int feeds, int scratches, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch)
         {
             numberOfFeeds = feeds;
@@ -30,7 +31,7 @@ namespace ToonTown_Rewritten_Bot
                     numberOfScratches = 0;
                 else if (justScratchCheckBox)
                     numberOfFeeds = 0;
-                while (numberOfFeeds > 0 || numberOfScratches > 0)
+                while (numberOfFeeds > 0 || numberOfScratches > 0 && !shouldStopTraining)
                 {
                     Thread.Sleep(5000);
                     if (numberOfFeeds > 0)//feed doodle
@@ -48,7 +49,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else //infinite checkbox is checked, so loop until stopped
             {
-                while (true)
+                while (true && !shouldStopTraining)
                 {
                     if (justFeedCheckBox)//just feed is checked
                         feedDoodle();
