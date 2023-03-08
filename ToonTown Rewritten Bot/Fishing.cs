@@ -16,6 +16,7 @@ namespace ToonTown_Rewritten_Bot
         private new static int x, y;
         private static Random rand = new Random();
         private static string redFishingButtonColor = "#FD0000";
+        public static bool shouldStopFishing = false;
 
         //location, num of casts, num of sells
         public static async void startFishing(string location, int numberOfCasts, int numberOfTimesToMeetFisherman, bool randomCasting)
@@ -54,45 +55,48 @@ namespace ToonTown_Rewritten_Bot
                 //start fishing
                 startFishing(numberOfCasts, randomCasting);
                 //walking to fisherman
-                switch (location)
+                if (!shouldStopFishing)
                 {
-                    case "TOONTOWN CENTRAL PUNCHLINE PLACE":
-                        fishTTCPunchlinePlace();//goes to fisherman and back to dock
-                        startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
-                        break;
-                    case "DONALD DREAM LAND LULLABY LANE":
-                        fishDDLLullabyLane();
-                        startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
-                        break;
-                    case "BRRRGH POLAR PLACE":
-                        fishBrrrghPolarPlace();
-                        startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
-                        break;
-                    case "BRRRGH WALRUS WAY":
-                        fishBrrrghWalrusWay();
-                        startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
-                        break;
-                    case "BRRRGH SLEET STREET":
-                        fishBrrrghSleetSt();
-                        startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
-                        break;
-                    case "MINNIE'S MELODYLAND TENOR TERRACE":
-                        fishMMTenorTerrace();
-                        startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
-                        break;
-                    case "DONALD DOCK LIGHTHOUSE LANE":
-                        fishDDLighthouseLane();
-                        startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
-                        break;
-                    case "DAISY'S GARDEN ELM STREET":
-                        fishDaisyGardenElmSt();
-                        startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
-                        break;
-                    case "FISH ANYWHERE":
-                        break;
+                    switch (location)
+                    {
+                        case "TOONTOWN CENTRAL PUNCHLINE PLACE":
+                            fishTTCPunchlinePlace();//goes to fisherman and back to dock
+                            startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
+                            break;
+                        case "DONALD DREAM LAND LULLABY LANE":
+                            fishDDLLullabyLane();
+                            startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
+                            break;
+                        case "BRRRGH POLAR PLACE":
+                            fishBrrrghPolarPlace();
+                            startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
+                            break;
+                        case "BRRRGH WALRUS WAY":
+                            fishBrrrghWalrusWay();
+                            startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
+                            break;
+                        case "BRRRGH SLEET STREET":
+                            fishBrrrghSleetSt();
+                            startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
+                            break;
+                        case "MINNIE'S MELODYLAND TENOR TERRACE":
+                            fishMMTenorTerrace();
+                            startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
+                            break;
+                        case "DONALD DOCK LIGHTHOUSE LANE":
+                            fishDDLighthouseLane();
+                            startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
+                            break;
+                        case "DAISY'S GARDEN ELM STREET":
+                            fishDaisyGardenElmSt();
+                            startFishing(location, numberOfCasts, numberOfTimesToMeetFisherman - 1, randomCasting);
+                            break;
+                        case "FISH ANYWHERE":
+                            break;
+                    }
+                    MessageBox.Show("Done!");
                 }
             }
-            MessageBox.Show("Done!");
         }
 
         private static void fishTTCPunchlinePlace()
@@ -237,7 +241,7 @@ namespace ToonTown_Rewritten_Bot
         private static void startFishing(int numberOfCasts, bool fishVariance)
         {
             Stopwatch stopwatch = new Stopwatch();
-            while (numberOfCasts != 0)
+            while (numberOfCasts != 0 && !shouldStopFishing)
             {
                 castLine(fishVariance);
                 stopwatch.Start();
@@ -250,8 +254,11 @@ namespace ToonTown_Rewritten_Bot
                 numberOfCasts--;
                 Thread.Sleep(1000);
             }
-            exitFishing();
-            Thread.Sleep(3000);
+            if (!shouldStopFishing) // Only call exitFishing() if we didn't break out of the loop
+            {
+                exitFishing();
+                Thread.Sleep(3000);
+            }
         }
 
         private static void sellFish()
