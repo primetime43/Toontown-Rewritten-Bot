@@ -34,13 +34,13 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.imageBox1 = new Emgu.CV.UI.ImageBox();
+            //this.imageBox1 = new Emgu.CV.UI.ImageBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).BeginInit();
+            //((System.ComponentModel.ISupportInitialize)(this.imageBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -96,12 +96,12 @@
             // 
             // imageBox1
             // 
-            this.imageBox1.Location = new System.Drawing.Point(1025, 8);
+            /*this.imageBox1.Location = new System.Drawing.Point(1025, 8);
             this.imageBox1.Name = "imageBox1";
             this.imageBox1.Size = new System.Drawing.Size(99, 93);
             this.imageBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.imageBox1.TabIndex = 2;
-            this.imageBox1.TabStop = false;
+            this.imageBox1.TabStop = false;*/
             // 
             // groupBox1
             // 
@@ -156,12 +156,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1146, 599);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.imageBox1);
+            //this.Controls.Add(this.imageBox1);
             this.Controls.Add(this.button1);
             this.Name = "DevForm";
             this.Text = "DevForm";
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.imageBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -173,7 +173,7 @@
         #endregion
 
         private System.Windows.Forms.Button button1;
-        private Emgu.CV.UI.ImageBox imageBox1;
+        //private Emgu.CV.UI.ImageBox imageBox1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.CheckBox checkBox1;
