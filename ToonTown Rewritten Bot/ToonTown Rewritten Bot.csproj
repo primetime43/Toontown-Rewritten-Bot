@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net7.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
@@ -21,6 +21,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -75,10 +76,5 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DynamicLanguageRuntime" Version="1.2.3" />
-    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.3.0.3890" />
-    <PackageReference Include="Tesseract" Version="3.3.0" />
   </ItemGroup>
 </Project>

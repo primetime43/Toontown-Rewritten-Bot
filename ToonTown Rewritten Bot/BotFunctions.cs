@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -92,7 +92,7 @@ namespace ToonTown_Rewritten_Bot
         private static string[] lines;
         public static void readTextFile()
         {
-            if (!File.Exists("Coordinates Data File.txt"))
+            if (File.Exists("Coordinates Data File.txt"))
             {
                 try
                 {
@@ -100,7 +100,7 @@ namespace ToonTown_Rewritten_Bot
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("The file could not be read:");
+                    MessageBox.Show("The file could not be read:");
                     Console.WriteLine(e.Message);
                 }
             }
@@ -262,7 +262,7 @@ namespace ToonTown_Rewritten_Bot
                 string[] lines = File.ReadAllLines(filePath);
                 for (int i = 0; i < Form1.dataFileMap.Count; i++)
                 {
-                    lines[i] = $"{i + 1}.(0,0)";
+                    lines[i] = $"{i}.(0,0)";
                 }
                 writeDefaultCords(lines);
             }
@@ -271,6 +271,9 @@ namespace ToonTown_Rewritten_Bot
         public static void createFreshCoordinatesFile()
         {
             string filePath = "Coordinates Data File.txt";
+            // Delete the file if it exists
+            if (File.Exists(filePath))
+                File.Delete(filePath);
             // Create the file and write the default coordinates
             using (StreamWriter sw = File.CreateText(filePath))
             {
