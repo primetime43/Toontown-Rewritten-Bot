@@ -16,7 +16,7 @@ namespace ToonTown_Rewritten_Bot
             InitializeComponent();
             this.Text = String.Format("About {0} by primetime43", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = "Version 1.4";
+            this.labelVersion.Text = "Version 1.4.1";
             this.labelCopyright.Text = "Programmed by primetime43";
             this.labelCompanyName.Text = AssemblyCompany;
             this.textBoxDescription.Text = "This program is a bot that will perform certain time consuming tasks on ToonTown Rewritten.";
