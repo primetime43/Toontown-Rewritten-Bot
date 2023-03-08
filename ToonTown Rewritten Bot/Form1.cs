@@ -1,4 +1,4 @@
-﻿using Emgu.CV.XPhoto;
+﻿//using Emgu.CV.XPhoto;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

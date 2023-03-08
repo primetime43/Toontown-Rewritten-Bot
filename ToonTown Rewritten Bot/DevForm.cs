@@ -1,11 +1,11 @@
-﻿using Emgu.CV;
-using Emgu.CV.Structure;
+﻿//using Emgu.CV;
+//using Emgu.CV.Structure;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using Tesseract;
+//using Tesseract;
 using System.Diagnostics;
 using System.IO;
 
@@ -105,12 +105,12 @@ namespace ToonTown_Rewritten_Bot
                 //previousImage?.Dispose();
 
                 //testing
-                testImageCapture(result);
+                //testImageCapture(result);
             }
         }
 
         //prob just use to show box where the coords are for debugging purposes in release version
-        Image<Bgr, byte> template = new Image<Bgr, byte>(Properties.Resources.stickerBook.ToImage<Bgr, byte>().Data); // Image A
+        /*Image<Bgr, byte> template = new Image<Bgr, byte>(Properties.Resources.stickerBook.ToImage<Bgr, byte>().Data); // Image A
         private void testImageCapture(Bitmap inputImage)
         {
             //find image a in b
@@ -137,7 +137,7 @@ namespace ToonTown_Rewritten_Bot
             }
 
             imageBox1.Image = imageToShow;
-        }
+        }*/
 
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT
@@ -184,7 +184,7 @@ namespace ToonTown_Rewritten_Bot
 
         public const string TESS_PATH = "tessdata/";
         public const string TESS_LANGUAGE = "eng";
-        private static TesseractEngine engine;
+        //private static TesseractEngine engine;
 
         /*public static void readText(Image inputImage)
         {
