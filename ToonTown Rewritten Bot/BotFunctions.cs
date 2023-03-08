@@ -92,7 +92,7 @@ namespace ToonTown_Rewritten_Bot
         private static string[] lines;
         public static void readTextFile()
         {
-            if (File.Exists("Coordinates Data File.txt"))
+            if (!File.Exists("Coordinates Data File.txt"))
             {
                 try
                 {
@@ -100,7 +100,7 @@ namespace ToonTown_Rewritten_Bot
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("The file could not be read:");
+                    Console.WriteLine("The file could not be read:");
                     Console.WriteLine(e.Message);
                 }
             }
@@ -271,9 +271,6 @@ namespace ToonTown_Rewritten_Bot
         public static void createFreshCoordinatesFile()
         {
             string filePath = "Coordinates Data File.txt";
-            // Delete the file if it exists
-            if (File.Exists(filePath))
-                File.Delete(filePath);
             // Create the file and write the default coordinates
             using (StreamWriter sw = File.CreateText(filePath))
             {
