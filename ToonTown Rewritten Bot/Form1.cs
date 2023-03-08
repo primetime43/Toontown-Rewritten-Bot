@@ -161,7 +161,7 @@ namespace ToonTown_Rewritten_Bot
 
         private void button7_Click(object sender, EventArgs e)
         {
-            BotFunctions.createFreshCoordinatesFile();
+            BotFunctions.resetAllCoordinates();
             MessageBox.Show("All coordinates reset!");
         }
 
@@ -226,11 +226,13 @@ namespace ToonTown_Rewritten_Bot
                 fishingThreading = new Thread(() => ToonTown_Rewritten_Bot.Fishing.startFishing(selected, numberOfCasts, numberOfSells, fishVariance));
                 fishingThreading.Start();
             }
+            else if (stopCheck)
+                fishingThreading.Abort();
         }
 
         private void button4_Click(object sender, EventArgs e)//button to stop fishing
         {
-            ToonTown_Rewritten_Bot.Fishing.shouldStopFishing = true;
+            startFishingThread(null, 0, 0, true);
             MessageBox.Show("Fishing stopped!");
         }
 
@@ -413,11 +415,13 @@ namespace ToonTown_Rewritten_Bot
                 doodleTrainingThreading = new Thread(() => DoodleTraining.startTrainingDoodle(numberOfFeeds, numberOfScratches, checkBox3.Checked, selectedTrick, checkBox4.Checked, checkBox5.Checked));
                 doodleTrainingThreading.Start();
             }
+            else if (stopTrainingClicked)
+                doodleTrainingThreading.Abort();
         }
 
         private void button19_Click(object sender, EventArgs e)
         {
-            DoodleTraining.shouldStopTraining = true;
+            startDoodleTrainingThread(0, 0, false, true, "");
             MessageBox.Show("Doodle Training stopped!");
         }
 
