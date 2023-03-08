@@ -262,7 +262,7 @@ namespace ToonTown_Rewritten_Bot
                 string[] lines = File.ReadAllLines(filePath);
                 for (int i = 0; i < Form1.dataFileMap.Count; i++)
                 {
-                    lines[i] = $"{i + 1}.(0,0)";
+                    lines[i] = $"{i}.(0,0)";
                 }
                 writeDefaultCords(lines);
             }
