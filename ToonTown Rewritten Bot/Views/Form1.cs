@@ -8,6 +8,9 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Properties;
+using ToonTown_Rewritten_Bot.Services;
+using ToonTown_Rewritten_Bot.Utilities;
+using ToonTown_Rewritten_Bot.Views;
 
 namespace ToonTown_Rewritten_Bot
 {
@@ -27,7 +30,7 @@ namespace ToonTown_Rewritten_Bot
         //important functions for bot
         private void startSpamButton_Click(object sender, EventArgs e)//spam message on screen
         {//if the user presses ALT key, it will break the loop
-            bool loopBroken = ToonTown_Rewritten_Bot.Misc.sendMessage(messageToType.Text, Convert.ToInt32(numericUpDown2.Value), checkBox1.Checked, numericUpDown2);
+            bool loopBroken = Utilities.Misc.sendMessage(messageToType.Text, Convert.ToInt32(numericUpDown2.Value), checkBox1.Checked, numericUpDown2);
         }
 
         private int timeLeft;
@@ -37,7 +40,7 @@ namespace ToonTown_Rewritten_Bot
             MessageBox.Show("Press OK when ready to begin!");
             Thread.Sleep(2000);
             timer1.Start();
-            bool loopBroken = ToonTown_Rewritten_Bot.Misc.keepToonAwake(Convert.ToInt32(numericUpDown1.Value));
+            bool loopBroken = Utilities.Misc.keepToonAwake(Convert.ToInt32(numericUpDown1.Value));
             if (loopBroken)
             {
                 timer1.Stop();
@@ -151,12 +154,12 @@ namespace ToonTown_Rewritten_Bot
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Gardening.waterPlant();
+            Services.Gardening.waterPlant();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Gardening.removePlant();
+            Services.Gardening.removePlant();
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -223,14 +226,14 @@ namespace ToonTown_Rewritten_Bot
         {
             if (!stopCheck)
             {
-                fishingThreading = new Thread(() => ToonTown_Rewritten_Bot.Fishing.startFishing(selected, numberOfCasts, numberOfSells, fishVariance));
+                fishingThreading = new Thread(() => Views.Fishing.startFishing(selected, numberOfCasts, numberOfSells, fishVariance));
                 fishingThreading.Start();
             }
         }
 
         private void button4_Click(object sender, EventArgs e)//button to stop fishing
         {
-            ToonTown_Rewritten_Bot.Fishing.shouldStopFishing = true;
+            Views.Fishing.shouldStopFishing = true;
             MessageBox.Show("Fishing stopped!");
         }
 
@@ -322,67 +325,67 @@ namespace ToonTown_Rewritten_Bot
         // GOLF- Afternoon Tee
         private void golfAfternoonTee(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Golf.afternoonTee();
+            Services.Golf.afternoonTee();
         }
 
         // GOLF - Holey Mackeral
         private void golfHoleyMackeral(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Golf.holeyMackeral();
+            Services.Golf.holeyMackeral();
         }
 
         // GOLF - Hole on the Range
         private void golfHoleOnTheRange(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Golf.holeOnTheRange();
+            Services.Golf.holeOnTheRange();
         }
 
         // GOLF - Seeing green
         private void golfSeeingGreen(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Golf.seeingGreen();
+            Services.Golf.seeingGreen();
         }
 
         // GOLF - Swing Time
         private void button15_Click(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Golf.swingTime();
+            Services.Golf.swingTime();
         }
 
         // GOLF - Down the Hatch
         private void button14_Click(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Golf.downTheHatch();
+            Services.Golf.downTheHatch();
         }
 
         //GOLF - Peanut Putter
         private void button13_Click(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Golf.peanutPutter();
+            Services.Golf.peanutPutter();
         }
 
         //GOLF - Hot Links
         private void button16_Click(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Golf.hotLinks();
+            Services.Golf.hotLinks();
         }
 
         //GOLF - Hole In Fun
         private void button17_Click(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Golf.holeInFun();
+            Services.Golf.holeInFun();
         }
 
         //GOLF - Swing-A-Long
         private void button18_Click(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Golf.swingALong();
+            Services.Golf.swingALong();
         }
 
         //GOLF - One Little Birdie
         private void One_Little_Birdie_Click(object sender, EventArgs e)
         {
-            ToonTown_Rewritten_Bot.Golf.oneLittleBirdie();
+            Services.Golf.oneLittleBirdie();
         }
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)

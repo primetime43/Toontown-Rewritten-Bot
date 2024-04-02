@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Views;
 
-namespace ToonTown_Rewritten_Bot
+namespace ToonTown_Rewritten_Bot.Services
 {
     class Gardening
     {
         private static int x, y;
-        public static void plantFlower(String flowerCombo)
+        public static void plantFlower(string flowerCombo)
         {
             DialogResult confirmation;
             //check if plant button is (0,0). True means continue, not (0,0)
             if (BotFunctions.checkCoordinates("1"))
             {
-                confirmation = MessageBox.Show("Press OK when ready to begin!","", MessageBoxButtons.OKCancel);
+                confirmation = MessageBox.Show("Press OK when ready to begin!", "", MessageBoxButtons.OKCancel);
                 if (confirmation.Equals(DialogResult.Cancel))
                     return;
                 Thread.Sleep(2000);
                 getCoords("1");
-                BotFunctions.MoveCursor(x,y);
+                BotFunctions.MoveCursor(x, y);
                 BotFunctions.DoMouseClick();
                 Thread.Sleep(2000);
                 checkBeans("2");
@@ -37,7 +38,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private static void selectBeans(String flowerCombo, char[] beans)
+        private static void selectBeans(string flowerCombo, char[] beans)
         {
             for (int i = 0; i < flowerCombo.Length; i++)
             {
@@ -77,7 +78,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private static void checkBeans(String location)
+        private static void checkBeans(string location)
         {
             if (Convert.ToInt32(location) <= 10)
             {
@@ -183,7 +184,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private static void getCoords(String item)
+        private static void getCoords(string item)
         {
             int[] coordinates = BotFunctions.getCoordinates(item);
             x = coordinates[0];

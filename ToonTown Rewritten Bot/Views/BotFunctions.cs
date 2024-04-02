@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace ToonTown_Rewritten_Bot
+namespace ToonTown_Rewritten_Bot.Views
 {
     class BotFunctions : AdvancedSettings
     {
@@ -29,7 +29,7 @@ namespace ToonTown_Rewritten_Bot
             int[] coordinates = getCoordinates("15");
             int x = coordinates[0];
             int y = coordinates[1];
-            MoveCursor(x, (y+150));//pull it back
+            MoveCursor(x, y + 150);//pull it back
             Thread.Sleep(500);
             DoMouseClickUp(getCursorLocation());
         }
@@ -57,11 +57,11 @@ namespace ToonTown_Rewritten_Bot
 
         public static Color GetColorAt(int x, int y)
         {
-            IntPtr desk = GetDesktopWindow();
-            IntPtr dc = GetWindowDC(desk);
+            nint desk = GetDesktopWindow();
+            nint dc = GetWindowDC(desk);
             int a = (int)GetPixel(dc, x, y);
             ReleaseDC(desk, dc);
-            return Color.FromArgb(255, (a >> 0) & 0xff, (a >> 8) & 0xff, (a >> 16) & 0xff);
+            return Color.FromArgb(255, a >> 0 & 0xff, a >> 8 & 0xff, a >> 16 & 0xff);
         }
 
         public static Point getCursorLocation()
@@ -71,7 +71,7 @@ namespace ToonTown_Rewritten_Bot
             return cursorLocation;
         }
 
-        public static String HexConverter(Color c)
+        public static string HexConverter(Color c)
         {
             return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         }
@@ -84,7 +84,7 @@ namespace ToonTown_Rewritten_Bot
         // Maximizes and Focuces TTR
         public static void maximizeAndFocus()
         {
-            IntPtr hwnd = FindWindowByCaption(IntPtr.Zero, "Toontown Rewritten");
+            nint hwnd = FindWindowByCaption(nint.Zero, "Toontown Rewritten");
             ShowWindow(hwnd, 6);//6 min
             ShowWindow(hwnd, 3);//3 max
         }
@@ -148,7 +148,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        public static void manualUpdateCoordinates(String locationToUpdate)
+        public static void manualUpdateCoordinates(string locationToUpdate)
         {
             UpdateCoordsHelper updateCoordsWindow = new UpdateCoordsHelper();
             try
@@ -194,7 +194,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        public static int[] getCoordinates(String coordsToRetrieve)
+        public static int[] getCoordinates(string coordsToRetrieve)
         {
             lines = File.ReadAllLines(Path.GetFullPath("Coordinates Data File.txt"));
             for (int i = 0; i < lines.Length; i++)
@@ -203,14 +203,14 @@ namespace ToonTown_Rewritten_Bot
                 {
                     if (coordsToRetrieve.Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
                     {
-                        String check = lines[i];
-                        char[] removeChars = {'(', ')' };
-                        String coords = check.Substring(check.IndexOf('(') + 1);
+                        string check = lines[i];
+                        char[] removeChars = { '(', ')' };
+                        string coords = check.Substring(check.IndexOf('(') + 1);
                         coords = coords.Trim(removeChars);
-                        String[] points = coords.Split(',');
+                        string[] points = coords.Split(',');
                         int x = Convert.ToInt32(points[0]);
                         int y = Convert.ToInt32(points[1]);
-                        int[] locations = {x,y};
+                        int[] locations = { x, y };
                         return locations;
                     }
                 }
@@ -218,7 +218,7 @@ namespace ToonTown_Rewritten_Bot
             return null;
         }
 
-        public static bool checkCoordinates(String checkCoords)
+        public static bool checkCoordinates(string checkCoords)
         {
             string filePath = "Coordinates Data File.txt";
             if (!File.Exists(filePath))
@@ -234,9 +234,9 @@ namespace ToonTown_Rewritten_Bot
                 {
                     if (checkCoords.Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
                     {
-                        String check = lines[i];
+                        string check = lines[i];
                         char[] removeChars = { '(', ')' };
-                        String coords = check.Substring(check.IndexOf('(') + 1);
+                        string coords = check.Substring(check.IndexOf('(') + 1);
                         coords = coords.Trim(removeChars);
                         if ("0,0".Equals(coords))
                         {
@@ -319,7 +319,7 @@ namespace ToonTown_Rewritten_Bot
         }
 
         //probably delete eventually. Use createFreshCoordinatesFile func
-        private static void writeDefaultCords(String[] line)
+        private static void writeDefaultCords(string[] line)
         {
             try
             {
@@ -347,22 +347,22 @@ namespace ToonTown_Rewritten_Bot
         private static extern bool GetCursorPos(ref Point lpPoint);
 
         [DllImport("user32.dll", EntryPoint = "FindWindow")]
-        private static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
+        private static extern nint FindWindowByCaption(nint ZeroOnly, string lpWindowName);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        private static extern bool ShowWindow(nint hWnd, int nCmdShow);
 
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
-        private static extern int BitBlt(IntPtr hDC, int x, int y, int nWidth, int nHeight, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
+        private static extern int BitBlt(nint hDC, int x, int y, int nWidth, int nHeight, nint hSrcDC, int xSrc, int ySrc, int dwRop);
         [DllImport("user32.dll", SetLastError = true)]
-        private static extern IntPtr GetDesktopWindow();
+        private static extern nint GetDesktopWindow();
         [DllImport("user32.dll", SetLastError = true)]
-        private static extern IntPtr GetWindowDC(IntPtr window);
+        private static extern nint GetWindowDC(nint window);
         [DllImport("gdi32.dll", SetLastError = true)]
-        private static extern uint GetPixel(IntPtr dc, int x, int y);
+        private static extern uint GetPixel(nint dc, int x, int y);
         [DllImport("user32.dll", SetLastError = true)]
-        private static extern int ReleaseDC(IntPtr window, IntPtr dc);
+        private static extern int ReleaseDC(nint window, nint dc);
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         private static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
 
