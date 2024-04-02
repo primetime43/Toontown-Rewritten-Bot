@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WindowsInput;
 
-namespace ToonTown_Rewritten_Bot
+namespace ToonTown_Rewritten_Bot.Services
 {
     class Racing
     {

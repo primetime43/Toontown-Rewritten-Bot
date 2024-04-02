@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Services;
 
 namespace ToonTown_Rewritten_Bot
 {

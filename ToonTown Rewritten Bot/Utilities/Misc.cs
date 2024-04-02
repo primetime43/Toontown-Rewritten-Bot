@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using WindowsInput;
 using System.Threading;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Views;
 
-namespace ToonTown_Rewritten_Bot
+namespace ToonTown_Rewritten_Bot.Utilities
 {
     class Misc
     {
-        public static Boolean sendMessage(String message, int spamCount, bool spam, NumericUpDown upDown)
+        public static bool sendMessage(string message, int spamCount, bool spam, NumericUpDown upDown)
         {
             DialogResult confirmation;
             Console.WriteLine("Spam? : " + spam);
@@ -45,7 +46,7 @@ namespace ToonTown_Rewritten_Bot
                 MessageBox.Show("You must enter a message to send!");
             return false;
         }
-        private static void send(String text)
+        private static void send(string text)
         {
             BotFunctions.DoMouseClick();
             Thread.Sleep(500);
@@ -54,7 +55,7 @@ namespace ToonTown_Rewritten_Bot
             SendKeys.SendWait("{ENTER}");
         }
 
-        public static Boolean keepToonAwake(int min)
+        public static bool keepToonAwake(int min)
         {
             DateTime endTime = DateTime.Now.AddMinutes(min);
             BotFunctions.DoMouseClick();

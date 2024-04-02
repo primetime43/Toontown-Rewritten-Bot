@@ -5,9 +5,10 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Utilities;
 using WindowsInput;
 
-namespace ToonTown_Rewritten_Bot
+namespace ToonTown_Rewritten_Bot.Views
 {
     class Fishing : AdvancedSettings
     {
@@ -263,7 +264,7 @@ namespace ToonTown_Rewritten_Bot
 
         private static void sellFish()
         {
-            retry:
+        retry:
             if (BotFunctions.checkCoordinates("17"))//returns true if they are not 0,0
             {
                 Thread.Sleep(2100);
@@ -282,7 +283,7 @@ namespace ToonTown_Rewritten_Bot
 
         private static void exitFishing()
         {
-            retry:
+        retry:
             if (BotFunctions.checkCoordinates("16"))//returns true if they are not 0,0
             {
                 getCoords("16");
@@ -303,10 +304,11 @@ namespace ToonTown_Rewritten_Bot
 
             int randX = 0;
             int randY = 0;
-            if (fishVariance) { 
-                randX = rand.Next(-VARIANCE, VARIANCE+1);
-                randY = rand.Next(-VARIANCE, VARIANCE+1);
-            } 
+            if (fishVariance)
+            {
+                randX = rand.Next(-VARIANCE, VARIANCE + 1);
+                randY = rand.Next(-VARIANCE, VARIANCE + 1);
+            }
             BotFunctions.MoveCursor(x + randX, y + randY);
             //Debug.WriteLine("X variance: " + randX + " \nY Variance: " + randY);
             BotFunctions.DoFishingClick();
@@ -316,7 +318,7 @@ namespace ToonTown_Rewritten_Bot
         {
             bool result = false;
             getCoords("15");
-            String color = BotFunctions.HexConverter(BotFunctions.GetColorAt(x, y - 600));
+            string color = BotFunctions.HexConverter(BotFunctions.GetColorAt(x, y - 600));
             if (color.Equals("#FFFFBE") || color.Equals("#FFFFBF"))
                 result = true;//fish caught
             // Check if boot caught (smaller catch window)
@@ -329,7 +331,7 @@ namespace ToonTown_Rewritten_Bot
         private static AdvancedSettings imgRec;
         private static void imgRecLocateExitBtn()
         {
-            retry:
+        retry:
             imgRec = new AdvancedSettings();
             if (Properties.Settings.Default["exitFishingBtn"].ToString() == "")//no image has been set to the property
             {
@@ -376,7 +378,7 @@ namespace ToonTown_Rewritten_Bot
 
         private static void imgRecLocateSellBtn()
         {
-            retry:
+        retry:
             imgRec = new AdvancedSettings();
             if (Properties.Settings.Default["sellFishBtn"].ToString() == "")//no image has been set to the property
             {
@@ -423,7 +425,7 @@ namespace ToonTown_Rewritten_Bot
 
         private static void imgRecLocateRedCastBtn()
         {
-            retry:
+        retry:
             imgRec = new AdvancedSettings();
             if (Properties.Settings.Default["fishingCastBtn"].ToString() == "")//no image has been set to the property
             {
@@ -486,7 +488,7 @@ namespace ToonTown_Rewritten_Bot
             BotFunctions.manualUpdateCoordinates("15");//update the red fishing button coords
         }
 
-        private static void getCoords(String item)
+        private static void getCoords(string item)
         {
             int[] coordinates = BotFunctions.getCoordinates(item);
             x = coordinates[0];

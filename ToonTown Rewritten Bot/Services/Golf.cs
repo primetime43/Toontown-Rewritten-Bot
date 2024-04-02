@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Views;
 using WindowsInput;
 
-namespace ToonTown_Rewritten_Bot
+namespace ToonTown_Rewritten_Bot.Services
 {
     class Golf
     {

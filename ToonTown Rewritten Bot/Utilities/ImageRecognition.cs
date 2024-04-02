@@ -13,7 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
 
-namespace ToonTown_Rewritten_Bot
+namespace ToonTown_Rewritten_Bot.Utilities
 {
     class ImageRecognition
     {
@@ -21,8 +21,8 @@ namespace ToonTown_Rewritten_Bot
         {
             string windowName = "Toontown Rewritten";
             // Find the window by name
-            IntPtr windowHandle = NativeMethods.FindWindow(null, windowName);
-            if (windowHandle == IntPtr.Zero)
+            nint windowHandle = NativeMethods.FindWindow(null, windowName);
+            if (windowHandle == nint.Zero)
             {
                 throw new ArgumentException("Window not found.");
             }
@@ -100,10 +100,10 @@ namespace ToonTown_Rewritten_Bot
             }
 
             [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-            public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+            public static extern nint FindWindow(string lpClassName, string lpWindowName);
 
             [DllImport("user32.dll", SetLastError = true)]
-            public static extern bool GetWindowRect(IntPtr hWnd, ref Rect lpRect);
+            public static extern bool GetWindowRect(nint hWnd, ref Rect lpRect);
         }
         #endregion
     }

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Views;
 
-namespace ToonTown_Rewritten_Bot
+namespace ToonTown_Rewritten_Bot.Services
 {
     class DoodleTraining
     {
@@ -42,7 +43,7 @@ namespace ToonTown_Rewritten_Bot
                     if (numberOfScratches > 0)//scratch doodle
                     {
                         scratchDoodle();
-                        numberOfScratches--; 
+                        numberOfScratches--;
                     }
                     determineSelectedTrick();//perform trick
                 }
@@ -55,7 +56,7 @@ namespace ToonTown_Rewritten_Bot
                         feedDoodle();
                     else if (justScratchCheckBox)//just scratch is checked
                         scratchDoodle();
-                    else if(!justFeedCheckBox && !justScratchCheckBox)//neither are checked, so do both
+                    else if (!justFeedCheckBox && !justScratchCheckBox)//neither are checked, so do both
                     {
                         feedDoodle();
                         scratchDoodle();
@@ -72,7 +73,7 @@ namespace ToonTown_Rewritten_Bot
             switch (selectedTrick)
             {
                 case "Jump (5 - 10 laff)":
-                    for(int i = 0; i < 2; i++)//attempt trick 2 times incase doodle gets confused
+                    for (int i = 0; i < 2; i++)//attempt trick 2 times incase doodle gets confused
                     {
                         openSpeedChat();
                         trainJump();
@@ -340,7 +341,7 @@ namespace ToonTown_Rewritten_Bot
         }
 
         private static int x, y;
-        private static void getCoords(String item)
+        private static void getCoords(string item)
         {
             int[] coordinates = BotFunctions.getCoordinates(item);
             x = coordinates[0];
