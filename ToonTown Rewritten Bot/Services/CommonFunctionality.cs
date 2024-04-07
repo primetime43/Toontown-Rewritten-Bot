@@ -1,18 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using static ToonTown_Rewritten_Bot.Utilities.ImageRecognition;
 
-namespace ToonTown_Rewritten_Bot.Views
+namespace ToonTown_Rewritten_Bot.Services
 {
-    class BotFunctions : AdvancedSettings
+    public class CommonFunctionality
     {
         //eventually clean up repetative code
 
         public static bool isAutoDetectFishingBtnActive = true;
+        public static Dictionary<string, string> _dataFileMap = BotFunctions.GetDataFileMap();
+
+        public (int x, int y) GetCoords(string item)
+        {
+            int[] coordinates = CommonFunctionality.getCoordinates(item);
+            return (coordinates[0], coordinates[1]);
+        }
 
         public static void DoMouseClick()
         {
@@ -148,12 +160,40 @@ namespace ToonTown_Rewritten_Bot.Views
             }
         }
 
-        public static void manualUpdateCoordinates(string locationToUpdate)
+        /// <summary>
+        /// Brings the Toontown Rewritten Bot window to the foreground.
+        /// </summary>
+        /// <remarks>
+        /// This function searches for the bot window by its title and, if found, brings it to the front of all other windows. 
+        /// This is useful for ensuring the bot's window is visible, especially when displaying messages or prompts that require user attention.
+        /// </remarks>
+        public static void BringBotWindowToFront()
         {
+            // Get the current process
+            Process currentProcess = Process.GetCurrentProcess();
+
+            // Use the main window title of the current process
+            string windowTitle = currentProcess.MainWindowTitle;
+
+            // Attempt to find the window by its title
+            IntPtr hWnd = NativeMethods.FindWindow(null, windowTitle);
+            // If a handle was found, attempt to bring the window to the front
+            if (hWnd != IntPtr.Zero)
+            {
+                NativeMethods.SetForegroundWindow(hWnd);
+            }
+        }
+
+        public async Task ManualUpdateCoordinates(string locationToUpdate)
+        {
+            BringBotWindowToFront();
+
             UpdateCoordsHelper updateCoordsWindow = new UpdateCoordsHelper();
             try
             {
-                updateCoordsWindow.startCountDown(Form1.dataFileMap[locationToUpdate]);
+                updateCoordsWindow.startCountDown(_dataFileMap[locationToUpdate]);
+                // Set the window to be topmost to ensure it appears above other applications.
+                updateCoordsWindow.TopMost = true;
                 updateCoordsWindow.ShowDialog();
             }
             catch
@@ -176,9 +216,10 @@ namespace ToonTown_Rewritten_Bot.Views
                     }
                 }
             }
+            maximizeAndFocus();
         }
 
-        public static void manuallyUpdateCoordinatesNoUI(string locationToUpdate, Point coodinates)
+        public static void ManuallyUpdateCoordinatesNoUI(string locationToUpdate, Point coodinates)
         {
             string[] lines = File.ReadAllLines(Path.GetFullPath("Coordinates Data File.txt"));
             for (int i = 0; i < lines.Length; i++)
@@ -218,7 +259,7 @@ namespace ToonTown_Rewritten_Bot.Views
             return null;
         }
 
-        public static bool checkCoordinates(string checkCoords)
+        public static bool CheckCoordinates(string checkCoords)
         {
             string filePath = "Coordinates Data File.txt";
             if (!File.Exists(filePath))
@@ -260,7 +301,7 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 // Read the existing file and overwrite with default coordinates
                 string[] lines = File.ReadAllLines(filePath);
-                for (int i = 0; i < Form1.dataFileMap.Count; i++)
+                for (int i = 0; i < _dataFileMap.Count; i++)
                 {
                     lines[i] = $"{i}.(0,0)";
                 }
@@ -277,7 +318,7 @@ namespace ToonTown_Rewritten_Bot.Views
             // Create the file and write the default coordinates
             using (StreamWriter sw = File.CreateText(filePath))
             {
-                for (int i = 1; i <= Form1.dataFileMap.Count; i++)
+                for (int i = 1; i <= _dataFileMap.Count; i++)
                 {
                     sw.WriteLine($"{i}.(0,0)");
                 }
