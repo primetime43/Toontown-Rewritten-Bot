@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Properties;
 using ToonTown_Rewritten_Bot.Services;
@@ -22,15 +23,15 @@ namespace ToonTown_Rewritten_Bot
         {
             //isTTRRunning();
             InitializeComponent();
-            BotFunctions.readTextFile();
-            createDataFileMap();
+            CommonFunctionality.readTextFile();
+            BotFunctions.CreateDataFileMap();
             loadCoordsIntoResetBox();
         }
 
         //important functions for bot
         private void startSpamButton_Click(object sender, EventArgs e)//spam message on screen
         {//if the user presses ALT key, it will break the loop
-            bool loopBroken = Utilities.Misc.sendMessage(messageToType.Text, Convert.ToInt32(numericUpDown2.Value), checkBox1.Checked, numericUpDown2);
+            bool loopBroken = BotFunctions.sendMessage(messageToType.Text, Convert.ToInt32(numericUpDown2.Value), checkBox1.Checked, numericUpDown2);
         }
 
         private int timeLeft;
@@ -40,7 +41,7 @@ namespace ToonTown_Rewritten_Bot
             MessageBox.Show("Press OK when ready to begin!");
             Thread.Sleep(2000);
             timer1.Start();
-            bool loopBroken = Utilities.Misc.keepToonAwake(Convert.ToInt32(numericUpDown1.Value));
+            bool loopBroken = BotFunctions.keepToonAwake(Convert.ToInt32(numericUpDown1.Value));
             if (loopBroken)
             {
                 timer1.Stop();
@@ -89,46 +90,7 @@ namespace ToonTown_Rewritten_Bot
                 if (confirmation.Equals(DialogResult.Cancel))
                     Environment.Exit(0);
             }
-            BotFunctions.maximizeAndFocus();
-        }
-
-        public static Dictionary<string, string> dataFileMap = new Dictionary<string, string>();
-        private void createDataFileMap()
-        {
-            //Gardening Coords
-            dataFileMap.Add("1", "Plant Flower/Remove Button");
-            dataFileMap.Add("2", "Red Jellybean Button");
-            dataFileMap.Add("3", "Green Jellybean Button");
-            dataFileMap.Add("4", "Orange Jellybean Button");
-            dataFileMap.Add("5", "Purple Jellybean Button");
-            dataFileMap.Add("6", "Blue Jellybean Button");
-            dataFileMap.Add("7", "Pink Jellybean Button");
-            dataFileMap.Add("8", "Yellow Jellybean Button");
-            dataFileMap.Add("9", "Cyan Jellybean Button");
-            dataFileMap.Add("10", "Silver Jellybean Button");
-            dataFileMap.Add("11", "Blue Plant Button");
-            dataFileMap.Add("12", "Blue Ok Button");
-            dataFileMap.Add("13", "Watering Can Button");
-            dataFileMap.Add("14", "Blue Yes Button");
-            //Fishing Coords
-            dataFileMap.Add("15", "Red Fishing Button");
-            dataFileMap.Add("16", "Exit Fishing Button");
-            dataFileMap.Add("17", "Blue Sell All Button");
-            //Racing Coords
-            //Doodle Training Coords
-            dataFileMap.Add("18", "Feed Doodle Button");
-            dataFileMap.Add("19", "Scratch Doodle Button");
-            dataFileMap.Add("20", "Green SpeedChat Button");
-            dataFileMap.Add("21", "Pets Tab in SpeedChat");
-            dataFileMap.Add("22", "Tricks Tab in SpeedChat");
-            dataFileMap.Add("23", "Jump Trick Option in SpeedChat");
-            dataFileMap.Add("24", "Beg Trick Option in SpeedChat");
-            dataFileMap.Add("25", "Play Dead Trick Option in SpeedChat");
-            dataFileMap.Add("26", "Rollover Trick Option in SpeedChat");
-            dataFileMap.Add("27", "Backflip Trick Option in SpeedChat");
-            dataFileMap.Add("28", "Dance Trick Option in SpeedChat");
-            dataFileMap.Add("29", "Speak Trick Option in SpeedChat");
-
+            CommonFunctionality.maximizeAndFocus();
         }
 
         /*private void button4_Click(object sender, EventArgs e)
@@ -152,25 +114,52 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private Gardening gardeningService = new Gardening();
+        private async void button2_Click(object sender, EventArgs e)
         {
-            Services.Gardening.waterPlant();
+            try
+            {
+                await gardeningService.WaterPlantAsync(cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                MessageBox.Show("Watering was canceled.");
+            }
+            catch (Exception ex)
+            {
+                // General error handling
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private async void button3_Click(object sender, EventArgs e)
         {
-            Services.Gardening.removePlant();
+            try
+            {
+                // Assuming RemovePlantAsync is an instance method requiring a CancellationToken.
+                await gardeningService.RemovePlantAsync(cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                MessageBox.Show("Removing plant was canceled.");
+            }
+            catch (Exception ex)
+            {
+                // General error handling
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            BotFunctions.createFreshCoordinatesFile();
+            CommonFunctionality.createFreshCoordinatesFile();
             MessageBox.Show("All coordinates reset!");
         }
 
         private void loadCoordsIntoResetBox()
         {
             comboBox1.Items.Clear();
+            var dataFileMap = BotFunctions.GetDataFileMap();
             words = new String[dataFileMap.Count];
             for (int i = 0; i < dataFileMap.Count; i++)
             {
@@ -180,7 +169,8 @@ namespace ToonTown_Rewritten_Bot
         }
 
         private static String[] words;
-        private void button6_Click(object sender, EventArgs e)
+        private CommonFunctionality commonService = new CommonFunctionality();
+        private async void button6_Click(object sender, EventArgs e)
         {
             string selected = (string)comboBox1.SelectedItem;
             try
@@ -188,7 +178,7 @@ namespace ToonTown_Rewritten_Bot
                 for (int i = 0; i < words.Length; i++)
                 {
                     if (words[i].Equals(selected))
-                        BotFunctions.manualUpdateCoordinates(Convert.ToString(i + 1));
+                        await commonService.ManualUpdateCoordinates(Convert.ToString(i + 1));
                 }
             }
             catch
@@ -198,14 +188,26 @@ namespace ToonTown_Rewritten_Bot
             MessageBox.Show("Coordinate's updated for " + selected);
         }
 
-        private void startFishing_Click(object sender, EventArgs e)//button to start fishing
+        private CancellationTokenSource cancellationTokenSource;
+        private FishingService _fishingService = new FishingService();
+        private async void startFishing_Click(object sender, EventArgs e)//button to start fishing
         {
-            string selected = (string)comboBox3.SelectedItem;//fishing location
-            int numberOfCasts = Convert.ToInt32(numericUpDown3.Value);//number of casts
-            int numberOfSells = Convert.ToInt32(numericUpDown4.Value);//number of sells
-            BotFunctions.tellFishingLocation(selected);//tell the bot what location were fishing at to provide instructions
-            MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
-            startFishingThread(selected, numberOfCasts, numberOfSells, false);//begin fishing
+            cancellationTokenSource = new CancellationTokenSource();
+            var token = cancellationTokenSource.Token;
+
+            try
+            {
+                string selectedLocation = (string)comboBox3.SelectedItem;//fishing location
+                int numberOfCasts = Convert.ToInt32(numericUpDown3.Value);//number of casts
+                int numberOfSells = Convert.ToInt32(numericUpDown4.Value);//number of sells
+                CommonFunctionality.tellFishingLocation(selectedLocation);//tell the bot what location were fishing at to provide instructions
+                MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
+                await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, fishVariance, token);
+            }
+            catch (TaskCanceledException)
+            {
+                MessageBox.Show("Fishing was cancelled.");
+            }
         }
 
         private void randomFishing_CheckedChanged(object sender, EventArgs e)
@@ -213,50 +215,48 @@ namespace ToonTown_Rewritten_Bot
             if (randomFishing.Checked)
             {
                 MessageBox.Show("This will add randomness to the line casting!");
-                fishVariance = true;
+                this.fishVariance = true;
             }
             else
             {
-                fishVariance = false;
-            }
-        }
-
-        Thread fishingThreading;
-        public void startFishingThread(string selected, int numberOfCasts, int numberOfSells, bool stopCheck)//fishing location, num of casts, num of sells, check if the user clicked stop button
-        {
-            if (!stopCheck)
-            {
-                fishingThreading = new Thread(() => Views.Fishing.startFishing(selected, numberOfCasts, numberOfSells, fishVariance));
-                fishingThreading.Start();
+                this.fishVariance = false;
             }
         }
 
         private void button4_Click(object sender, EventArgs e)//button to stop fishing
         {
-            Views.Fishing.shouldStopFishing = true;
-            MessageBox.Show("Fishing stopped!");
+            // Check if the operation is already canceled or not started
+    if (cancellationTokenSource == null || cancellationTokenSource.IsCancellationRequested)
+    {
+        MessageBox.Show("Fishing is not currently in progress.");
+        return;
+    }
+
+    // Signal the cancellation
+    cancellationTokenSource.Cancel();
+    MessageBox.Show("Fishing stopped!");
         }
 
         private void smartFishing_CheckedChanged(object sender, EventArgs e)
         {
             if (smartFishing.Checked)
-                BotFunctions.isAutoDetectFishingBtnActive = true;
+                CommonFunctionality.isAutoDetectFishingBtnActive = true;
             else
-                BotFunctions.isAutoDetectFishingBtnActive = false;
+                CommonFunctionality.isAutoDetectFishingBtnActive = false;
         }
 
         private async void button5_Click(object sender, EventArgs e)//racing test
         {
             MessageBox.Show("Press OK when ready to begin!");
             Thread.Sleep(5000);
-            Point test = BotFunctions.getCursorLocation();
-            BotFunctions.GetColorAt(test.X, test.Y);
-            string hexColor = BotFunctions.HexConverter(BotFunctions.GetColorAt(test.X, test.Y));
+            Point test = CommonFunctionality.getCursorLocation();
+            CommonFunctionality.GetColorAt(test.X, test.Y);
+            string hexColor = CommonFunctionality.HexConverter(CommonFunctionality.GetColorAt(test.X, test.Y));
             //Debug.WriteLine("HEX: " + BotFunctions.HexConverter(BotFunctions.GetColorAt(test.X, test.Y)) + " RGB: " + BotFunctions.GetColorAt(test.X, test.Y));
-            Debug.WriteLine("HEX: " + BotFunctions.HexConverter(BotFunctions.GetColorAt(test.X, test.Y)) + " RGB: " + BotFunctions.GetColorAt(test.X, test.Y));
+            Debug.WriteLine("HEX: " + CommonFunctionality.HexConverter(CommonFunctionality.GetColorAt(test.X, test.Y)) + " RGB: " + CommonFunctionality.GetColorAt(test.X, test.Y));
             MessageBox.Show("Done");
 
-            BotFunctions.maximizeAndFocus();
+            CommonFunctionality.maximizeAndFocus();
 
             Image screenshot = ImageRecognition.GetWindowScreenshot();
             /*PictureBox pictureBox = new PictureBox();
@@ -411,11 +411,11 @@ namespace ToonTown_Rewritten_Bot
         Thread doodleTrainingThreading;
         public void startDoodleTrainingThread(int numberOfFeeds, int numberOfScratches, bool checkBoxChecked, bool stopTrainingClicked, string selectedTrick)
         {
-            if (!stopTrainingClicked)
+            /*if (!stopTrainingClicked)
             {
                 doodleTrainingThreading = new Thread(() => DoodleTraining.startTrainingDoodle(numberOfFeeds, numberOfScratches, checkBox3.Checked, selectedTrick, checkBox4.Checked, checkBox5.Checked));
                 doodleTrainingThreading.Start();
-            }
+            }*/
         }
 
         private void button19_Click(object sender, EventArgs e)

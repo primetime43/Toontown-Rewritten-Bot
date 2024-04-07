@@ -61,6 +61,7 @@
             comboBox2 = new System.Windows.Forms.ComboBox();
             button1 = new System.Windows.Forms.Button();
             Golf = new System.Windows.Forms.TabPage();
+            golfNoteLbl = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             Near_Hole = new System.Windows.Forms.GroupBox();
             One_Little_Birdie = new System.Windows.Forms.Button();
@@ -112,7 +113,7 @@
             button7 = new System.Windows.Forms.Button();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
             timer1 = new System.Windows.Forms.Timer(components);
-            golfNoteLbl = new System.Windows.Forms.Label();
+            label12 = new System.Windows.Forms.Label();
             tabControl1.SuspendLayout();
             Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -234,6 +235,7 @@
             // 
             // Fishing
             // 
+            Fishing.Controls.Add(label12);
             Fishing.Controls.Add(groupBox6);
             Fishing.Location = new System.Drawing.Point(4, 25);
             Fishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -522,6 +524,14 @@
             Golf.TabIndex = 6;
             Golf.Text = "Golf";
             Golf.UseVisualStyleBackColor = true;
+            // 
+            // golfNoteLbl
+            // 
+            golfNoteLbl.Location = new System.Drawing.Point(364, 3);
+            golfNoteLbl.Name = "golfNoteLbl";
+            golfNoteLbl.Size = new System.Drawing.Size(182, 134);
+            golfNoteLbl.TabIndex = 17;
+            golfNoteLbl.Text = "Do not click a button until after the changing tee spot.\r\nClick a button once it gives you the option to press control to swing";
             // 
             // label2
             // 
@@ -1034,7 +1044,6 @@
             groupBox9.TabIndex = 8;
             groupBox9.TabStop = false;
             groupBox9.Text = "Image Rec";
-            groupBox9.Visible = false;
             // 
             // label11
             // 
@@ -1137,13 +1146,14 @@
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
-            // golfNoteLbl
+            // label12
             // 
-            golfNoteLbl.Location = new System.Drawing.Point(364, 3);
-            golfNoteLbl.Name = "golfNoteLbl";
-            golfNoteLbl.Size = new System.Drawing.Size(182, 134);
-            golfNoteLbl.TabIndex = 17;
-            golfNoteLbl.Text = "Do not click a button until after the changing tee spot.\r\nClick a button once it gives you the option to press control to swing";
+            label12.AutoSize = true;
+            label12.Location = new System.Drawing.Point(104, 240);
+            label12.Name = "label12";
+            label12.Size = new System.Drawing.Size(51, 16);
+            label12.TabIndex = 9;
+            label12.Text = "label12";
             // 
             // Form1
             // 
@@ -1160,6 +1170,7 @@
             Main.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             Fishing.ResumeLayout(false);
+            Fishing.PerformLayout();
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown4).EndInit();
@@ -1279,6 +1290,7 @@
         private System.Windows.Forms.Button resetImagesBtn;
         public System.Windows.Forms.CheckBox smartFishing;
         private System.Windows.Forms.Label golfNoteLbl;
+        private System.Windows.Forms.Label label12;
     }
 }
 

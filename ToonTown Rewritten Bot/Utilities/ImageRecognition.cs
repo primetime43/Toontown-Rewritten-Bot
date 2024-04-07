@@ -104,6 +104,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             [DllImport("user32.dll", SetLastError = true)]
             public static extern bool GetWindowRect(nint hWnd, ref Rect lpRect);
+
+            [DllImport("user32.dll")]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool SetForegroundWindow(IntPtr hWnd);
         }
         #endregion
     }

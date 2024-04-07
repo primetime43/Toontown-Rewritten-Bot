@@ -21,7 +21,7 @@
     <Compile Update="Views\AdvancedSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\BotFunctions.cs">
+    <Compile Update="Views\AdvancedTemp.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Views\DevForm.cs">
@@ -42,7 +42,7 @@
     <Compile Update="Views\UpdateCoordsHelper.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\updateImages.cs">
+    <Compile Update="Views\UpdateImages.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

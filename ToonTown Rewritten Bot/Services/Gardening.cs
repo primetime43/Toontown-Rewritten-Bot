@@ -1,194 +1,175 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Views;
 
 namespace ToonTown_Rewritten_Bot.Services
 {
-    class Gardening
+    public class Gardening : CommonFunctionality
     {
-        private static int x, y;
-        public static void plantFlower(string flowerCombo)
+        public async Task PlantFlowerAsync(string flowerCombo, CancellationToken cancellationToken)
         {
-            DialogResult confirmation;
-            //check if plant button is (0,0). True means continue, not (0,0)
-            if (BotFunctions.checkCoordinates("1"))
+            // Assume ManualUpdateCoordinatesAsync is an async version of ManualUpdateCoordinates
+            if (!CheckCoordinates("1"))
             {
-                confirmation = MessageBox.Show("Press OK when ready to begin!", "", MessageBoxButtons.OKCancel);
-                if (confirmation.Equals(DialogResult.Cancel))
-                    return;
-                Thread.Sleep(2000);
-                getCoords("1");
-                BotFunctions.MoveCursor(x, y);
-                BotFunctions.DoMouseClick();
-                Thread.Sleep(2000);
-                checkBeans("2");
+                await ManualUpdateCoordinates("1");
+                if (!CheckCoordinates("1")) return;
+            }
 
-                char[] beans = flowerCombo.ToCharArray();
-                selectBeans(flowerCombo, beans);
-                pressPlantButton();
-                Thread.Sleep(1500);
-                MessageBox.Show("Done!");
-            }
-            else
+            var confirmation = MessageBox.Show("Press OK when ready to begin!", "", MessageBoxButtons.OKCancel);
+            if (confirmation == DialogResult.Cancel) return;
+
+            await Task.Delay(2000, cancellationToken);
+
+            var (x, y) = GetCoords("1");
+            MoveCursor(x, y);
+            DoMouseClick();
+            await Task.Delay(2000, cancellationToken);
+
+            await CheckBeansAsync("2", cancellationToken);
+
+            char[] beans = flowerCombo.ToCharArray();
+            foreach (var bean in beans)
             {
-                BotFunctions.manualUpdateCoordinates("1");//update the plant flower button coords
-                plantFlower(flowerCombo);
-                Thread.Sleep(2000);
+                await SelectBeanAsync(bean, cancellationToken);
             }
+            await PressPlantButtonAsync(cancellationToken);
+            MessageBox.Show("Done!");
         }
 
-        private static void selectBeans(string flowerCombo, char[] beans)
+        private async Task SelectBeanAsync(char beanType, CancellationToken cancellationToken)
         {
-            for (int i = 0; i < flowerCombo.Length; i++)
+            string location = beanType switch
             {
-                switch (beans[i])
-                {
-                    case 'r':
-                        getCoords("2");
-                        break;
-                    case 'g':
-                        getCoords("3");
-                        break;
-                    case 'o':
-                        getCoords("4");
-                        break;
-                    case 'u':
-                        getCoords("5");
-                        break;
-                    case 'b':
-                        getCoords("6");
-                        break;
-                    case 'i':
-                        getCoords("7");
-                        break;
-                    case 'y':
-                        getCoords("8");
-                        break;
-                    case 'c':
-                        getCoords("9");
-                        break;
-                    case 's':
-                        getCoords("10");
-                        break;
-                }
-                BotFunctions.MoveCursor(x, y);
-                BotFunctions.DoMouseClick();
-                Thread.Sleep(2000);
+                'r' => "2",  // Red Jellybean
+                'g' => "3",  // Green Jellybean
+                'o' => "4",  // Orange Jellybean
+                'u' => "5",  // Purple Jellybean, assuming 'u' is for 'purple'
+                'b' => "6",  // Blue Jellybean
+                'i' => "7",  // Pink Jellybean, assuming 'i' is for 'pink'
+                'y' => "8",  // Yellow Jellybean
+                'c' => "9",  // Cyan Jellybean
+                's' => "10", // Silver Jellybean
+                _ => throw new ArgumentException("Invalid bean type", nameof(beanType)),
+            };
+
+            if (!CheckCoordinates(location))
+            {
+                await ManualUpdateCoordinates(location);
+                if (!CheckCoordinates(location)) return; // Ensure coordinates are set after update.
             }
+            var (x, y) = GetCoords(location);
+            MoveCursor(x, y);
+            DoMouseClick();
+            await Task.Delay(2000, cancellationToken);
         }
 
-        private static void checkBeans(string location)
+        private async Task CheckBeansAsync(string location, CancellationToken cancellationToken)
         {
             if (Convert.ToInt32(location) <= 10)
             {
-                if (!BotFunctions.checkCoordinates(location))//if they're 0,0
+                if (!CommonFunctionality.CheckCoordinates(location))//if they're 0,0
                 {
-                    BotFunctions.manualUpdateCoordinates(location);
-                    checkBeans(Convert.ToString(Convert.ToInt32(location) + 1));
+                    await ManualUpdateCoordinates(location);
+                    await CheckBeansAsync(Convert.ToString(Convert.ToInt32(location) + 1), cancellationToken);
                 }
                 else
-                    checkBeans(Convert.ToString(Convert.ToInt32(location) + 1));
+                    await CheckBeansAsync(Convert.ToString(Convert.ToInt32(location) + 1), cancellationToken);
             }
         }
 
-        private static void pressPlantButton()
+        private async Task PressPlantButtonAsync(CancellationToken cancellationToken)
         {
-            if (BotFunctions.checkCoordinates("11"))
+            if (CommonFunctionality.CheckCoordinates("11"))
             {
-                getCoords("11");
-                BotFunctions.MoveCursor(x, y);
-                BotFunctions.DoMouseClick();
+                var (x, y) = GetCoords("11");
+                MoveCursor(x, y);
+                DoMouseClick();
                 Thread.Sleep(8000);
-                clickOKAfterPlant();
-                waterPlant();
+                await ClickOKAfterPlantAsync(cancellationToken);
+                await WaterPlantAsync(cancellationToken);
             }
             else
             {
-                BotFunctions.manualUpdateCoordinates("11");
+                await ManualUpdateCoordinates("11");
                 Thread.Sleep(2000);
-                pressPlantButton();
+                await PressPlantButtonAsync(cancellationToken);
             }
         }
 
-        private static void clickOKAfterPlant()
+        private async Task ClickOKAfterPlantAsync(CancellationToken cancellationToken)
         {
-            if (BotFunctions.checkCoordinates("12"))
+            if (CommonFunctionality.CheckCoordinates("12"))
             {
-                getCoords("12");
-                BotFunctions.MoveCursor(x, y);
-                BotFunctions.DoMouseClick();
+                var (x, y) = GetCoords("12");
+                CommonFunctionality.MoveCursor(x, y);
+                CommonFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else
             {
-                BotFunctions.manualUpdateCoordinates("12");
+                await ManualUpdateCoordinates("12");
                 Thread.Sleep(2000);
-                clickOKAfterPlant();
+                await ClickOKAfterPlantAsync(cancellationToken);
             }
         }
 
-        public static void waterPlant()
+        public async Task WaterPlantAsync(CancellationToken cancellationToken)
         {
-            if (BotFunctions.checkCoordinates("13"))
+            if (CommonFunctionality.CheckCoordinates("13"))
             {
-                getCoords("13");
-                BotFunctions.MoveCursor(x, y);
-                BotFunctions.DoMouseClick();
+                var (x, y) = GetCoords("13");
+                CommonFunctionality.MoveCursor(x, y);
+                CommonFunctionality.DoMouseClick();
                 Thread.Sleep(4000);
-                BotFunctions.MoveCursor(x, y);
-                BotFunctions.DoMouseClick();
+                CommonFunctionality.MoveCursor(x, y);
+                CommonFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else
             {
-                BotFunctions.manualUpdateCoordinates("13");
+                await ManualUpdateCoordinates("13");
                 Thread.Sleep(2000);
-                waterPlant();
+                await WaterPlantAsync(cancellationToken);
             }
         }
 
-        public static void removePlant()
+        public async Task RemovePlantAsync(CancellationToken cancellationToken)
         {
-            if (BotFunctions.checkCoordinates("1"))
+            if (CommonFunctionality.CheckCoordinates("1"))
             {
-                getCoords("1");
+                var (x, y) = GetCoords("1");
                 MessageBox.Show("Press OK when ready to begin!");
                 Thread.Sleep(2000);
-                BotFunctions.MoveCursor(x, y);
-                BotFunctions.DoMouseClick();
-                selectYESToRemove();
+                CommonFunctionality.MoveCursor(x, y);
+                CommonFunctionality.DoMouseClick();
+                await SelectYESToRemoveAsync(cancellationToken);
             }
             else
             {
-                BotFunctions.manualUpdateCoordinates("1");//update the plant flower button coords
-                removePlant();
+                await ManualUpdateCoordinates("1");//update the plant flower button coords
+                await RemovePlantAsync(cancellationToken);
                 Thread.Sleep(2000);
             }
 
         }
 
-        private static void selectYESToRemove()
+        private async Task SelectYESToRemoveAsync(CancellationToken cancellationToken)
         {
-            if (BotFunctions.checkCoordinates("14"))
+            if (CommonFunctionality.CheckCoordinates("14"))
             {
-                getCoords("14");
-                BotFunctions.MoveCursor(x, y);
-                BotFunctions.DoMouseClick();
+                var (x, y) = GetCoords("14");
+                CommonFunctionality.MoveCursor(x, y);
+                CommonFunctionality.DoMouseClick();
             }
             else
             {
-                BotFunctions.manualUpdateCoordinates("14");//update the plant flower button coords
-                selectYESToRemove();
+                await ManualUpdateCoordinates("14");//update the plant flower button coords
+                await SelectYESToRemoveAsync(cancellationToken);
                 Thread.Sleep(2000);
             }
-        }
-
-        private static void getCoords(string item)
-        {
-            int[] coordinates = BotFunctions.getCoordinates(item);
-            x = coordinates[0];
-            y = coordinates[1];
         }
     }
 }
