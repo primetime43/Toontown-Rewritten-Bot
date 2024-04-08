@@ -50,7 +50,7 @@ namespace ToonTown_Rewritten_Bot.Services
         }
         private static void send(string text)
         {
-            CommonFunctionality.DoMouseClick();
+            CoreFunctionality.DoMouseClick();
             Thread.Sleep(500);
             InputSimulator.SimulateTextEntry(text);
             Thread.Sleep(500);
@@ -60,7 +60,7 @@ namespace ToonTown_Rewritten_Bot.Services
         public static bool keepToonAwake(int min)
         {
             DateTime endTime = DateTime.Now.AddMinutes(min);
-            CommonFunctionality.DoMouseClick();
+            CoreFunctionality.DoMouseClick();
             while (endTime > DateTime.Now)
             {
                 SendKeys.SendWait("^");
@@ -75,7 +75,7 @@ namespace ToonTown_Rewritten_Bot.Services
             return _dataFileMap;
         }
 
-        public static void CreateDataFileMap()
+        public static void CreateItemsDataFileMap()
         {
             //Gardening Coords
             _dataFileMap.Add(((int)Coordinates.GardeningCoordinatesEnum.PlantFlowerRemoveButton).ToString(), "Plant Flower/Remove Button");

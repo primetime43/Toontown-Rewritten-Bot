@@ -7,7 +7,7 @@ using ToonTown_Rewritten_Bot.Views;
 
 namespace ToonTown_Rewritten_Bot.Services
 {
-    public class Gardening : CommonFunctionality
+    public class Gardening : CoreFunctionality
     {
         public async Task PlantFlowerAsync(string flowerCombo, CancellationToken cancellationToken)
         {
@@ -23,7 +23,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
             await Task.Delay(2000, cancellationToken);
 
-            var (x, y) = GetCoords("1");
+            var (x, y) = GetCoordsFromMap("1");
             MoveCursor(x, y);
             DoMouseClick();
             await Task.Delay(2000, cancellationToken);
@@ -60,7 +60,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 await ManualUpdateCoordinates(location);
                 if (!CheckCoordinates(location)) return; // Ensure coordinates are set after update.
             }
-            var (x, y) = GetCoords(location);
+            var (x, y) = GetCoordsFromMap(location);
             MoveCursor(x, y);
             DoMouseClick();
             await Task.Delay(2000, cancellationToken);
@@ -70,7 +70,7 @@ namespace ToonTown_Rewritten_Bot.Services
         {
             if (Convert.ToInt32(location) <= 10)
             {
-                if (!CommonFunctionality.CheckCoordinates(location))//if they're 0,0
+                if (!CoreFunctionality.CheckCoordinates(location))//if they're 0,0
                 {
                     await ManualUpdateCoordinates(location);
                     await CheckBeansAsync(Convert.ToString(Convert.ToInt32(location) + 1), cancellationToken);
@@ -82,9 +82,9 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private async Task PressPlantButtonAsync(CancellationToken cancellationToken)
         {
-            if (CommonFunctionality.CheckCoordinates("11"))
+            if (CoreFunctionality.CheckCoordinates("11"))
             {
-                var (x, y) = GetCoords("11");
+                var (x, y) = GetCoordsFromMap("11");
                 MoveCursor(x, y);
                 DoMouseClick();
                 Thread.Sleep(8000);
@@ -101,11 +101,11 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private async Task ClickOKAfterPlantAsync(CancellationToken cancellationToken)
         {
-            if (CommonFunctionality.CheckCoordinates("12"))
+            if (CoreFunctionality.CheckCoordinates("12"))
             {
-                var (x, y) = GetCoords("12");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("12");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else
@@ -118,14 +118,14 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public async Task WaterPlantAsync(CancellationToken cancellationToken)
         {
-            if (CommonFunctionality.CheckCoordinates("13"))
+            if (CoreFunctionality.CheckCoordinates("13"))
             {
-                var (x, y) = GetCoords("13");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("13");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(4000);
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else
@@ -138,13 +138,13 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public async Task RemovePlantAsync(CancellationToken cancellationToken)
         {
-            if (CommonFunctionality.CheckCoordinates("1"))
+            if (CoreFunctionality.CheckCoordinates("1"))
             {
-                var (x, y) = GetCoords("1");
+                var (x, y) = GetCoordsFromMap("1");
                 MessageBox.Show("Press OK when ready to begin!");
                 Thread.Sleep(2000);
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 await SelectYESToRemoveAsync(cancellationToken);
             }
             else
@@ -158,11 +158,11 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private async Task SelectYESToRemoveAsync(CancellationToken cancellationToken)
         {
-            if (CommonFunctionality.CheckCoordinates("14"))
+            if (CoreFunctionality.CheckCoordinates("14"))
             {
-                var (x, y) = GetCoords("14");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("14");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
             }
             else
             {

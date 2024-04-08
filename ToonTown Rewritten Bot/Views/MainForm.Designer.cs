@@ -1,6 +1,6 @@
 ﻿namespace ToonTown_Rewritten_Bot
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             tabControl1 = new System.Windows.Forms.TabControl();
             Main = new System.Windows.Forms.TabPage();
             label8 = new System.Windows.Forms.Label();
@@ -38,6 +38,8 @@
             label7 = new System.Windows.Forms.Label();
             pictureBox1 = new System.Windows.Forms.PictureBox();
             Fishing = new System.Windows.Forms.TabPage();
+            button21 = new System.Windows.Forms.Button();
+            label12 = new System.Windows.Forms.Label();
             groupBox6 = new System.Windows.Forms.GroupBox();
             button4 = new System.Windows.Forms.Button();
             randomFishing = new System.Windows.Forms.CheckBox();
@@ -47,7 +49,7 @@
             label3 = new System.Windows.Forms.Label();
             numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             startFishing = new System.Windows.Forms.Button();
-            comboBox3 = new System.Windows.Forms.ComboBox();
+            fishingLocationscomboBox = new System.Windows.Forms.ComboBox();
             Racing = new System.Windows.Forms.TabPage();
             label6 = new System.Windows.Forms.Label();
             richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -113,7 +115,6 @@
             button7 = new System.Windows.Forms.Button();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
             timer1 = new System.Windows.Forms.Timer(components);
-            label12 = new System.Windows.Forms.Label();
             tabControl1.SuspendLayout();
             Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -155,7 +156,7 @@
             tabControl1.Controls.Add(Misc);
             tabControl1.Controls.Add(Dev);
             tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             tabControl1.Location = new System.Drawing.Point(0, 0);
             tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabControl1.Name = "tabControl1";
@@ -235,6 +236,7 @@
             // 
             // Fishing
             // 
+            Fishing.Controls.Add(button21);
             Fishing.Controls.Add(label12);
             Fishing.Controls.Add(groupBox6);
             Fishing.Location = new System.Drawing.Point(4, 25);
@@ -246,6 +248,27 @@
             Fishing.Text = "Fishing";
             Fishing.UseVisualStyleBackColor = true;
             // 
+            // button21
+            // 
+            button21.Location = new System.Drawing.Point(401, 12);
+            button21.Name = "button21";
+            button21.Size = new System.Drawing.Size(137, 43);
+            button21.TabIndex = 10;
+            button21.Text = "Build Custom Fishing Action";
+            toolTip1.SetToolTip(button21, "This will allow you to build custom fishing actions\r\nfor walking from the fishing dock to the fisherman\r\n to sell and back to the fishing dock");
+            button21.UseVisualStyleBackColor = true;
+            button21.Click += button21_Click;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new System.Drawing.Point(16, 222);
+            label12.Name = "label12";
+            label12.Size = new System.Drawing.Size(51, 16);
+            label12.TabIndex = 9;
+            label12.Text = "label12";
+            label12.Visible = false;
+            // 
             // groupBox6
             // 
             groupBox6.Controls.Add(button4);
@@ -256,7 +279,7 @@
             groupBox6.Controls.Add(label3);
             groupBox6.Controls.Add(numericUpDown3);
             groupBox6.Controls.Add(startFishing);
-            groupBox6.Controls.Add(comboBox3);
+            groupBox6.Controls.Add(fishingLocationscomboBox);
             groupBox6.Location = new System.Drawing.Point(9, 7);
             groupBox6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox6.Name = "groupBox6";
@@ -360,16 +383,17 @@
             startFishing.UseVisualStyleBackColor = true;
             startFishing.Click += startFishing_Click;
             // 
-            // comboBox3
+            // fishingLocationscomboBox
             // 
-            comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            comboBox3.Items.AddRange(new object[] { "TOONTOWN CENTRAL PUNCHLINE PLACE", "DONALD DREAM LAND LULLABY LANE", "BRRRGH POLAR PLACE", "BRRRGH WALRUS WAY", "BRRRGH SLEET STREET", "MINNIE'S MELODYLAND TENOR TERRACE", "DONALD DOCK LIGHTHOUSE LANE", "DAISY'S GARDEN ELM STREET", "FISH ANYWHERE" });
-            comboBox3.Location = new System.Drawing.Point(7, 24);
-            comboBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            comboBox3.Name = "comboBox3";
-            comboBox3.Size = new System.Drawing.Size(370, 24);
-            comboBox3.TabIndex = 1;
-            toolTip1.SetToolTip(comboBox3, "Select the location you wish to fish at");
+            fishingLocationscomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            fishingLocationscomboBox.Items.AddRange(new object[] { "TOONTOWN CENTRAL PUNCHLINE PLACE", "DONALD DREAM LAND LULLABY LANE", "BRRRGH POLAR PLACE", "BRRRGH WALRUS WAY", "BRRRGH SLEET STREET", "MINNIE'S MELODYLAND TENOR TERRACE", "DONALD DOCK LIGHTHOUSE LANE", "DAISY'S GARDEN ELM STREET", "FISH ANYWHERE", "CUSTOM FISHING ACTION" });
+            fishingLocationscomboBox.Location = new System.Drawing.Point(7, 24);
+            fishingLocationscomboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            fishingLocationscomboBox.Name = "fishingLocationscomboBox";
+            fishingLocationscomboBox.Size = new System.Drawing.Size(370, 24);
+            fishingLocationscomboBox.TabIndex = 1;
+            toolTip1.SetToolTip(fishingLocationscomboBox, "Select the location you wish to fish at");
+            fishingLocationscomboBox.SelectedIndexChanged += fishingLocationscomboBox_SelectedIndexChanged;
             // 
             // Racing
             // 
@@ -535,7 +559,7 @@
             // 
             // label2
             // 
-            label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold);
             label2.Location = new System.Drawing.Point(7, 10);
             label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label2.Name = "label2";
@@ -888,7 +912,7 @@
             Misc.Controls.Add(checkBox2);
             Misc.Controls.Add(groupBox2);
             Misc.Controls.Add(groupBox1);
-            Misc.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            Misc.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             Misc.Location = new System.Drawing.Point(4, 25);
             Misc.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Misc.Name = "Misc";
@@ -1048,7 +1072,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             label11.Location = new System.Drawing.Point(36, 21);
             label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label11.Name = "label11";
@@ -1146,16 +1170,7 @@
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
-            // label12
-            // 
-            label12.AutoSize = true;
-            label12.Location = new System.Drawing.Point(104, 240);
-            label12.Name = "label12";
-            label12.Size = new System.Drawing.Size(51, 16);
-            label12.TabIndex = 9;
-            label12.Text = "label12";
-            // 
-            // Form1
+            // MainForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1163,7 +1178,7 @@
             Controls.Add(tabControl1);
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Name = "Form1";
+            Name = "MainForm";
             Text = "Toontown Rewritten Bot by primetime43";
             tabControl1.ResumeLayout(false);
             Main.ResumeLayout(false);
@@ -1239,7 +1254,7 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button startFishing;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.ComboBox fishingLocationscomboBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown numericUpDown4;
         private System.Windows.Forms.Label label3;
@@ -1291,6 +1306,7 @@
         public System.Windows.Forms.CheckBox smartFishing;
         private System.Windows.Forms.Label golfNoteLbl;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Button button21;
     }
 }
 

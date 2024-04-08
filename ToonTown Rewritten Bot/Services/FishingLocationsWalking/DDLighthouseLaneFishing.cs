@@ -14,17 +14,17 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocations
         {
             // Simulation of leaving the fishing dock & walking over to the fisherman to sell
             InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
-            Thread.Sleep(330);
+            await Task.Delay(330, cancellationToken);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.UP); ;
-            Thread.Sleep(2200);
+            await Task.Delay(2200, cancellationToken);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
 
             await SellFishAsync(cancellationToken);
 
             // Simulation of going back to the dock
             InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
-            Thread.Sleep(4500);
+            await Task.Delay(4500, cancellationToken);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
         }
     }

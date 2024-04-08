@@ -6,7 +6,7 @@ using ToonTown_Rewritten_Bot.Views;
 
 namespace ToonTown_Rewritten_Bot.Services
 {
-    public class DoodleTraining : CommonFunctionality
+    public class DoodleTraining : CoreFunctionality
     {
         public static int numberOfFeeds, numberOfScratches;
         private static string selectedTrick;
@@ -133,29 +133,29 @@ namespace ToonTown_Rewritten_Bot.Services
             Thread.Sleep(1000);
             //Below is the location for the SpeedChat button location
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CommonFunctionality.CheckCoordinates("20"))
+            if (CoreFunctionality.CheckCoordinates("20"))
             {
-                var (x, y) = GetCoords("20");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("20");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(1000);
 
                 //Below is the location for pets tab
                 //check if coordinates for the button is (0,0). True means they're not (0,0).
-                if (CommonFunctionality.CheckCoordinates("21"))
+                if (CoreFunctionality.CheckCoordinates("21"))
                 {
-                    (x, y) = GetCoords("21");
-                    CommonFunctionality.MoveCursor(x, y);
-                    CommonFunctionality.DoMouseClick();
+                    (x, y) = GetCoordsFromMap("21");
+                    CoreFunctionality.MoveCursor(x, y);
+                    CoreFunctionality.DoMouseClick();
                     Thread.Sleep(1000);
 
                     //Below is the location for tricks tab
                     //check if coordinates for the button is (0,0). True means they're not (0,0).
-                    if (CommonFunctionality.CheckCoordinates("22"))
+                    if (CoreFunctionality.CheckCoordinates("22"))
                     {
-                        (x, y) = GetCoords("22");
-                        CommonFunctionality.MoveCursor(x, y);
-                        CommonFunctionality.DoMouseClick();
+                        (x, y) = GetCoordsFromMap("22");
+                        CoreFunctionality.MoveCursor(x, y);
+                        CoreFunctionality.DoMouseClick();
                         Thread.Sleep(1000);
                     }
                     else
@@ -183,11 +183,11 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainBeg()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CommonFunctionality.CheckCoordinates("24"))
+            if (CoreFunctionality.CheckCoordinates("24"))
             {
-                var (x, y) = GetCoords("24");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("24");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
@@ -201,11 +201,11 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainPlayDead()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CommonFunctionality.CheckCoordinates("25"))
+            if (CoreFunctionality.CheckCoordinates("25"))
             {
-                var (x, y) = GetCoords("25");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("25");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
@@ -219,11 +219,11 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainRollover()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CommonFunctionality.CheckCoordinates("26"))
+            if (CoreFunctionality.CheckCoordinates("26"))
             {
-                var (x, y) = GetCoords("26");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("26");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
@@ -237,11 +237,11 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainBackflip()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CommonFunctionality.CheckCoordinates("27"))
+            if (CoreFunctionality.CheckCoordinates("27"))
             {
-                var (x, y) = GetCoords("27");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("27");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
@@ -255,11 +255,11 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainDance()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CommonFunctionality.CheckCoordinates("28"))
+            if (CoreFunctionality.CheckCoordinates("28"))
             {
-                var (x, y) = GetCoords("28");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("28");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
@@ -273,11 +273,11 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainSpeak()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CommonFunctionality.CheckCoordinates("29"))
+            if (CoreFunctionality.CheckCoordinates("29"))
             {
-                var (x, y) = GetCoords("29");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("29");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
@@ -291,11 +291,11 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainJump()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CommonFunctionality.CheckCoordinates("23"))
+            if (CoreFunctionality.CheckCoordinates("23"))
             {
-                var (x, y) = GetCoords("23");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("23");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
@@ -309,11 +309,11 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task feedDoodle()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CommonFunctionality.CheckCoordinates("18"))
+            if (CoreFunctionality.CheckCoordinates("18"))
             {
-                var (x, y) = GetCoords("18");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("18");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(11500);
             }
             else//means it was (0,0) and needs updated
@@ -326,11 +326,11 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public async Task scratchDoodle()
         {
-            if (CommonFunctionality.CheckCoordinates("19"))
+            if (CoreFunctionality.CheckCoordinates("19"))
             {
-                var (x, y) = GetCoords("19");
-                CommonFunctionality.MoveCursor(x, y);
-                CommonFunctionality.DoMouseClick();
+                var (x, y) = GetCoordsFromMap("19");
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
                 Thread.Sleep(10000);
             }
             else

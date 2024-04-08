@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ToonTown_Rewritten_Bot.Services.FishingLocations
 {
-    public abstract class FishingStrategyBase : CommonFunctionality
+    public abstract class FishingStrategyBase : CoreFunctionality
     {
         protected bool shouldStopFishing = false;
         /// <summary>
@@ -64,7 +64,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocations
 
         protected async Task CastLine(bool fishVariance, CancellationToken cancellationToken)
         {
-            var (x, y) = GetCoords("15");
+            var (x, y) = GetCoordsFromMap("15");
 
             int randX = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
             int randY = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
@@ -75,7 +75,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocations
 
         protected async Task<bool> CheckIfFishCaught(CancellationToken cancellationToken)
         {
-            var (x, y) = GetCoords("15");
+            var (x, y) = GetCoordsFromMap("15");
             string color = HexConverter(GetColorAt(x, y - 600));
             if (color.Equals("#FFFFBE") || color.Equals("#FFFFBF")) return true;
 
@@ -87,7 +87,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocations
         {
             if (CheckCoordinates("16"))
             {
-                var (x, y) = GetCoords("16");
+                var (x, y) = GetCoordsFromMap("16");
                 MoveCursor(x, y);
                 DoMouseClick();
             }
@@ -105,7 +105,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocations
             if (CheckCoordinates("17"))//returns true if they are not 0,0
             {
                 await Task.Delay(2100, cancellationToken);
-                var (x, y) = GetCoords("17");
+                var (x, y) = GetCoordsFromMap("17");
                 MoveCursor(x, y);
                 DoMouseClick();
             }
