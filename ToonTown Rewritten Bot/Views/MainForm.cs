@@ -5,9 +5,11 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Models;
 using ToonTown_Rewritten_Bot.Properties;
 using ToonTown_Rewritten_Bot.Services;
 using ToonTown_Rewritten_Bot.Utilities;
@@ -15,17 +17,19 @@ using ToonTown_Rewritten_Bot.Views;
 
 namespace ToonTown_Rewritten_Bot
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         public bool fishVariance = false;
 
-        public Form1()
+        public MainForm()
         {
-            //isTTRRunning();
             InitializeComponent();
-            CommonFunctionality.readTextFile();
-            BotFunctions.CreateDataFileMap();
-            loadCoordsIntoResetBox();
+
+            CoreFunctionality.CreateCustomFishingActionsFolder();
+
+            CoreFunctionality.readCoordinatesFile();
+            BotFunctions.CreateItemsDataFileMap();
+            loadCoordinatesIntoResetBox();
         }
 
         //important functions for bot
@@ -80,17 +84,6 @@ namespace ToonTown_Rewritten_Bot
                 TopMost = true;
             else
                 TopMost = false;
-        }
-        private void isTTRRunning()
-        {
-            DialogResult confirmation;
-            while (!(Process.GetProcessesByName("TTREngine").Length > 0))
-            {
-                confirmation = MessageBox.Show("Press OK once running or Cancel.", "ToonTown Rewritten is not running!", MessageBoxButtons.OKCancel);
-                if (confirmation.Equals(DialogResult.Cancel))
-                    Environment.Exit(0);
-            }
-            CommonFunctionality.maximizeAndFocus();
         }
 
         /*private void button4_Click(object sender, EventArgs e)
@@ -152,11 +145,11 @@ namespace ToonTown_Rewritten_Bot
 
         private void button7_Click(object sender, EventArgs e)
         {
-            CommonFunctionality.createFreshCoordinatesFile();
+            CoreFunctionality.createFreshCoordinatesFile();
             MessageBox.Show("All coordinates reset!");
         }
 
-        private void loadCoordsIntoResetBox()
+        private void loadCoordinatesIntoResetBox()
         {
             comboBox1.Items.Clear();
             var dataFileMap = BotFunctions.GetDataFileMap();
@@ -169,7 +162,7 @@ namespace ToonTown_Rewritten_Bot
         }
 
         private static String[] words;
-        private CommonFunctionality commonService = new CommonFunctionality();
+        private CoreFunctionality commonService = new CoreFunctionality();
         private async void button6_Click(object sender, EventArgs e)
         {
             string selected = (string)comboBox1.SelectedItem;
@@ -197,10 +190,11 @@ namespace ToonTown_Rewritten_Bot
 
             try
             {
-                string selectedLocation = (string)comboBox3.SelectedItem;//fishing location
+                string selectedLocation = (string)fishingLocationscomboBox.SelectedItem;//fishing location
                 int numberOfCasts = Convert.ToInt32(numericUpDown3.Value);//number of casts
                 int numberOfSells = Convert.ToInt32(numericUpDown4.Value);//number of sells
-                CommonFunctionality.tellFishingLocation(selectedLocation);//tell the bot what location were fishing at to provide instructions
+                //CoreFunctionality.tellFishingLocation(selectedLocation);//tell the bot what location were fishing at to provide instructions
+                FishingLocationMessages.TellFishingLocation(selectedLocation);
                 MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
                 await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, fishVariance, token);
             }
@@ -226,37 +220,37 @@ namespace ToonTown_Rewritten_Bot
         private void button4_Click(object sender, EventArgs e)//button to stop fishing
         {
             // Check if the operation is already canceled or not started
-    if (cancellationTokenSource == null || cancellationTokenSource.IsCancellationRequested)
-    {
-        MessageBox.Show("Fishing is not currently in progress.");
-        return;
-    }
+            if (cancellationTokenSource == null || cancellationTokenSource.IsCancellationRequested)
+            {
+                MessageBox.Show("Fishing is not currently in progress.");
+                return;
+            }
 
-    // Signal the cancellation
-    cancellationTokenSource.Cancel();
-    MessageBox.Show("Fishing stopped!");
+            // Signal the cancellation
+            cancellationTokenSource.Cancel();
+            MessageBox.Show("Fishing stopped!");
         }
 
         private void smartFishing_CheckedChanged(object sender, EventArgs e)
         {
             if (smartFishing.Checked)
-                CommonFunctionality.isAutoDetectFishingBtnActive = true;
+                CoreFunctionality.isAutoDetectFishingBtnActive = true;
             else
-                CommonFunctionality.isAutoDetectFishingBtnActive = false;
+                CoreFunctionality.isAutoDetectFishingBtnActive = false;
         }
 
         private async void button5_Click(object sender, EventArgs e)//racing test
         {
             MessageBox.Show("Press OK when ready to begin!");
             Thread.Sleep(5000);
-            Point test = CommonFunctionality.getCursorLocation();
-            CommonFunctionality.GetColorAt(test.X, test.Y);
-            string hexColor = CommonFunctionality.HexConverter(CommonFunctionality.GetColorAt(test.X, test.Y));
+            Point test = CoreFunctionality.getCursorLocation();
+            CoreFunctionality.GetColorAt(test.X, test.Y);
+            string hexColor = CoreFunctionality.HexConverter(CoreFunctionality.GetColorAt(test.X, test.Y));
             //Debug.WriteLine("HEX: " + BotFunctions.HexConverter(BotFunctions.GetColorAt(test.X, test.Y)) + " RGB: " + BotFunctions.GetColorAt(test.X, test.Y));
-            Debug.WriteLine("HEX: " + CommonFunctionality.HexConverter(CommonFunctionality.GetColorAt(test.X, test.Y)) + " RGB: " + CommonFunctionality.GetColorAt(test.X, test.Y));
+            Debug.WriteLine("HEX: " + CoreFunctionality.HexConverter(CoreFunctionality.GetColorAt(test.X, test.Y)) + " RGB: " + CoreFunctionality.GetColorAt(test.X, test.Y));
             MessageBox.Show("Done");
 
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
 
             Image screenshot = ImageRecognition.GetWindowScreenshot();
             /*PictureBox pictureBox = new PictureBox();
@@ -482,6 +476,24 @@ namespace ToonTown_Rewritten_Bot
                 Properties.Settings.Default[currentProperty.Name] = "";
             }
             Properties.Settings.Default.Save();
+        }
+
+        private void fishingLocationscomboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Ensure there's a selected item to avoid NullReferenceException
+            if (fishingLocationscomboBox.SelectedItem != null)
+            {
+                string selectedLocation = fishingLocationscomboBox.SelectedItem.ToString();
+                label12.Text = FishingLocationMessages.GetLocationMessage(selectedLocation);
+                label12.Visible = true;
+            }
+            else
+                label12.Visible = false;
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            new CustomFishingActions().Show();
         }
     }
 }

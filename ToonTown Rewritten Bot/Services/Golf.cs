@@ -12,7 +12,7 @@ namespace ToonTown_Rewritten_Bot.Services
         public static void afternoonTee()//works, finished
         {
             Debug.WriteLine("1");
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
             Thread.Sleep(15000);
             Debug.WriteLine("2");
             toonLookAtHole();
@@ -27,7 +27,7 @@ namespace ToonTown_Rewritten_Bot.Services
         // GOLF - Holey Mackeral
         public static void holeyMackeral()//works, finished
         {
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
@@ -39,7 +39,7 @@ namespace ToonTown_Rewritten_Bot.Services
         // GOLF - Hole on the Range
         public static void holeOnTheRange()//needs fixed? Not sure
         {
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
@@ -51,7 +51,7 @@ namespace ToonTown_Rewritten_Bot.Services
         // GOLF - Seeing green
         public static void seeingGreen()//works, finished
         {
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
@@ -63,7 +63,7 @@ namespace ToonTown_Rewritten_Bot.Services
         // GOLF - Swing Time
         public static void swingTime()//yellow, needs fixed (move to the right?)
         {
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
             Thread.Sleep(100);
             //move toon to the right location
             InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
@@ -79,7 +79,7 @@ namespace ToonTown_Rewritten_Bot.Services
         // GOLF - Down the Hatch
         public static void downTheHatch()//yellow, needs fixed
         {
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
             Thread.Sleep(15000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(2340);
@@ -89,7 +89,7 @@ namespace ToonTown_Rewritten_Bot.Services
         //GOLF - Peanut Putter
         public static void peanutPutter()
         {
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
@@ -101,7 +101,7 @@ namespace ToonTown_Rewritten_Bot.Services
         //GOLF - Hot Links
         public static void hotLinks()
         {
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
@@ -113,7 +113,7 @@ namespace ToonTown_Rewritten_Bot.Services
         //GOLF - Hole In Fun
         public static void holeInFun()
         {
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
             Thread.Sleep(15000);
             toonLookAtHole();
             Thread.Sleep(3000);
@@ -125,7 +125,7 @@ namespace ToonTown_Rewritten_Bot.Services
         //GOLF - Swing-A-Long
         public static void swingALong()
         {
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
             Thread.Sleep(15000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
             Thread.Sleep(2340);// 82%
@@ -134,7 +134,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static void oneLittleBirdie()
         {
-            CommonFunctionality.maximizeAndFocus();
+            CoreFunctionality.maximizeAndFocus();
             Thread.Sleep(15000);
             //rotate the toon right
             InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);

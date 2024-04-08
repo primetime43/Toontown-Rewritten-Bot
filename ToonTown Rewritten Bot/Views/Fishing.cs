@@ -43,7 +43,7 @@ namespace ToonTown_Rewritten_Bot.Views
                         if ("16".Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
                         {
                             lines[i] = "16" + "." + "(" + x + "," + y + ")";
-                            CommonFunctionality.updateTextFile(lines);//changes the coordinate values in the data file
+                            CoreFunctionality.updateTextFile(lines);//changes the coordinate values in the data file
                         }
                     }
                 }
@@ -90,7 +90,7 @@ namespace ToonTown_Rewritten_Bot.Views
                         if ("17".Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
                         {
                             lines[i] = "17" + "." + "(" + x + "," + y + ")";
-                            CommonFunctionality.updateTextFile(lines);//changes the coordinate values in the data file
+                            CoreFunctionality.updateTextFile(lines);//changes the coordinate values in the data file
                         }
                     }
                 }
@@ -137,7 +137,7 @@ namespace ToonTown_Rewritten_Bot.Views
                         if ("15".Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
                         {
                             lines[i] = "15" + "." + "(" + x + "," + y + ")";
-                            CommonFunctionality.updateTextFile(lines);//changes the coordinate values in the data file
+                            CoreFunctionality.updateTextFile(lines);//changes the coordinate values in the data file
                         }
                     }
                 }

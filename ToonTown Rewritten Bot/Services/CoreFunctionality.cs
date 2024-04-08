@@ -4,25 +4,27 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Models;
 using static ToonTown_Rewritten_Bot.Utilities.ImageRecognition;
 
 namespace ToonTown_Rewritten_Bot.Services
 {
-    public class CommonFunctionality
+    public class CoreFunctionality
     {
         //eventually clean up repetative code
 
         public static bool isAutoDetectFishingBtnActive = true;
-        public static Dictionary<string, string> _dataFileMap = BotFunctions.GetDataFileMap();
+        //public static Dictionary<string, string> _dataFileMap = BotFunctions.GetDataFileMap();
 
-        public (int x, int y) GetCoords(string item)
+        public (int x, int y) GetCoordsFromMap(string item)
         {
-            int[] coordinates = CommonFunctionality.getCoordinates(item);
+            int[] coordinates = CoreFunctionality.readCoordinatesFromFile(item);
             return (coordinates[0], coordinates[1]);
         }
 
@@ -38,7 +40,7 @@ namespace ToonTown_Rewritten_Bot.Services
             Thread.Sleep(500);//sleep 2 sec
 
             //get the coords of the red button and move cursor from there, downward
-            int[] coordinates = getCoordinates("15");
+            int[] coordinates = readCoordinatesFromFile("15");
             int x = coordinates[0];
             int y = coordinates[1];
             MoveCursor(x, y + 150);//pull it back
@@ -102,7 +104,7 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         private static string[] lines;
-        public static void readTextFile()
+        public static void readCoordinatesFile()
         {
             if (File.Exists("Coordinates Data File.txt"))
             {
@@ -191,7 +193,13 @@ namespace ToonTown_Rewritten_Bot.Services
             UpdateCoordsHelper updateCoordsWindow = new UpdateCoordsHelper();
             try
             {
-                updateCoordsWindow.startCountDown(_dataFileMap[locationToUpdate]);
+                // Use CoordinateActions.GetDescription to retrieve the description by key
+                string description = CoordinateActions.GetDescription(locationToUpdate);
+                if (description == null)
+                {
+                    throw new Exception("Description not found for the given key.");
+                }
+                updateCoordsWindow.startCountDown(description);
                 // Set the window to be topmost to ensure it appears above other applications.
                 updateCoordsWindow.TopMost = true;
                 updateCoordsWindow.ShowDialog();
@@ -235,14 +243,14 @@ namespace ToonTown_Rewritten_Bot.Services
             }
         }
 
-        public static int[] getCoordinates(string coordsToRetrieve)
+        private static int[] readCoordinatesFromFile(string coordsToRetrieve)
         {
             lines = File.ReadAllLines(Path.GetFullPath("Coordinates Data File.txt"));
             for (int i = 0; i < lines.Length; i++)
             {
                 if (lines[i].Contains("."))
                 {
-                    if (coordsToRetrieve.Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
+                    if (coordsToRetrieve.Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it corresponds to
                     {
                         string check = lines[i];
                         char[] removeChars = { '(', ')' };
@@ -273,7 +281,7 @@ namespace ToonTown_Rewritten_Bot.Services
             {
                 if (lines[i].Contains("."))
                 {
-                    if (checkCoords.Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
+                    if (checkCoords.Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it corresponds to
                     {
                         string check = lines[i];
                         char[] removeChars = { '(', ')' };
@@ -289,24 +297,15 @@ namespace ToonTown_Rewritten_Bot.Services
             return true;//return true if they're not 0,0
         }
 
-        public static void resetAllCoordinates()
+        /// <summary>
+        /// Create "Custom Fishing Actions" folder if it doesn't exist
+        /// </summary>
+        public static string CreateCustomFishingActionsFolder()
         {
-            string filePath = "Coordinates Data File.txt";
-            if (!File.Exists(filePath))
-            {
-                // Create the file and write the default coordinates
-                createFreshCoordinatesFile();
-            }
-            else
-            {
-                // Read the existing file and overwrite with default coordinates
-                string[] lines = File.ReadAllLines(filePath);
-                for (int i = 0; i < _dataFileMap.Count; i++)
-                {
-                    lines[i] = $"{i}.(0,0)";
-                }
-                writeDefaultCords(lines);
-            }
+            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string customActionsFolderPath = Path.Combine(exePath, "Custom Fishing Actions");
+            Directory.CreateDirectory(customActionsFolderPath);
+            return customActionsFolderPath;
         }
 
         public static void createFreshCoordinatesFile()
@@ -315,73 +314,18 @@ namespace ToonTown_Rewritten_Bot.Services
             // Delete the file if it exists
             if (File.Exists(filePath))
                 File.Delete(filePath);
+
             // Create the file and write the default coordinates
             using (StreamWriter sw = File.CreateText(filePath))
             {
-                for (int i = 1; i <= _dataFileMap.Count; i++)
+                var allDescriptions = CoordinateActions.GetAllDescriptions();
+
+                foreach (var key in allDescriptions.Keys)
                 {
-                    sw.WriteLine($"{i}.(0,0)");
+                    sw.WriteLine($"{key}.(0,0)"); // Write each key with default coordinates
                 }
             }
         }
-
-        public static void tellFishingLocation(string location)
-        {
-            switch (location)
-            {
-                case "TOONTOWN CENTRAL PUNCHLINE PLACE":
-                    MessageBox.Show("Fishes in the first dock when you walk in");
-                    break;
-                case "DONALD DREAM LAND LULLABY LANE":
-                    MessageBox.Show("Fishes in the dock to the left of the small box");
-                    break;
-                case "BRRRGH POLAR PLACE":
-                    MessageBox.Show("Fishes in the top right dock");
-                    break;
-                case "BRRRGH WALRUS WAY":
-                    MessageBox.Show("Fishes in the top left dock");
-                    break;
-                case "BRRRGH SLEET STREET":
-                    MessageBox.Show("Fishes in the first dock when you walk in");
-                    break;
-                case "MINNIE'S MELODYLAND TENOR TERRACE":
-                    MessageBox.Show("Fishes in the top left dock");
-                    break;
-                case "DONALD DOCK LIGHTHOUSE LANE":
-                    MessageBox.Show("Fishes in the 2nd one on the right");
-                    break;
-                case "DAISY'S GARDEN ELM STREET":
-                    MessageBox.Show("Fishes in the bottom left dock when you walk in");
-                    break;
-                case "FISH ANYWHERE":
-                    MessageBox.Show("Fishes for you anywhere, but will only fish, will not sell fish!");
-                    break;
-            }
-        }
-
-        //probably delete eventually. Use createFreshCoordinatesFile func
-        private static void writeDefaultCords(string[] line)
-        {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(Path.GetFullPath("Coordinates Data File.txt")))
-                {
-                    for (int i = 0; i < line.Length; i++)
-                    {
-                        writer.WriteLine(line[i]);
-                    }
-                    writer.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("The file could not be written to:");
-                Console.WriteLine(e.Message);
-            }
-        }
-
-
-
 
         //ignore .dll imports below
         [DllImport("user32.dll")]
