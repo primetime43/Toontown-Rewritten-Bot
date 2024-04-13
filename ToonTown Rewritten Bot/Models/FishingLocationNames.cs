@@ -11,5 +11,6 @@
         public static readonly string DonaldDockLighthouseLane = "DONALD DOCK LIGHTHOUSE LANE";
         public static readonly string DaisysGardenElmStreet = "DAISY'S GARDEN ELM STREET";
         public static readonly string FishAnywhere = "FISH ANYWHERE";
+        public static readonly string CustomFishingAction = "CUSTOM FISHING ACTION";
     }
 }

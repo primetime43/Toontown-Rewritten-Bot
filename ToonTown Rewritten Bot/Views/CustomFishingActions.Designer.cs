@@ -28,111 +28,139 @@
         /// </summary>
         private void InitializeComponent()
         {
-            listBox1 = new System.Windows.Forms.ListBox();
-            button1 = new System.Windows.Forms.Button();
-            button2 = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomFishingActions));
+            addItemBtn = new System.Windows.Forms.Button();
+            removeItemBtn = new System.Windows.Forms.Button();
             comboBox1 = new System.Windows.Forms.ComboBox();
-            textBox1 = new System.Windows.Forms.TextBox();
+            actionTimeTxtBox = new System.Windows.Forms.TextBox();
             label1 = new System.Windows.Forms.Label();
-            button3 = new System.Windows.Forms.Button();
+            saveActonItemBtn = new System.Windows.Forms.Button();
+            loadActonItemBtn = new System.Windows.Forms.Button();
+            actionItemsListBox = new System.Windows.Forms.ListBox();
+            updateSelectedActionItemBtn = new System.Windows.Forms.Button();
             SuspendLayout();
             // 
-            // listBox1
+            // addItemBtn
             // 
-            listBox1.FormattingEnabled = true;
-            listBox1.ItemHeight = 15;
-            listBox1.Location = new System.Drawing.Point(19, 15);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new System.Drawing.Size(225, 244);
-            listBox1.TabIndex = 0;
-            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
+            addItemBtn.Location = new System.Drawing.Point(250, 49);
+            addItemBtn.Name = "addItemBtn";
+            addItemBtn.Size = new System.Drawing.Size(91, 28);
+            addItemBtn.TabIndex = 1;
+            addItemBtn.Text = "Add Item";
+            addItemBtn.UseVisualStyleBackColor = true;
+            addItemBtn.Click += addItemBtn_Click;
             // 
-            // button1
+            // removeItemBtn
             // 
-            button1.Location = new System.Drawing.Point(250, 49);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(91, 28);
-            button1.TabIndex = 1;
-            button1.Text = "Add Item";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
-            // button2
-            // 
-            button2.Location = new System.Drawing.Point(250, 83);
-            button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(91, 28);
-            button2.TabIndex = 2;
-            button2.Text = "Remove Item";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            removeItemBtn.Location = new System.Drawing.Point(347, 49);
+            removeItemBtn.Name = "removeItemBtn";
+            removeItemBtn.Size = new System.Drawing.Size(91, 28);
+            removeItemBtn.TabIndex = 2;
+            removeItemBtn.Text = "Remove Item";
+            removeItemBtn.UseVisualStyleBackColor = true;
+            removeItemBtn.Click += removeItemBtn_Click;
             // 
             // comboBox1
             // 
             comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "WALK FORWARDS", "WALK BACKWARDS", "TURN LEFT", "TURN RIGHT", "TIME" });
+            comboBox1.Items.AddRange(new object[] { "WALK FORWARDS", "WALK BACKWARDS", "TURN LEFT", "TURN RIGHT", "TIME", "SELL FISH" });
             comboBox1.Location = new System.Drawing.Point(250, 15);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new System.Drawing.Size(144, 23);
+            comboBox1.Size = new System.Drawing.Size(188, 23);
             comboBox1.TabIndex = 3;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
-            // textBox1
+            // actionTimeTxtBox
             // 
-            textBox1.Enabled = false;
-            textBox1.Location = new System.Drawing.Point(250, 139);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new System.Drawing.Size(144, 23);
-            textBox1.TabIndex = 4;
-            textBox1.TextChanged += textBox1_TextChanged;
+            actionTimeTxtBox.Enabled = false;
+            actionTimeTxtBox.Location = new System.Drawing.Point(250, 179);
+            actionTimeTxtBox.Name = "actionTimeTxtBox";
+            actionTimeTxtBox.Size = new System.Drawing.Size(144, 23);
+            actionTimeTxtBox.TabIndex = 4;
+            actionTimeTxtBox.TextChanged += actionTimeTxtBox_TextChanged;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(250, 121);
+            label1.Location = new System.Drawing.Point(250, 161);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(144, 15);
+            label1.Size = new System.Drawing.Size(117, 15);
             label1.TabIndex = 5;
-            label1.Text = "Time for action (seconds):";
+            label1.Text = "Time for action (ms):";
             // 
-            // button3
+            // saveActonItemBtn
             // 
-            button3.Location = new System.Drawing.Point(250, 213);
-            button3.Name = "button3";
-            button3.Size = new System.Drawing.Size(134, 46);
-            button3.TabIndex = 6;
-            button3.Text = "Save Action Item";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            saveActonItemBtn.Location = new System.Drawing.Point(174, 274);
+            saveActonItemBtn.Name = "saveActonItemBtn";
+            saveActonItemBtn.Size = new System.Drawing.Size(144, 34);
+            saveActonItemBtn.TabIndex = 6;
+            saveActonItemBtn.Text = "Save Action Item";
+            saveActonItemBtn.UseVisualStyleBackColor = true;
+            saveActonItemBtn.Click += saveActonItemBtn_Click;
+            // 
+            // loadActonItemBtn
+            // 
+            loadActonItemBtn.Location = new System.Drawing.Point(14, 274);
+            loadActonItemBtn.Name = "loadActonItemBtn";
+            loadActonItemBtn.Size = new System.Drawing.Size(144, 34);
+            loadActonItemBtn.TabIndex = 7;
+            loadActonItemBtn.Text = "Load Action Item";
+            loadActonItemBtn.UseVisualStyleBackColor = true;
+            loadActonItemBtn.Click += loadActonItemBtn_Click;
+            // 
+            // actionItemsListBox
+            // 
+            actionItemsListBox.FormattingEnabled = true;
+            actionItemsListBox.ItemHeight = 15;
+            actionItemsListBox.Location = new System.Drawing.Point(14, 13);
+            actionItemsListBox.Name = "actionItemsListBox";
+            actionItemsListBox.Size = new System.Drawing.Size(230, 244);
+            actionItemsListBox.TabIndex = 8;
+            actionItemsListBox.SelectedIndexChanged += actionItemsListBox_SelectedIndexChanged;
+            // 
+            // updateSelectedActionItemBtn
+            // 
+            updateSelectedActionItemBtn.Enabled = false;
+            updateSelectedActionItemBtn.Location = new System.Drawing.Point(250, 83);
+            updateSelectedActionItemBtn.Name = "updateSelectedActionItemBtn";
+            updateSelectedActionItemBtn.Size = new System.Drawing.Size(188, 28);
+            updateSelectedActionItemBtn.TabIndex = 9;
+            updateSelectedActionItemBtn.Text = "Update Selected Item";
+            updateSelectedActionItemBtn.UseVisualStyleBackColor = true;
+            updateSelectedActionItemBtn.Click += updateSelectedActionItemBtn_Click;
             // 
             // CustomFishingActions
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(410, 275);
-            Controls.Add(button3);
+            ClientSize = new System.Drawing.Size(453, 320);
+            Controls.Add(updateSelectedActionItemBtn);
+            Controls.Add(actionItemsListBox);
+            Controls.Add(loadActonItemBtn);
+            Controls.Add(saveActonItemBtn);
             Controls.Add(label1);
-            Controls.Add(textBox1);
+            Controls.Add(actionTimeTxtBox);
             Controls.Add(comboBox1);
-            Controls.Add(button2);
-            Controls.Add(button1);
-            Controls.Add(listBox1);
+            Controls.Add(removeItemBtn);
+            Controls.Add(addItemBtn);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             Name = "CustomFishingActions";
-            Text = "CustomFishingActions";
+            Text = "Custom Fishing Actions Manager";
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button addItemBtn;
+        private System.Windows.Forms.Button removeItemBtn;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox actionTimeTxtBox;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button saveActonItemBtn;
+        private System.Windows.Forms.Button loadActonItemBtn;
+        private System.Windows.Forms.ListBox actionItemsListBox;
+        private System.Windows.Forms.Button updateSelectedActionItemBtn;
     }
 }

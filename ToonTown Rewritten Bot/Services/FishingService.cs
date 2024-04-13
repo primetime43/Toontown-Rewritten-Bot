@@ -8,8 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
-using ToonTown_Rewritten_Bot.Services.FishingLocations;
+using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
 using ToonTown_Rewritten_Bot.Utilities;
+using ToonTown_Rewritten_Bot.Views;
 
 namespace ToonTown_Rewritten_Bot.Services
 {
@@ -27,17 +28,23 @@ namespace ToonTown_Rewritten_Bot.Services
         /// <remarks>
         /// This method manages the entire fishing operation including preparing for fishing, casting, and optionally selling the fish based on the provided location. It utilizes different fishing strategies based on the specified location and handles selling operations unless fishing in the "FISH ANYWHERE" mode.
         /// </remarks>
-        public async Task StartFishing(string locationName, int casts, int sells, bool variance, CancellationToken cancellationToken)
+        public async Task StartFishing(string locationName, int casts, int sells, bool variance, CancellationToken cancellationToken, string customFishingFilePath = "")
         {
             while (sells > 0 && !cancellationToken.IsCancellationRequested)
             {
                 await PrepareForFishing(cancellationToken);
                 await StartFishingActionsAsync(casts, variance, cancellationToken);
 
-                if (locationName != FishingLocationNames.FishAnywhere)
+                if (locationName != FishingLocationNames.FishAnywhere && locationName != FishingLocationNames.CustomFishingAction)
                 {
                     FishingStrategyBase fishingStrategy = DetermineFishingStrategy(locationName);
                     await fishingStrategy.LeaveDockAndSellAsync(cancellationToken);
+                    sells--;
+                }
+                else if(locationName == FishingLocationNames.CustomFishingAction && customFishingFilePath != "")
+                {
+                    CustomActionsFishing customFishing = new CustomActionsFishing(customFishingFilePath);
+                    await customFishing.LeaveDockAndSellAsync(cancellationToken); // Start the action sequence
                     sells--;
                 }
                 else
@@ -50,6 +57,27 @@ namespace ToonTown_Rewritten_Bot.Services
             BringBotWindowToFront();
             MessageBox.Show($"Done Fishing in '{locationName}'.");
         }
+
+        /// <summary>
+        /// Starts a custom fishing debugging session using a specified JSON file.
+        /// </summary>
+        /// <param name="jsonPath">The path to the JSON file containing the custom actions to be executed.</param>
+        /// <remarks>
+        /// This method is intended for debugging custom fishing actions. It simulates the fishing actions
+        /// without actual fishing, focusing on the movement and actions defined in the JSON file.
+        /// It ensures the game window is maximized and focused before starting the actions
+        /// </remarks>
+        public async Task StartCustomFishingDebugging(string jsonPath)
+        {
+            CustomActionsFishing customFishing = new CustomActionsFishing(jsonPath);
+
+            // Prepare
+            maximizeAndFocus();
+            await Task.Delay(3000, CancellationToken.None); // Initial delay before starting.
+            await customFishing.LeaveDockAndSellAsync(CancellationToken.None); // Start the action sequence
+            MessageBox.Show("Done Debugging Custom Action");
+        }
+
 
         /// <summary>
         /// Prepares the fishing environment by ensuring that the game window is focused and checking the necessary coordinates before starting the fishing process.

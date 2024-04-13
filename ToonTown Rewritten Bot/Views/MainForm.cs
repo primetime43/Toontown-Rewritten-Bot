@@ -19,8 +19,6 @@ namespace ToonTown_Rewritten_Bot
 {
     public partial class MainForm : Form
     {
-        public bool fishVariance = false;
-
         public MainForm()
         {
             InitializeComponent();
@@ -29,7 +27,7 @@ namespace ToonTown_Rewritten_Bot
 
             CoreFunctionality.readCoordinatesFile();
             BotFunctions.CreateItemsDataFileMap();
-            loadCoordinatesIntoResetBox();
+            LoadCoordinatesIntoResetBox();
         }
 
         //important functions for bot
@@ -86,7 +84,7 @@ namespace ToonTown_Rewritten_Bot
                 TopMost = false;
         }
 
-        /*private void button4_Click(object sender, EventArgs e)
+        /*private void loadActonItemBtn_Click(object sender, EventArgs e)
         {
             //Thread.Sleep(4000);
             //textBox1.Text = BotFunctions.HexConverter(BotFunctions.GetColorAt(BotFunctions.getCursorLocation().X, BotFunctions.getCursorLocation().Y));
@@ -145,11 +143,11 @@ namespace ToonTown_Rewritten_Bot
 
         private void button7_Click(object sender, EventArgs e)
         {
-            CoreFunctionality.createFreshCoordinatesFile();
+            CoreFunctionality.CreateFreshCoordinatesFile();
             MessageBox.Show("All coordinates reset!");
         }
 
-        private void loadCoordinatesIntoResetBox()
+        private void LoadCoordinatesIntoResetBox()
         {
             comboBox1.Items.Clear();
             var dataFileMap = BotFunctions.GetDataFileMap();
@@ -183,37 +181,78 @@ namespace ToonTown_Rewritten_Bot
 
         private CancellationTokenSource cancellationTokenSource;
         private FishingService _fishingService = new FishingService();
-        private async void startFishing_Click(object sender, EventArgs e)//button to start fishing
+
+        /// <summary>
+        /// Handles the start fishing button click event. This method initiates fishing
+        /// based on the selected location and settings specified in the user interface.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Event data that provides information about the click event.</param>
+        /// <remarks>
+        /// This method checks the selected fishing location from a comboBox and determines
+        /// whether to initiate standard fishing or a custom fishing action based on JSON configurations.
+        /// If "CUSTOM FISHING ACTION" is selected, it allows for either debugging the custom actions or
+        /// performing them normally based on a checkbox selection. If any other location is selected,
+        /// it proceeds with standard fishing operations. Exceptions are handled to address user cancellation
+        /// and other errors, providing appropriate feedback.
+        /// </remarks>
+        private async void startFishing_Click(object sender, EventArgs e)
         {
             cancellationTokenSource = new CancellationTokenSource();
-            var token = cancellationTokenSource.Token;
+            var token = cancellationTokenSource.Token; // Token to handle task cancellation
 
             try
             {
-                string selectedLocation = (string)fishingLocationscomboBox.SelectedItem;//fishing location
-                int numberOfCasts = Convert.ToInt32(numericUpDown3.Value);//number of casts
-                int numberOfSells = Convert.ToInt32(numericUpDown4.Value);//number of sells
-                //CoreFunctionality.tellFishingLocation(selectedLocation);//tell the bot what location were fishing at to provide instructions
-                FishingLocationMessages.TellFishingLocation(selectedLocation);
-                MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
-                await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, fishVariance, token);
+                string selectedLocation = (string)fishingLocationscomboBox.SelectedItem; // Retrieve the location selected by the user
+                int numberOfCasts = Convert.ToInt32(numericUpDown3.Value); // Number of times to cast the line
+                int numberOfSells = Convert.ToInt32(numericUpDown4.Value); // Number of times to sell the caught fish
+
+                // Check if the selected location is to perform custom fishing actions
+                if (selectedLocation == "CUSTOM FISHING ACTION")
+                {
+                    MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
+                    string selectedFileName = customFishingFilesComboBox.SelectedItem?.ToString();
+                    if (string.IsNullOrEmpty(selectedFileName))
+                    {
+                        MessageBox.Show("Please select a custom fishing action.");
+                        return;
+                    }
+
+                    string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    string filePath = Path.Combine(exePath, "Custom Fishing Actions", selectedFileName);
+
+                    // Decide whether to debug custom actions or perform them normally
+                    if (debugCustomActionsCheckBox.Checked)
+                    {
+                        await _fishingService.StartCustomFishingDebugging(filePath); // Debugging custom fishing actions
+                    }
+                    else
+                    {
+                        await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, filePath); // Perform custom fishing actions
+                    }
+                }
+                else
+                {
+                    FishingLocationMessages.TellFishingLocation(selectedLocation); // Provide location-specific messages
+                    MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
+                    await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token); // Start standard fishing
+                }
             }
             catch (TaskCanceledException)
             {
-                MessageBox.Show("Fishing was cancelled.");
+                MessageBox.Show("Fishing was cancelled."); // Handle cancellation of the task
+            }
+            catch (Exception ex) // Catch any other unforeseen errors
+            {
+                MessageBox.Show("An error occurred: " + ex.Message);
             }
         }
 
         private void randomFishing_CheckedChanged(object sender, EventArgs e)
         {
-            if (randomFishing.Checked)
+            if (randomFishingCheckBox.Checked)
             {
                 MessageBox.Show("This will add randomness to the line casting!");
-                this.fishVariance = true;
-            }
-            else
-            {
-                this.fishVariance = false;
             }
         }
 
@@ -486,6 +525,20 @@ namespace ToonTown_Rewritten_Bot
                 string selectedLocation = fishingLocationscomboBox.SelectedItem.ToString();
                 label12.Text = FishingLocationMessages.GetLocationMessage(selectedLocation);
                 label12.Visible = true;
+
+                if (selectedLocation == "CUSTOM FISHING ACTION")
+                {
+                    debugCustomActionsCheckBox.Visible = true;
+                    debugCustomActionsCheckBox.Enabled = true;
+                    customFishingFilesComboBox.Visible = true;
+                    LoadCustomFishingActions();
+                }
+                else
+                {
+                    debugCustomActionsCheckBox.Visible = false;
+                    debugCustomActionsCheckBox.Enabled = false;
+                    customFishingFilesComboBox.Visible = false;
+                }
             }
             else
                 label12.Visible = false;
@@ -494,6 +547,17 @@ namespace ToonTown_Rewritten_Bot
         private void button21_Click(object sender, EventArgs e)
         {
             new CustomFishingActions().Show();
+        }
+
+        public void LoadCustomFishingActions()
+        {
+            string[] files = CoreFunctionality.loadCustomFishingActions();
+
+            customFishingFilesComboBox.Items.Clear();
+            foreach (string file in files)
+            {
+                customFishingFilesComboBox.Items.Add(Path.GetFileName(file)); // Add only file names to the ComboBox
+            }
         }
     }
 }

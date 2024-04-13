@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WindowsInput;
 
-namespace ToonTown_Rewritten_Bot.Services.FishingLocations
+namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 {
     public class BrrrghWalrusWayFishing : FishingStrategyBase
     {

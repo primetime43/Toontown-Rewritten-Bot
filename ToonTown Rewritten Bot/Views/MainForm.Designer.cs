@@ -41,8 +41,10 @@
             button21 = new System.Windows.Forms.Button();
             label12 = new System.Windows.Forms.Label();
             groupBox6 = new System.Windows.Forms.GroupBox();
+            debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
             button4 = new System.Windows.Forms.Button();
-            randomFishing = new System.Windows.Forms.CheckBox();
+            customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
+            randomFishingCheckBox = new System.Windows.Forms.CheckBox();
             smartFishing = new System.Windows.Forms.CheckBox();
             label4 = new System.Windows.Forms.Label();
             numericUpDown4 = new System.Windows.Forms.NumericUpDown();
@@ -254,7 +256,7 @@
             button21.Name = "button21";
             button21.Size = new System.Drawing.Size(137, 43);
             button21.TabIndex = 10;
-            button21.Text = "Build Custom Fishing Action";
+            button21.Text = "Create Custom Fishing Actions";
             toolTip1.SetToolTip(button21, "This will allow you to build custom fishing actions\r\nfor walking from the fishing dock to the fisherman\r\n to sell and back to the fishing dock");
             button21.UseVisualStyleBackColor = true;
             button21.Click += button21_Click;
@@ -262,7 +264,7 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new System.Drawing.Point(16, 222);
+            label12.Location = new System.Drawing.Point(13, 278);
             label12.Name = "label12";
             label12.Size = new System.Drawing.Size(51, 16);
             label12.TabIndex = 9;
@@ -271,8 +273,10 @@
             // 
             // groupBox6
             // 
+            groupBox6.Controls.Add(debugCustomActionsCheckBox);
             groupBox6.Controls.Add(button4);
-            groupBox6.Controls.Add(randomFishing);
+            groupBox6.Controls.Add(customFishingFilesComboBox);
+            groupBox6.Controls.Add(randomFishingCheckBox);
             groupBox6.Controls.Add(smartFishing);
             groupBox6.Controls.Add(label4);
             groupBox6.Controls.Add(numericUpDown4);
@@ -284,14 +288,28 @@
             groupBox6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox6.Name = "groupBox6";
             groupBox6.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox6.Size = new System.Drawing.Size(385, 196);
+            groupBox6.Size = new System.Drawing.Size(385, 236);
             groupBox6.TabIndex = 8;
             groupBox6.TabStop = false;
             groupBox6.Text = "Fishing Locations";
             // 
+            // debugCustomActionsCheckBox
+            // 
+            debugCustomActionsCheckBox.AutoSize = true;
+            debugCustomActionsCheckBox.Enabled = false;
+            debugCustomActionsCheckBox.Location = new System.Drawing.Point(194, 122);
+            debugCustomActionsCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            debugCustomActionsCheckBox.Name = "debugCustomActionsCheckBox";
+            debugCustomActionsCheckBox.Size = new System.Drawing.Size(162, 20);
+            debugCustomActionsCheckBox.TabIndex = 13;
+            debugCustomActionsCheckBox.Text = "Debug Custom Actions";
+            toolTip1.SetToolTip(debugCustomActionsCheckBox, "This will allow you to debug the custom action\r\nwalk from the dock to the fisherman");
+            debugCustomActionsCheckBox.UseVisualStyleBackColor = true;
+            debugCustomActionsCheckBox.Visible = false;
+            // 
             // button4
             // 
-            button4.Location = new System.Drawing.Point(194, 144);
+            button4.Location = new System.Drawing.Point(193, 183);
             button4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button4.Name = "button4";
             button4.Size = new System.Drawing.Size(184, 38);
@@ -300,18 +318,28 @@
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
-            // randomFishing
+            // customFishingFilesComboBox
             // 
-            randomFishing.AutoSize = true;
-            randomFishing.Location = new System.Drawing.Point(194, 110);
-            randomFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            randomFishing.Name = "randomFishing";
-            randomFishing.Size = new System.Drawing.Size(135, 20);
-            randomFishing.TabIndex = 11;
-            randomFishing.Text = "Random Variance";
-            toolTip1.SetToolTip(randomFishing, "This add some randomness and will make it so you \r\nwon't cast your line at the same spot every time!");
-            randomFishing.UseVisualStyleBackColor = true;
-            randomFishing.CheckedChanged += randomFishing_CheckedChanged;
+            customFishingFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            customFishingFilesComboBox.FormattingEnabled = true;
+            customFishingFilesComboBox.Location = new System.Drawing.Point(4, 153);
+            customFishingFilesComboBox.Name = "customFishingFilesComboBox";
+            customFishingFilesComboBox.Size = new System.Drawing.Size(373, 24);
+            customFishingFilesComboBox.TabIndex = 11;
+            customFishingFilesComboBox.Visible = false;
+            // 
+            // randomFishingCheckBox
+            // 
+            randomFishingCheckBox.AutoSize = true;
+            randomFishingCheckBox.Location = new System.Drawing.Point(194, 96);
+            randomFishingCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            randomFishingCheckBox.Name = "randomFishingCheckBox";
+            randomFishingCheckBox.Size = new System.Drawing.Size(135, 20);
+            randomFishingCheckBox.TabIndex = 11;
+            randomFishingCheckBox.Text = "Random Variance";
+            toolTip1.SetToolTip(randomFishingCheckBox, "This add some randomness and will make it so you \r\nwon't cast your line at the same spot every time!");
+            randomFishingCheckBox.UseVisualStyleBackColor = true;
+            randomFishingCheckBox.CheckedChanged += randomFishing_CheckedChanged;
             // 
             // smartFishing
             // 
@@ -374,7 +402,7 @@
             // 
             // startFishing
             // 
-            startFishing.Location = new System.Drawing.Point(7, 144);
+            startFishing.Location = new System.Drawing.Point(6, 183);
             startFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             startFishing.Name = "startFishing";
             startFishing.Size = new System.Drawing.Size(184, 38);
@@ -1267,7 +1295,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.CheckBox randomFishing;
+        private System.Windows.Forms.CheckBox randomFishingCheckBox;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TabPage Golf;
         private System.Windows.Forms.Button button11;
@@ -1307,6 +1335,8 @@
         private System.Windows.Forms.Label golfNoteLbl;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button button21;
+        private System.Windows.Forms.ComboBox customFishingFilesComboBox;
+        private System.Windows.Forms.CheckBox debugCustomActionsCheckBox;
     }
 }
 
