@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ToonTown_Rewritten_Bot.Services.FishingLocations
+namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 {
     public abstract class FishingStrategyBase : CoreFunctionality
     {

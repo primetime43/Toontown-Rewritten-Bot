@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using ToonTown_Rewritten_Bot.Views;
 using WindowsInput;
 
-namespace ToonTown_Rewritten_Bot.Services.FishingLocations
+namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 {
     public class TTCPunchlinePlaceFishing : FishingStrategyBase
     {

@@ -4,23 +4,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
-using ToonTown_Rewritten_Bot.Services.FishingLocations;
 using WindowsInput;
+using System.Diagnostics;
+using ToonTown_Rewritten_Bot.Models;
 
 namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 {
     public class CustomActionsFishing : FishingStrategyBase
     {
-        private Dictionary<string, string> actions = new Dictionary<string, string>();
+        //private Dictionary<string, string> actions = new Dictionary<string, string>();
+        private List<ActionCommand> actions = new List<ActionCommand>();
 
-        public CustomActionsFishing()
-        {
-
-        }
-        
         public CustomActionsFishing(string filePath)
         {
-            LoadActionsFromJson("path_to_your_json_file.json");
+            LoadActionsFromJson(filePath);
         }
 
         private void LoadActionsFromJson(string filePath)
@@ -28,35 +25,52 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                actions = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                actions = JsonConvert.DeserializeObject<List<ActionCommand>>(json);
             }
         }
 
         public override async Task LeaveDockAndSellAsync(CancellationToken cancellationToken)
         {
-            foreach (var action in actions)
+            foreach (var actionCommand in actions)
             {
-                if (action.Value.StartsWith("TIME"))
+                Debug.WriteLine($"Executing action: {actionCommand.Action}");
+
+                if (!actionCommand.Command.StartsWith("TIME"))
                 {
-                    // Extract the number of seconds from the action.Value, which is like "TIME X"
-                    if (int.TryParse(action.Value.Split(' ')[1], out int seconds))
+                    if (actionCommand.Command == "SELL")
                     {
-                        await Task.Delay(seconds * 1000, cancellationToken); // Convert seconds to milliseconds
+                        await SellFishAsync(cancellationToken); // Handle selling fish
+                        await Task.Delay(3000, cancellationToken); // Delay to ensure the selling action is complete
+                    }
+                    else if (Enum.TryParse<VirtualKeyCode>(actionCommand.Command, out var keyCode))
+                    {
+                        InputSimulator.SimulateKeyDown(keyCode);
+                        // Find the next action
+                        int currentIndex = actions.IndexOf(actionCommand);
+                        if (currentIndex + 1 < actions.Count && actions[currentIndex + 1].Action == "TIME")
+                        {
+                            var nextAction = actions[currentIndex + 1];
+                            if (int.TryParse(nextAction.Command.Split(' ')[0], out int milliseconds))
+                            {
+                                await Task.Delay(milliseconds, cancellationToken);
+                                InputSimulator.SimulateKeyUp(keyCode);
+                            }
+                        }
+                        else
+                        {
+                            await Task.Delay(500, cancellationToken); // Default press duration for keys without a specified time
+                            InputSimulator.SimulateKeyUp(keyCode);
+                        }
                     }
                 }
                 else
                 {
-                    // Convert action string to VirtualKeyCode and simulate key press
-                    if (Enum.TryParse<VirtualKeyCode>(action.Value, out var keyCode))
+                    if (int.TryParse(actionCommand.Command.Split(' ')[0], out int milliseconds))
                     {
-                        InputSimulator.SimulateKeyDown(keyCode);
-                        await Task.Delay(500, cancellationToken); // Assuming a default delay for key press
-                        InputSimulator.SimulateKeyUp(keyCode);
+                        await Task.Delay(milliseconds, cancellationToken); // Wait for the specified time in milliseconds
                     }
                 }
             }
-
-            await SellFishAsync(cancellationToken);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace ToonTown_Rewritten_Bot.Models
                 {"WALK BACKWARDS", "DOWN"},
                 {"TURN LEFT", "LEFT"},
                 {"TURN RIGHT", "RIGHT"},
+                {"SELL FISH", "SELL"},
             };
         }
 
@@ -32,4 +33,11 @@ namespace ToonTown_Rewritten_Bot.Models
             }
         }
     }
+
+    public class ActionCommand
+    {
+        public string Action { get; set; }
+        public string Command { get; set; }
+    }
+
 }

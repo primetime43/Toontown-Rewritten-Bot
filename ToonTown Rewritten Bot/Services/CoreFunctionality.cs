@@ -119,7 +119,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 }
             }
             else
-                createFreshCoordinatesFile();
+                CreateFreshCoordinatesFile();
         }
 
         private static void updateTextFile()
@@ -273,7 +273,7 @@ namespace ToonTown_Rewritten_Bot.Services
             if (!File.Exists(filePath))
             {
                 // Create the file and write the default coordinates
-                createFreshCoordinatesFile();
+                CreateFreshCoordinatesFile();
             }
 
             lines = File.ReadAllLines(Path.GetFullPath("Coordinates Data File.txt"));
@@ -298,17 +298,27 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
-        /// Create "Custom Fishing Actions" folder if it doesn't exist
+        /// Ensures that a "Custom Fishing Actions" folder exists in the application's directory.
+        /// Creates the folder if it does not exist. Always returns the path to this folder.
         /// </summary>
+        /// <returns>The path to the "Custom Fishing Actions" folder.</returns>
         public static string CreateCustomFishingActionsFolder()
         {
+            // Get the directory where the executable is running
             string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            // Combine the executable path with the "Custom Fishing Actions" folder name
             string customActionsFolderPath = Path.Combine(exePath, "Custom Fishing Actions");
+
+            // Ensure the directory exists. This method creates the directory if it does not exist
+            // and does nothing if it already exists.
             Directory.CreateDirectory(customActionsFolderPath);
+
+            // Return the full path to the folder
             return customActionsFolderPath;
         }
 
-        public static void createFreshCoordinatesFile()
+        public static void CreateFreshCoordinatesFile()
         {
             string filePath = "Coordinates Data File.txt";
             // Delete the file if it exists
@@ -325,6 +335,17 @@ namespace ToonTown_Rewritten_Bot.Services
                     sw.WriteLine($"{key}.(0,0)"); // Write each key with default coordinates
                 }
             }
+        }
+
+        public static string[] loadCustomFishingActions()
+        {
+            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string customActionsFolderPath = Path.Combine(exePath, "Custom Fishing Actions");
+            // Ensure the directory exists
+            Directory.CreateDirectory(customActionsFolderPath); // This line ensures the directory is created if it doesn't exist
+
+            // Read files in the folder
+            return Directory.GetFiles(customActionsFolderPath);
         }
 
         //ignore .dll imports below
