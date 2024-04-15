@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static ToonTown_Rewritten_Bot.Models.Coordinates;
 
 namespace ToonTown_Rewritten_Bot.Models
 {
-    public class CoordinateActions
+    public class CoordinateActions : ICoordinateData
     {
+        public string Key { get; set; }
+        public string Description { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+
         private static readonly Dictionary<string, string> _actionDescriptionMap = new Dictionary<string, string>();
 
         // Static constructor to fill the dictionary
@@ -66,8 +73,23 @@ namespace ToonTown_Rewritten_Bot.Models
             return null; // Or throw an exception, depending on your needs
         }
 
-        // Optional: Method to get the full dictionary if needed elsewhere
+        // Method to get the full dictionary if needed elsewhere
         public static Dictionary<string, string> GetAllDescriptions() => _actionDescriptionMap;
+
+        public static string GetKeyFromDescription(string description)
+        {
+            // Iterate over the key-value pairs in the map
+            foreach (var pair in _actionDescriptionMap)
+            {
+                // Check if the value matches the provided description
+                if (pair.Value == description)
+                {
+                    return pair.Key;  // Return the key that matches the description
+                }
+            }
+
+            return null; // Return null if no match is found
+        }
     }
 
     public class Coordinates

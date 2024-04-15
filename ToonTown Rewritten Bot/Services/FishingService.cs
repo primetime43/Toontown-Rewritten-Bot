@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
 using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
 using ToonTown_Rewritten_Bot.Utilities;
-using ToonTown_Rewritten_Bot.Views;
+using static ToonTown_Rewritten_Bot.Models.Coordinates;
 
 namespace ToonTown_Rewritten_Bot.Services
 {
@@ -102,7 +102,7 @@ namespace ToonTown_Rewritten_Bot.Services
             maximizeAndFocus();
             await Task.Delay(3000, cancellationToken); // Initial delay before starting.
 
-            if (!CheckCoordinates("15")) // Checks the red fishing button
+            if (!CheckCoordinates(FishingCoordinatesEnum.RedFishingButton)) // Checks the red fishing button
             {
                 //imgRecLocateRedCastBtn();//use the image rec to locate the image and set the coordinates
 
@@ -122,7 +122,7 @@ namespace ToonTown_Rewritten_Bot.Services
                         await ManuallyLocateRedFishingButton();
                     }
                     else
-                        ManuallyUpdateCoordinatesNoUI("15", coords);
+                        ManuallyUpdateCoordinatesNoUI(FishingCoordinatesEnum.RedFishingButton, coords);
                 }
                 else
                     await ManuallyLocateRedFishingButton();

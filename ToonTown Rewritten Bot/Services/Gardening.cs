@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Views;
+using static ToonTown_Rewritten_Bot.Models.Coordinates;
 
 namespace ToonTown_Rewritten_Bot.Services
 {
@@ -12,10 +13,10 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task PlantFlowerAsync(string flowerCombo, CancellationToken cancellationToken)
         {
             // Assume ManualUpdateCoordinatesAsync is an async version of ManualUpdateCoordinates
-            if (!CheckCoordinates("1"))
+            if (!CheckCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton))
             {
-                await ManualUpdateCoordinates("1");
-                if (!CheckCoordinates("1")) return;
+                await ManualUpdateCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
+                if (!CheckCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton)) return;
             }
 
             var confirmation = MessageBox.Show("Press OK when ready to begin!", "", MessageBoxButtons.OKCancel);
@@ -23,12 +24,12 @@ namespace ToonTown_Rewritten_Bot.Services
 
             await Task.Delay(2000, cancellationToken);
 
-            var (x, y) = GetCoordsFromMap("1");
+            var (x, y) = GetCoordsFromMap(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
             MoveCursor(x, y);
             DoMouseClick();
             await Task.Delay(2000, cancellationToken);
 
-            await CheckBeansAsync("2", cancellationToken);
+            await CheckBeansAsync(GardeningCoordinatesEnum.RedJellybeanButton, cancellationToken);
 
             char[] beans = flowerCombo.ToCharArray();
             foreach (var bean in beans)
@@ -41,17 +42,17 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private async Task SelectBeanAsync(char beanType, CancellationToken cancellationToken)
         {
-            string location = beanType switch
+            GardeningCoordinatesEnum location = beanType switch
             {
-                'r' => "2",  // Red Jellybean
-                'g' => "3",  // Green Jellybean
-                'o' => "4",  // Orange Jellybean
-                'u' => "5",  // Purple Jellybean, assuming 'u' is for 'purple'
-                'b' => "6",  // Blue Jellybean
-                'i' => "7",  // Pink Jellybean, assuming 'i' is for 'pink'
-                'y' => "8",  // Yellow Jellybean
-                'c' => "9",  // Cyan Jellybean
-                's' => "10", // Silver Jellybean
+                'r' => GardeningCoordinatesEnum.RedJellybeanButton,
+                'g' => GardeningCoordinatesEnum.GreenJellybeanButton,
+                'o' => GardeningCoordinatesEnum.OrangeJellybeanButton,
+                'u' => GardeningCoordinatesEnum.PurpleJellybeanButton,
+                'b' => GardeningCoordinatesEnum.BlueJellybeanButton,
+                'i' => GardeningCoordinatesEnum.PinkJellybeanButton,
+                'y' => GardeningCoordinatesEnum.YellowJellybeanButton,
+                'c' => GardeningCoordinatesEnum.CyanJellybeanButton,
+                's' => GardeningCoordinatesEnum.SilverJellybeanButton,
                 _ => throw new ArgumentException("Invalid bean type", nameof(beanType)),
             };
 
@@ -66,25 +67,36 @@ namespace ToonTown_Rewritten_Bot.Services
             await Task.Delay(2000, cancellationToken);
         }
 
-        private async Task CheckBeansAsync(string location, CancellationToken cancellationToken)
+        private async Task CheckBeansAsync(GardeningCoordinatesEnum location, CancellationToken cancellationToken)
         {
-            if (Convert.ToInt32(location) <= 10)
+            int locationNumericalVal = Convert.ToInt32(location);
+            if (locationNumericalVal <= 10)
             {
                 if (!CoreFunctionality.CheckCoordinates(location))//if they're 0,0
                 {
                     await ManualUpdateCoordinates(location);
-                    await CheckBeansAsync(Convert.ToString(Convert.ToInt32(location) + 1), cancellationToken);
+                    GardeningCoordinatesEnum nextLocation = (GardeningCoordinatesEnum)(locationNumericalVal + 1);
+                    if (Enum.IsDefined(typeof(GardeningCoordinatesEnum), nextLocation))
+                    {
+                        await CheckBeansAsync(nextLocation, cancellationToken);
+                    }
                 }
                 else
-                    await CheckBeansAsync(Convert.ToString(Convert.ToInt32(location) + 1), cancellationToken);
+                {
+                    GardeningCoordinatesEnum nextLocation = (GardeningCoordinatesEnum)(locationNumericalVal + 1);
+                    if (Enum.IsDefined(typeof(GardeningCoordinatesEnum), nextLocation))
+                    {
+                        await CheckBeansAsync(nextLocation, cancellationToken);
+                    }
+                }
             }
         }
 
         private async Task PressPlantButtonAsync(CancellationToken cancellationToken)
         {
-            if (CoreFunctionality.CheckCoordinates("11"))
+            if (CoreFunctionality.CheckCoordinates(GardeningCoordinatesEnum.BluePlantButton))
             {
-                var (x, y) = GetCoordsFromMap("11");
+                var (x, y) = GetCoordsFromMap(GardeningCoordinatesEnum.BluePlantButton);
                 MoveCursor(x, y);
                 DoMouseClick();
                 Thread.Sleep(8000);
@@ -93,7 +105,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
             else
             {
-                await ManualUpdateCoordinates("11");
+                await ManualUpdateCoordinates(GardeningCoordinatesEnum.BluePlantButton);
                 Thread.Sleep(2000);
                 await PressPlantButtonAsync(cancellationToken);
             }
@@ -101,16 +113,16 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private async Task ClickOKAfterPlantAsync(CancellationToken cancellationToken)
         {
-            if (CoreFunctionality.CheckCoordinates("12"))
+            if (CoreFunctionality.CheckCoordinates(GardeningCoordinatesEnum.BlueOkButton))
             {
-                var (x, y) = GetCoordsFromMap("12");
+                var (x, y) = GetCoordsFromMap(GardeningCoordinatesEnum.BlueOkButton);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else
             {
-                await ManualUpdateCoordinates("12");
+                await ManualUpdateCoordinates(GardeningCoordinatesEnum.BlueOkButton);
                 Thread.Sleep(2000);
                 await ClickOKAfterPlantAsync(cancellationToken);
             }
@@ -118,9 +130,9 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public async Task WaterPlantAsync(CancellationToken cancellationToken)
         {
-            if (CoreFunctionality.CheckCoordinates("13"))
+            if (CoreFunctionality.CheckCoordinates(GardeningCoordinatesEnum.WateringCanButton))
             {
-                var (x, y) = GetCoordsFromMap("13");
+                var (x, y) = GetCoordsFromMap(GardeningCoordinatesEnum.WateringCanButton);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(4000);
@@ -130,7 +142,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
             else
             {
-                await ManualUpdateCoordinates("13");
+                await ManualUpdateCoordinates(GardeningCoordinatesEnum.WateringCanButton);
                 Thread.Sleep(2000);
                 await WaterPlantAsync(cancellationToken);
             }
@@ -138,9 +150,9 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public async Task RemovePlantAsync(CancellationToken cancellationToken)
         {
-            if (CoreFunctionality.CheckCoordinates("1"))
+            if (CoreFunctionality.CheckCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton))
             {
-                var (x, y) = GetCoordsFromMap("1");
+                var (x, y) = GetCoordsFromMap(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
                 MessageBox.Show("Press OK when ready to begin!");
                 Thread.Sleep(2000);
                 CoreFunctionality.MoveCursor(x, y);
@@ -149,7 +161,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
             else
             {
-                await ManualUpdateCoordinates("1");//update the plant flower button coords
+                await ManualUpdateCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton);//update the plant flower button coords
                 await RemovePlantAsync(cancellationToken);
                 Thread.Sleep(2000);
             }
@@ -158,15 +170,15 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private async Task SelectYESToRemoveAsync(CancellationToken cancellationToken)
         {
-            if (CoreFunctionality.CheckCoordinates("14"))
+            if (CoreFunctionality.CheckCoordinates(GardeningCoordinatesEnum.BlueYesButton))
             {
-                var (x, y) = GetCoordsFromMap("14");
+                var (x, y) = GetCoordsFromMap(GardeningCoordinatesEnum.BlueYesButton);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
             }
             else
             {
-                await ManualUpdateCoordinates("14");//update the plant flower button coords
+                await ManualUpdateCoordinates(GardeningCoordinatesEnum.BlueYesButton);//update the plant flower button coords
                 await SelectYESToRemoveAsync(cancellationToken);
                 Thread.Sleep(2000);
             }
