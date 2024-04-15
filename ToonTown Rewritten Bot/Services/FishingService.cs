@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -37,12 +38,14 @@ namespace ToonTown_Rewritten_Bot.Services
 
                 if (locationName != FishingLocationNames.FishAnywhere && locationName != FishingLocationNames.CustomFishingAction)
                 {
+                    // Hardcoded Fishing Locations' if
                     FishingStrategyBase fishingStrategy = DetermineFishingStrategy(locationName);
                     await fishingStrategy.LeaveDockAndSellAsync(cancellationToken);
                     sells--;
                 }
                 else if(locationName == FishingLocationNames.CustomFishingAction && customFishingFilePath != "")
                 {
+                    // Custom Fishing's if
                     CustomActionsFishing customFishing = new CustomActionsFishing(customFishingFilePath);
                     await customFishing.LeaveDockAndSellAsync(cancellationToken); // Start the action sequence
                     sells--;
@@ -53,6 +56,10 @@ namespace ToonTown_Rewritten_Bot.Services
                     sells = 0;
                 }
             }
+
+            if(locationName == FishingLocationNames.CustomFishingAction && customFishingFilePath != "")
+                // Update the location name to only the file name without the extension
+                locationName = Path.GetFileNameWithoutExtension(customFishingFilePath);
 
             BringBotWindowToFront();
             MessageBox.Show($"Done Fishing in '{locationName}'.");

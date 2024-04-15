@@ -124,7 +124,7 @@ namespace ToonTown_Rewritten_Bot.Models
             ["BRRRGH WALRUS WAY"] = "Fishes in the top left dock",
             ["BRRRGH SLEET STREET"] = "Fishes in the first dock when you walk in",
             ["MINNIE'S MELODYLAND TENOR TERRACE"] = "Fishes in the top left dock",
-            ["DONALD DOCK LIGHTHOUSE LANE"] = "Fishes in the 2nd one on the right",
+            ["DONALD DOCK LIGHTHOUSE LANE"] = "Fishes in the middle right dock (middle right)",
             ["DAISY'S GARDEN ELM STREET"] = "Fishes in the bottom left dock when you walk in",
             ["FISH ANYWHERE"] = "Fishes for you anywhere, but will only fish, will not sell fish!",
             ["CUSTOM FISHING ACTION"] = "Select your custom fishing actions in the dropdown"

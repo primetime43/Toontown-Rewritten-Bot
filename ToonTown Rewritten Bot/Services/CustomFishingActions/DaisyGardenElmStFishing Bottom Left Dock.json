@@ -1,0 +1,9 @@
+[
+  {"Action": "TURN LEFT", "Command": "LEFT"},
+  {"Action": "TIME", "Command": "80 milliseconds"},
+  {"Action": "WALK FORWARDS", "Command": "UP"},
+  {"Action": "TIME", "Command": "2000 milliseconds"},
+  {"Action": "SELL FISH", "Command": "SELL"},
+  {"Action": "WALK BACKWARDS", "Command": "DOWN"},
+  {"Action": "TIME", "Command": "4500 milliseconds"}
+]
