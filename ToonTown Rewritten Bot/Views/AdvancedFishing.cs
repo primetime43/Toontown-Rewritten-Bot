@@ -12,12 +12,12 @@ using WindowsInput;
 
 namespace ToonTown_Rewritten_Bot.Views
 {
-    class Fishing : AdvancedTemp
+    class AdvancedFishing : AdvancedTemp
     {
         //location, num of casts, num of sells
 
         private static AdvancedSettings imgRec;
-        private static void imgRecLocateExitBtn()
+        /*private static void imgRecLocateExitBtn()
         {
         retry:
             imgRec = new AdvancedSettings();
@@ -43,7 +43,7 @@ namespace ToonTown_Rewritten_Bot.Views
                         if ("16".Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
                         {
                             lines[i] = "16" + "." + "(" + x + "," + y + ")";
-                            CoreFunctionality.updateTextFile(lines);//changes the coordinate values in the data file
+                            CoreFunctionality.UpdateCoordinatesFile(lines);//changes the coordinate values in the data file
                         }
                     }
                 }
@@ -62,9 +62,9 @@ namespace ToonTown_Rewritten_Bot.Views
                 else//cancel
                     return;
             }
-        }
+        }*/
 
-        private static void imgRecLocateSellBtn()
+        /*private static void imgRecLocateSellBtn()
         {
         retry:
             imgRec = new AdvancedSettings();
@@ -90,7 +90,7 @@ namespace ToonTown_Rewritten_Bot.Views
                         if ("17".Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
                         {
                             lines[i] = "17" + "." + "(" + x + "," + y + ")";
-                            CoreFunctionality.updateTextFile(lines);//changes the coordinate values in the data file
+                            CoreFunctionality.UpdateCoordinatesFile(lines);//changes the coordinate values in the data file
                         }
                     }
                 }
@@ -109,9 +109,9 @@ namespace ToonTown_Rewritten_Bot.Views
                 else//cancel
                     return;
             }
-        }
+        }*/
 
-        private static void imgRecLocateRedCastBtn()
+        /*private static void imgRecLocateRedCastBtn()
         {
         retry:
             imgRec = new AdvancedSettings();
@@ -134,10 +134,10 @@ namespace ToonTown_Rewritten_Bot.Views
                 {
                     if (lines[i].Contains("."))
                     {
-                        if ("15".Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
+                        if (FishingCoordinatesEnum.RedFishingButton.Equals(lines[i].Substring(0, lines[i].IndexOf('.'))))//look for the number it cooresponds to
                         {
-                            lines[i] = "15" + "." + "(" + x + "," + y + ")";
-                            CoreFunctionality.updateTextFile(lines);//changes the coordinate values in the data file
+                            lines[i] = FishingCoordinatesEnum.RedFishingButton + "." + "(" + x + "," + y + ")";
+                            CoreFunctionality.UpdateCoordinatesFile(lines);//changes the coordinate values in the data file
                         }
                     }
                 }
@@ -156,7 +156,7 @@ namespace ToonTown_Rewritten_Bot.Views
                 else//cancel
                     return;
             }
-        }
+        }*/
 
         private static void openImageSettingsForm()
         {

@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace ToonTown_Rewritten_Bot
 
             CoreFunctionality.CreateCustomFishingActionsFolder();
 
-            CoreFunctionality.readCoordinatesFile();
+            CoreFunctionality.ReadCoordinatesFromJson();
             BotFunctions.CreateItemsDataFileMap();
             LoadCoordinatesIntoResetBox();
         }
@@ -150,33 +151,36 @@ namespace ToonTown_Rewritten_Bot
         private void LoadCoordinatesIntoResetBox()
         {
             comboBox1.Items.Clear();
-            var dataFileMap = BotFunctions.GetDataFileMap();
-            words = new String[dataFileMap.Count];
-            for (int i = 0; i < dataFileMap.Count; i++)
-            {
-                words[i] = dataFileMap[Convert.ToString(i + 1)];
-            }
-            comboBox1.Items.AddRange(words);
+            var descriptions = CoordinateActions.GetAllDescriptions();
+            comboBox1.Items.AddRange(descriptions.Values.ToArray());
         }
 
-        private static String[] words;
         private CoreFunctionality commonService = new CoreFunctionality();
         private async void button6_Click(object sender, EventArgs e)
         {
-            string selected = (string)comboBox1.SelectedItem;
+            string selectedDescription = comboBox1.SelectedItem as string;
+            if (string.IsNullOrEmpty(selectedDescription))
+            {
+                MessageBox.Show("Please select a valid item from the list.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string keyToUpdate = CoordinateActions.GetKeyFromDescription(selectedDescription);
+            if (keyToUpdate == null)
+            {
+                MessageBox.Show("No valid key found for the selected description.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             try
             {
-                for (int i = 0; i < words.Length; i++)
-                {
-                    if (words[i].Equals(selected))
-                        await commonService.ManualUpdateCoordinates(Convert.ToString(i + 1));
-                }
+                await commonService.ManualUpdateCoordinates(keyToUpdate);
+                MessageBox.Show("Coordinates updated for " + selectedDescription);
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show("Unable to perform this action: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
-            MessageBox.Show("Coordinate's updated for " + selected);
         }
 
         private CancellationTokenSource cancellationTokenSource;

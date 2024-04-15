@@ -1096,6 +1096,7 @@
             groupBox9.TabIndex = 8;
             groupBox9.TabStop = false;
             groupBox9.Text = "Image Rec";
+            groupBox9.Visible = false;
             // 
             // label11
             // 

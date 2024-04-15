@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using static ToonTown_Rewritten_Bot.Models.Coordinates;
 
 namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 {
@@ -64,7 +65,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         protected async Task CastLine(bool fishVariance, CancellationToken cancellationToken)
         {
-            var (x, y) = GetCoordsFromMap("15");
+            var (x, y) = GetCoordsFromMap(FishingCoordinatesEnum.RedFishingButton);
 
             int randX = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
             int randY = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
@@ -75,7 +76,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         protected async Task<bool> CheckIfFishCaught(CancellationToken cancellationToken)
         {
-            var (x, y) = GetCoordsFromMap("15");
+            var (x, y) = GetCoordsFromMap(FishingCoordinatesEnum.RedFishingButton);
             string color = HexConverter(GetColorAt(x, y - 600));
             if (color.Equals("#FFFFBE") || color.Equals("#FFFFBF")) return true;
 
@@ -85,15 +86,15 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         protected async Task ExitFishing(CancellationToken cancellationToken)
         {
-            if (CheckCoordinates("16"))
+            if (CheckCoordinates(FishingCoordinatesEnum.ExitFishingButton))
             {
-                var (x, y) = GetCoordsFromMap("16");
+                var (x, y) = GetCoordsFromMap(FishingCoordinatesEnum.ExitFishingButton);
                 MoveCursor(x, y);
                 DoMouseClick();
             }
             else
             {
-                await ManualUpdateCoordinates("16");
+                await ManualUpdateCoordinates(FishingCoordinatesEnum.ExitFishingButton);
                 await ExitFishing(cancellationToken);
             }
             await Task.Delay(2000, cancellationToken);
@@ -102,16 +103,16 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         protected async Task SellFishAsync(CancellationToken cancellationToken)
         {
         retry:
-            if (CheckCoordinates("17"))//returns true if they are not 0,0
+            if (CheckCoordinates(FishingCoordinatesEnum.BlueSellAllButton))//returns true if they are not 0,0
             {
                 await Task.Delay(2100, cancellationToken);
-                var (x, y) = GetCoordsFromMap("17");
+                var (x, y) = GetCoordsFromMap(FishingCoordinatesEnum.BlueSellAllButton);
                 MoveCursor(x, y);
                 DoMouseClick();
             }
             else
             {
-                await ManualUpdateCoordinates("17");
+                await ManualUpdateCoordinates(FishingCoordinatesEnum.BlueSellAllButton);
                 //imgRecLocateSellBtn();
                 goto retry;
             }
@@ -120,7 +121,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         protected async Task ManuallyLocateRedFishingButton()
         {
-            await ManualUpdateCoordinates("15");//update the red fishing button coords
+            await ManualUpdateCoordinates(FishingCoordinatesEnum.RedFishingButton);//update the red fishing button coords
         }
     }
 }
