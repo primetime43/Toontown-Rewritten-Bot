@@ -102,7 +102,7 @@ namespace ToonTown_Rewritten_Bot.Services
             maximizeAndFocus();
             await Task.Delay(3000, cancellationToken); // Initial delay before starting.
 
-            if (!CheckCoordinates(FishingCoordinatesEnum.RedFishingButton)) // Checks the red fishing button
+            if (!CoordinatesManager.CheckCoordinates(FishingCoordinatesEnum.RedFishingButton)) // Checks the red fishing button
             {
                 //imgRecLocateRedCastBtn();//use the image rec to locate the image and set the coordinates
 
@@ -122,7 +122,7 @@ namespace ToonTown_Rewritten_Bot.Services
                         await ManuallyLocateRedFishingButton();
                     }
                     else
-                        UpdateCoordinatesAutomatically(FishingCoordinatesEnum.RedFishingButton, coords);
+                        CoordinatesManager.UpdateCoordinatesAutomatically(FishingCoordinatesEnum.RedFishingButton, coords);
                 }
                 else
                     await ManuallyLocateRedFishingButton();

@@ -11,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
-using ToonTown_Rewritten_Bot.Properties;
 using ToonTown_Rewritten_Bot.Services;
 using ToonTown_Rewritten_Bot.Utilities;
 using ToonTown_Rewritten_Bot.Views;
@@ -26,7 +25,7 @@ namespace ToonTown_Rewritten_Bot
 
             CoreFunctionality.CreateCustomFishingActionsFolder();
 
-            CoreFunctionality.ReadCoordinatesFromJsonFile();
+            CoordinatesManager.ReadCoordinates();
             BotFunctions.CreateItemsDataFileMap();
             LoadCoordinatesIntoResetBox();
         }
@@ -144,7 +143,7 @@ namespace ToonTown_Rewritten_Bot
 
         private void button7_Click(object sender, EventArgs e)
         {
-            CoreFunctionality.CreateFreshCoordinatesFile();
+            CoordinatesManager.CreateFreshCoordinatesFile();
             MessageBox.Show("All coordinates reset!");
         }
 
@@ -155,7 +154,7 @@ namespace ToonTown_Rewritten_Bot
             comboBox1.Items.AddRange(descriptions.Values.ToArray());
         }
 
-        private CoreFunctionality commonService = new CoreFunctionality();
+        private CoordinatesManager coordinatesManagerService = new CoordinatesManager();
         private async void button6_Click(object sender, EventArgs e)
         {
             string selectedDescription = comboBox1.SelectedItem as string;
@@ -174,7 +173,7 @@ namespace ToonTown_Rewritten_Bot
 
             try
             {
-                await commonService.ManualUpdateCoordinates(keyToUpdate);
+                await coordinatesManagerService.ManualUpdateCoordinates(keyToUpdate);
                 MessageBox.Show("Coordinates updated for " + selectedDescription);
             }
             catch (Exception ex)
