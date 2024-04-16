@@ -20,6 +20,8 @@ namespace ToonTown_Rewritten_Bot
     public partial class MainForm : Form
     {
         private CoordinatesManager _coordinatesManagerService = new CoordinatesManager();
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private FishingService _fishingService = new FishingService();
         public MainForm()
         {
             InitializeComponent();
@@ -52,14 +54,16 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)//open the flower manager
+        private void selectFlowerBeanAmountBtn_Click(object sender, EventArgs e)//open the flower manager
         {
             Plants plantsForm = new Plants();
             try
             {
-                string selected = (string)comboBox2.SelectedItem;
-                plantsForm.loadFlowers(selected);
-                plantsForm.ShowDialog();
+                string selected = (string)flowerBeanAmountDropdown.SelectedItem;
+                plantsForm.PopulateFlowerOptionsBasedOnBeanCount(selected);
+                this.Hide();
+                plantsForm.ShowDialog();// Shows the form that allows the user to select one of the flowers from PopulateFlowerOptionsBasedOnBeanCount
+                this.Show();
             }
             catch
             {
@@ -106,12 +110,11 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private Gardening gardeningService = new Gardening();
-        private async void button2_Click(object sender, EventArgs e)
+        private async void waterPlantBtn_Click(object sender, EventArgs e)
         {
             try
             {
-                await gardeningService.WaterPlantAsync(cancellationTokenSource.Token);
+                await Services.Gardening.WaterPlantAsync(_cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {
@@ -124,12 +127,12 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private async void button3_Click(object sender, EventArgs e)
+        private async void removePlantBtn_Click(object sender, EventArgs e)
         {
             try
             {
                 // Assuming RemovePlantAsync is an instance method requiring a CancellationToken.
-                await gardeningService.RemovePlantAsync(cancellationTokenSource.Token);
+                await Services.Gardening.RemovePlantAsync(_cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {
@@ -174,6 +177,7 @@ namespace ToonTown_Rewritten_Bot
             try
             {
                 await _coordinatesManagerService.ManualUpdateCoordinates(keyToUpdate);
+                CoreFunctionality.BringBotWindowToFront();
                 MessageBox.Show("Coordinates updated for " + selectedDescription);
             }
             catch (Exception ex)
@@ -181,9 +185,6 @@ namespace ToonTown_Rewritten_Bot
                 MessageBox.Show("Unable to perform this action: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
         }
-
-        private CancellationTokenSource cancellationTokenSource;
-        private FishingService _fishingService = new FishingService();
 
         /// <summary>
         /// Handles the start fishing button click event. This method initiates fishing
@@ -201,8 +202,7 @@ namespace ToonTown_Rewritten_Bot
         /// </remarks>
         private async void startFishing_Click(object sender, EventArgs e)
         {
-            cancellationTokenSource = new CancellationTokenSource();
-            var token = cancellationTokenSource.Token; // Token to handle task cancellation
+            var token = _cancellationTokenSource.Token; // Token to handle task cancellation
 
             try
             {
@@ -262,14 +262,14 @@ namespace ToonTown_Rewritten_Bot
         private void button4_Click(object sender, EventArgs e)//button to stop fishing
         {
             // Check if the operation is already canceled or not started
-            if (cancellationTokenSource == null || cancellationTokenSource.IsCancellationRequested)
+            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
             {
                 MessageBox.Show("Fishing is not currently in progress.");
                 return;
             }
 
             // Signal the cancellation
-            cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Cancel();
             MessageBox.Show("Fishing stopped!");
         }
 

@@ -1,33 +1,44 @@
 ﻿using System;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Views;
 using static ToonTown_Rewritten_Bot.Models.Coordinates;
+using static ToonTown_Rewritten_Bot.Utilities.ImageRecognition;
 
 namespace ToonTown_Rewritten_Bot.Services
 {
     public class Gardening : CoreFunctionality
     {
-        public async Task PlantFlowerAsync(string flowerCombo, CancellationToken cancellationToken)
+        public static async Task PlantFlowerAsync(string flowerCombo, CancellationToken cancellationToken)
         {
-            // Assume ManualUpdateCoordinatesAsync is an async version of ManualUpdateCoordinates
             if (!CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton))
             {
                 await CoordinatesManager.ManualUpdateCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
-                if (!CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton)) return;
+                if (!CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton)) 
+                    return;
             }
 
-            var confirmation = MessageBox.Show("Press OK when ready to begin!", "", MessageBoxButtons.OKCancel);
-            if (confirmation == DialogResult.Cancel) return;
+            //BringBotWindowToFront();
+            //var confirmation = MessageBox.Show("Press OK when ready to begin!", "", MessageBoxButtons.OKCancel);
+            var confirmation = MessageBox.Show(
+            "Press OK when ready to begin!",
+            "Begin Gardening",
+            MessageBoxButtons.OKCancel,
+            MessageBoxIcon.None,
+            MessageBoxDefaultButton.Button1,
+            MessageBoxOptions.DefaultDesktopOnly);
+            if (confirmation == DialogResult.Cancel) 
+                return;
 
-            await Task.Delay(2000, cancellationToken);
+            await Task.Delay(2000);
 
             var (x, y) = CoordinatesManager.GetCoordsFromMap(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
             MoveCursor(x, y);
             DoMouseClick();
-            await Task.Delay(2000, cancellationToken);
+            await Task.Delay(2000);
 
             await CheckBeansAsync(GardeningCoordinatesEnum.RedJellybeanButton, cancellationToken);
 
@@ -37,10 +48,17 @@ namespace ToonTown_Rewritten_Bot.Services
                 await SelectBeanAsync(bean, cancellationToken);
             }
             await PressPlantButtonAsync(cancellationToken);
-            MessageBox.Show("Done!");
+
+            MessageBox.Show(
+            "Done!",
+            "Gardening Complete",
+            MessageBoxButtons.OKCancel,
+            MessageBoxIcon.None,
+            MessageBoxDefaultButton.Button1,
+            MessageBoxOptions.DefaultDesktopOnly);
         }
 
-        private async Task SelectBeanAsync(char beanType, CancellationToken cancellationToken)
+        private static async Task SelectBeanAsync(char beanType, CancellationToken cancellationToken)
         {
             GardeningCoordinatesEnum location = beanType switch
             {
@@ -67,7 +85,7 @@ namespace ToonTown_Rewritten_Bot.Services
             await Task.Delay(2000, cancellationToken);
         }
 
-        private async Task CheckBeansAsync(GardeningCoordinatesEnum location, CancellationToken cancellationToken)
+        private static async Task CheckBeansAsync(GardeningCoordinatesEnum location, CancellationToken cancellationToken)
         {
             int locationNumericalVal = Convert.ToInt32(location);
             if (locationNumericalVal <= 10)
@@ -92,7 +110,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
         }
 
-        private async Task PressPlantButtonAsync(CancellationToken cancellationToken)
+        private static async Task PressPlantButtonAsync(CancellationToken cancellationToken)
         {
             if (CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.BluePlantButton))
             {
@@ -111,7 +129,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
         }
 
-        private async Task ClickOKAfterPlantAsync(CancellationToken cancellationToken)
+        private static async Task ClickOKAfterPlantAsync(CancellationToken cancellationToken)
         {
             if (CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.BlueOkButton))
             {
@@ -128,27 +146,30 @@ namespace ToonTown_Rewritten_Bot.Services
             }
         }
 
-        public async Task WaterPlantAsync(CancellationToken cancellationToken)
+        public static async Task WaterPlantAsync(CancellationToken cancellationToken)
         {
-            if (CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.WateringCanButton))
-            {
-                var (x, y) = CoordinatesManager.GetCoordsFromMap(GardeningCoordinatesEnum.WateringCanButton);
-                CoreFunctionality.MoveCursor(x, y);
-                CoreFunctionality.DoMouseClick();
-                Thread.Sleep(4000);
-                CoreFunctionality.MoveCursor(x, y);
-                CoreFunctionality.DoMouseClick();
-                Thread.Sleep(2000);
-            }
-            else
+            if (!CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.WateringCanButton))
             {
                 await CoordinatesManager.ManualUpdateCoordinates(GardeningCoordinatesEnum.WateringCanButton);
-                Thread.Sleep(2000);
-                await WaterPlantAsync(cancellationToken);
+                // Recheck coordinates after update
+                if (!CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.WateringCanButton))
+                {
+                    throw new InvalidOperationException("Watering can button coordinates not set.");
+                }
             }
+
+            var (x, y) = CoordinatesManager.GetCoordsFromMap(GardeningCoordinatesEnum.WateringCanButton);
+
+            CoreFunctionality.MoveCursor(x, y);
+            CoreFunctionality.DoMouseClick();
+            await Task.Delay(4000, cancellationToken);
+
+            CoreFunctionality.MoveCursor(x, y);
+            CoreFunctionality.DoMouseClick();
+            await Task.Delay(2000, cancellationToken);
         }
 
-        public async Task RemovePlantAsync(CancellationToken cancellationToken)
+        public static async Task RemovePlantAsync(CancellationToken cancellationToken)
         {
             if (CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton))
             {
@@ -168,7 +189,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
         }
 
-        private async Task SelectYESToRemoveAsync(CancellationToken cancellationToken)
+        private static async Task SelectYESToRemoveAsync(CancellationToken cancellationToken)
         {
             if (CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.BlueYesButton))
             {
