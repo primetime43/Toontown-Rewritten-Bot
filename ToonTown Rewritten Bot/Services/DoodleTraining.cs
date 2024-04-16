@@ -134,48 +134,48 @@ namespace ToonTown_Rewritten_Bot.Services
             Thread.Sleep(1000);
             //Below is the location for the SpeedChat button location
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.GreenSpeedChatButton))
+            if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.GreenSpeedChatButton))
             {
-                var (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.GreenSpeedChatButton);
+                var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.GreenSpeedChatButton);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(1000);
 
                 //Below is the location for pets tab
                 //check if coordinates for the button is (0,0). True means they're not (0,0).
-                if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.PetsTabInSpeedChat))
+                if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.PetsTabInSpeedChat))
                 {
-                    (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.PetsTabInSpeedChat);
+                    (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.PetsTabInSpeedChat);
                     CoreFunctionality.MoveCursor(x, y);
                     CoreFunctionality.DoMouseClick();
                     Thread.Sleep(1000);
 
                     //Below is the location for tricks tab
                     //check if coordinates for the button is (0,0). True means they're not (0,0).
-                    if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.TricksTabInSpeedChat))
+                    if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.TricksTabInSpeedChat))
                     {
-                        (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.TricksTabInSpeedChat);
+                        (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.TricksTabInSpeedChat);
                         CoreFunctionality.MoveCursor(x, y);
                         CoreFunctionality.DoMouseClick();
                         Thread.Sleep(1000);
                     }
                     else
                     {
-                        await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.TricksTabInSpeedChat);
+                        await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.TricksTabInSpeedChat);
                         Thread.Sleep(2000);
                         await openSpeedChat();
                     }
                 }
                 else
                 {
-                    await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.PetsTabInSpeedChat);
+                    await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.PetsTabInSpeedChat);
                     Thread.Sleep(2000);
                     await openSpeedChat();
                 }
             }
             else//means it was (0,0) and needs updated
             {
-                await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.GreenSpeedChatButton);
+                await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.GreenSpeedChatButton);
                 Thread.Sleep(2000);
                 await openSpeedChat();
             }
@@ -184,16 +184,16 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainBeg()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.BegTrickOptionInSpeedChat))
+            if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.BegTrickOptionInSpeedChat))
             {
-                var (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.BegTrickOptionInSpeedChat);
+                var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.BegTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
             {
-                await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.BegTrickOptionInSpeedChat);
+                await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.BegTrickOptionInSpeedChat);
                 Thread.Sleep(2000);
                 await trainBeg();
             }
@@ -202,16 +202,16 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainPlayDead()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.PlayDeadTrickOptionInSpeedChat))
+            if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.PlayDeadTrickOptionInSpeedChat))
             {
-                var (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.PlayDeadTrickOptionInSpeedChat);
+                var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.PlayDeadTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
             {
-                await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.PlayDeadTrickOptionInSpeedChat);
+                await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.PlayDeadTrickOptionInSpeedChat);
                 Thread.Sleep(2000);
                 await trainPlayDead();
             }
@@ -220,16 +220,16 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainRollover()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.RolloverTrickOptionInSpeedChat))
+            if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.RolloverTrickOptionInSpeedChat))
             {
-                var (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.RolloverTrickOptionInSpeedChat);
+                var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.RolloverTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
             {
-                await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.RolloverTrickOptionInSpeedChat);
+                await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.RolloverTrickOptionInSpeedChat);
                 Thread.Sleep(2000);
                 await trainRollover();
             }
@@ -238,16 +238,16 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainBackflip()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.BackflipTrickOptionInSpeedChat))
+            if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.BackflipTrickOptionInSpeedChat))
             {
-                var (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.BackflipTrickOptionInSpeedChat);
+                var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.BackflipTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
             {
-                await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.BackflipTrickOptionInSpeedChat);
+                await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.BackflipTrickOptionInSpeedChat);
                 Thread.Sleep(2000);
                 await trainBackflip();
             }
@@ -256,16 +256,16 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainDance()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.DanceTrickOptionInSpeedChat))
+            if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.DanceTrickOptionInSpeedChat))
             {
-                var (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.DanceTrickOptionInSpeedChat);
+                var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.DanceTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
             {
-                await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.DanceTrickOptionInSpeedChat);
+                await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.DanceTrickOptionInSpeedChat);
                 Thread.Sleep(2000);
                 await trainDance();
             }
@@ -274,16 +274,16 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainSpeak()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.SpeakTrickOptionInSpeedChat))
+            if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.SpeakTrickOptionInSpeedChat))
             {
-                var (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.SpeakTrickOptionInSpeedChat);
+                var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.SpeakTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
             {
-                await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.SpeakTrickOptionInSpeedChat);
+                await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.SpeakTrickOptionInSpeedChat);
                 Thread.Sleep(2000);
                 await trainSpeak();
             }
@@ -292,16 +292,16 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task trainJump()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.JumpTrickOptionInSpeedChat))
+            if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.JumpTrickOptionInSpeedChat))
             {
-                var (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.JumpTrickOptionInSpeedChat);
+                var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.JumpTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(2000);
             }
             else//means it was (0,0) and needs updated
             {
-                await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.JumpTrickOptionInSpeedChat);
+                await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.JumpTrickOptionInSpeedChat);
                 Thread.Sleep(2000);
                 await trainJump();
             }
@@ -310,16 +310,16 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task feedDoodle()
         {
             //check if coordinates for the button is (0,0). True means they're not (0,0).
-            if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.FeedDoodleButton))
+            if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.FeedDoodleButton))
             {
-                var (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.FeedDoodleButton);
+                var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.FeedDoodleButton);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(11500);
             }
             else//means it was (0,0) and needs updated
             {
-                await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.FeedDoodleButton);
+                await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.FeedDoodleButton);
                 Thread.Sleep(2000);
                 await feedDoodle();
             }
@@ -327,16 +327,16 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public async Task scratchDoodle()
         {
-            if (CoreFunctionality.CheckCoordinates(DoodleTrainingCoordinatesEnum.ScratchDoodleButton))
+            if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.ScratchDoodleButton))
             {
-                var (x, y) = GetCoordsFromMap(DoodleTrainingCoordinatesEnum.ScratchDoodleButton);
+                var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.ScratchDoodleButton);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 Thread.Sleep(10000);
             }
             else
             {
-                await ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.ScratchDoodleButton);
+                await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.ScratchDoodleButton);
                 Thread.Sleep(2000);
                 await scratchDoodle();
             }
