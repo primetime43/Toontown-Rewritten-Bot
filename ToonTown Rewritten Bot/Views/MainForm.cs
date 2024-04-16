@@ -19,6 +19,7 @@ namespace ToonTown_Rewritten_Bot
 {
     public partial class MainForm : Form
     {
+        private CoordinatesManager _coordinatesManagerService = new CoordinatesManager();
         public MainForm()
         {
             InitializeComponent();
@@ -154,7 +155,6 @@ namespace ToonTown_Rewritten_Bot
             comboBox1.Items.AddRange(descriptions.Values.ToArray());
         }
 
-        private CoordinatesManager coordinatesManagerService = new CoordinatesManager();
         private async void button6_Click(object sender, EventArgs e)
         {
             string selectedDescription = comboBox1.SelectedItem as string;
@@ -173,7 +173,7 @@ namespace ToonTown_Rewritten_Bot
 
             try
             {
-                await coordinatesManagerService.ManualUpdateCoordinates(keyToUpdate);
+                await _coordinatesManagerService.ManualUpdateCoordinates(keyToUpdate);
                 MessageBox.Show("Coordinates updated for " + selectedDescription);
             }
             catch (Exception ex)

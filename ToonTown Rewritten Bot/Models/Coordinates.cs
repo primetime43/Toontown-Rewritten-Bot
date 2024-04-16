@@ -9,6 +9,9 @@ using static ToonTown_Rewritten_Bot.Models.Coordinates;
 
 namespace ToonTown_Rewritten_Bot.Models
 {
+    /// <summary>
+    /// Represents actions associated with coordinates in the UI, such as button locations.
+    /// </summary>
     public class CoordinateActions : ICoordinateData
     {
         public string Key { get; set; }
@@ -18,12 +21,18 @@ namespace ToonTown_Rewritten_Bot.Models
 
         private static readonly Dictionary<string, string> _actionDescriptionMap = new Dictionary<string, string>();
 
-        // Static constructor to fill the dictionary
+        /// <summary>
+        /// Static constructor to initialize the action description map.
+        /// </summary>
         static CoordinateActions()
         {
             CreateActionDescriptionMap();
         }
 
+        /// <summary>
+        /// Initializes the description map with keys and corresponding descriptions.
+        /// This map is what is used when creating the default UIElementCoordinates.json file
+        /// </summary>
         private static void CreateActionDescriptionMap()
         {
             // Gardening Actions
@@ -62,7 +71,11 @@ namespace ToonTown_Rewritten_Bot.Models
             _actionDescriptionMap.Add("29", "Speak Trick Option in SpeedChat");
         }
 
-        // Public method to get the description by key
+        /// <summary>
+        /// Retrieves the description for a given key.
+        /// </summary>
+        /// <param name="key">The key whose description is to be retrieved.</param>
+        /// <returns>The description if found; otherwise, null.</returns>
         public static string GetDescription(string key)
         {
             if (_actionDescriptionMap.TryGetValue(key, out var description))
@@ -73,9 +86,17 @@ namespace ToonTown_Rewritten_Bot.Models
             return null; // Or throw an exception, depending on your needs
         }
 
-        // Method to get the full dictionary if needed elsewhere
+        /// <summary>
+        /// Provides access to the complete dictionary of action descriptions.
+        /// </summary>
+        /// <returns>A dictionary of all descriptions mapped by their keys.</returns>
         public static Dictionary<string, string> GetAllDescriptions() => _actionDescriptionMap;
 
+        /// <summary>
+        /// Finds the key for a given description.
+        /// </summary>
+        /// <param name="description">The description to find the key for.</param>
+        /// <returns>The key if found; otherwise, null.</returns>
         public static string GetKeyFromDescription(string description)
         {
             // Iterate over the key-value pairs in the map

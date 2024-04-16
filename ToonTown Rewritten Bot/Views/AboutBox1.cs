@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Utilities;
 
 namespace ToonTown_Rewritten_Bot
 {
@@ -14,10 +10,10 @@ namespace ToonTown_Rewritten_Bot
         public AboutBox1()
         {
             InitializeComponent();
-            this.Text = String.Format("About {0} by primetime43", AssemblyTitle);
+            this.Text = String.Format("About {0} by " + GlobalSettings.ApplicationInfo.Author, AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = "Version 1.4.1";
-            this.labelCopyright.Text = "Programmed by primetime43";
+            this.labelVersion.Text = "Version " + GlobalSettings.ApplicationInfo.Version;
+            this.labelCopyright.Text = "Programmed by " + GlobalSettings.ApplicationInfo.Author;
             this.labelCompanyName.Text = AssemblyCompany;
             this.textBoxDescription.Text = "This program is a bot that will perform certain time consuming tasks on ToonTown Rewritten.";
         }
