@@ -122,7 +122,7 @@ namespace ToonTown_Rewritten_Bot.Services
                         await ManuallyLocateRedFishingButton();
                     }
                     else
-                        ManuallyUpdateCoordinatesNoUI(FishingCoordinatesEnum.RedFishingButton, coords);
+                        UpdateCoordinatesAutomatically(FishingCoordinatesEnum.RedFishingButton, coords);
                 }
                 else
                     await ManuallyLocateRedFishingButton();

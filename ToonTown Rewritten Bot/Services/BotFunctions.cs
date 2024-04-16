@@ -70,10 +70,10 @@ namespace ToonTown_Rewritten_Bot.Services
             return false;
         }
 
-        public static Dictionary<string, string> GetDataFileMap()
+        /*public static Dictionary<string, string> GetDataFileMap()
         {
             return _dataFileMap;
-        }
+        }*/
 
         public static void CreateItemsDataFileMap()
         {
