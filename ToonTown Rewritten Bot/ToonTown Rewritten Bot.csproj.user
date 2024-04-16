@@ -30,9 +30,6 @@
     <Compile Update="Views\DevForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\AdvancedFishing.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

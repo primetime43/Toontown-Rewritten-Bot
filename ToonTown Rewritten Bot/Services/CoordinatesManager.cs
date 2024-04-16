@@ -13,11 +13,14 @@ namespace ToonTown_Rewritten_Bot.Services
 {
     public class CoordinatesManager
     {
-        private const string CoordinatesFileName = "Coordinates Data File.json";
+        private const string CoordinatesFileName = "UIElementCoordinates.json";
 
         public CoordinatesManager()
         {
-
+            if (!File.Exists(CoordinatesFileName))
+            {
+                CreateFreshCoordinatesFile();
+            }
         }
 
         /// <summary>
@@ -36,17 +39,14 @@ namespace ToonTown_Rewritten_Bot.Services
         /// <returns>True if the coordinates are valid and set; otherwise, false if they are default (0,0) or not found.</returns>
         public static bool CheckCoordinates(Enum coordinateKey)
         {
-            // Define the path to the JSON file that stores the coordinates.
-            string filePath = CoordinatesFileName;
-
             // Check if the coordinates file exists. If not, create a fresh one with default values.
-            if (!File.Exists(filePath))
+            if (!File.Exists(CoordinatesFileName))
             {
                 CreateFreshCoordinatesFile();
             }
 
             // Read the JSON file containing the coordinates data.
-            string json = File.ReadAllText(Path.GetFullPath(filePath));
+            string json = File.ReadAllText(Path.GetFullPath(CoordinatesFileName));
             // Deserialize the JSON data into a list of CoordinateActions objects.
             List<CoordinateActions> coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
 
@@ -71,7 +71,7 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         /// <param name="key">An enum value representing the coordinate key to retrieve. The enum should be convertible to an integer that matches keys stored in the JSON.</param>
         /// <returns>A tuple containing the X and Y coordinates associated with the provided enum key.</returns>
-        /// <exception cref="FileNotFoundException">Thrown if the coordinates data file cannot be found at the expected location.</exception>
+        /// <exception cref="FileNotFoundException">Thrown if the UIElementCoordinates cannot be found at the expected location.</exception>
         /// <exception cref="Exception">Thrown if no coordinates are found for the given key, indicating a possible issue with data consistency or key validity.</exception>
         /// <remarks>
         /// This method reads from a JSON file located relative to the executable's directory, deserializing it into a list of <see cref="CoordinateActions"/> objects.
@@ -103,7 +103,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
             else
             {
-                throw new FileNotFoundException("Coordinates data file not found.");
+                throw new FileNotFoundException("UIElementCoordinates not found.");
             }
         }
 
@@ -145,7 +145,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
             else
             {
-                throw new FileNotFoundException("Coordinates data file not found.");
+                throw new FileNotFoundException("UIElementCoordinates not found.");
             }
         }
 
@@ -290,12 +290,9 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static void CreateFreshCoordinatesFile()
         {
-            // Path to the new JSON file
-            string filePath = CoordinatesFileName;
-
             // Delete the file if it exists
-            if (File.Exists(filePath))
-                File.Delete(filePath);
+            if (File.Exists(CoordinatesFileName))
+                File.Delete(CoordinatesFileName);
 
             // Retrieve all descriptions to populate the JSON file
             var allDescriptions = CoordinateActions.GetAllDescriptions();
@@ -319,7 +316,7 @@ namespace ToonTown_Rewritten_Bot.Services
             string json = JsonConvert.SerializeObject(coordinateList, Formatting.Indented);
 
             // Write the JSON to the file
-            File.WriteAllText(filePath, json);
+            File.WriteAllText(CoordinatesFileName, json);
         }
     }
 }
