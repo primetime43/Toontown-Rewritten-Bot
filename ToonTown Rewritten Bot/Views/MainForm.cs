@@ -26,7 +26,7 @@ namespace ToonTown_Rewritten_Bot
 
             CoreFunctionality.CreateCustomFishingActionsFolder();
 
-            CoreFunctionality.ReadCoordinatesFromJson();
+            CoreFunctionality.ReadCoordinatesFromJsonFile();
             BotFunctions.CreateItemsDataFileMap();
             LoadCoordinatesIntoResetBox();
         }

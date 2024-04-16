@@ -52,24 +52,27 @@ namespace ToonTown_Rewritten_Bot.Services
             }
         }*/
 
-        //this needs fixed. Its passing in a string name
         public static (int x, int y) GetCoordsFromMap(Enum key)
         {
             string filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Coordinates Data File.json");
 
+            // Convert the Enum to its integer value, then to string
+            string keyAsString = Convert.ToInt32(key).ToString();
+
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
+                //Gets all of the coordinate models
                 var coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
 
-                var action = coordinateActions.FirstOrDefault(a => a.Key == key.ToString());
+                var action = coordinateActions.FirstOrDefault(a => a.Key == keyAsString);
                 if (action != null)
                 {
                     return (action.X, action.Y);
                 }
                 else
                 {
-                    throw new Exception($"No coordinates found for the key: {key}");
+                    throw new Exception($"No coordinates found for the key: {keyAsString}");
                 }
             }
             else
@@ -197,12 +200,12 @@ namespace ToonTown_Rewritten_Bot.Services
             BringBotWindowToFront();
 
             UpdateCoordsHelper updateCoordsWindow = new UpdateCoordsHelper();
-            // Convert the Enum to string to use as a key
-            string locationToUpdate = locationToUpdateEnum.ToString();
+            // Convert the Enum to its integer value, then to string
+            string keyAsString = Convert.ToInt32(locationToUpdateEnum).ToString();
             try
             {
                 // Use CoordinateActions.GetDescription to retrieve the description by key
-                string description = CoordinateActions.GetDescription(locationToUpdate);
+                string description = CoordinateActions.GetDescription(keyAsString);
                 if (description == null)
                 {
                     throw new Exception("Description not found for the given key.");
@@ -237,7 +240,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
 
             // Find the coordinate by key and update its X and Y values
-            var coordinateToUpdate = coordinateActions.FirstOrDefault(ca => ca.Key == locationToUpdate);
+            var coordinateToUpdate = coordinateActions.FirstOrDefault(ca => ca.Key == keyAsString);
             if (coordinateToUpdate != null)
             {
                 coordinateToUpdate.X = int.Parse(x);
@@ -308,9 +311,18 @@ namespace ToonTown_Rewritten_Bot.Services
             maximizeAndFocus();
         }
 
-        public static void ManuallyUpdateCoordinatesNoUI(Enum locationToUpdateEnum, Point coordinates)
+        /// <summary>
+        /// Updates the coordinates for a specified location programmatically without user interaction.
+        /// This function reads the existing coordinates from the JSON file, updates them with new values,
+        /// and then writes the updated coordinates back to the file.
+        /// </summary>
+        /// <param name="locationToUpdateEnum">The enum value representing the location to update. 
+        /// This should be a value from an established Enum type that corresponds to specific coordinate keys.</param>
+        /// <param name="coordinates">The new coordinates to set for the location, encapsulated in a Point structure.</param>
+        public static void UpdateCoordinatesAutomatically(Enum locationToUpdateEnum, Point coordinates)
         {
-            string locationToUpdate = locationToUpdateEnum.ToString();
+            // Convert the Enum to its integer value, then to string
+            string keyAsString = Convert.ToInt32(locationToUpdateEnum).ToString();
             string filePath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Coordinates Data File.json");
 
             // Read the existing JSON file
@@ -320,7 +332,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 var coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
 
                 // Find and update the coordinates for the specified location
-                var actionToUpdate = coordinateActions.Find(action => action.Key == locationToUpdate);
+                var actionToUpdate = coordinateActions.Find(action => action.Key == keyAsString);
                 if (actionToUpdate != null)
                 {
                     actionToUpdate.X = coordinates.X;
@@ -330,23 +342,43 @@ namespace ToonTown_Rewritten_Bot.Services
                     string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
                     File.WriteAllText(filePath, updatedJson);
                 }
+                else
+                {
+                    throw new InvalidOperationException("No matching coordinate action found for the given key.");
+                }
+            }
+            else
+            {
+                throw new FileNotFoundException("Coordinates data file not found.");
             }
         }
 
-        public static List<CoordinateActions> ReadCoordinatesFromJson()
+        /// <summary>
+        /// Reads the coordinate data from the JSON file and returns a list of CoordinateActions.
+        /// </summary>
+        /// <returns>A list of CoordinateActions representing the coordinates. If the file does not exist, returns an empty list.</returns>
+        public static List<CoordinateActions> ReadCoordinatesFromJsonFile()
         {
+            // Define the path to the JSON file containing the coordinates.
             string filePath = "Coordinates Data File.json";
+
+            // Check if the file exists at the specified path.
             if (File.Exists(filePath))
             {
+                // Read the JSON content from the file.
                 string json = File.ReadAllText(filePath);
+
+                // Deserialize the JSON content into a list of CoordinateActions objects.
                 return JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
             }
+
+            // If the file does not exist, return an empty list to prevent null reference issues.
             return new List<CoordinateActions>();
         }
 
-        public static void UpdateCoordinateInJson(string key, int x, int y)
+        public static void UpdateCoordinatesInJsonFile(string key, int x, int y)
         {
-            var coordinates = ReadCoordinatesFromJson();
+            var coordinates = ReadCoordinatesFromJsonFile();
             var coordinate = coordinates.FirstOrDefault(c => c.Key == key);
             if (coordinate != null)
             {
@@ -382,33 +414,41 @@ namespace ToonTown_Rewritten_Bot.Services
             return null;
         }*/
 
+        /// <summary>
+        /// Checks if the coordinates associated with a given key are set and valid.
+        /// </summary>
+        /// <param name="coordinateKey">The enum value representing the coordinate key to check.</param>
+        /// <returns>True if the coordinates are valid and set; otherwise, false if they are default (0,0) or not found.</returns>
         public static bool CheckCoordinates(Enum coordinateKey)
         {
+            // Define the path to the JSON file that stores the coordinates.
             string filePath = "Coordinates Data File.json";
 
-            // Ensure the file exists, if not, create a fresh one
+            // Check if the coordinates file exists. If not, create a fresh one with default values.
             if (!File.Exists(filePath))
             {
                 CreateFreshCoordinatesFile();
             }
 
-            // Read the JSON file and deserialize it into a list of CoordinateActions
+            // Read the JSON file containing the coordinates data.
             string json = File.ReadAllText(Path.GetFullPath(filePath));
+            // Deserialize the JSON data into a list of CoordinateActions objects.
             List<CoordinateActions> coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
 
-            // Convert the Enum to string to use as a key
-            string key = coordinateKey.ToString();
+            // Convert the enum key to its corresponding integer value, then convert that to a string.
+            string keyAsString = Convert.ToInt32(coordinateKey).ToString();
 
-            // Find the corresponding CoordinateAction based on the key provided
-            var coordinate = coordinateActions.FirstOrDefault(ca => ca.Key == key);
+            // Attempt to find a CoordinateAction that matches the provided key.
+            var coordinate = coordinateActions.FirstOrDefault(ca => ca.Key == keyAsString);
 
-            // Check if the coordinates are default (0,0) indicating they have not been set
+            // Check if the coordinate exists and if its X and Y values are not the default (0,0), indicating they have been set.
             if (coordinate != null && (coordinate.X == 0 && coordinate.Y == 0))
             {
-                return false; // Coordinates are default, hence invalid
+                return false; // The coordinates are default (0,0), indicating they have not been properly set.
             }
 
-            return true; // Coordinates are valid (not 0,0)
+            // If the coordinate exists and is not default, or if no coordinate with the provided key exists, assume the coordinates are valid.
+            return true; // The coordinates are valid and have been set.
         }
 
         /// <summary>
