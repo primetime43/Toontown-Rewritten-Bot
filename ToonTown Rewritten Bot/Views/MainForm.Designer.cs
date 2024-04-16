@@ -58,12 +58,12 @@
             startRacing = new System.Windows.Forms.Button();
             Gardening = new System.Windows.Forms.TabPage();
             groupBox5 = new System.Windows.Forms.GroupBox();
-            button3 = new System.Windows.Forms.Button();
+            removePlantBtn = new System.Windows.Forms.Button();
             groupBox4 = new System.Windows.Forms.GroupBox();
-            button2 = new System.Windows.Forms.Button();
+            waterPlantBtn = new System.Windows.Forms.Button();
             groupBox3 = new System.Windows.Forms.GroupBox();
-            comboBox2 = new System.Windows.Forms.ComboBox();
-            button1 = new System.Windows.Forms.Button();
+            flowerBeanAmountDropdown = new System.Windows.Forms.ComboBox();
+            selectFlowerBeanAmountBtn = new System.Windows.Forms.Button();
             Golf = new System.Windows.Forms.TabPage();
             golfNoteLbl = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
@@ -484,7 +484,7 @@
             // 
             // groupBox5
             // 
-            groupBox5.Controls.Add(button3);
+            groupBox5.Controls.Add(removePlantBtn);
             groupBox5.Location = new System.Drawing.Point(9, 197);
             groupBox5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox5.Name = "groupBox5";
@@ -494,20 +494,20 @@
             groupBox5.TabStop = false;
             groupBox5.Text = "Remove Plant";
             // 
-            // button3
+            // removePlantBtn
             // 
-            button3.Location = new System.Drawing.Point(34, 24);
-            button3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button3.Name = "button3";
-            button3.Size = new System.Drawing.Size(115, 42);
-            button3.TabIndex = 0;
-            button3.Text = "Remove";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            removePlantBtn.Location = new System.Drawing.Point(34, 24);
+            removePlantBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            removePlantBtn.Name = "removePlantBtn";
+            removePlantBtn.Size = new System.Drawing.Size(115, 42);
+            removePlantBtn.TabIndex = 0;
+            removePlantBtn.Text = "Remove";
+            removePlantBtn.UseVisualStyleBackColor = true;
+            removePlantBtn.Click += removePlantBtn_Click;
             // 
             // groupBox4
             // 
-            groupBox4.Controls.Add(button2);
+            groupBox4.Controls.Add(waterPlantBtn);
             groupBox4.Location = new System.Drawing.Point(9, 113);
             groupBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox4.Name = "groupBox4";
@@ -517,21 +517,21 @@
             groupBox4.TabStop = false;
             groupBox4.Text = "Water Plant";
             // 
-            // button2
+            // waterPlantBtn
             // 
-            button2.Location = new System.Drawing.Point(34, 24);
-            button2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(115, 42);
-            button2.TabIndex = 0;
-            button2.Text = "Water";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            waterPlantBtn.Location = new System.Drawing.Point(34, 24);
+            waterPlantBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            waterPlantBtn.Name = "waterPlantBtn";
+            waterPlantBtn.Size = new System.Drawing.Size(115, 42);
+            waterPlantBtn.TabIndex = 0;
+            waterPlantBtn.Text = "Water";
+            waterPlantBtn.UseVisualStyleBackColor = true;
+            waterPlantBtn.Click += waterPlantBtn_Click;
             // 
             // groupBox3
             // 
-            groupBox3.Controls.Add(comboBox2);
-            groupBox3.Controls.Add(button1);
+            groupBox3.Controls.Add(flowerBeanAmountDropdown);
+            groupBox3.Controls.Add(selectFlowerBeanAmountBtn);
             groupBox3.Location = new System.Drawing.Point(9, 3);
             groupBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox3.Name = "groupBox3";
@@ -541,26 +541,26 @@
             groupBox3.TabStop = false;
             groupBox3.Text = "Plant Flower";
             // 
-            // comboBox2
+            // flowerBeanAmountDropdown
             // 
-            comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            comboBox2.Items.AddRange(new object[] { "1 Bean Plant", "2 Bean Plant", "3 Bean Plant", "4 Bean Plant", "5 Bean Plant", "6 Bean Plant", "7 Bean Plant", "8 Bean Plant" });
-            comboBox2.Location = new System.Drawing.Point(20, 24);
-            comboBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            comboBox2.Name = "comboBox2";
-            comboBox2.Size = new System.Drawing.Size(140, 24);
-            comboBox2.TabIndex = 0;
+            flowerBeanAmountDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            flowerBeanAmountDropdown.Items.AddRange(new object[] { "1 Bean Plant", "2 Bean Plant", "3 Bean Plant", "4 Bean Plant", "5 Bean Plant", "6 Bean Plant", "7 Bean Plant", "8 Bean Plant" });
+            flowerBeanAmountDropdown.Location = new System.Drawing.Point(20, 24);
+            flowerBeanAmountDropdown.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            flowerBeanAmountDropdown.Name = "flowerBeanAmountDropdown";
+            flowerBeanAmountDropdown.Size = new System.Drawing.Size(140, 24);
+            flowerBeanAmountDropdown.TabIndex = 0;
             // 
-            // button1
+            // selectFlowerBeanAmountBtn
             // 
-            button1.Location = new System.Drawing.Point(34, 59);
-            button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(115, 29);
-            button1.TabIndex = 1;
-            button1.Text = "Select";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            selectFlowerBeanAmountBtn.Location = new System.Drawing.Point(34, 59);
+            selectFlowerBeanAmountBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            selectFlowerBeanAmountBtn.Name = "selectFlowerBeanAmountBtn";
+            selectFlowerBeanAmountBtn.Size = new System.Drawing.Size(115, 29);
+            selectFlowerBeanAmountBtn.TabIndex = 1;
+            selectFlowerBeanAmountBtn.Text = "Select";
+            selectFlowerBeanAmountBtn.UseVisualStyleBackColor = true;
+            selectFlowerBeanAmountBtn.Click += selectFlowerBeanAmountBtn_Click;
             // 
             // Golf
             // 
@@ -1262,18 +1262,18 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button selectFlowerBeanAmountBtn;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox flowerBeanAmountDropdown;
         public System.Windows.Forms.NumericUpDown numericUpDown1;
         public System.Windows.Forms.Button keepToonAwakeButton;
         private System.Windows.Forms.TextBox messageToType;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button removePlantBtn;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button waterPlantBtn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.TabPage Dev;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Services;
 
@@ -17,59 +18,69 @@ namespace ToonTown_Rewritten_Bot
             createMap();
         }
 
-        private Dictionary<string, string> dictionary = new Dictionary<string, string>();
+        private Dictionary<string, string> plantComboDictionary = new Dictionary<string, string>();
         private void createMap()
         {
             //1 bean
-            dictionary.Add("Laff-o-dil", "g");
-            dictionary.Add("Dandy Pansy", "o");
-            dictionary.Add("What-in Carnation", "i");
-            dictionary.Add("School Daisy", "y");
-            dictionary.Add("Lily-of-the-Alley", "c");
+            plantComboDictionary.Add("Laff-o-dil", "g");
+            plantComboDictionary.Add("Dandy Pansy", "o");
+            plantComboDictionary.Add("What-in Carnation", "i");
+            plantComboDictionary.Add("School Daisy", "y");
+            plantComboDictionary.Add("Lily-of-the-Alley", "c");
             //2 bean
-            dictionary.Add("Daffy Dill", "gc");
-            dictionary.Add("Chim Pansy", "oc");
-            dictionary.Add("Instant Carnation", "iy");
-            dictionary.Add("Lazy Daisy", "yr");
-            dictionary.Add("Lily Pad", "cg");
+            plantComboDictionary.Add("Daffy Dill", "gc");
+            plantComboDictionary.Add("Chim Pansy", "oc");
+            plantComboDictionary.Add("Instant Carnation", "iy");
+            plantComboDictionary.Add("Lazy Daisy", "yr");
+            plantComboDictionary.Add("Lily Pad", "cg");
             //3 bean
-            dictionary.Add("Summer's Last Rose", "rrr");
-            dictionary.Add("Potsen Pansy", "orr");
-            dictionary.Add("Hybrid Carnation", "irr");
-            dictionary.Add("Midsummer Daisy", "yrg");
-            dictionary.Add("Tiger Lily", "coo");
+            plantComboDictionary.Add("Summer's Last Rose", "rrr");
+            plantComboDictionary.Add("Potsen Pansy", "orr");
+            plantComboDictionary.Add("Hybrid Carnation", "irr");
+            plantComboDictionary.Add("Midsummer Daisy", "yrg");
+            plantComboDictionary.Add("Tiger Lily", "coo");
             //4 bean
-            dictionary.Add("Corn Rose", "ryoy");
-            dictionary.Add("Giraff-o-dil", "giyy");
-            dictionary.Add("Marzi Pansy", "oyyr");
-            dictionary.Add("Freshasa Daisy", "yrco");
-            dictionary.Add("Livered Lily", "cooi");
+            plantComboDictionary.Add("Corn Rose", "ryoy");
+            plantComboDictionary.Add("Giraff-o-dil", "giyy");
+            plantComboDictionary.Add("Marzi Pansy", "oyyr");
+            plantComboDictionary.Add("Freshasa Daisy", "yrco");
+            plantComboDictionary.Add("Livered Lily", "cooi");
             //5 bean
-            dictionary.Add("Time and a half-o-dil", "gibii");
-            dictionary.Add("Onelip", "urbuu");
-            dictionary.Add("Side Carnation", "irgbr");
-            dictionary.Add("Whoopsie Daisy", "yrooo");
-            dictionary.Add("Chili Lily", "crrrr");
+            plantComboDictionary.Add("Time and a half-o-dil", "gibii");
+            plantComboDictionary.Add("Onelip", "urbuu");
+            plantComboDictionary.Add("Side Carnation", "irgbr");
+            plantComboDictionary.Add("Whoopsie Daisy", "yrooo");
+            plantComboDictionary.Add("Chili Lily", "crrrr");
             //6 bean
-            dictionary.Add("Tinted Rose", "rioroi");
-            dictionary.Add("Smarty Pansy", "oiiobi");
-            dictionary.Add("Twolip", "urrruu");
-            dictionary.Add("Upsy Daisy", "ybcubb");
-            dictionary.Add("Silly Lily", "cruuuu");
+            plantComboDictionary.Add("Tinted Rose", "rioroi");
+            plantComboDictionary.Add("Smarty Pansy", "oiiobi");
+            plantComboDictionary.Add("Twolip", "urrruu");
+            plantComboDictionary.Add("Upsy Daisy", "ybcubb");
+            plantComboDictionary.Add("Silly Lily", "cruuuu");
             //7 bean
-            dictionary.Add("Stinking Rose", "rcoiucc");
-            dictionary.Add("Car Petunia", "bubucbb");
-            dictionary.Add("Model Carnation", "iggggyg");
-            dictionary.Add("Crazy Daisy", "ygroggg");
-            dictionary.Add("Indubitab Lily", "cucbcbb");
+            plantComboDictionary.Add("Stinking Rose", "rcoiucc");
+            plantComboDictionary.Add("Car Petunia", "bubucbb");
+            plantComboDictionary.Add("Model Carnation", "iggggyg");
+            plantComboDictionary.Add("Crazy Daisy", "ygroggg");
+            plantComboDictionary.Add("Indubitab Lily", "cucbcbb");
             //8 bean
-            dictionary.Add("Istilla Rose", "rbuubbib");
-            dictionary.Add("Threelip", "uyyuyouy");
-            dictionary.Add("Platoonia", "biibroyy");
-            dictionary.Add("Hazy Dazy", "ybucurou");
-            dictionary.Add("Dilly Lilly", "cbyycbyy");
+            plantComboDictionary.Add("Istilla Rose", "rbuubbib");
+            plantComboDictionary.Add("Threelip", "uyyuyouy");
+            plantComboDictionary.Add("Platoonia", "biibroyy");
+            plantComboDictionary.Add("Hazy Dazy", "ybucurou");
+            plantComboDictionary.Add("Dilly Lilly", "cbyycbyy");
         }
-        public void loadFlowers(String beans)
+
+        /// <summary>
+        /// Populates the flower selection combo box based on the specified number of beans.
+        /// </summary>
+        /// <param name="beans">The bean count category which determines the list of available flowers.</param>
+        /// <remarks>
+        /// This method updates the UI elements to reflect the available flower options based on the bean count.
+        /// The bean count is represented as a string that includes the number of beans followed by the text 'Bean Plant'.
+        /// Depending on the bean count, different flower options are added to the combo box for user selection.
+        /// </remarks>
+        public void PopulateFlowerOptionsBasedOnBeanCount(String beans)
         {
             label1.Text = beans;
             switch (beans)
@@ -104,12 +115,12 @@ namespace ToonTown_Rewritten_Bot
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selected = (string)comboBox1.SelectedItem;
-            loadBeans(dictionary[selected], 0);
+            loadBeans(plantComboDictionary[selected], 0);
         }
 
         private void loadBeans(String beansCombo, int index)
         {
-  
+
             if (index != beansCombo.Length)
             {
                 char letter = beansCombo[index];
@@ -176,14 +187,40 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private async void button1_Click(object sender, EventArgs e)
         {
-            DialogResult confirmation;
-            confirmation = MessageBox.Show("Make sure you're at the flower bed before pressing OK!", "", MessageBoxButtons.OKCancel);
+            DialogResult confirmation = MessageBox.Show("Make sure you're at the flower bed before pressing OK!", "", MessageBoxButtons.OKCancel);
             if (confirmation.Equals(DialogResult.Cancel))
                 return;
+
             string selected = (string)comboBox1.SelectedItem;
-            //Gardening.plantFlower(dictionary[selected]);
+
+            try
+            {
+                // Place the task on a background thread to avoid blocking the UI
+                await Task.Run(() => Gardening.PlantFlowerAsync(plantComboDictionary[selected], _cancellationTokenSource.Token));
+            }
+            catch (OperationCanceledException)
+            {
+                MessageBox.Show("Planting was canceled.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // Check if the operation is already canceled or not started
+            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+            {
+                MessageBox.Show("Planting is not currently in progress.");
+                return;
+            }
+
+            _cancellationTokenSource.Cancel();
         }
     }
 }

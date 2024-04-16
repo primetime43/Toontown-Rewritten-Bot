@@ -87,9 +87,9 @@ namespace ToonTown_Rewritten_Bot.Models
         }
 
         /// <summary>
-        /// Provides access to the complete dictionary of action descriptions.
+        /// Provides access to the complete plantComboDictionary of action descriptions.
         /// </summary>
-        /// <returns>A dictionary of all descriptions mapped by their keys.</returns>
+        /// <returns>A plantComboDictionary of all descriptions mapped by their keys.</returns>
         public static Dictionary<string, string> GetAllDescriptions() => _actionDescriptionMap;
 
         /// <summary>
