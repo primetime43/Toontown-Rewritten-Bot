@@ -71,10 +71,10 @@ namespace ToonTown_Rewritten_Bot.Views
 
         }
 
-        private ActionKeys _actionKeys = new ActionKeys();
-        private void saveActonItemBtn_Click(object sender, EventArgs e)
+        private FishingActionKeys _fishingActionKeys = new FishingActionKeys();
+        private void saveActionItemBtn_Click(object sender, EventArgs e)
         {
-            List<ActionCommand> actionsList = new List<ActionCommand>();
+            List<FishingActionCommand> actionsList = new List<FishingActionCommand>();
 
             foreach (var item in actionItemsListBox.Items)
             {
@@ -89,14 +89,14 @@ namespace ToonTown_Rewritten_Bot.Views
                 else
                 {
                     action = actionText;
-                    command = _actionKeys.GetKeyCodeString(actionText);
+                    command = _fishingActionKeys.GetKeyCodeString(actionText);
                     if (string.IsNullOrEmpty(command))
                     {
                         command = "UNKNOWN"; // Handle the case where no key code is found for the action
                     }
                 }
 
-                actionsList.Add(new ActionCommand { Action = action, Command = command });
+                actionsList.Add(new FishingActionCommand { Action = action, Command = command });
             }
 
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(actionsList, Newtonsoft.Json.Formatting.Indented);
@@ -121,7 +121,7 @@ namespace ToonTown_Rewritten_Bot.Views
             }
         }
 
-        private void loadActonItemBtn_Click(object sender, EventArgs e)
+        private void loadActionItemBtn_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -133,7 +133,7 @@ namespace ToonTown_Rewritten_Bot.Views
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string json = File.ReadAllText(openFileDialog.FileName);
-                var actionsList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ActionCommand>>(json);
+                var actionsList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FishingActionCommand>>(json);
 
                 actionItemsListBox.Items.Clear();
                 foreach (var actionCommand in actionsList)

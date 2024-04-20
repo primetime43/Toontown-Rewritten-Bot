@@ -1,6 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Services.CustomGolfActions;
 using ToonTown_Rewritten_Bot.Views;
 using WindowsInput;
 
@@ -8,154 +11,171 @@ namespace ToonTown_Rewritten_Bot.Services
 {
     class Golf
     {
-        // GOLF- Afternoon Tee
-        public static void afternoonTee()//works, finished
+        public static async Task StartCustomGolfAction(string filePath, CancellationToken cancellationToken)
         {
-            Debug.WriteLine("1");
+            // Initialize the CustomActionsGolf with the file path
+            CustomActionsGolf customGolfActions = new CustomActionsGolf(filePath);
+
+            try
+            {
+                // Perform the actions read from the JSON file
+                await customGolfActions.PerformGolfActions(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine("Operation was canceled by the user.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Handle other exceptions, possibly related to JSON parsing or key lookup failures
+            }
+        }
+
+        // GOLF- Afternoon Tee
+        public static async void AfternoonTee()//works, finished
+        {
             CoreFunctionality.maximizeAndFocus();
-            Thread.Sleep(15000);
-            Debug.WriteLine("2");
-            toonLookAtHole();
-            Thread.Sleep(3000);
-            Debug.WriteLine("3");
+            await Task.Delay(15000);
+            ToonLookAtHole();
+            await Task.Delay(3000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(2120);
+            await Task.Delay(2120);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
-            Debug.WriteLine("4");
         }
 
         // GOLF - Holey Mackeral
-        public static void holeyMackeral()//works, finished
+        public static async void HoleyMackeral()//works, finished
         {
             CoreFunctionality.maximizeAndFocus();
-            Thread.Sleep(15000);
-            toonLookAtHole();
-            Thread.Sleep(3000);
+            await Task.Delay(15000);
+            ToonLookAtHole();
+            await Task.Delay(3000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         // GOLF - Hole on the Range
-        public static void holeOnTheRange()//needs fixed? Not sure
+        public static async void HoleOnTheRange()//needs fixed? Not sure
         {
             CoreFunctionality.maximizeAndFocus();
-            Thread.Sleep(15000);
-            toonLookAtHole();
-            Thread.Sleep(3000);
+            await Task.Delay(15000);
+            ToonLookAtHole();
+            await Task.Delay(3000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(1800); // 68%
+            await Task.Delay(1800); // 68%
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         // GOLF - Seeing green
-        public static void seeingGreen()//works, finished
+        public static async void SeeingGreen()//works, finished
         {
             CoreFunctionality.maximizeAndFocus();
-            Thread.Sleep(15000);
-            toonLookAtHole();
-            Thread.Sleep(3000);
+            await Task.Delay(15000);
+            ToonLookAtHole();
+            await Task.Delay(3000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(1790); // 67%
+            await Task.Delay(1790); // 67%
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         // GOLF - Swing Time
-        public static void swingTime()//yellow, needs fixed (move to the right?)
+        public static async void SwingTime()//yellow, needs fixed (move to the right?)
         {
             CoreFunctionality.maximizeAndFocus();
-            Thread.Sleep(100);
+            await Task.Delay(100);
             //move toon to the right location
             InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
-            Thread.Sleep(50);
+            await Task.Delay(50);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
-            Thread.Sleep(100);
-            Thread.Sleep(15000);
+            await Task.Delay(100);
+            await Task.Delay(15000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(2000);
+            await Task.Delay(2000);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         // GOLF - Down the Hatch
-        public static void downTheHatch()//yellow, needs fixed
+        public static async void DownTheHatch()//yellow, needs fixed
         {
             CoreFunctionality.maximizeAndFocus();
-            Thread.Sleep(15000);
+            await Task.Delay(15000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(2340);
+            await Task.Delay(2340);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         //GOLF - Peanut Putter
-        public static void peanutPutter()
+        public static async void PeanutPutter()
         {
             CoreFunctionality.maximizeAndFocus();
-            Thread.Sleep(15000);
-            toonLookAtHole();
-            Thread.Sleep(3000);
+            await Task.Delay(15000);
+            ToonLookAtHole();
+            await Task.Delay(3000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(1860); // 69-70% ?
+            await Task.Delay(1860); // 69-70% ?
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         //GOLF - Hot Links
-        public static void hotLinks()
+        public static async void HotLinks()
         {
             CoreFunctionality.maximizeAndFocus();
-            Thread.Sleep(15000);
-            toonLookAtHole();
-            Thread.Sleep(3000);
+            await Task.Delay(15000);
+            ToonLookAtHole();
+            await Task.Delay(3000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(1800); // 67%
+            await Task.Delay(1800); // 67%
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         //GOLF - Hole In Fun
-        public static void holeInFun()
+        public static async void HoleInFun()
         {
             CoreFunctionality.maximizeAndFocus();
-            Thread.Sleep(15000);
-            toonLookAtHole();
-            Thread.Sleep(3000);
+            await Task.Delay(15000);
+            ToonLookAtHole();
+            await Task.Delay(3000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(1300);// 52%
+            await Task.Delay(1300);// 52%
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
         //GOLF - Swing-A-Long
-        public static void swingALong()
+        public static async void SwingALong()
         {
             CoreFunctionality.maximizeAndFocus();
-            Thread.Sleep(15000);
+            await Task.Delay(15000);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(2340);// 82%
+            await Task.Delay(2340);// 82%
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
-        public static void oneLittleBirdie()
+        public static async void OneLittleBirdie()
         {
             CoreFunctionality.maximizeAndFocus();
-            Thread.Sleep(15000);
+            await Task.Delay(15000);
             //rotate the toon right
             InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
-            Thread.Sleep(700);
+            await Task.Delay(700);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(1870); // 69-70% ?
+            await Task.Delay(1870); // 69-70% ?
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
-        private static void confirmLocation()
+        private static async void ConfirmLocation()
         {
             InputSimulator.SimulateKeyDown(VirtualKeyCode.CONTROL);
-            Thread.Sleep(50);
+            await Task.Delay(50);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.CONTROL);
         }
 
-        private static void toonLookAtHole()//this is just to stop the timer
+        private static async void ToonLookAtHole()//this is just to stop the timer
         {
             InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
-            Thread.Sleep(50);
+            await Task.Delay(50);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
         }
     }

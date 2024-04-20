@@ -1,0 +1,12 @@
+[
+  {
+    "Action": "TIME",
+    "Command": "TIME",
+    "Duration": 15000
+  },
+  {
+    "Action": "SWING POWER",
+    "Command": "CONTROL",
+    "Duration": 2120
+  }
+]

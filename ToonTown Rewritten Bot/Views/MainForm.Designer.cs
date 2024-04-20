@@ -38,7 +38,7 @@
             label7 = new System.Windows.Forms.Label();
             pictureBox1 = new System.Windows.Forms.PictureBox();
             Fishing = new System.Windows.Forms.TabPage();
-            button21 = new System.Windows.Forms.Button();
+            createCustomFishingActionsBtn = new System.Windows.Forms.Button();
             label12 = new System.Windows.Forms.Label();
             groupBox6 = new System.Windows.Forms.GroupBox();
             debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
@@ -66,7 +66,8 @@
             flowerBeanAmountDropdown = new System.Windows.Forms.ComboBox();
             selectFlowerBeanAmountBtn = new System.Windows.Forms.Button();
             Golf = new System.Windows.Forms.TabPage();
-            golfNoteLbl = new System.Windows.Forms.Label();
+            customGolfFilesComboBox = new System.Windows.Forms.ComboBox();
+            createCustomGolfActionsBtn = new System.Windows.Forms.Button();
             label2 = new System.Windows.Forms.Label();
             Near_Hole = new System.Windows.Forms.GroupBox();
             One_Little_Birdie = new System.Windows.Forms.Button();
@@ -119,6 +120,7 @@
             button7 = new System.Windows.Forms.Button();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
             timer1 = new System.Windows.Forms.Timer(components);
+            button1 = new System.Windows.Forms.Button();
             tabControl1.SuspendLayout();
             Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -241,7 +243,7 @@
             // 
             // Fishing
             // 
-            Fishing.Controls.Add(button21);
+            Fishing.Controls.Add(createCustomFishingActionsBtn);
             Fishing.Controls.Add(label12);
             Fishing.Controls.Add(groupBox6);
             Fishing.Location = new System.Drawing.Point(4, 25);
@@ -253,16 +255,16 @@
             Fishing.Text = "Fishing";
             Fishing.UseVisualStyleBackColor = true;
             // 
-            // button21
+            // createCustomFishingActionsBtn
             // 
-            button21.Location = new System.Drawing.Point(401, 12);
-            button21.Name = "button21";
-            button21.Size = new System.Drawing.Size(137, 43);
-            button21.TabIndex = 10;
-            button21.Text = "Create Custom Fishing Actions";
-            toolTip1.SetToolTip(button21, "This will allow you to build custom fishing actions\r\nfor walking from the fishing dock to the fisherman\r\n to sell and back to the fishing dock");
-            button21.UseVisualStyleBackColor = true;
-            button21.Click += button21_Click;
+            createCustomFishingActionsBtn.Location = new System.Drawing.Point(401, 12);
+            createCustomFishingActionsBtn.Name = "createCustomFishingActionsBtn";
+            createCustomFishingActionsBtn.Size = new System.Drawing.Size(137, 43);
+            createCustomFishingActionsBtn.TabIndex = 10;
+            createCustomFishingActionsBtn.Text = "Create Custom Fishing Actions";
+            toolTip1.SetToolTip(createCustomFishingActionsBtn, "This will allow you to build custom fishing actions\r\nfor walking from the fishing dock to the fisherman\r\n to sell and back to the fishing dock");
+            createCustomFishingActionsBtn.UseVisualStyleBackColor = true;
+            createCustomFishingActionsBtn.Click += createCustomFishingActionsBtn_Click;
             // 
             // label12
             // 
@@ -577,7 +579,9 @@
             // 
             // Golf
             // 
-            Golf.Controls.Add(golfNoteLbl);
+            Golf.Controls.Add(button1);
+            Golf.Controls.Add(customGolfFilesComboBox);
+            Golf.Controls.Add(createCustomGolfActionsBtn);
             Golf.Controls.Add(label2);
             Golf.Controls.Add(Near_Hole);
             Golf.Controls.Add(Hole_In_One);
@@ -590,13 +594,24 @@
             Golf.Text = "Golf";
             Golf.UseVisualStyleBackColor = true;
             // 
-            // golfNoteLbl
+            // customGolfFilesComboBox
             // 
-            golfNoteLbl.Location = new System.Drawing.Point(364, 3);
-            golfNoteLbl.Name = "golfNoteLbl";
-            golfNoteLbl.Size = new System.Drawing.Size(182, 134);
-            golfNoteLbl.TabIndex = 17;
-            golfNoteLbl.Text = "Do not click a button until after the changing tee spot.\r\nClick a button once it gives you the option to press control to swing";
+            customGolfFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            customGolfFilesComboBox.FormattingEnabled = true;
+            customGolfFilesComboBox.Location = new System.Drawing.Point(367, 75);
+            customGolfFilesComboBox.Name = "customGolfFilesComboBox";
+            customGolfFilesComboBox.Size = new System.Drawing.Size(172, 24);
+            customGolfFilesComboBox.TabIndex = 19;
+            // 
+            // createCustomGolfActionsBtn
+            // 
+            createCustomGolfActionsBtn.Location = new System.Drawing.Point(393, 11);
+            createCustomGolfActionsBtn.Name = "createCustomGolfActionsBtn";
+            createCustomGolfActionsBtn.Size = new System.Drawing.Size(126, 41);
+            createCustomGolfActionsBtn.TabIndex = 18;
+            createCustomGolfActionsBtn.Text = "Create Custom Golf Actions";
+            createCustomGolfActionsBtn.UseVisualStyleBackColor = true;
+            createCustomGolfActionsBtn.Click += createCustomGolfActionsBtn_Click;
             // 
             // label2
             // 
@@ -1225,6 +1240,16 @@
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
+            // button1
+            // 
+            button1.Location = new System.Drawing.Point(393, 109);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(126, 39);
+            button1.TabIndex = 20;
+            button1.Text = "Start Golf";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1360,13 +1385,15 @@
         private System.Windows.Forms.Button updateImagesBtn;
         private System.Windows.Forms.Button resetImagesBtn;
         public System.Windows.Forms.CheckBox smartFishing;
-        private System.Windows.Forms.Label golfNoteLbl;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Button button21;
+        private System.Windows.Forms.Button createCustomFishingActionsBtn;
         private System.Windows.Forms.ComboBox customFishingFilesComboBox;
         private System.Windows.Forms.CheckBox debugCustomActionsCheckBox;
         private System.Windows.Forms.NumericUpDown waterPlantNumericUpDown;
         public System.Windows.Forms.Button stopKeepToonAwakeButton;
+        private System.Windows.Forms.Button createCustomGolfActionsBtn;
+        private System.Windows.Forms.ComboBox customGolfFilesComboBox;
+        private System.Windows.Forms.Button button1;
     }
 }
 
