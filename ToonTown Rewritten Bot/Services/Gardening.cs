@@ -119,7 +119,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 DoMouseClick();
                 Thread.Sleep(8000);
                 await ClickOKAfterPlantAsync(cancellationToken);
-                await WaterPlantAsync(cancellationToken);
+                await WaterPlantAsync(3, cancellationToken);
             }
             else
             {
@@ -146,7 +146,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
         }
 
-        public static async Task WaterPlantAsync(CancellationToken cancellationToken)
+        public static async Task WaterPlantAsync(int waterPlantCount, CancellationToken cancellationToken)
         {
             if (!CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.WateringCanButton))
             {
@@ -160,13 +160,13 @@ namespace ToonTown_Rewritten_Bot.Services
 
             var (x, y) = CoordinatesManager.GetCoordsFromMap(GardeningCoordinatesEnum.WateringCanButton);
 
-            CoreFunctionality.MoveCursor(x, y);
-            CoreFunctionality.DoMouseClick();
-            await Task.Delay(4000, cancellationToken);
-
-            CoreFunctionality.MoveCursor(x, y);
-            CoreFunctionality.DoMouseClick();
-            await Task.Delay(2000, cancellationToken);
+            for (int i = 0; i < waterPlantCount; i++)
+            {
+                cancellationToken.ThrowIfCancellationRequested(); // Check if the operation has been cancelled
+                CoreFunctionality.MoveCursor(x, y);
+                CoreFunctionality.DoMouseClick();
+                await Task.Delay(4000, cancellationToken);
+            }
         }
 
         public static async Task RemovePlantAsync(CancellationToken cancellationToken)
