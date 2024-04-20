@@ -45,12 +45,15 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (actionCommand.Action == "TIME")
+                // Handle delay time actions separately
+                if (actionCommand.Action == "DELAY TIME")
                 {
-                    // Directly delay for the specified duration without any key press
                     await Task.Delay(actionCommand.Duration, cancellationToken);
+                    continue; // Skip the rest of the loop for delay actions
                 }
-                else if (keys.ActionKeyMap.TryGetValue(actionCommand.Action, out VirtualKeyCode keyCode))
+
+                // Process other actions that should correspond to actual key presses
+                if (keys.ActionKeyMap.TryGetValue(actionCommand.Action, out VirtualKeyCode keyCode))
                 {
                     // Tee movements use the duration to wait after the movement, but do not apply delay during key press.
                     if (actionCommand.Action == "MOVE TO RIGHT TEE SPOT" || actionCommand.Action == "MOVE TO LEFT TEE SPOT")
@@ -71,6 +74,7 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
                 }
                 else
                 {
+                    CoreFunctionality.BringBotWindowToFront();
                     MessageBox.Show($"Unsupported action: {actionCommand.Action}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
