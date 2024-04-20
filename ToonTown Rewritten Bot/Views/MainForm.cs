@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,22 +38,43 @@ namespace ToonTown_Rewritten_Bot
         //important functions for bot
         private void startSpamButton_Click(object sender, EventArgs e)//spam message on screen
         {//if the user presses ALT key, it will break the loop
-            bool loopBroken = BotFunctions.sendMessage(messageToType.Text, Convert.ToInt32(numericUpDown2.Value), checkBox1.Checked, numericUpDown2);
+            bool loopBroken = BotFunctions.SendMessage(messageToType.Text, Convert.ToInt32(numericUpDown2.Value), checkBox1.Checked, numericUpDown2);
         }
 
         private int timeLeft;
-        private void keepToonAwakeButton_Click(object sender, EventArgs e)//keep toon 
+        private bool isToonAwakeActive = false;  // Flag to track if the function is active
+        private void startKeepToonAwakeButton_Click(object sender, EventArgs e)
         {
-            timeLeft = Convert.ToInt32(numericUpDown1.Value) * 60;
-            MessageBox.Show("Press OK when ready to begin!");
-            Thread.Sleep(2000);
-            timer1.Start();
-            bool loopBroken = BotFunctions.keepToonAwake(Convert.ToInt32(numericUpDown1.Value));
-            if (loopBroken)
+            if (_cancellationTokenSource != null)
             {
-                timer1.Stop();
-                label1.Visible = false;
+                _cancellationTokenSource.Dispose();  // Dispose any existing token source
             }
+            _cancellationTokenSource = new CancellationTokenSource();
+            isToonAwakeActive = true;  // Flag to indicate the task is active
+
+            int timeInSeconds = Convert.ToInt32(numericUpDown1.Value) * 60;  // Convert minutes to seconds
+            timeLeft = timeInSeconds;  // Set timeLeft for countdown
+            MessageBox.Show("Press OK when ready to begin!");
+
+            timer1.Start();  // Start the countdown timer
+
+            Task.Run(() =>
+            {
+                return BotFunctions.KeepToonAwake(timeInSeconds, _cancellationTokenSource.Token);
+            }, _cancellationTokenSource.Token)
+            .ContinueWith(task =>
+            {
+                if (task.IsCompletedSuccessfully)
+                {
+                    CoreFunctionality.BringBotWindowToFront();
+                    MessageBox.Show("Keep Toon Awake completed successfully!", "Keep Awake Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if (task.IsFaulted)
+                {
+                    timer1.Stop();  // Ensure timer is stopped on error
+                    MessageBox.Show($"Error: {task.Exception.InnerException.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext());  // Ensure UI updates are on the main thread
         }
 
         private void selectFlowerBeanAmountBtn_Click(object sender, EventArgs e)//open the flower manager
@@ -445,6 +467,8 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
+        private bool isTrainingActive = false;  // Flag to track training status
+
         private async void startDoodleTrainingBtn_Click(object sender, EventArgs e)
         {
             string selectedTrick = (string)doodleTrickComboBox.SelectedItem;
@@ -460,6 +484,7 @@ namespace ToonTown_Rewritten_Bot
                 _cancellationTokenSource.Dispose(); // Dispose the old one if it exists
             }
             _cancellationTokenSource = new CancellationTokenSource();
+            isTrainingActive = true;  // Set the flag to indicate that training has started
 
             try
             {
@@ -470,6 +495,7 @@ namespace ToonTown_Rewritten_Bot
                     _cancellationTokenSource.Token)
                 .ContinueWith(task =>
                 {
+                    isTrainingActive = false;  // Clear the flag when training completes or is canceled
                     if (task.IsCompletedSuccessfully)
                     {
                         CoreFunctionality.BringBotWindowToFront();
@@ -483,20 +509,26 @@ namespace ToonTown_Rewritten_Bot
             }
             catch (OperationCanceledException)
             {
-
+                isTrainingActive = false;  // Ensure flag is cleared if training is canceled
             }
         }
 
         private void stopDoodleTrainingBtn_Click(object sender, EventArgs e)
         {
-            // Check if the cancellation token source is created and not yet cancelled
-            if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
+            // Check if the cancellation token source is created and the training is active
+            if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested && isTrainingActive)
             {
                 _cancellationTokenSource.Cancel();  // Request cancellation
                 _cancellationTokenSource.Dispose();  // Dispose the token source
                 _cancellationTokenSource = null;     // Reset the source to be sure it's fresh when restarted
+                isTrainingActive = false;  // Clear the flag
 
                 MessageBox.Show("Doodle Training stopped!", "Training Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                // If the training was not active, show a different message
+                MessageBox.Show("No active training to stop.", "Stop Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -600,6 +632,28 @@ namespace ToonTown_Rewritten_Bot
             foreach (string file in files)
             {
                 customFishingFilesComboBox.Items.Add(Path.GetFileName(file)); // Add only file names to the ComboBox
+            }
+        }
+
+        private void stopKeepToonAwakeButton_Click(object sender, EventArgs e)
+        {
+            // Check if the cancellation token source is created and not yet cancelled and the function is active
+            if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested && isToonAwakeActive)
+            {
+                _cancellationTokenSource.Cancel();  // Request cancellation
+                _cancellationTokenSource.Dispose();  // Dispose the token source
+                _cancellationTokenSource = null;     // Reset the source to ensure it's fresh when restarted
+                isToonAwakeActive = false;  // Clear the flag
+                timer1.Stop();
+                timeLeft = 0;
+                label1.Visible = false;
+
+                MessageBox.Show("Keep Toon Awake stopped!", "Keep Toon Awake Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                // If the function was not active, show a different message
+                MessageBox.Show("No active 'Keep Toon Awake' function to stop.", "Stop Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

@@ -98,9 +98,10 @@
             Misc = new System.Windows.Forms.TabPage();
             checkBox2 = new System.Windows.Forms.CheckBox();
             groupBox2 = new System.Windows.Forms.GroupBox();
+            stopKeepToonAwakeButton = new System.Windows.Forms.Button();
             label1 = new System.Windows.Forms.Label();
             numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            keepToonAwakeButton = new System.Windows.Forms.Button();
+            startKeepToonAwakeButton = new System.Windows.Forms.Button();
             groupBox1 = new System.Windows.Forms.GroupBox();
             numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             checkBox1 = new System.Windows.Forms.CheckBox();
@@ -975,9 +976,10 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(stopKeepToonAwakeButton);
             groupBox2.Controls.Add(label1);
             groupBox2.Controls.Add(numericUpDown1);
-            groupBox2.Controls.Add(keepToonAwakeButton);
+            groupBox2.Controls.Add(startKeepToonAwakeButton);
             groupBox2.Location = new System.Drawing.Point(9, 137);
             groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
@@ -986,6 +988,18 @@
             groupBox2.TabIndex = 5;
             groupBox2.TabStop = false;
             groupBox2.Text = "Keep Toon Awake";
+            // 
+            // stopKeepToonAwakeButton
+            // 
+            stopKeepToonAwakeButton.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            stopKeepToonAwakeButton.Location = new System.Drawing.Point(114, 58);
+            stopKeepToonAwakeButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            stopKeepToonAwakeButton.Name = "stopKeepToonAwakeButton";
+            stopKeepToonAwakeButton.Size = new System.Drawing.Size(88, 39);
+            stopKeepToonAwakeButton.TabIndex = 7;
+            stopKeepToonAwakeButton.Text = "Stop";
+            stopKeepToonAwakeButton.UseVisualStyleBackColor = true;
+            stopKeepToonAwakeButton.Click += stopKeepToonAwakeButton_Click;
             // 
             // label1
             // 
@@ -1009,18 +1023,18 @@
             toolTip1.SetToolTip(numericUpDown1, "How many minutes do you wish to keep your toon awake for?");
             numericUpDown1.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
-            // keepToonAwakeButton
+            // startKeepToonAwakeButton
             // 
-            keepToonAwakeButton.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            keepToonAwakeButton.Location = new System.Drawing.Point(18, 58);
-            keepToonAwakeButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            keepToonAwakeButton.Name = "keepToonAwakeButton";
-            keepToonAwakeButton.Size = new System.Drawing.Size(141, 39);
-            keepToonAwakeButton.TabIndex = 3;
-            keepToonAwakeButton.Text = "Start Stay Awake";
-            toolTip1.SetToolTip(keepToonAwakeButton, "Press the ALT key to stop the jumping loop at any time!");
-            keepToonAwakeButton.UseVisualStyleBackColor = true;
-            keepToonAwakeButton.Click += keepToonAwakeButton_Click;
+            startKeepToonAwakeButton.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            startKeepToonAwakeButton.Location = new System.Drawing.Point(18, 58);
+            startKeepToonAwakeButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            startKeepToonAwakeButton.Name = "startKeepToonAwakeButton";
+            startKeepToonAwakeButton.Size = new System.Drawing.Size(88, 39);
+            startKeepToonAwakeButton.TabIndex = 3;
+            startKeepToonAwakeButton.Text = "Start";
+            toolTip1.SetToolTip(startKeepToonAwakeButton, "Press the ALT key to stop the jumping loop at any time!");
+            startKeepToonAwakeButton.UseVisualStyleBackColor = true;
+            startKeepToonAwakeButton.Click += startKeepToonAwakeButton_Click;
             // 
             // groupBox1
             // 
@@ -1068,7 +1082,7 @@
             messageToType.Name = "messageToType";
             messageToType.Size = new System.Drawing.Size(181, 22);
             messageToType.TabIndex = 2;
-            toolTip1.SetToolTip(messageToType, "Enter the message to send");
+            toolTip1.SetToolTip(messageToType, "Enter the message to Send");
             // 
             // startSpamButton
             // 
@@ -1279,7 +1293,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ComboBox flowerBeanAmountDropdown;
         public System.Windows.Forms.NumericUpDown numericUpDown1;
-        public System.Windows.Forms.Button keepToonAwakeButton;
+        public System.Windows.Forms.Button startKeepToonAwakeButton;
         private System.Windows.Forms.TextBox messageToType;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.CheckBox checkBox1;
@@ -1352,6 +1366,7 @@
         private System.Windows.Forms.ComboBox customFishingFilesComboBox;
         private System.Windows.Forms.CheckBox debugCustomActionsCheckBox;
         private System.Windows.Forms.NumericUpDown waterPlantNumericUpDown;
+        public System.Windows.Forms.Button stopKeepToonAwakeButton;
     }
 }
 

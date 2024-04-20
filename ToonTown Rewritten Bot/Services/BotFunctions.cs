@@ -14,10 +14,9 @@ namespace ToonTown_Rewritten_Bot.Services
     public class BotFunctions
     {
         private static Dictionary<string, string> _dataFileMap = new Dictionary<string, string>();
-        public static bool sendMessage(string message, int spamCount, bool spam, NumericUpDown upDown)
+        public static bool SendMessage(string message, int spamCount, bool spam, NumericUpDown upDown)
         {
             DialogResult confirmation;
-            Console.WriteLine("Spam? : " + spam);
             if (!message.Equals(""))
             {
                 confirmation = MessageBox.Show("Send Message?", "Continue...", MessageBoxButtons.YesNo);
@@ -32,23 +31,23 @@ namespace ToonTown_Rewritten_Bot.Services
                                 upDown.Value = 1;
                                 return true;
                             }
-                            send(message);
+                            Send(message);
                             spamCount--;
                             if (spamCount != 0)
                                 upDown.Value = spamCount;
                         }
                     }
                     else if (!spam || spamCount == 1)
-                        send(message);
+                        Send(message);
                 }
                 else if (confirmation.Equals(DialogResult.No) || confirmation.Equals(DialogResult.Cancel))
                     return false;
             }
             else
-                MessageBox.Show("You must enter a message to send!");
+                MessageBox.Show("You must enter a message to Send!");
             return false;
         }
-        private static void send(string text)
+        private static void Send(string text)
         {
             CoreFunctionality.DoMouseClick();
             Thread.Sleep(500);
@@ -57,17 +56,24 @@ namespace ToonTown_Rewritten_Bot.Services
             SendKeys.SendWait("{ENTER}");
         }
 
-        public static bool keepToonAwake(int min)
+        public static async Task KeepToonAwake(int timeInSeconds, CancellationToken cancellationToken)
         {
-            DateTime endTime = DateTime.Now.AddMinutes(min);
-            CoreFunctionality.DoMouseClick();
-            while (endTime > DateTime.Now)
+            CoreFunctionality.maximizeAndFocus(); // Ensure the game window is focused
+            DateTime endTime = DateTime.Now.AddSeconds(timeInSeconds); // Calculate the end time based on seconds
+            CoreFunctionality.DoMouseClick(); // Initial action to "keep awake"
+
+            try
             {
-                SendKeys.SendWait("^");
-                if (Control.ModifierKeys == Keys.Alt)//break out of loop
-                    return true;
+                while (endTime > DateTime.Now)
+                {
+                    cancellationToken.ThrowIfCancellationRequested(); // Check for cancellation
+                    SendKeys.SendWait("^"); // Simulate key press to keep the toon awake
+                    await Task.Delay(1000, cancellationToken); // Wait for a second before the next key press
+                }
             }
-            return false;
+            catch (OperationCanceledException)
+            {
+            }
         }
 
         /*public static Dictionary<string, string> GetDataFileMap()
