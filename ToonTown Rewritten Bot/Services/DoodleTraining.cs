@@ -12,8 +12,7 @@ namespace ToonTown_Rewritten_Bot.Services
         public static int numberOfFeeds, numberOfScratches;
         private static string selectedTrick;
         private static bool infiniteTimeCheckBox, justFeedCheckBox, justScratchCheckBox;
-        public static bool shouldStopTraining = false;
-        public async Task startTrainingDoodle(int feeds, int scratches, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch)
+        public async Task StartDoodleTraining(int feeds, int scratches, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch, CancellationToken cancellationToken)
         {
             numberOfFeeds = feeds;
             numberOfScratches = scratches;
@@ -21,324 +20,285 @@ namespace ToonTown_Rewritten_Bot.Services
             infiniteTimeCheckBox = unlimitedCheckBox;
             justFeedCheckBox = justFeed;
             justScratchCheckBox = justScratch;
-            Thread.Sleep(2000);
-            await feedAndScratch();
+
+            await Task.Delay(2000, cancellationToken); // Use cancellation token
+            await feedAndScratch(cancellationToken); // Pass cancellation token down
         }
 
-        public async Task feedAndScratch()
+        private async Task feedAndScratch(CancellationToken cancellationToken)
         {
-            if (!infiniteTimeCheckBox)//infinite checkbox is not checked
+            // Continue looping indefinitely if unlimited, or until tasks are done
+            while (infiniteTimeCheckBox || numberOfFeeds > 0 || numberOfScratches > 0)
             {
-                //code here is required so it doesn't get stuck in infinite loop below
-                if (justFeedCheckBox)
-                    numberOfScratches = 0;
-                else if (justScratchCheckBox)
-                    numberOfFeeds = 0;
-                while (numberOfFeeds > 0 || numberOfScratches > 0 && !shouldStopTraining)
+                cancellationToken.ThrowIfCancellationRequested(); // Check for cancellation
+
+                if (!justScratchCheckBox && numberOfFeeds > 0) // Feed if not just scratching and feeds are left
                 {
-                    Thread.Sleep(5000);
-                    if (numberOfFeeds > 0)//feed doodle
-                    {
-                        await feedDoodle();
-                        numberOfFeeds--;
-                    }
-                    if (numberOfScratches > 0)//scratch doodle
-                    {
-                        await scratchDoodle();
-                        numberOfScratches--;
-                    }
-                    determineSelectedTrick();//perform trick
+                    await feedDoodle(cancellationToken);
+                    if (!infiniteTimeCheckBox) numberOfFeeds--; // Only decrement if not unlimited
                 }
-            }
-            else //infinite checkbox is checked, so loop until stopped
-            {
-                while (true && !shouldStopTraining)
+
+                if (!justFeedCheckBox && numberOfScratches > 0) // Scratch if not just feeding and scratches are left
                 {
-                    if (justFeedCheckBox)//just feed is checked
-                        await feedDoodle();
-                    else if (justScratchCheckBox)//just scratch is checked
-                        await scratchDoodle();
-                    else if (!justFeedCheckBox && !justScratchCheckBox)//neither are checked, so do both
-                    {
-                        await feedDoodle();
-                        await scratchDoodle();
-                    }
-                    determineSelectedTrick();
-                    Thread.Sleep(5000);
+                    await scratchDoodle(cancellationToken);
+                    if (!infiniteTimeCheckBox) numberOfScratches--; // Only decrement if not unlimited
                 }
+
+                if (selectedTrick != "None") // If a trick is selected, perform it
+                    await DetermineSelectedTrick(cancellationToken);
+
+                await Task.Delay(5000, cancellationToken); // Wait for 5 seconds between actions, respect cancellation
             }
         }
 
-        public async Task determineSelectedTrick()
+        public async Task DetermineSelectedTrick(CancellationToken cancellationToken)
         {
-            Thread.Sleep(1000);
+            // Ensure there's a small delay before starting the trick (simulating setup time).
+            await Task.Delay(1000, cancellationToken);
+
+            // Check if the selected trick is recognized and perform the associated actions.
             switch (selectedTrick)
             {
                 case "Jump (5 - 10 laff)":
-                    for (int i = 0; i < 2; i++)//attempt trick 2 times incase doodle gets confused
-                    {
-                        await openSpeedChat();
-                        await trainJump();
-                    }
+                    await PerformTrickAsync(TrainJump, cancellationToken);
                     break;
                 case "Beg (6 - 12 laff)":
-                    for (int i = 0; i < 2; i++)//attempt trick 2 times incase doodle gets confused
-                    {
-                        await openSpeedChat();
-                        await trainBeg();
-                    }
+                    await PerformTrickAsync(TrainBeg, cancellationToken);
                     break;
                 case "Play Dead (7 - 14 laff)":
-                    for (int i = 0; i < 2; i++)//attempt trick 2 times incase doodle gets confused
-                    {
-                        await openSpeedChat();
-                        await trainPlayDead();
-                    }
+                    await PerformTrickAsync(TrainPlayDead, cancellationToken);
                     break;
                 case "Rollover (8 - 16 laff)":
-                    for (int i = 0; i < 2; i++)//attempt trick 2 times incase doodle gets confused
-                    {
-                        await openSpeedChat();
-                        await trainRollover();
-                    }
+                    await PerformTrickAsync(TrainRollover, cancellationToken);
                     break;
                 case "Backflip (9 - 18 laff)":
-                    for (int i = 0; i < 2; i++)//attempt trick 2 times incase doodle gets confused
-                    {
-                        await openSpeedChat();
-                        await trainBackflip();
-                    }
+                    await PerformTrickAsync(TrainBackflip, cancellationToken);
                     break;
                 case "Dance (10 - 20 laff)":
-                    for (int i = 0; i < 2; i++)//attempt trick 2 times incase doodle gets confused
-                    {
-                        await openSpeedChat();
-                        await trainDance();
-                    }
+                    await PerformTrickAsync(TrainDance, cancellationToken);
                     break;
                 case "Speak (11 - 22 laff)":
-                    for (int i = 0; i < 2; i++)//attempt trick 2 times incase doodle gets confused
-                    {
-                        await openSpeedChat();
-                        await trainSpeak();
-                    }
+                    await PerformTrickAsync(TrainSpeak, cancellationToken);
                     break;
                 default:
-                    MessageBox.Show("Error!");
+                    MessageBox.Show("Selected trick is not recognized. Please check the trick name and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
         }
 
-        public async Task openSpeedChat()
+        private async Task PerformTrickAsync(Func<CancellationToken, Task> trickAction, CancellationToken cancellationToken)
         {
-            Thread.Sleep(1000);
-            //Below is the location for the SpeedChat button location
-            //check if coordinates for the button is (0,0). True means they're not (0,0).
+            // Try the trick two times in case the first attempt fails (doodle might get confused).
+            for (int i = 0; i < 2; i++)
+            {
+                await OpenSpeedChat(cancellationToken);  // Ensure OpenSpeedChat is now designed to accept and use CancellationToken.
+                await trickAction(cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();  // Properly handle cancellation between attempts.
+            }
+        }
+
+        public async Task OpenSpeedChat(CancellationToken cancellationToken)
+        {
+            await Task.Delay(1000, cancellationToken); // Simulate delay before starting the operation
+
+            // Check coordinates for the SpeedChat button
             if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.GreenSpeedChatButton))
             {
                 var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.GreenSpeedChatButton);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
-                Thread.Sleep(1000);
+                await Task.Delay(1000, cancellationToken); // Delay after clicking SpeedChat
 
-                //Below is the location for pets tab
-                //check if coordinates for the button is (0,0). True means they're not (0,0).
+                // Check coordinates for the Pets tab
                 if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.PetsTabInSpeedChat))
                 {
                     (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.PetsTabInSpeedChat);
                     CoreFunctionality.MoveCursor(x, y);
                     CoreFunctionality.DoMouseClick();
-                    Thread.Sleep(1000);
+                    await Task.Delay(1000, cancellationToken); // Delay after clicking Pets tab
 
-                    //Below is the location for tricks tab
-                    //check if coordinates for the button is (0,0). True means they're not (0,0).
+                    // Check coordinates for the Tricks tab
                     if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.TricksTabInSpeedChat))
                     {
                         (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.TricksTabInSpeedChat);
                         CoreFunctionality.MoveCursor(x, y);
                         CoreFunctionality.DoMouseClick();
-                        Thread.Sleep(1000);
+                        await Task.Delay(1000, cancellationToken); // Delay after clicking Tricks tab
                     }
                     else
                     {
                         await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.TricksTabInSpeedChat);
-                        Thread.Sleep(2000);
-                        await openSpeedChat();
+                        await Task.Delay(2000, cancellationToken);
+                        await OpenSpeedChat(cancellationToken); // Recursively call with cancellation support
                     }
                 }
                 else
                 {
                     await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.PetsTabInSpeedChat);
-                    Thread.Sleep(2000);
-                    await openSpeedChat();
+                    await Task.Delay(2000, cancellationToken);
+                    await OpenSpeedChat(cancellationToken); // Recursively call with cancellation support
                 }
             }
-            else//means it was (0,0) and needs updated
+            else
             {
                 await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.GreenSpeedChatButton);
-                Thread.Sleep(2000);
-                await openSpeedChat();
+                await Task.Delay(2000, cancellationToken);
+                await OpenSpeedChat(cancellationToken); // Recursively call with cancellation support
             }
         }
 
-        public async Task trainBeg()
+        public async Task TrainBeg(CancellationToken cancellationToken)
         {
-            //check if coordinates for the button is (0,0). True means they're not (0,0).
             if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.BegTrickOptionInSpeedChat))
             {
                 var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.BegTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
-                Thread.Sleep(2000);
+                await Task.Delay(2000, cancellationToken);
             }
-            else//means it was (0,0) and needs updated
+            else
             {
                 await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.BegTrickOptionInSpeedChat);
-                Thread.Sleep(2000);
-                await trainBeg();
+                await Task.Delay(2000, cancellationToken);
+                await TrainBeg(cancellationToken);
             }
         }
 
-        public async Task trainPlayDead()
+        public async Task TrainPlayDead(CancellationToken cancellationToken)
         {
-            //check if coordinates for the button is (0,0). True means they're not (0,0).
             if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.PlayDeadTrickOptionInSpeedChat))
             {
                 var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.PlayDeadTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
-                Thread.Sleep(2000);
+                await Task.Delay(2000, cancellationToken);
             }
-            else//means it was (0,0) and needs updated
+            else
             {
                 await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.PlayDeadTrickOptionInSpeedChat);
-                Thread.Sleep(2000);
-                await trainPlayDead();
+                await Task.Delay(2000, cancellationToken);
+                await TrainPlayDead(cancellationToken);
             }
         }
 
-        public async Task trainRollover()
+        public async Task TrainRollover(CancellationToken cancellationToken)
         {
-            //check if coordinates for the button is (0,0). True means they're not (0,0).
             if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.RolloverTrickOptionInSpeedChat))
             {
                 var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.RolloverTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
-                Thread.Sleep(2000);
+                await Task.Delay(2000, cancellationToken);
             }
-            else//means it was (0,0) and needs updated
+            else
             {
                 await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.RolloverTrickOptionInSpeedChat);
-                Thread.Sleep(2000);
-                await trainRollover();
+                await Task.Delay(2000, cancellationToken);
+                await TrainRollover(cancellationToken);
             }
         }
 
-        public async Task trainBackflip()
+        public async Task TrainBackflip(CancellationToken cancellationToken)
         {
-            //check if coordinates for the button is (0,0). True means they're not (0,0).
             if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.BackflipTrickOptionInSpeedChat))
             {
                 var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.BackflipTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
-                Thread.Sleep(2000);
+                await Task.Delay(2000, cancellationToken);
             }
-            else//means it was (0,0) and needs updated
+            else
             {
                 await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.BackflipTrickOptionInSpeedChat);
-                Thread.Sleep(2000);
-                await trainBackflip();
+                await Task.Delay(2000, cancellationToken);
+                await TrainBackflip(cancellationToken);
             }
         }
 
-        public async Task trainDance()
+        public async Task TrainDance(CancellationToken cancellationToken)
         {
-            //check if coordinates for the button is (0,0). True means they're not (0,0).
             if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.DanceTrickOptionInSpeedChat))
             {
                 var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.DanceTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
-                Thread.Sleep(2000);
+                await Task.Delay(2000, cancellationToken);
             }
-            else//means it was (0,0) and needs updated
+            else
             {
                 await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.DanceTrickOptionInSpeedChat);
-                Thread.Sleep(2000);
-                await trainDance();
+                await Task.Delay(2000, cancellationToken);
+                await TrainDance(cancellationToken);
             }
         }
 
-        public async Task trainSpeak()
+        public async Task TrainSpeak(CancellationToken cancellationToken)
         {
-            //check if coordinates for the button is (0,0). True means they're not (0,0).
             if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.SpeakTrickOptionInSpeedChat))
             {
                 var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.SpeakTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
-                Thread.Sleep(2000);
+                await Task.Delay(2000, cancellationToken);
             }
-            else//means it was (0,0) and needs updated
+            else
             {
                 await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.SpeakTrickOptionInSpeedChat);
-                Thread.Sleep(2000);
-                await trainSpeak();
+                await Task.Delay(2000, cancellationToken);
+                await TrainSpeak(cancellationToken);
             }
         }
 
-        public async Task trainJump()
+        public async Task TrainJump(CancellationToken cancellationToken)
         {
-            //check if coordinates for the button is (0,0). True means they're not (0,0).
             if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.JumpTrickOptionInSpeedChat))
             {
                 var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.JumpTrickOptionInSpeedChat);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
-                Thread.Sleep(2000);
+                await Task.Delay(2000, cancellationToken);
             }
-            else//means it was (0,0) and needs updated
+            else
             {
                 await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.JumpTrickOptionInSpeedChat);
-                Thread.Sleep(2000);
-                await trainJump();
+                await Task.Delay(2000, cancellationToken);
+                await TrainJump(cancellationToken);
             }
         }
 
-        public async Task feedDoodle()
+        public async Task feedDoodle(CancellationToken cancellationToken)
         {
-            //check if coordinates for the button is (0,0). True means they're not (0,0).
+            cancellationToken.ThrowIfCancellationRequested();
             if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.FeedDoodleButton))
             {
                 var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.FeedDoodleButton);
-                CoreFunctionality.MoveCursor(x, y);
-                CoreFunctionality.DoMouseClick();
-                Thread.Sleep(11500);
+                MoveCursor(x, y);
+                DoMouseClick();
+                await Task.Delay(11500, cancellationToken); // Respect cancellation
             }
-            else//means it was (0,0) and needs updated
+            else
             {
                 await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.FeedDoodleButton);
-                Thread.Sleep(2000);
-                await feedDoodle();
+                await Task.Delay(2000, cancellationToken);
+                await feedDoodle(cancellationToken); // Recursive call with cancellation
             }
         }
 
-        public async Task scratchDoodle()
+        public async Task scratchDoodle(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             if (CoordinatesManager.CheckCoordinates(DoodleTrainingCoordinatesEnum.ScratchDoodleButton))
             {
                 var (x, y) = CoordinatesManager.GetCoordsFromMap(DoodleTrainingCoordinatesEnum.ScratchDoodleButton);
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
-                Thread.Sleep(10000);
+                await Task.Delay(10000, cancellationToken);
             }
             else
             {
                 await CoordinatesManager.ManualUpdateCoordinates(DoodleTrainingCoordinatesEnum.ScratchDoodleButton);
-                Thread.Sleep(2000);
-                await scratchDoodle();
+                await Task.Delay(2000, cancellationToken);
+                await scratchDoodle(cancellationToken);
             }
         }
     }

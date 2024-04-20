@@ -31,6 +31,7 @@ namespace ToonTown_Rewritten_Bot
             CoordinatesManager.ReadCoordinates();
             BotFunctions.CreateItemsDataFileMap();
             LoadCoordinatesIntoResetBox();
+            doodleTrickComboBox.SelectedIndex = 0; // clean this up/move this eventually
         }
 
         //important functions for bot
@@ -424,74 +425,113 @@ namespace ToonTown_Rewritten_Bot
             Services.Golf.oneLittleBirdie();
         }
 
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        private void unlimitedTrainingCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox3.Checked)
+            if (unlimitedTrainingCheckBox.Checked)
             {
-                numericUpDown5.Enabled = false;
-                numericUpDown6.Enabled = false;
+                numberOfDoodleScratchesNumericUpDown.Enabled = false;
+                numberOfDoodleFeedsNumericUpDown.Enabled = false;
+                justFeedDoodleCheckBox.Checked = false;
+                justScratchDoodleCheckBox.Checked = false;
+                justFeedDoodleCheckBox.Enabled = false;
+                justScratchDoodleCheckBox.Enabled = false;
             }
             else
             {
-                numericUpDown5.Enabled = true;
-                numericUpDown6.Enabled = true;
+                numberOfDoodleScratchesNumericUpDown.Enabled = true;
+                numberOfDoodleFeedsNumericUpDown.Enabled = true;
+                justFeedDoodleCheckBox.Enabled = true;
+                justScratchDoodleCheckBox.Enabled = true;
             }
         }
 
-        private void button20_Click(object sender, EventArgs e)
+        private async void startDoodleTrainingBtn_Click(object sender, EventArgs e)
         {
-            string selected = (string)comboBox4.SelectedItem;
-            startDoodleTrainingThread(Convert.ToInt32(numericUpDown6.Value), Convert.ToInt32(numericUpDown5.Value), checkBox3.Checked, false, selected);
-        }
+            string selectedTrick = (string)doodleTrickComboBox.SelectedItem;
+            int numberOfFeeds = Convert.ToInt32(numberOfDoodleFeedsNumericUpDown.Value);
+            int numberOfScratches = Convert.ToInt32(numberOfDoodleScratchesNumericUpDown.Value);
+            bool unlimitedCheckBox = unlimitedTrainingCheckBox.Checked;
+            bool justFeed = justFeedDoodleCheckBox.Checked;
+            bool justScratch = justScratchDoodleCheckBox.Checked;
 
-        Thread doodleTrainingThreading;
-        public void startDoodleTrainingThread(int numberOfFeeds, int numberOfScratches, bool checkBoxChecked, bool stopTrainingClicked, string selectedTrick)
-        {
-            /*if (!stopTrainingClicked)
+            // Ensure we have a fresh CancellationTokenSource
+            if (_cancellationTokenSource != null)
             {
-                doodleTrainingThreading = new Thread(() => DoodleTraining.startTrainingDoodle(numberOfFeeds, numberOfScratches, checkBox3.Checked, selectedTrick, checkBox4.Checked, checkBox5.Checked));
-                doodleTrainingThreading.Start();
-            }*/
-        }
-
-        private void button19_Click(object sender, EventArgs e)
-        {
-            DoodleTraining.shouldStopTraining = true;
-            MessageBox.Show("Doodle Training stopped!");
-        }
-
-        private void checkBox4_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox4.Checked)
-            {
-                numericUpDown5.Enabled = false;
-                checkBox5.Checked = false;
+                _cancellationTokenSource.Dispose(); // Dispose the old one if it exists
             }
-            else
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            try
             {
-                numericUpDown5.Enabled = true;
-                if (checkBox3.Checked)
+                // Run the training task and handle completion
+                await Task.Run(() => new DoodleTraining().StartDoodleTraining(
+                    numberOfFeeds, numberOfScratches, unlimitedCheckBox,
+                    selectedTrick, justFeed, justScratch, _cancellationTokenSource.Token),
+                    _cancellationTokenSource.Token)
+                .ContinueWith(task =>
                 {
-                    numericUpDown6.Enabled = false;
-                    numericUpDown5.Enabled = false;
+                    if (task.IsCompletedSuccessfully)
+                    {
+                        CoreFunctionality.BringBotWindowToFront();
+                        MessageBox.Show("Doodle training completed successfully!", "Training Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else if (task.IsFaulted)
+                    {
+                        MessageBox.Show($"Error occurred during doodle training: {task.Exception?.GetBaseException().Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext()); // Ensure UI updates are done on the main thread.
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
+        }
+
+        private void stopDoodleTrainingBtn_Click(object sender, EventArgs e)
+        {
+            // Check if the cancellation token source is created and not yet cancelled
+            if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
+            {
+                _cancellationTokenSource.Cancel();  // Request cancellation
+                _cancellationTokenSource.Dispose();  // Dispose the token source
+                _cancellationTokenSource = null;     // Reset the source to be sure it's fresh when restarted
+
+                MessageBox.Show("Doodle Training stopped!", "Training Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void justFeedDoodleCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (justFeedDoodleCheckBox.Checked)
+            {
+                numberOfDoodleScratchesNumericUpDown.Enabled = false;
+                justScratchDoodleCheckBox.Checked = false;
+            }
+            else
+            {
+                numberOfDoodleScratchesNumericUpDown.Enabled = true;
+                if (unlimitedTrainingCheckBox.Checked)
+                {
+                    numberOfDoodleFeedsNumericUpDown.Enabled = false;
+                    numberOfDoodleScratchesNumericUpDown.Enabled = false;
                 }
             }
         }
 
-        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        private void justScratchDoodleCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox5.Checked)
+            if (justScratchDoodleCheckBox.Checked)
             {
-                numericUpDown6.Enabled = false;
-                checkBox4.Checked = false;
+                numberOfDoodleFeedsNumericUpDown.Enabled = false;
+                justFeedDoodleCheckBox.Checked = false;
             }
             else
             {
-                numericUpDown6.Enabled = true;
-                if (checkBox3.Checked)
+                numberOfDoodleFeedsNumericUpDown.Enabled = true;
+                if (unlimitedTrainingCheckBox.Checked)
                 {
-                    numericUpDown6.Enabled = false;
-                    numericUpDown5.Enabled = false;
+                    numberOfDoodleFeedsNumericUpDown.Enabled = false;
+                    numberOfDoodleScratchesNumericUpDown.Enabled = false;
                 }
             }
         }

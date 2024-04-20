@@ -60,6 +60,7 @@
             groupBox5 = new System.Windows.Forms.GroupBox();
             removePlantBtn = new System.Windows.Forms.Button();
             groupBox4 = new System.Windows.Forms.GroupBox();
+            waterPlantNumericUpDown = new System.Windows.Forms.NumericUpDown();
             waterPlantBtn = new System.Windows.Forms.Button();
             groupBox3 = new System.Windows.Forms.GroupBox();
             flowerBeanAmountDropdown = new System.Windows.Forms.ComboBox();
@@ -83,17 +84,17 @@
             Doodles = new System.Windows.Forms.TabPage();
             richTextBox2 = new System.Windows.Forms.RichTextBox();
             groupBox8 = new System.Windows.Forms.GroupBox();
-            checkBox5 = new System.Windows.Forms.CheckBox();
-            checkBox4 = new System.Windows.Forms.CheckBox();
-            comboBox4 = new System.Windows.Forms.ComboBox();
+            justScratchDoodleCheckBox = new System.Windows.Forms.CheckBox();
+            justFeedDoodleCheckBox = new System.Windows.Forms.CheckBox();
+            doodleTrickComboBox = new System.Windows.Forms.ComboBox();
             pictureBox2 = new System.Windows.Forms.PictureBox();
-            checkBox3 = new System.Windows.Forms.CheckBox();
-            button19 = new System.Windows.Forms.Button();
+            unlimitedTrainingCheckBox = new System.Windows.Forms.CheckBox();
+            stopDoodleTrainingBtn = new System.Windows.Forms.Button();
             label9 = new System.Windows.Forms.Label();
-            numericUpDown5 = new System.Windows.Forms.NumericUpDown();
+            numberOfDoodleScratchesNumericUpDown = new System.Windows.Forms.NumericUpDown();
             label10 = new System.Windows.Forms.Label();
-            numericUpDown6 = new System.Windows.Forms.NumericUpDown();
-            button20 = new System.Windows.Forms.Button();
+            numberOfDoodleFeedsNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            startDoodleTrainingBtn = new System.Windows.Forms.Button();
             Misc = new System.Windows.Forms.TabPage();
             checkBox2 = new System.Windows.Forms.CheckBox();
             groupBox2 = new System.Windows.Forms.GroupBox();
@@ -117,7 +118,6 @@
             button7 = new System.Windows.Forms.Button();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
             timer1 = new System.Windows.Forms.Timer(components);
-            waterPlantNumericUpDown = new System.Windows.Forms.NumericUpDown();
             tabControl1.SuspendLayout();
             Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -129,6 +129,7 @@
             Gardening.SuspendLayout();
             groupBox5.SuspendLayout();
             groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).BeginInit();
             groupBox3.SuspendLayout();
             Golf.SuspendLayout();
             Near_Hole.SuspendLayout();
@@ -136,8 +137,8 @@
             Doodles.SuspendLayout();
             groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown5).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown6).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numberOfDoodleScratchesNumericUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numberOfDoodleFeedsNumericUpDown).BeginInit();
             Misc.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
@@ -146,7 +147,6 @@
             Dev.SuspendLayout();
             groupBox9.SuspendLayout();
             groupBox7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).BeginInit();
             SuspendLayout();
             // 
             // tabControl1
@@ -520,6 +520,15 @@
             groupBox4.TabStop = false;
             groupBox4.Text = "Water Plant";
             // 
+            // waterPlantNumericUpDown
+            // 
+            waterPlantNumericUpDown.Location = new System.Drawing.Point(20, 32);
+            waterPlantNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            waterPlantNumericUpDown.Name = "waterPlantNumericUpDown";
+            waterPlantNumericUpDown.Size = new System.Drawing.Size(44, 22);
+            waterPlantNumericUpDown.TabIndex = 1;
+            waterPlantNumericUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
+            // 
             // waterPlantBtn
             // 
             waterPlantBtn.Location = new System.Drawing.Point(71, 21);
@@ -791,17 +800,17 @@
             // 
             // groupBox8
             // 
-            groupBox8.Controls.Add(checkBox5);
-            groupBox8.Controls.Add(checkBox4);
-            groupBox8.Controls.Add(comboBox4);
+            groupBox8.Controls.Add(justScratchDoodleCheckBox);
+            groupBox8.Controls.Add(justFeedDoodleCheckBox);
+            groupBox8.Controls.Add(doodleTrickComboBox);
             groupBox8.Controls.Add(pictureBox2);
-            groupBox8.Controls.Add(checkBox3);
-            groupBox8.Controls.Add(button19);
+            groupBox8.Controls.Add(unlimitedTrainingCheckBox);
+            groupBox8.Controls.Add(stopDoodleTrainingBtn);
             groupBox8.Controls.Add(label9);
-            groupBox8.Controls.Add(numericUpDown5);
+            groupBox8.Controls.Add(numberOfDoodleScratchesNumericUpDown);
             groupBox8.Controls.Add(label10);
-            groupBox8.Controls.Add(numericUpDown6);
-            groupBox8.Controls.Add(button20);
+            groupBox8.Controls.Add(numberOfDoodleFeedsNumericUpDown);
+            groupBox8.Controls.Add(startDoodleTrainingBtn);
             groupBox8.Location = new System.Drawing.Point(9, 3);
             groupBox8.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox8.Name = "groupBox8";
@@ -811,42 +820,42 @@
             groupBox8.TabStop = false;
             groupBox8.Text = "Doodle Training";
             // 
-            // checkBox5
+            // justScratchDoodleCheckBox
             // 
-            checkBox5.AutoSize = true;
-            checkBox5.Location = new System.Drawing.Point(10, 192);
-            checkBox5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            checkBox5.Name = "checkBox5";
-            checkBox5.Size = new System.Drawing.Size(146, 20);
-            checkBox5.TabIndex = 15;
-            checkBox5.Text = "Just Scratch Doodle";
-            toolTip1.SetToolTip(checkBox5, "Select this if you only want to train using scratching");
-            checkBox5.UseVisualStyleBackColor = true;
-            checkBox5.CheckedChanged += checkBox5_CheckedChanged;
+            justScratchDoodleCheckBox.AutoSize = true;
+            justScratchDoodleCheckBox.Location = new System.Drawing.Point(10, 192);
+            justScratchDoodleCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            justScratchDoodleCheckBox.Name = "justScratchDoodleCheckBox";
+            justScratchDoodleCheckBox.Size = new System.Drawing.Size(146, 20);
+            justScratchDoodleCheckBox.TabIndex = 15;
+            justScratchDoodleCheckBox.Text = "Just Scratch Doodle";
+            toolTip1.SetToolTip(justScratchDoodleCheckBox, "Select this if you only want to train using scratching");
+            justScratchDoodleCheckBox.UseVisualStyleBackColor = true;
+            justScratchDoodleCheckBox.CheckedChanged += justScratchDoodleCheckBox_CheckedChanged;
             // 
-            // checkBox4
+            // justFeedDoodleCheckBox
             // 
-            checkBox4.AutoSize = true;
-            checkBox4.Location = new System.Drawing.Point(10, 162);
-            checkBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            checkBox4.Name = "checkBox4";
-            checkBox4.Size = new System.Drawing.Size(133, 20);
-            checkBox4.TabIndex = 14;
-            checkBox4.Text = "Just Feed Doodle";
-            toolTip1.SetToolTip(checkBox4, "Select this if you only want to train using feeding");
-            checkBox4.UseVisualStyleBackColor = true;
-            checkBox4.CheckedChanged += checkBox4_CheckedChanged;
+            justFeedDoodleCheckBox.AutoSize = true;
+            justFeedDoodleCheckBox.Location = new System.Drawing.Point(10, 162);
+            justFeedDoodleCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            justFeedDoodleCheckBox.Name = "justFeedDoodleCheckBox";
+            justFeedDoodleCheckBox.Size = new System.Drawing.Size(133, 20);
+            justFeedDoodleCheckBox.TabIndex = 14;
+            justFeedDoodleCheckBox.Text = "Just Feed Doodle";
+            toolTip1.SetToolTip(justFeedDoodleCheckBox, "Select this if you only want to train using feeding");
+            justFeedDoodleCheckBox.UseVisualStyleBackColor = true;
+            justFeedDoodleCheckBox.CheckedChanged += justFeedDoodleCheckBox_CheckedChanged;
             // 
-            // comboBox4
+            // doodleTrickComboBox
             // 
-            comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            comboBox4.Items.AddRange(new object[] { "Jump (5 - 10 laff)", "Beg (6 - 12 laff)", "Play Dead (7 - 14 laff)", "Rollover (8 - 16 laff)", "Backflip (9 - 18 laff)", "Dance (10 - 20 laff)", "Speak (11 - 22 laff)" });
-            comboBox4.Location = new System.Drawing.Point(10, 24);
-            comboBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            comboBox4.Name = "comboBox4";
-            comboBox4.Size = new System.Drawing.Size(199, 24);
-            comboBox4.TabIndex = 11;
-            toolTip1.SetToolTip(comboBox4, "Select the trick you wish to train.");
+            doodleTrickComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            doodleTrickComboBox.Items.AddRange(new object[] { "None", "Jump (5 - 10 laff)", "Beg (6 - 12 laff)", "Play Dead (7 - 14 laff)", "Rollover (8 - 16 laff)", "Backflip (9 - 18 laff)", "Dance (10 - 20 laff)", "Speak (11 - 22 laff)" });
+            doodleTrickComboBox.Location = new System.Drawing.Point(10, 24);
+            doodleTrickComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            doodleTrickComboBox.Name = "doodleTrickComboBox";
+            doodleTrickComboBox.Size = new System.Drawing.Size(199, 24);
+            doodleTrickComboBox.TabIndex = 11;
+            toolTip1.SetToolTip(doodleTrickComboBox, "Select the trick you wish to train.");
             // 
             // pictureBox2
             // 
@@ -859,29 +868,29 @@
             pictureBox2.TabIndex = 10;
             pictureBox2.TabStop = false;
             // 
-            // checkBox3
+            // unlimitedTrainingCheckBox
             // 
-            checkBox3.AutoSize = true;
-            checkBox3.Location = new System.Drawing.Point(10, 132);
-            checkBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            checkBox3.Name = "checkBox3";
-            checkBox3.Size = new System.Drawing.Size(194, 20);
-            checkBox3.TabIndex = 13;
-            checkBox3.Text = "Train until I click stop training";
-            toolTip1.SetToolTip(checkBox3, "Has no feed or scratch limit, it will go forever until you click the stop training button.");
-            checkBox3.UseVisualStyleBackColor = true;
-            checkBox3.CheckedChanged += checkBox3_CheckedChanged;
+            unlimitedTrainingCheckBox.AutoSize = true;
+            unlimitedTrainingCheckBox.Location = new System.Drawing.Point(10, 132);
+            unlimitedTrainingCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            unlimitedTrainingCheckBox.Name = "unlimitedTrainingCheckBox";
+            unlimitedTrainingCheckBox.Size = new System.Drawing.Size(194, 20);
+            unlimitedTrainingCheckBox.TabIndex = 13;
+            unlimitedTrainingCheckBox.Text = "Train until I click stop training";
+            toolTip1.SetToolTip(unlimitedTrainingCheckBox, "Has no feed or scratch limit, it will go forever until you click the stop training button.");
+            unlimitedTrainingCheckBox.UseVisualStyleBackColor = true;
+            unlimitedTrainingCheckBox.CheckedChanged += unlimitedTrainingCheckBox_CheckedChanged;
             // 
-            // button19
+            // stopDoodleTrainingBtn
             // 
-            button19.Location = new System.Drawing.Point(194, 222);
-            button19.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button19.Name = "button19";
-            button19.Size = new System.Drawing.Size(184, 38);
-            button19.TabIndex = 12;
-            button19.Text = "Stop Training";
-            button19.UseVisualStyleBackColor = true;
-            button19.Click += button19_Click;
+            stopDoodleTrainingBtn.Location = new System.Drawing.Point(194, 222);
+            stopDoodleTrainingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            stopDoodleTrainingBtn.Name = "stopDoodleTrainingBtn";
+            stopDoodleTrainingBtn.Size = new System.Drawing.Size(184, 38);
+            stopDoodleTrainingBtn.TabIndex = 12;
+            stopDoodleTrainingBtn.Text = "Stop Training";
+            stopDoodleTrainingBtn.UseVisualStyleBackColor = true;
+            stopDoodleTrainingBtn.Click += stopDoodleTrainingBtn_Click;
             // 
             // label9
             // 
@@ -893,17 +902,17 @@
             label9.TabIndex = 9;
             label9.Text = "Number of Scratches:";
             // 
-            // numericUpDown5
+            // numberOfDoodleScratchesNumericUpDown
             // 
-            numericUpDown5.Location = new System.Drawing.Point(173, 99);
-            numericUpDown5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            numericUpDown5.Maximum = new decimal(new int[] { 900, 0, 0, 0 });
-            numericUpDown5.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericUpDown5.Name = "numericUpDown5";
-            numericUpDown5.Size = new System.Drawing.Size(48, 22);
-            numericUpDown5.TabIndex = 8;
-            toolTip1.SetToolTip(numericUpDown5, "This number indicates the number of times to go to the fisherman to sell the fish");
-            numericUpDown5.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            numberOfDoodleScratchesNumericUpDown.Location = new System.Drawing.Point(173, 99);
+            numberOfDoodleScratchesNumericUpDown.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numberOfDoodleScratchesNumericUpDown.Maximum = new decimal(new int[] { 900, 0, 0, 0 });
+            numberOfDoodleScratchesNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numberOfDoodleScratchesNumericUpDown.Name = "numberOfDoodleScratchesNumericUpDown";
+            numberOfDoodleScratchesNumericUpDown.Size = new System.Drawing.Size(48, 22);
+            numberOfDoodleScratchesNumericUpDown.TabIndex = 8;
+            toolTip1.SetToolTip(numberOfDoodleScratchesNumericUpDown, "This number indicates the number of times to go to the fisherman to sell the fish");
+            numberOfDoodleScratchesNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // label10
             // 
@@ -915,28 +924,28 @@
             label10.TabIndex = 7;
             label10.Text = "Number of Feeds:";
             // 
-            // numericUpDown6
+            // numberOfDoodleFeedsNumericUpDown
             // 
-            numericUpDown6.Location = new System.Drawing.Point(148, 67);
-            numericUpDown6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            numericUpDown6.Maximum = new decimal(new int[] { 900, 0, 0, 0 });
-            numericUpDown6.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericUpDown6.Name = "numericUpDown6";
-            numericUpDown6.Size = new System.Drawing.Size(48, 22);
-            numericUpDown6.TabIndex = 6;
-            toolTip1.SetToolTip(numericUpDown6, "This number indicates the number of times to cast your fishing rod");
-            numericUpDown6.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            numberOfDoodleFeedsNumericUpDown.Location = new System.Drawing.Point(148, 67);
+            numberOfDoodleFeedsNumericUpDown.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numberOfDoodleFeedsNumericUpDown.Maximum = new decimal(new int[] { 900, 0, 0, 0 });
+            numberOfDoodleFeedsNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numberOfDoodleFeedsNumericUpDown.Name = "numberOfDoodleFeedsNumericUpDown";
+            numberOfDoodleFeedsNumericUpDown.Size = new System.Drawing.Size(48, 22);
+            numberOfDoodleFeedsNumericUpDown.TabIndex = 6;
+            toolTip1.SetToolTip(numberOfDoodleFeedsNumericUpDown, "This number indicates the number of times to cast your fishing rod");
+            numberOfDoodleFeedsNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
-            // button20
+            // startDoodleTrainingBtn
             // 
-            button20.Location = new System.Drawing.Point(7, 222);
-            button20.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button20.Name = "button20";
-            button20.Size = new System.Drawing.Size(184, 38);
-            button20.TabIndex = 2;
-            button20.Text = "Start Training";
-            button20.UseVisualStyleBackColor = true;
-            button20.Click += button20_Click;
+            startDoodleTrainingBtn.Location = new System.Drawing.Point(7, 222);
+            startDoodleTrainingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            startDoodleTrainingBtn.Name = "startDoodleTrainingBtn";
+            startDoodleTrainingBtn.Size = new System.Drawing.Size(184, 38);
+            startDoodleTrainingBtn.TabIndex = 2;
+            startDoodleTrainingBtn.Text = "Start Training";
+            startDoodleTrainingBtn.UseVisualStyleBackColor = true;
+            startDoodleTrainingBtn.Click += startDoodleTrainingBtn_Click;
             // 
             // Misc
             // 
@@ -1202,15 +1211,6 @@
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
-            // waterPlantNumericUpDown
-            // 
-            waterPlantNumericUpDown.Location = new System.Drawing.Point(20, 32);
-            waterPlantNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            waterPlantNumericUpDown.Name = "waterPlantNumericUpDown";
-            waterPlantNumericUpDown.Size = new System.Drawing.Size(44, 22);
-            waterPlantNumericUpDown.TabIndex = 1;
-            waterPlantNumericUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1236,6 +1236,7 @@
             Gardening.ResumeLayout(false);
             groupBox5.ResumeLayout(false);
             groupBox4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).EndInit();
             groupBox3.ResumeLayout(false);
             Golf.ResumeLayout(false);
             Near_Hole.ResumeLayout(false);
@@ -1244,8 +1245,8 @@
             groupBox8.ResumeLayout(false);
             groupBox8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown5).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown6).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numberOfDoodleScratchesNumericUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numberOfDoodleFeedsNumericUpDown).EndInit();
             Misc.ResumeLayout(false);
             Misc.PerformLayout();
             groupBox2.ResumeLayout(false);
@@ -1259,7 +1260,6 @@
             groupBox9.ResumeLayout(false);
             groupBox9.PerformLayout();
             groupBox7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).EndInit();
             ResumeLayout(false);
         }
 
@@ -1329,17 +1329,17 @@
         private System.Windows.Forms.Button One_Little_Birdie;
         private System.Windows.Forms.TabPage Doodles;
         private System.Windows.Forms.GroupBox groupBox8;
-        private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.Button stopDoodleTrainingBtn;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.NumericUpDown numericUpDown5;
+        private System.Windows.Forms.NumericUpDown numberOfDoodleScratchesNumericUpDown;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.NumericUpDown numericUpDown6;
-        private System.Windows.Forms.Button button20;
-        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.NumericUpDown numberOfDoodleFeedsNumericUpDown;
+        private System.Windows.Forms.Button startDoodleTrainingBtn;
+        private System.Windows.Forms.CheckBox unlimitedTrainingCheckBox;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.CheckBox checkBox5;
-        private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.ComboBox doodleTrickComboBox;
+        private System.Windows.Forms.CheckBox justScratchDoodleCheckBox;
+        private System.Windows.Forms.CheckBox justFeedDoodleCheckBox;
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Label label11;
