@@ -114,7 +114,7 @@ namespace ToonTown_Rewritten_Bot
         {
             try
             {
-                await Services.Gardening.WaterPlantAsync(_cancellationTokenSource.Token);
+                await Services.Gardening.WaterPlantAsync((int)waterPlantNumericUpDown.Value, _cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {

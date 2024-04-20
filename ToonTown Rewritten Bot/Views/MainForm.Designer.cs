@@ -117,6 +117,7 @@
             button7 = new System.Windows.Forms.Button();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
             timer1 = new System.Windows.Forms.Timer(components);
+            waterPlantNumericUpDown = new System.Windows.Forms.NumericUpDown();
             tabControl1.SuspendLayout();
             Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -145,6 +146,7 @@
             Dev.SuspendLayout();
             groupBox9.SuspendLayout();
             groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).BeginInit();
             SuspendLayout();
             // 
             // tabControl1
@@ -485,7 +487,7 @@
             // groupBox5
             // 
             groupBox5.Controls.Add(removePlantBtn);
-            groupBox5.Location = new System.Drawing.Point(9, 197);
+            groupBox5.Location = new System.Drawing.Point(9, 198);
             groupBox5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox5.Name = "groupBox5";
             groupBox5.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -507,19 +509,20 @@
             // 
             // groupBox4
             // 
+            groupBox4.Controls.Add(waterPlantNumericUpDown);
             groupBox4.Controls.Add(waterPlantBtn);
             groupBox4.Location = new System.Drawing.Point(9, 113);
             groupBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox4.Name = "groupBox4";
             groupBox4.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox4.Size = new System.Drawing.Size(195, 77);
+            groupBox4.Size = new System.Drawing.Size(195, 79);
             groupBox4.TabIndex = 4;
             groupBox4.TabStop = false;
             groupBox4.Text = "Water Plant";
             // 
             // waterPlantBtn
             // 
-            waterPlantBtn.Location = new System.Drawing.Point(34, 24);
+            waterPlantBtn.Location = new System.Drawing.Point(71, 21);
             waterPlantBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             waterPlantBtn.Name = "waterPlantBtn";
             waterPlantBtn.Size = new System.Drawing.Size(115, 42);
@@ -1199,6 +1202,15 @@
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
+            // waterPlantNumericUpDown
+            // 
+            waterPlantNumericUpDown.Location = new System.Drawing.Point(20, 32);
+            waterPlantNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            waterPlantNumericUpDown.Name = "waterPlantNumericUpDown";
+            waterPlantNumericUpDown.Size = new System.Drawing.Size(44, 22);
+            waterPlantNumericUpDown.TabIndex = 1;
+            waterPlantNumericUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1247,6 +1259,7 @@
             groupBox9.ResumeLayout(false);
             groupBox9.PerformLayout();
             groupBox7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).EndInit();
             ResumeLayout(false);
         }
 
@@ -1338,6 +1351,7 @@
         private System.Windows.Forms.Button button21;
         private System.Windows.Forms.ComboBox customFishingFilesComboBox;
         private System.Windows.Forms.CheckBox debugCustomActionsCheckBox;
+        private System.Windows.Forms.NumericUpDown waterPlantNumericUpDown;
     }
 }
 
