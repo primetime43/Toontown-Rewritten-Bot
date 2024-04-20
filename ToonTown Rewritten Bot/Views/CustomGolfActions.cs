@@ -150,7 +150,7 @@ namespace ToonTown_Rewritten_Bot.Views
                         // Apply default duration for specific actions not specified as "milliseconds"
                         if (actionName == "MOVE TO LEFT TEE SPOT" || actionName == "MOVE TO RIGHT TEE SPOT" || actionName == "TURN LEFT" || actionName == "TURN RIGHT")
                         {
-                            actionCommand.Duration = 500; // Set a specific duration for tee and turn actions
+                            actionCommand.Duration = 50; // Set a specific duration for tee and turn actions
                         }
                         else
                         {
@@ -171,6 +171,7 @@ namespace ToonTown_Rewritten_Bot.Views
 
             string json = JsonConvert.SerializeObject(actionsList, Formatting.Indented);
             SaveToJsonFile(json);
+            actionItemsListBox.Items.Clear();
         }
 
         private void SaveToJsonFile(string jsonContent)
