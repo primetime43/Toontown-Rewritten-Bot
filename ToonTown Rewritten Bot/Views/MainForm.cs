@@ -27,7 +27,13 @@ namespace ToonTown_Rewritten_Bot
         {
             InitializeComponent();
 
+            CoreFunctionality.EnsureFishingJsonFilesExist();
+
+            // need to clean this all up and handle it better eventually
             CoreFunctionality.CreateCustomFishingActionsFolder();
+            CoreFunctionality.CreateCustomGolfActionsFolder();
+
+            LoadCustomGolfActions();
 
             CoordinatesManager.ReadCoordinates();
             BotFunctions.CreateItemsDataFileMap();
@@ -384,67 +390,67 @@ namespace ToonTown_Rewritten_Bot
         // GOLF- Afternoon Tee
         private void golfAfternoonTee(object sender, EventArgs e)
         {
-            Services.Golf.afternoonTee();
+            Services.Golf.AfternoonTee();
         }
 
         // GOLF - Holey Mackeral
         private void golfHoleyMackeral(object sender, EventArgs e)
         {
-            Services.Golf.holeyMackeral();
+            Services.Golf.HoleyMackeral();
         }
 
         // GOLF - Hole on the Range
         private void golfHoleOnTheRange(object sender, EventArgs e)
         {
-            Services.Golf.holeOnTheRange();
+            Services.Golf.HoleOnTheRange();
         }
 
         // GOLF - Seeing green
         private void golfSeeingGreen(object sender, EventArgs e)
         {
-            Services.Golf.seeingGreen();
+            Services.Golf.SeeingGreen();
         }
 
         // GOLF - Swing Time
         private void button15_Click(object sender, EventArgs e)
         {
-            Services.Golf.swingTime();
+            Services.Golf.SwingTime();
         }
 
         // GOLF - Down the Hatch
         private void button14_Click(object sender, EventArgs e)
         {
-            Services.Golf.downTheHatch();
+            Services.Golf.DownTheHatch();
         }
 
         //GOLF - Peanut Putter
         private void button13_Click(object sender, EventArgs e)
         {
-            Services.Golf.peanutPutter();
+            Services.Golf.PeanutPutter();
         }
 
         //GOLF - Hot Links
         private void button16_Click(object sender, EventArgs e)
         {
-            Services.Golf.hotLinks();
+            Services.Golf.HotLinks();
         }
 
         //GOLF - Hole In Fun
         private void button17_Click(object sender, EventArgs e)
         {
-            Services.Golf.holeInFun();
+            Services.Golf.HoleInFun();
         }
 
         //GOLF - Swing-A-Long
         private void button18_Click(object sender, EventArgs e)
         {
-            Services.Golf.swingALong();
+            Services.Golf.SwingALong();
         }
 
         //GOLF - One Little Birdie
         private void One_Little_Birdie_Click(object sender, EventArgs e)
         {
-            Services.Golf.oneLittleBirdie();
+            Services.Golf.OneLittleBirdie();
         }
 
         private void unlimitedTrainingCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -619,9 +625,13 @@ namespace ToonTown_Rewritten_Bot
                 label12.Visible = false;
         }
 
-        private void button21_Click(object sender, EventArgs e)
+        private void createCustomFishingActionsBtn_Click(object sender, EventArgs e)
         {
-            new CustomFishingActions().Show();
+            using (var form = new CustomFishingActions())
+            {
+                form.ShowDialog(); // This will block until the form is closed
+            }
+            LoadCustomFishingActions(); // load fishing actions after the form is closed
         }
 
         public void LoadCustomFishingActions()
@@ -632,6 +642,17 @@ namespace ToonTown_Rewritten_Bot
             foreach (string file in files)
             {
                 customFishingFilesComboBox.Items.Add(Path.GetFileName(file)); // Add only file names to the ComboBox
+            }
+        }
+
+        public void LoadCustomGolfActions()
+        {
+            string[] files = CoreFunctionality.loadCustomGolfActions();
+
+            customGolfFilesComboBox.Items.Clear();
+            foreach (string file in files)
+            {
+                customGolfFilesComboBox.Items.Add(Path.GetFileName(file)); // Add only file names to the ComboBox
             }
         }
 
@@ -654,6 +675,52 @@ namespace ToonTown_Rewritten_Bot
             {
                 // If the function was not active, show a different message
                 MessageBox.Show("No active 'Keep Toon Awake' function to stop.", "Stop Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void createCustomGolfActionsBtn_Click(object sender, EventArgs e)
+        {
+            using (var form = new CustomGolfActions())
+            {
+                form.ShowDialog(); // This will block until the form is closed
+            }
+
+            LoadCustomGolfActions(); // load golf actions after the form is closed
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            string selectedFileName = customGolfFilesComboBox.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selectedFileName))
+            {
+                MessageBox.Show("Please select a custom golf action file.");
+                return;
+            }
+
+            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string filePath = Path.Combine(exePath, "Custom Golf Actions", selectedFileName);
+
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+            }
+
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            try
+            {
+                await Services.Golf.StartCustomGolfAction(filePath, _cancellationTokenSource.Token);
+                CoreFunctionality.BringBotWindowToFront();
+                MessageBox.Show("Golf actions completed successfully.", "Golf Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (OperationCanceledException)
+            {
+                MessageBox.Show("Golf actions were cancelled.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
     }

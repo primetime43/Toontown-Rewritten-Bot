@@ -2,13 +2,13 @@
 
 namespace ToonTown_Rewritten_Bot.Models
 {
-    public class ActionKeys
+    public class FishingActionKeys
     {
         // Property to hold the mapping
         public Dictionary<string, string> ActionKeyMap { get; private set; }
 
         // Constructor to initialize the mapping
-        public ActionKeys()
+        public FishingActionKeys()
         {
             ActionKeyMap = new Dictionary<string, string>
             {
@@ -34,7 +34,7 @@ namespace ToonTown_Rewritten_Bot.Models
         }
     }
 
-    public class ActionCommand
+    public class FishingActionCommand
     {
         public string Action { get; set; }
         public string Command { get; set; }

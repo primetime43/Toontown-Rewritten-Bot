@@ -34,8 +34,8 @@
             comboBox1 = new System.Windows.Forms.ComboBox();
             actionTimeTxtBox = new System.Windows.Forms.TextBox();
             label1 = new System.Windows.Forms.Label();
-            saveActonItemBtn = new System.Windows.Forms.Button();
-            loadActonItemBtn = new System.Windows.Forms.Button();
+            saveActionItemBtn = new System.Windows.Forms.Button();
+            loadActionItemBtn = new System.Windows.Forms.Button();
             actionItemsListBox = new System.Windows.Forms.ListBox();
             updateSelectedActionItemBtn = new System.Windows.Forms.Button();
             SuspendLayout();
@@ -89,25 +89,25 @@
             label1.TabIndex = 5;
             label1.Text = "Time for action (ms):";
             // 
-            // saveActonItemBtn
+            // saveActionItemBtn
             // 
-            saveActonItemBtn.Location = new System.Drawing.Point(174, 274);
-            saveActonItemBtn.Name = "saveActonItemBtn";
-            saveActonItemBtn.Size = new System.Drawing.Size(144, 34);
-            saveActonItemBtn.TabIndex = 6;
-            saveActonItemBtn.Text = "Save Action Item";
-            saveActonItemBtn.UseVisualStyleBackColor = true;
-            saveActonItemBtn.Click += saveActonItemBtn_Click;
+            saveActionItemBtn.Location = new System.Drawing.Point(174, 274);
+            saveActionItemBtn.Name = "saveActionItemBtn";
+            saveActionItemBtn.Size = new System.Drawing.Size(144, 34);
+            saveActionItemBtn.TabIndex = 6;
+            saveActionItemBtn.Text = "Save Action Item";
+            saveActionItemBtn.UseVisualStyleBackColor = true;
+            saveActionItemBtn.Click += saveActionItemBtn_Click;
             // 
-            // loadActonItemBtn
+            // loadActionItemBtn
             // 
-            loadActonItemBtn.Location = new System.Drawing.Point(14, 274);
-            loadActonItemBtn.Name = "loadActonItemBtn";
-            loadActonItemBtn.Size = new System.Drawing.Size(144, 34);
-            loadActonItemBtn.TabIndex = 7;
-            loadActonItemBtn.Text = "Load Action Item";
-            loadActonItemBtn.UseVisualStyleBackColor = true;
-            loadActonItemBtn.Click += loadActonItemBtn_Click;
+            loadActionItemBtn.Location = new System.Drawing.Point(14, 274);
+            loadActionItemBtn.Name = "loadActionItemBtn";
+            loadActionItemBtn.Size = new System.Drawing.Size(144, 34);
+            loadActionItemBtn.TabIndex = 7;
+            loadActionItemBtn.Text = "Load Action Item";
+            loadActionItemBtn.UseVisualStyleBackColor = true;
+            loadActionItemBtn.Click += loadActionItemBtn_Click;
             // 
             // actionItemsListBox
             // 
@@ -137,8 +137,8 @@
             ClientSize = new System.Drawing.Size(453, 320);
             Controls.Add(updateSelectedActionItemBtn);
             Controls.Add(actionItemsListBox);
-            Controls.Add(loadActonItemBtn);
-            Controls.Add(saveActonItemBtn);
+            Controls.Add(loadActionItemBtn);
+            Controls.Add(saveActionItemBtn);
             Controls.Add(label1);
             Controls.Add(actionTimeTxtBox);
             Controls.Add(comboBox1);
@@ -158,8 +158,8 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.TextBox actionTimeTxtBox;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button saveActonItemBtn;
-        private System.Windows.Forms.Button loadActonItemBtn;
+        private System.Windows.Forms.Button saveActionItemBtn;
+        private System.Windows.Forms.Button loadActionItemBtn;
         private System.Windows.Forms.ListBox actionItemsListBox;
         private System.Windows.Forms.Button updateSelectedActionItemBtn;
     }

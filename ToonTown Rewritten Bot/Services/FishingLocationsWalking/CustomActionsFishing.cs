@@ -12,8 +12,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 {
     public class CustomActionsFishing : FishingStrategyBase
     {
-        //private Dictionary<string, string> actions = new Dictionary<string, string>();
-        private List<ActionCommand> actions = new List<ActionCommand>();
+        private List<FishingActionCommand> actions = new List<FishingActionCommand>();
 
         public CustomActionsFishing(string filePath)
         {
@@ -25,7 +24,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             if (File.Exists(filePath))
             {
                 string json = File.ReadAllText(filePath);
-                actions = JsonConvert.DeserializeObject<List<ActionCommand>>(json);
+                actions = JsonConvert.DeserializeObject<List<FishingActionCommand>>(json);
             }
         }
 

@@ -148,6 +148,106 @@ namespace ToonTown_Rewritten_Bot.Services
             return Directory.GetFiles(customActionsFolderPath);
         }
 
+        /// <summary>
+        /// Ensures that a "Custom Golf Actions" folder exists in the application's directory.
+        /// Creates the folder if it does not exist. Always returns the path to this folder.
+        /// </summary>
+        /// <returns>The path to the "Custom Golf Actions" folder.</returns>
+        public static string CreateCustomGolfActionsFolder()
+        {
+            // Get the directory where the executable is running
+            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            // Combine the executable path with the "Custom Fishing Actions" folder name
+            string customActionsFolderPath = Path.Combine(exePath, "Custom Golf Actions");
+
+            // Ensure the directory exists. This method creates the directory if it does not exist
+            // and does nothing if it already exists.
+            Directory.CreateDirectory(customActionsFolderPath);
+
+            // Return the full path to the folder
+            return customActionsFolderPath;
+        }
+
+        public static string[] loadCustomGolfActions()
+        {
+            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string customActionsFolderPath = Path.Combine(exePath, "Custom Golf Actions");
+            // Ensure the directory exists
+            Directory.CreateDirectory(customActionsFolderPath); // This line ensures the directory is created if it doesn't exist
+
+            // Read files in the folder
+            return Directory.GetFiles(customActionsFolderPath);
+        }
+
+        /// <summary>
+        /// Extracts an embedded resource from the assembly and writes it to a specified file path.
+        /// </summary>
+        /// <param name="resourceName">The fully qualified name of the embedded resource.</param>
+        /// <param name="outputFile">The path where the resource file should be saved. This method overwrites any existing file.</param>
+        /// <exception cref="FileNotFoundException">Thrown if the specified resource is not found in the assembly.</exception>
+        public static void ExtractResourceToFile(string resourceName, string outputFile)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using (var resourceStream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (resourceStream == null)
+                {
+                    throw new FileNotFoundException($"Resource '{resourceName}' not found in assembly.");
+                }
+
+                using (var fileStream = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+                {
+                    resourceStream.CopyTo(fileStream);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ensures that all necessary JSON files from embedded resources are available in the application's directory.
+        /// It checks each resource mapped in the fishing actions resource dictionary and extracts it if it does not exist.
+        /// </summary>
+        public static void EnsureFishingJsonFilesExist()
+        {
+            string folderPath = CreateCustomFishingActionsFolder();
+            var resources = GetFishingResourceDictionary();
+
+            foreach (var resource in resources)
+            {
+                string fullPath = Path.Combine(folderPath, resource.Value);
+                if (!File.Exists(fullPath))
+                {
+                    ExtractResourceToFile(resource.Key, fullPath);
+                    Console.WriteLine($"Extracted: {resource.Value}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a dictionary of embedded resource file names related to Custom Fishing Actions.
+        /// This dictionary maps the embedded resource names to more readable JSON file names, to be used when extracting these resources to the file system.
+        /// The method scans all embedded resources that start with a specific prefix related to Custom Fishing Actions.
+        /// </summary>
+        /// <returns>A dictionary where keys are the full embedded resource names and values are the corresponding filenames intended for saving to disk.</returns>
+        public static Dictionary<string, string> GetFishingResourceDictionary()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            string[] resourceNames = assembly.GetManifestResourceNames();
+            string prefix = "ToonTown_Rewritten_Bot.Services.CustomFishingActions";
+            Dictionary<string, string> resourceMap = new Dictionary<string, string>();
+
+            foreach (string resourceName in resourceNames)
+            {
+                if (resourceName.StartsWith(prefix))
+                {
+                    // Extracting the filename from the resource path and removing extension for better readability
+                    string fileName = Path.GetFileNameWithoutExtension(resourceName.Substring(prefix.Length + 1));
+                    resourceMap.Add(resourceName, fileName + ".json");
+                }
+            }
+            return resourceMap;
+        }
+
         //ignore .dll imports below
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(ref Point lpPoint);

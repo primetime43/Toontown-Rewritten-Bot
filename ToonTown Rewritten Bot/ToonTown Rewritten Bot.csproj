@@ -48,6 +48,16 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Services\CustomFishingActions\BrrrghPolarPlaceFishing Top Right Dock.json" />
+    <None Remove="Services\CustomFishingActions\BrrrghSleetStFishing First Dock.json" />
+    <None Remove="Services\CustomFishingActions\BrrrghWalrusWayFishing Top Left Dock.json" />
+    <None Remove="Services\CustomFishingActions\DaisyGardenElmStFishing Bottom Left Dock.json" />
+    <None Remove="Services\CustomFishingActions\DDLighthouseLaneFishing Middle Right Dock.json" />
+    <None Remove="Services\CustomFishingActions\DDLLullabyLaneFishing Dock Left Of The Small Box.json" />
+    <None Remove="Services\CustomFishingActions\MMTenorTerraceFishing Top Left Dock.json" />
+    <None Remove="Services\CustomFishingActions\TTCPunchlinePlaceFishing First Dock.json" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="InputSimulator, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\InputSimulator.dll</HintPath>
@@ -68,6 +78,18 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Services\CustomFishingActions\BrrrghPolarPlaceFishing Top Right Dock.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomFishingActions\BrrrghSleetStFishing First Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\BrrrghWalrusWayFishing Top Left Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\DaisyGardenElmStFishing Bottom Left Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\DDLighthouseLaneFishing Middle Right Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\DDLLullabyLaneFishing Dock Left Of The Small Box.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\MMTenorTerraceFishing Top Left Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\TTCPunchlinePlaceFishing First Dock.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
