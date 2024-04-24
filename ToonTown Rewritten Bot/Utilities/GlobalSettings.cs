@@ -10,9 +10,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
     {
         public static class ApplicationInfo
         {
-            public static readonly string Version = "1.4.1";
+            public static string Version { get; } = "1.4.1";
             public static readonly string ReleaseDate = "";
-            public static readonly string Author = "primetime43";
+            public static string Author { get; } = "primetime43";
         }
     }
 }

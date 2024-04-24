@@ -1,12 +1,9 @@
-﻿//using Emgu.CV.XPhoto;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,6 +23,15 @@ namespace ToonTown_Rewritten_Bot
         public MainForm()
         {
             InitializeComponent();
+
+            // Check if a new version of the program is available
+            GithubReleaseChecker.CheckForNewVersion().ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    MessageBox.Show("Error checking for updates: " + t.Exception.Flatten().InnerException.Message);
+                }
+            }, TaskScheduler.FromCurrentSynchronizationContext()); // Ensures the continuation runs on the UI thread
 
             CoreFunctionality.EnsureAllEmbeddedJsonFilesExist();
 
