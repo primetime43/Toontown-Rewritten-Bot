@@ -12,42 +12,42 @@
   </PropertyGroup>
   <PropertyGroup>
     <EnableSecurityDebugging>false</EnableSecurityDebugging>
-    <_LastSelectedProfileId>C:\source control\repos\Toontown-Rewritten-Bot\ToonTown Rewritten Bot\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
+    <_LastSelectedProfileId>C:\Users\primetime43\source\repos\Toontown-Rewritten-Bot\ToonTown Rewritten Bot\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="Views\AboutBox1.cs">
+    <Compile Update="AboutBox1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\AdvancedSettings.cs">
+    <Compile Update="AdvancedSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\AdvancedTemp.cs">
+    <Compile Update="BotFunctions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\CustomFishingActions.cs">
+    <Compile Update="DevForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\CustomGolfActions.cs">
+    <Compile Update="Fishing.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\MainForm.cs">
+    <Compile Update="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\Help.cs">
+    <Compile Update="Help.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\Plants.cs">
+    <Compile Update="Plants.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\UpdateCoordsHelper.cs">
+    <Compile Update="UpdateCoordsHelper.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\UpdateImages.cs">
+    <Compile Update="updateImages.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Views\AboutBox1.resx">
+    <EmbeddedResource Update="AboutBox1.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
