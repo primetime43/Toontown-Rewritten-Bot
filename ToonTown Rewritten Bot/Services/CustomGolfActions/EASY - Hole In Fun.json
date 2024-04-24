@@ -1,0 +1,12 @@
+[
+  {
+    "Action": "DELAY TIME",
+    "Command": "DELAY TIME",
+    "Duration": 15000
+  },
+  {
+    "Action": "SWING POWER",
+    "Command": "SWING POWER",
+    "Duration": 1300
+  }
+]
