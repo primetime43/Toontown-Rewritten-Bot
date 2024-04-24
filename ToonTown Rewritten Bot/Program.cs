@@ -18,7 +18,6 @@ namespace ToonTown_Rewritten_Bot
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
-            //Application.Run(new DevForm());
         }
     }
 }
