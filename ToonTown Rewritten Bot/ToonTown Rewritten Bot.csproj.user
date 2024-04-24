@@ -12,7 +12,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <EnableSecurityDebugging>false</EnableSecurityDebugging>
-    <_LastSelectedProfileId>C:\Users\primetime43\source\repos\Toontown-Rewritten-Bot\ToonTown Rewritten Bot\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
+    <_LastSelectedProfileId>C:\source control\repos\Toontown-Rewritten-Bot\ToonTown Rewritten Bot\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Views\AboutBox1.cs">

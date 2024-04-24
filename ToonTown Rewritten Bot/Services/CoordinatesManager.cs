@@ -14,13 +14,25 @@ namespace ToonTown_Rewritten_Bot.Services
     public class CoordinatesManager
     {
         private const string CoordinatesFileName = "UIElementCoordinates.json";
-
+        // Static readonly field that computes the file path only once when the class is loaded
+        private static readonly string CoordinatesFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), CoordinatesFileName);
         public CoordinatesManager()
         {
-            if (!File.Exists(CoordinatesFileName))
+            if (!File.Exists(CoordinatesFilePath))
             {
                 CreateFreshCoordinatesFile();
             }
+        }
+
+        /// <summary>
+        /// Provides the fully qualified path to the coordinates file.
+        /// This path is based on the assembly's current execution location,
+        /// ensuring consistent access to the coordinates file throughout the application.
+        /// </summary>
+        /// <returns>A string containing the path to the coordinates file.</returns>
+        public static string GetCoordinatesFilePath()
+        {
+            return CoordinatesFilePath;
         }
 
         /// <summary>
@@ -40,13 +52,13 @@ namespace ToonTown_Rewritten_Bot.Services
         public static bool CheckCoordinates(Enum coordinateKey)
         {
             // Check if the coordinates file exists. If not, create a fresh one with default values.
-            if (!File.Exists(CoordinatesFileName))
+            if (!File.Exists(CoordinatesFilePath))
             {
                 CreateFreshCoordinatesFile();
             }
 
             // Read the JSON file containing the coordinates data.
-            string json = File.ReadAllText(Path.GetFullPath(CoordinatesFileName));
+            string json = File.ReadAllText(CoordinatesFilePath);
             // Deserialize the JSON data into a list of CoordinateActions objects.
             List<CoordinateActions> coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
 
@@ -80,14 +92,12 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </remarks>
         public static (int x, int y) GetCoordsFromMap(Enum key)
         {
-            string filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), CoordinatesFileName);
-
             // Convert the Enum to its integer value, then to string
             string keyAsString = Convert.ToInt32(key).ToString();
 
-            if (File.Exists(filePath))
+            if (File.Exists(CoordinatesFilePath))
             {
-                string json = File.ReadAllText(filePath);
+                string json = File.ReadAllText(CoordinatesFilePath);
                 //Gets all of the coordinate models
                 var coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
 
@@ -119,12 +129,11 @@ namespace ToonTown_Rewritten_Bot.Services
         {
             // Convert the Enum to its integer value, then to string
             string keyAsString = Convert.ToInt32(locationToUpdateEnum).ToString();
-            string filePath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), CoordinatesFileName);
 
             // Read the existing JSON file
-            if (File.Exists(filePath))
+            if (File.Exists(CoordinatesFilePath))
             {
-                string json = File.ReadAllText(filePath);
+                string json = File.ReadAllText(CoordinatesFilePath);
                 var coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
 
                 // Find and update the coordinates for the specified location
@@ -136,7 +145,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
                     // Serialize the updated list back to JSON and write it to the file
                     string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
-                    File.WriteAllText(filePath, updatedJson);
+                    File.WriteAllText(CoordinatesFilePath, updatedJson);
                 }
                 else
                 {
@@ -180,11 +189,10 @@ namespace ToonTown_Rewritten_Bot.Services
             string y = Convert.ToString(coords.Y);
 
             // Read the JSON file and deserialize it into a list of CoordinateAction objects
-            string filePath = CoordinatesFileName;
             List<CoordinateActions> coordinateActions;
-            if (File.Exists(filePath))
+            if (File.Exists(CoordinatesFilePath))
             {
-                string json = File.ReadAllText(filePath);
+                string json = File.ReadAllText(CoordinatesFilePath);
                 coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
             }
             else
@@ -203,7 +211,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
             // Serialize the list back to JSON and write it to the file
             string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
-            File.WriteAllText(filePath, updatedJson);
+            File.WriteAllText(CoordinatesFilePath, updatedJson);
 
             CoreFunctionality.MaximizeAndFocusTTRWindow();
         }
@@ -237,11 +245,10 @@ namespace ToonTown_Rewritten_Bot.Services
             string y = Convert.ToString(coords.Y);
 
             // Read the JSON file and deserialize it into a list of CoordinateAction objects
-            string filePath = CoordinatesFileName;
             List<CoordinateActions> coordinateActions;
-            if (File.Exists(filePath))
+            if (File.Exists(CoordinatesFilePath))
             {
-                string json = File.ReadAllText(filePath);
+                string json = File.ReadAllText(CoordinatesFilePath);
                 coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
             }
             else
@@ -260,7 +267,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
             // Serialize the list back to JSON and write it to the file
             string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
-            File.WriteAllText(filePath, updatedJson);
+            File.WriteAllText(CoordinatesFilePath, updatedJson);
 
             //CoreFunctionality.MaximizeAndFocusTTRWindow();
         }
@@ -271,14 +278,11 @@ namespace ToonTown_Rewritten_Bot.Services
         /// <returns>A list of CoordinateActions representing the coordinates. If the file does not exist, returns an empty list.</returns>
         private static List<CoordinateActions> ReadCoordinatesFromJsonFile()
         {
-            // Define the path to the JSON file containing the coordinates.
-            string filePath = CoordinatesFileName;
-
             // Check if the file exists at the specified path.
-            if (File.Exists(filePath))
+            if (File.Exists(CoordinatesFilePath))
             {
                 // Read the JSON content from the file.
-                string json = File.ReadAllText(filePath);
+                string json = File.ReadAllText(CoordinatesFilePath);
 
                 // Deserialize the JSON content into a list of CoordinateActions objects.
                 return JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
@@ -291,8 +295,8 @@ namespace ToonTown_Rewritten_Bot.Services
         public static void CreateFreshCoordinatesFile()
         {
             // Delete the file if it exists
-            if (File.Exists(CoordinatesFileName))
-                File.Delete(CoordinatesFileName);
+            if (File.Exists(CoordinatesFilePath))
+                File.Delete(CoordinatesFilePath);
 
             // Retrieve all descriptions to populate the JSON file
             var allDescriptions = CoordinateActions.GetAllDescriptions();
@@ -316,7 +320,7 @@ namespace ToonTown_Rewritten_Bot.Services
             string json = JsonConvert.SerializeObject(coordinateList, Formatting.Indented);
 
             // Write the JSON to the file
-            File.WriteAllText(CoordinatesFileName, json);
+            File.WriteAllText(CoordinatesFilePath, json);
         }
     }
 }

@@ -677,5 +677,22 @@ namespace ToonTown_Rewritten_Bot
                 golfActionsListBox.Items.Add($"{action.Action} - {action.Duration} ms");
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = CoordinatesManager.GetCoordinatesFilePath(),
+                    UseShellExecute = true, 
+                    Verb = "open" 
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to open the folder: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

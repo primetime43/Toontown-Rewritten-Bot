@@ -104,6 +104,7 @@
             resetImagesBtn = new System.Windows.Forms.Button();
             label5 = new System.Windows.Forms.Label();
             groupBox7 = new System.Windows.Forms.GroupBox();
+            button2 = new System.Windows.Forms.Button();
             button6 = new System.Windows.Forms.Button();
             comboBox1 = new System.Windows.Forms.ComboBox();
             button7 = new System.Windows.Forms.Button();
@@ -1014,7 +1015,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(6, 163);
+            label5.Location = new System.Drawing.Point(9, 162);
             label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label5.Name = "label5";
             label5.Size = new System.Drawing.Size(282, 32);
@@ -1023,6 +1024,7 @@
             // 
             // groupBox7
             // 
+            groupBox7.Controls.Add(button2);
             groupBox7.Controls.Add(button6);
             groupBox7.Controls.Add(comboBox1);
             groupBox7.Controls.Add(button7);
@@ -1034,6 +1036,18 @@
             groupBox7.TabIndex = 7;
             groupBox7.TabStop = false;
             groupBox7.Text = "Coordinates";
+            // 
+            // button2
+            // 
+            button2.Location = new System.Drawing.Point(143, 104);
+            button2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button2.Name = "button2";
+            button2.Size = new System.Drawing.Size(123, 38);
+            button2.TabIndex = 3;
+            button2.Text = "Open File";
+            toolTip1.SetToolTip(button2, "This will reset all of your coordinates!");
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // button6
             // 
@@ -1058,10 +1072,10 @@
             // 
             // button7
             // 
-            button7.Location = new System.Drawing.Point(56, 104);
+            button7.Location = new System.Drawing.Point(12, 104);
             button7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button7.Name = "button7";
-            button7.Size = new System.Drawing.Size(163, 38);
+            button7.Size = new System.Drawing.Size(123, 38);
             button7.TabIndex = 0;
             button7.Text = "Reset All";
             toolTip1.SetToolTip(button7, "This will reset all of your coordinates!");
@@ -1209,6 +1223,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.ListBox golfActionsListBox;
+        private System.Windows.Forms.Button button2;
     }
 }
 
