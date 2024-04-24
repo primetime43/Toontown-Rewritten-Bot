@@ -90,7 +90,7 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 Filter = "JSON File|*.json",
                 Title = "Open an Actions JSON File",
-                InitialDirectory = CoreFunctionality.CreateCustomGolfActionsFolder()
+                InitialDirectory = (string)CoreFunctionality.ManageCustomActionsFolder("Golf", false)  // Getting the folder path only
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -176,7 +176,7 @@ namespace ToonTown_Rewritten_Bot.Views
 
         private void SaveToJsonFile(string jsonContent)
         {
-            string folderPath = CoreFunctionality.CreateCustomGolfActionsFolder();
+            string folderPath = (string)CoreFunctionality.ManageCustomActionsFolder("Golf", false);  // Getting the folder path only
 
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {

@@ -37,7 +37,7 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
 
         public async Task PerformGolfActions(CancellationToken cancellationToken)
         {
-            CoreFunctionality.maximizeAndFocus();
+            CoreFunctionality.MaximizeAndFocusTTRWindow();
             await Task.Delay(1000, cancellationToken); // Initial delay before starting actions
             GolfActionKeys keys = new GolfActionKeys();
 

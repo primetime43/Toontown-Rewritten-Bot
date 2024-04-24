@@ -85,9 +85,9 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         // Maximizes and Focuces TTR
-        public static void maximizeAndFocus()
+        public static void MaximizeAndFocusTTRWindow()
         {
-            nint hwnd = FindWindowByCaption(nint.Zero, "Toontown Rewritten");
+            nint hwnd = FindToontownWindow();
             ShowWindow(hwnd, 6);//6 min
             ShowWindow(hwnd, 3);//3 max
         }
@@ -117,67 +117,34 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
-        /// Ensures that a "Custom Fishing Actions" folder exists in the application's directory.
-        /// Creates the folder if it does not exist. Always returns the path to this folder.
+        /// Either creates and returns the path to a specific custom actions folder or returns the paths of all JSON files within that folder.
         /// </summary>
-        /// <returns>The path to the "Custom Fishing Actions" folder.</returns>
-        public static string CreateCustomFishingActionsFolder()
+        /// <param name="actionType">The type of actions folder to manage ('Fishing' or 'Golf').</param>
+        /// <param name="returnFiles">If true, returns paths of all .json files in the folder; otherwise, returns the folder path.</param>
+        /// <returns>If returnFiles is false, returns the path to the folder. If returnFiles is true, returns an array of file paths for .json files in the folder.</returns>
+        public static object ManageCustomActionsFolder(string actionType, bool returnFiles = false)
         {
+            // Define the folder name based on the action type
+            string folderName = actionType == "Fishing" ? "Custom Fishing Actions" : "Custom Golf Actions";
+
             // Get the directory where the executable is running
             string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            // Combine the executable path with the "Custom Fishing Actions" folder name
-            string customActionsFolderPath = Path.Combine(exePath, "Custom Fishing Actions");
+            // Combine the executable path with the specific folder name
+            string customActionsFolderPath = Path.Combine(exePath, folderName);
 
             // Ensure the directory exists. This method creates the directory if it does not exist
             // and does nothing if it already exists.
             Directory.CreateDirectory(customActionsFolderPath);
 
-            // Return the full path to the folder
-            return customActionsFolderPath;
-        }
+            // If only the path is required, return it
+            if (!returnFiles)
+            {
+                return customActionsFolderPath;
+            }
 
-        public static string[] loadCustomFishingActions()
-        {
-            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string customActionsFolderPath = Path.Combine(exePath, "Custom Fishing Actions");
-            // Ensure the directory exists
-            Directory.CreateDirectory(customActionsFolderPath); // This line ensures the directory is created if it doesn't exist
-
-            // Read files in the folder
-            return Directory.GetFiles(customActionsFolderPath);
-        }
-
-        /// <summary>
-        /// Ensures that a "Custom Golf Actions" folder exists in the application's directory.
-        /// Creates the folder if it does not exist. Always returns the path to this folder.
-        /// </summary>
-        /// <returns>The path to the "Custom Golf Actions" folder.</returns>
-        public static string CreateCustomGolfActionsFolder()
-        {
-            // Get the directory where the executable is running
-            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            // Combine the executable path with the "Custom Fishing Actions" folder name
-            string customActionsFolderPath = Path.Combine(exePath, "Custom Golf Actions");
-
-            // Ensure the directory exists. This method creates the directory if it does not exist
-            // and does nothing if it already exists.
-            Directory.CreateDirectory(customActionsFolderPath);
-
-            // Return the full path to the folder
-            return customActionsFolderPath;
-        }
-
-        public static string[] loadCustomGolfActions()
-        {
-            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string customActionsFolderPath = Path.Combine(exePath, "Custom Golf Actions");
-            // Ensure the directory exists
-            Directory.CreateDirectory(customActionsFolderPath); // This line ensures the directory is created if it doesn't exist
-
-            // Read files in the folder
-            return Directory.GetFiles(customActionsFolderPath);
+            // If files are requested, read and return only .json files in the folder
+            return Directory.GetFiles(customActionsFolderPath, "*.json");
         }
 
         /// <summary>
@@ -204,14 +171,29 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
-        /// Ensures that all necessary JSON files from embedded resources are available in the application's directory.
-        /// It checks each resource mapped in the fishing actions resource dictionary and extracts it if it does not exist.
+        /// Ensures that all necessary JSON files from embedded resources related to both Fishing and Golf are available
+        /// in the application's directory. It extracts any missing files.
         /// </summary>
-        public static void EnsureFishingJsonFilesExist()
+        public static void EnsureAllEmbeddedJsonFilesExist()
         {
-            string folderPath = CreateCustomFishingActionsFolder();
-            var resources = GetFishingResourceDictionary();
+            // Handle Fishing Actions
+            string fishingFolderPath = (string)ManageCustomActionsFolder("Fishing", false);
+            var fishingResources = GetFishingResourceDictionary();
+            EnsureEmbeddedJsonFilesExist(fishingFolderPath, fishingResources);
 
+            // Handle Golf Actions
+            string golfFolderPath = (string)ManageCustomActionsFolder("Golf", false);
+            var golfResources = GetGolfResourceDictionary();
+            EnsureEmbeddedJsonFilesExist(golfFolderPath, golfResources);
+        }
+
+        /// <summary>
+        /// Checks and extracts missing files for the specified custom actions based on the given resource dictionary.
+        /// </summary>
+        /// <param name="folderPath">The folder path where files should be checked and saved.</param>
+        /// <param name="resources">A dictionary of embedded resource names and their respective file names.</param>
+        private static void EnsureEmbeddedJsonFilesExist(string folderPath, Dictionary<string, string> resources)
+        {
             foreach (var resource in resources)
             {
                 string fullPath = Path.Combine(folderPath, resource.Value);
@@ -248,12 +230,43 @@ namespace ToonTown_Rewritten_Bot.Services
             return resourceMap;
         }
 
+        /// <summary>
+        /// Retrieves a dictionary of embedded resource file names related to Custom Golf Actions.
+        /// This dictionary maps the embedded resource names to more readable JSON file names, to be used when extracting these resources to the file system.
+        /// The method scans all embedded resources that start with a specific prefix related to Custom Golf Actions.
+        /// </summary>
+        /// <returns>A dictionary where keys are the full embedded resource names and values are the corresponding filenames intended for saving to disk.</returns>
+        public static Dictionary<string, string> GetGolfResourceDictionary()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            string[] resourceNames = assembly.GetManifestResourceNames();
+            string prefix = "ToonTown_Rewritten_Bot.Services.CustomGolfActions";
+            Dictionary<string, string> resourceMap = new Dictionary<string, string>();
+
+            foreach (string resourceName in resourceNames)
+            {
+                if (resourceName.StartsWith(prefix))
+                {
+                    // Extracting the filename from the resource path and removing extension for better readability
+                    string fileName = Path.GetFileNameWithoutExtension(resourceName.Substring(prefix.Length + 1));
+                    resourceMap.Add(resourceName, fileName + ".json");
+                }
+            }
+            return resourceMap;
+        }
+
         //ignore .dll imports below
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(ref Point lpPoint);
 
-        [DllImport("user32.dll", EntryPoint = "FindWindow")]
-        private static extern nint FindWindowByCaption(nint ZeroOnly, string lpWindowName);
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        public static IntPtr FindToontownWindow()
+        {
+            // Attempt to find the Toontown window by its title
+            return FindWindow(null, "Toontown Rewritten");
+        }
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]

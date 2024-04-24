@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -79,7 +75,7 @@ namespace ToonTown_Rewritten_Bot.Services
             CustomActionsFishing customFishing = new CustomActionsFishing(jsonPath);
 
             // Prepare
-            maximizeAndFocus();
+            MaximizeAndFocusTTRWindow();
             await Task.Delay(3000, CancellationToken.None); // Initial delay before starting.
             await customFishing.LeaveDockAndSellAsync(CancellationToken.None); // Start the action sequence
             MessageBox.Show("Done Debugging Custom Action");
@@ -99,7 +95,7 @@ namespace ToonTown_Rewritten_Bot.Services
         private async Task PrepareForFishing(CancellationToken cancellationToken)
         {
             // Prepare for fishing based on initial conditions
-            maximizeAndFocus();
+            MaximizeAndFocusTTRWindow();
             await Task.Delay(3000, cancellationToken); // Initial delay before starting.
 
             if (!CoordinatesManager.CheckCoordinates(FishingCoordinatesEnum.RedFishingButton)) // Checks the red fishing button

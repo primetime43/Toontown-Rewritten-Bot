@@ -66,22 +66,11 @@
             flowerBeanAmountDropdown = new System.Windows.Forms.ComboBox();
             selectFlowerBeanAmountBtn = new System.Windows.Forms.Button();
             Golf = new System.Windows.Forms.TabPage();
+            groupBox10 = new System.Windows.Forms.GroupBox();
+            golfActionsListBox = new System.Windows.Forms.ListBox();
             customGolfFilesComboBox = new System.Windows.Forms.ComboBox();
+            button1 = new System.Windows.Forms.Button();
             createCustomGolfActionsBtn = new System.Windows.Forms.Button();
-            label2 = new System.Windows.Forms.Label();
-            Near_Hole = new System.Windows.Forms.GroupBox();
-            One_Little_Birdie = new System.Windows.Forms.Button();
-            button14 = new System.Windows.Forms.Button();
-            button18 = new System.Windows.Forms.Button();
-            button15 = new System.Windows.Forms.Button();
-            button13 = new System.Windows.Forms.Button();
-            button16 = new System.Windows.Forms.Button();
-            Hole_In_One = new System.Windows.Forms.GroupBox();
-            button12 = new System.Windows.Forms.Button();
-            button5 = new System.Windows.Forms.Button();
-            button17 = new System.Windows.Forms.Button();
-            button10 = new System.Windows.Forms.Button();
-            button11 = new System.Windows.Forms.Button();
             Doodles = new System.Windows.Forms.TabPage();
             richTextBox2 = new System.Windows.Forms.RichTextBox();
             groupBox8 = new System.Windows.Forms.GroupBox();
@@ -120,7 +109,6 @@
             button7 = new System.Windows.Forms.Button();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
             timer1 = new System.Windows.Forms.Timer(components);
-            button1 = new System.Windows.Forms.Button();
             tabControl1.SuspendLayout();
             Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -135,8 +123,7 @@
             ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).BeginInit();
             groupBox3.SuspendLayout();
             Golf.SuspendLayout();
-            Near_Hole.SuspendLayout();
-            Hole_In_One.SuspendLayout();
+            groupBox10.SuspendLayout();
             Doodles.SuspendLayout();
             groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -579,12 +566,8 @@
             // 
             // Golf
             // 
-            Golf.Controls.Add(button1);
-            Golf.Controls.Add(customGolfFilesComboBox);
+            Golf.Controls.Add(groupBox10);
             Golf.Controls.Add(createCustomGolfActionsBtn);
-            Golf.Controls.Add(label2);
-            Golf.Controls.Add(Near_Hole);
-            Golf.Controls.Add(Hole_In_One);
             Golf.Location = new System.Drawing.Point(4, 25);
             Golf.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Golf.Name = "Golf";
@@ -594,203 +577,58 @@
             Golf.Text = "Golf";
             Golf.UseVisualStyleBackColor = true;
             // 
+            // groupBox10
+            // 
+            groupBox10.Controls.Add(golfActionsListBox);
+            groupBox10.Controls.Add(customGolfFilesComboBox);
+            groupBox10.Controls.Add(button1);
+            groupBox10.Location = new System.Drawing.Point(7, 6);
+            groupBox10.Name = "groupBox10";
+            groupBox10.Size = new System.Drawing.Size(354, 314);
+            groupBox10.TabIndex = 21;
+            groupBox10.TabStop = false;
+            groupBox10.Text = "Golf Actions";
+            // 
+            // golfActionsListBox
+            // 
+            golfActionsListBox.FormattingEnabled = true;
+            golfActionsListBox.ItemHeight = 16;
+            golfActionsListBox.Location = new System.Drawing.Point(6, 59);
+            golfActionsListBox.Name = "golfActionsListBox";
+            golfActionsListBox.Size = new System.Drawing.Size(342, 196);
+            golfActionsListBox.TabIndex = 21;
+            // 
             // customGolfFilesComboBox
             // 
             customGolfFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             customGolfFilesComboBox.FormattingEnabled = true;
-            customGolfFilesComboBox.Location = new System.Drawing.Point(367, 75);
+            customGolfFilesComboBox.Location = new System.Drawing.Point(6, 21);
             customGolfFilesComboBox.Name = "customGolfFilesComboBox";
-            customGolfFilesComboBox.Size = new System.Drawing.Size(172, 24);
+            customGolfFilesComboBox.Size = new System.Drawing.Size(342, 24);
+            customGolfFilesComboBox.Sorted = true;
             customGolfFilesComboBox.TabIndex = 19;
+            customGolfFilesComboBox.SelectedIndexChanged += customGolfFilesComboBox_SelectedIndexChanged;
+            // 
+            // button1
+            // 
+            button1.Location = new System.Drawing.Point(117, 269);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(126, 39);
+            button1.TabIndex = 20;
+            button1.Text = "Start Golf";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // createCustomGolfActionsBtn
             // 
-            createCustomGolfActionsBtn.Location = new System.Drawing.Point(393, 11);
+            createCustomGolfActionsBtn.Location = new System.Drawing.Point(392, 10);
             createCustomGolfActionsBtn.Name = "createCustomGolfActionsBtn";
             createCustomGolfActionsBtn.Size = new System.Drawing.Size(126, 41);
             createCustomGolfActionsBtn.TabIndex = 18;
             createCustomGolfActionsBtn.Text = "Create Custom Golf Actions";
+            toolTip1.SetToolTip(createCustomGolfActionsBtn, "This will allow you to build custom golf actions\r\nfor golfing any course");
             createCustomGolfActionsBtn.UseVisualStyleBackColor = true;
             createCustomGolfActionsBtn.Click += createCustomGolfActionsBtn_Click;
-            // 
-            // label2
-            // 
-            label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold);
-            label2.Location = new System.Drawing.Point(7, 10);
-            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(317, 37);
-            label2.TabIndex = 16;
-            label2.Text = "Walk In The Par - Easy";
-            label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // Near_Hole
-            // 
-            Near_Hole.Controls.Add(One_Little_Birdie);
-            Near_Hole.Controls.Add(button14);
-            Near_Hole.Controls.Add(button18);
-            Near_Hole.Controls.Add(button15);
-            Near_Hole.Controls.Add(button13);
-            Near_Hole.Controls.Add(button16);
-            Near_Hole.Location = new System.Drawing.Point(7, 186);
-            Near_Hole.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Near_Hole.Name = "Near_Hole";
-            Near_Hole.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Near_Hole.Size = new System.Drawing.Size(350, 128);
-            Near_Hole.TabIndex = 15;
-            Near_Hole.TabStop = false;
-            Near_Hole.Text = "Near Hole";
-            toolTip1.SetToolTip(Near_Hole, "On these courses, you will get near the hole, then you need to shoot the ball in yourself afterwards.");
-            // 
-            // One_Little_Birdie
-            // 
-            One_Little_Birdie.BackColor = System.Drawing.Color.Yellow;
-            One_Little_Birdie.Location = new System.Drawing.Point(174, 91);
-            One_Little_Birdie.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            One_Little_Birdie.Name = "One_Little_Birdie";
-            One_Little_Birdie.Size = new System.Drawing.Size(160, 27);
-            One_Little_Birdie.TabIndex = 14;
-            One_Little_Birdie.Text = "One Little Birdie";
-            One_Little_Birdie.UseVisualStyleBackColor = false;
-            One_Little_Birdie.Click += One_Little_Birdie_Click;
-            // 
-            // button14
-            // 
-            button14.BackColor = System.Drawing.Color.Yellow;
-            button14.Location = new System.Drawing.Point(7, 24);
-            button14.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button14.Name = "button14";
-            button14.Size = new System.Drawing.Size(160, 27);
-            button14.TabIndex = 10;
-            button14.Text = "Down the Hatch";
-            button14.UseVisualStyleBackColor = false;
-            button14.Click += button14_Click;
-            // 
-            // button18
-            // 
-            button18.BackColor = System.Drawing.Color.Yellow;
-            button18.Location = new System.Drawing.Point(174, 58);
-            button18.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button18.Name = "button18";
-            button18.Size = new System.Drawing.Size(160, 27);
-            button18.TabIndex = 13;
-            button18.Text = "Swing-A-Long";
-            button18.UseVisualStyleBackColor = false;
-            button18.Click += button18_Click;
-            // 
-            // button15
-            // 
-            button15.BackColor = System.Drawing.Color.Yellow;
-            button15.Location = new System.Drawing.Point(7, 91);
-            button15.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button15.Name = "button15";
-            button15.Size = new System.Drawing.Size(160, 27);
-            button15.TabIndex = 11;
-            button15.Text = "Swing Time";
-            toolTip1.SetToolTip(button15, "You must select this course befoer the first timer runs out!");
-            button15.UseVisualStyleBackColor = false;
-            button15.Click += button15_Click;
-            // 
-            // button13
-            // 
-            button13.BackColor = System.Drawing.Color.Yellow;
-            button13.Location = new System.Drawing.Point(7, 58);
-            button13.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button13.Name = "button13";
-            button13.Size = new System.Drawing.Size(160, 27);
-            button13.TabIndex = 9;
-            button13.Text = "Peanut Putter";
-            button13.UseVisualStyleBackColor = false;
-            button13.Click += button13_Click;
-            // 
-            // button16
-            // 
-            button16.BackColor = System.Drawing.Color.Yellow;
-            button16.Location = new System.Drawing.Point(174, 24);
-            button16.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button16.Name = "button16";
-            button16.Size = new System.Drawing.Size(160, 27);
-            button16.TabIndex = 8;
-            button16.Text = "Hot Links";
-            button16.UseVisualStyleBackColor = false;
-            button16.Click += button16_Click;
-            // 
-            // Hole_In_One
-            // 
-            Hole_In_One.Controls.Add(button12);
-            Hole_In_One.Controls.Add(button5);
-            Hole_In_One.Controls.Add(button17);
-            Hole_In_One.Controls.Add(button10);
-            Hole_In_One.Controls.Add(button11);
-            Hole_In_One.Location = new System.Drawing.Point(7, 51);
-            Hole_In_One.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Hole_In_One.Name = "Hole_In_One";
-            Hole_In_One.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Hole_In_One.Size = new System.Drawing.Size(350, 128);
-            Hole_In_One.TabIndex = 14;
-            Hole_In_One.TabStop = false;
-            Hole_In_One.Text = "Hole In One";
-            toolTip1.SetToolTip(Hole_In_One, "On these courses, you will get a hole in one.");
-            // 
-            // button12
-            // 
-            button12.BackColor = System.Drawing.Color.LawnGreen;
-            button12.Location = new System.Drawing.Point(7, 24);
-            button12.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button12.Name = "button12";
-            button12.Size = new System.Drawing.Size(160, 27);
-            button12.TabIndex = 4;
-            button12.Text = "Afternoon Tee";
-            button12.UseVisualStyleBackColor = false;
-            button12.Click += golfAfternoonTee;
-            // 
-            // button5
-            // 
-            button5.BackColor = System.Drawing.Color.LawnGreen;
-            button5.Location = new System.Drawing.Point(7, 58);
-            button5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button5.Name = "button5";
-            button5.Size = new System.Drawing.Size(160, 27);
-            button5.TabIndex = 5;
-            button5.Text = "Holey Mackeral";
-            button5.UseVisualStyleBackColor = false;
-            button5.Click += golfHoleyMackeral;
-            // 
-            // button17
-            // 
-            button17.BackColor = System.Drawing.Color.LawnGreen;
-            button17.Location = new System.Drawing.Point(174, 58);
-            button17.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button17.Name = "button17";
-            button17.Size = new System.Drawing.Size(160, 27);
-            button17.TabIndex = 12;
-            button17.Text = "Hole In Fun";
-            button17.UseVisualStyleBackColor = false;
-            button17.Click += button17_Click;
-            // 
-            // button10
-            // 
-            button10.BackColor = System.Drawing.Color.LawnGreen;
-            button10.Location = new System.Drawing.Point(7, 91);
-            button10.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button10.Name = "button10";
-            button10.Size = new System.Drawing.Size(160, 27);
-            button10.TabIndex = 6;
-            button10.Text = "Hole on the Range";
-            button10.UseVisualStyleBackColor = false;
-            button10.Click += golfHoleOnTheRange;
-            // 
-            // button11
-            // 
-            button11.BackColor = System.Drawing.Color.LawnGreen;
-            button11.Location = new System.Drawing.Point(174, 24);
-            button11.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button11.Name = "button11";
-            button11.Size = new System.Drawing.Size(160, 27);
-            button11.TabIndex = 7;
-            button11.Text = "Seeing Green";
-            button11.UseVisualStyleBackColor = false;
-            button11.Click += golfSeeingGreen;
             // 
             // Doodles
             // 
@@ -1240,16 +1078,6 @@
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
-            // button1
-            // 
-            button1.Location = new System.Drawing.Point(393, 109);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(126, 39);
-            button1.TabIndex = 20;
-            button1.Text = "Start Golf";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1278,8 +1106,7 @@
             ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).EndInit();
             groupBox3.ResumeLayout(false);
             Golf.ResumeLayout(false);
-            Near_Hole.ResumeLayout(false);
-            Hole_In_One.ResumeLayout(false);
+            groupBox10.ResumeLayout(false);
             Doodles.ResumeLayout(false);
             groupBox8.ResumeLayout(false);
             groupBox8.PerformLayout();
@@ -1351,21 +1178,7 @@
         private System.Windows.Forms.CheckBox randomFishingCheckBox;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TabPage Golf;
-        private System.Windows.Forms.Button button11;
-        private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button12;
-        private System.Windows.Forms.Button button14;
-        private System.Windows.Forms.Button button13;
-        private System.Windows.Forms.Button button16;
-        private System.Windows.Forms.Button button15;
-        private System.Windows.Forms.Button button17;
-        private System.Windows.Forms.Button button18;
-        private System.Windows.Forms.GroupBox Near_Hole;
-        private System.Windows.Forms.GroupBox Hole_In_One;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button One_Little_Birdie;
         private System.Windows.Forms.TabPage Doodles;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Button stopDoodleTrainingBtn;
@@ -1394,6 +1207,8 @@
         private System.Windows.Forms.Button createCustomGolfActionsBtn;
         private System.Windows.Forms.ComboBox customGolfFilesComboBox;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.ListBox golfActionsListBox;
     }
 }
 

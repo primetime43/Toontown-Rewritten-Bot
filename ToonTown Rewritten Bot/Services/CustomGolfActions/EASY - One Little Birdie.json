@@ -1,0 +1,17 @@
+[
+  {
+    "Action": "DELAY TIME",
+    "Command": "DELAY TIME",
+    "Duration": 15000
+  },
+  {
+    "Action": "TURN RIGHT",
+    "Command": "TURN RIGHT",
+    "Duration": 700
+  },
+  {
+    "Action": "SWING POWER",
+    "Command": "SWING POWER",
+    "Duration": 1870
+  }
+]
