@@ -48,6 +48,27 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Services\CustomFishingActions\BrrrghPolarPlaceFishing Top Right Dock.json" />
+    <None Remove="Services\CustomFishingActions\BrrrghSleetStFishing First Dock.json" />
+    <None Remove="Services\CustomFishingActions\BrrrghWalrusWayFishing Top Left Dock.json" />
+    <None Remove="Services\CustomFishingActions\DaisyGardenElmStFishing Bottom Left Dock.json" />
+    <None Remove="Services\CustomFishingActions\DDLighthouseLaneFishing Middle Right Dock.json" />
+    <None Remove="Services\CustomFishingActions\DDLLullabyLaneFishing Dock Left Of The Small Box.json" />
+    <None Remove="Services\CustomFishingActions\MMTenorTerraceFishing Top Left Dock.json" />
+    <None Remove="Services\CustomFishingActions\TTCPunchlinePlaceFishing First Dock.json" />
+    <None Remove="Services\CustomGolfActions\EASY - Afternoon Tee.json" />
+    <None Remove="Services\CustomGolfActions\EASY - Down the Hatch.json" />
+    <None Remove="Services\CustomGolfActions\EASY - Hole In Fun.json" />
+    <None Remove="Services\CustomGolfActions\EASY - Hole on the Range.json" />
+    <None Remove="Services\CustomGolfActions\EASY - Holey Mackeral.json" />
+    <None Remove="Services\CustomGolfActions\EASY - Hot Links.json" />
+    <None Remove="Services\CustomGolfActions\EASY - One Little Birdie.json" />
+    <None Remove="Services\CustomGolfActions\EASY - Peanut Putter.json" />
+    <None Remove="Services\CustomGolfActions\EASY - Seeing green.json" />
+    <None Remove="Services\CustomGolfActions\EASY - Swing Time.json" />
+    <None Remove="Services\CustomGolfActions\EASY - Swing-A-Long.json" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="InputSimulator, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\InputSimulator.dll</HintPath>
@@ -70,11 +91,57 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Services\CustomFishingActions\BrrrghPolarPlaceFishing Top Right Dock.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomFishingActions\BrrrghSleetStFishing First Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\BrrrghWalrusWayFishing Top Left Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\DaisyGardenElmStFishing Bottom Left Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\DDLighthouseLaneFishing Middle Right Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\DDLLullabyLaneFishing Dock Left Of The Small Box.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\MMTenorTerraceFishing Top Left Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\TTCPunchlinePlaceFishing First Dock.json" />
+    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Afternoon Tee.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Down the Hatch.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Hole In Fun.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Hole on the Range.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Holey Mackeral.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Hot Links.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomGolfActions\EASY - One Little Birdie.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Peanut Putter.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Seeing green.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Swing Time.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Swing-A-Long.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.410601">
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.3" />
   </ItemGroup>
 </Project>
