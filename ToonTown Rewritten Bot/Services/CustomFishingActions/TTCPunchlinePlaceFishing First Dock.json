@@ -7,7 +7,7 @@
   {"Action": "TIME", "Command": "700 milliseconds"},
   {"Action": "SELL FISH", "Command": "SELL"},
   {"Action": "WALK BACKWARDS", "Command": "DOWN"},
-  {"Action": "TIME", "Command": "700 milliseconds"},
+  {"Action": "TIME", "Command": "600 milliseconds"},
   {"Action": "TURN LEFT", "Command": "LEFT"},
   {"Action": "TIME", "Command": "750 milliseconds"},
   {"Action": "WALK FORWARDS", "Command": "UP"},

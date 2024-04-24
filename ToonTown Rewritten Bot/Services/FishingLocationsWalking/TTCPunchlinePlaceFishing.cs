@@ -28,7 +28,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
             // Simulation of going back to the dock
             InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
-            await Task.Delay(700, cancellationToken);
+            await Task.Delay(600, cancellationToken);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
             InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
             await Task.Delay(750, cancellationToken);
