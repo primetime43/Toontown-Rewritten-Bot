@@ -105,7 +105,7 @@ namespace ToonTown_Rewritten_Bot.Views
 
         private void SaveToJsonFile(string jsonContent)
         {
-            string folderPath = CoreFunctionality.CreateCustomFishingActionsFolder();
+            string folderPath = (string)CoreFunctionality.ManageCustomActionsFolder("Fishing", false);  // Getting the folder path only
 
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
@@ -127,7 +127,7 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 Filter = "JSON File|*.json",
                 Title = "Open an Actions JSON File",
-                InitialDirectory = CoreFunctionality.CreateCustomFishingActionsFolder()
+                InitialDirectory = (string)CoreFunctionality.ManageCustomActionsFolder("Fishing", false)
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)

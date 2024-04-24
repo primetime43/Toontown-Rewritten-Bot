@@ -1,7 +1,7 @@
 [
   {
-    "Action": "TIME",
-    "Command": "TIME",
+    "Action": "DELAY TIME",
+    "Command": "DELAY TIME",
     "Duration": 15000
   },
   {
