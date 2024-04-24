@@ -62,7 +62,7 @@
             textBoxDescription.Size = new System.Drawing.Size(316, 147);
             textBoxDescription.TabIndex = 23;
             textBoxDescription.TabStop = false;
-            textBoxDescription.Text = "This program is a bot that will perform certain time consuming tasks on ToonTown Rewritten.";
+            textBoxDescription.Text = "This program is a bot that will perform certain time consuming tasks on Toontown Rewritten.";
             // 
             // labelCompanyName
             // 
@@ -108,7 +108,7 @@
             labelProductName.Name = "labelProductName";
             labelProductName.Size = new System.Drawing.Size(316, 20);
             labelProductName.TabIndex = 19;
-            labelProductName.Text = "ToonTown Rewritten Bot";
+            labelProductName.Text = "Toontown Rewritten Bot";
             labelProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // logoPictureBox
