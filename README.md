@@ -28,7 +28,7 @@ Table of Contents
 ## Images of v1.5.0:
 
 <details>
-  <summary>Click to view screenshots of version 1.4.0</summary>
+  <summary>Click to view screenshots of version 1.5.0</summary>
   <p>Main Window</p>
   <img src="https://github.com/primetime43/Toontown-Rewritten-Bot/assets/12754111/ef6d4f6f-03b9-45dd-941f-750059aca3c3" alt="Main Window">
   <p>Fishing Window</p>
