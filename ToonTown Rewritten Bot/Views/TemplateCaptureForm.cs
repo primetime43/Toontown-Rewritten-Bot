@@ -47,6 +47,16 @@ namespace ToonTown_Rewritten_Bot.Views
             _elementName = elementName;
             _description = description ?? $"Capture template for: {elementName}";
             InitializeComponent();
+
+            // Ensure this form comes to the front when shown
+            this.TopMost = true;
+            this.Load += (s, e) =>
+            {
+                this.BringToFront();
+                this.Activate();
+                // Reset TopMost after activation so it doesn't stay on top of everything
+                this.BeginInvoke(new Action(() => this.TopMost = false));
+            };
         }
 
         private void InitializeComponent()

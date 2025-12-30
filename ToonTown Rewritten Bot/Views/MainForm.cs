@@ -146,6 +146,13 @@ namespace ToonTown_Rewritten_Bot
         {
             try
             {
+                // Ensure cancellation token source exists
+                if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+                {
+                    _cancellationTokenSource?.Dispose();
+                    _cancellationTokenSource = new CancellationTokenSource();
+                }
+
                 await Services.Gardening.WaterPlantAsync((int)waterPlantNumericUpDown.Value, _cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
@@ -163,7 +170,13 @@ namespace ToonTown_Rewritten_Bot
         {
             try
             {
-                // Assuming RemovePlantAsync is an instance method requiring a CancellationToken.
+                // Ensure cancellation token source exists
+                if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+                {
+                    _cancellationTokenSource?.Dispose();
+                    _cancellationTokenSource = new CancellationTokenSource();
+                }
+
                 await Services.Gardening.RemovePlantAsync(_cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)

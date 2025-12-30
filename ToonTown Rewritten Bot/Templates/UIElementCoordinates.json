@@ -40,5 +40,12 @@
     "ManualCoordinates": null,
     "CachedCenter": "1805, 255",
     "LastFoundTime": "2025-12-30T03:56:41.0135037-05:00"
+  },
+  "Plant Flower/Remove Button": {
+    "Name": "Plant Flower/Remove Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Plant_Flower_Remove_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "80, 259",
+    "LastFoundTime": "2025-12-30T04:04:26.8506834-05:00"
   }
 }

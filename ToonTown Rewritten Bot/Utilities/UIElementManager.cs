@@ -139,11 +139,15 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 bool result = false;
                 Application.OpenForms[0].Invoke(new Action(() =>
                 {
+                    // Bring bot window to front first so the capture dialog is visible
+                    ToonTown_Rewritten_Bot.Services.CoreFunctionality.BringBotWindowToFront();
                     result = TemplateCaptureForm.CaptureTemplate(elementName, description);
                 }));
                 return result;
             }
 
+            // Bring bot window to front first so the capture dialog is visible
+            ToonTown_Rewritten_Bot.Services.CoreFunctionality.BringBotWindowToFront();
             return TemplateCaptureForm.CaptureTemplate(elementName, description);
         }
 
