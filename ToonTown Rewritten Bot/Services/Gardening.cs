@@ -131,6 +131,10 @@ namespace ToonTown_Rewritten_Bot.Services
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
             CoreFunctionality.MoveCursor(x, y);
             CoreFunctionality.DoMouseClick();
+
+            // Wait for the confirmation dialog to appear
+            await Task.Delay(2000, cancellationToken);
+
             await SelectYESToRemoveAsync(cancellationToken);
         }
 
@@ -140,6 +144,7 @@ namespace ToonTown_Rewritten_Bot.Services
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.BlueYesButton);
             CoreFunctionality.MoveCursor(x, y);
             CoreFunctionality.DoMouseClick();
+            await Task.Delay(1000, cancellationToken);
         }
     }
 }
