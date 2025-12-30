@@ -30,6 +30,9 @@
     <Compile Update="Views\CustomGolfActions.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Views\FishBubbleColorCaptureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Views\ImageRecognitionDebugForm.cs">
       <SubType>Form</SubType>
     </Compile>
