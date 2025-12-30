@@ -71,6 +71,10 @@
             customGolfFilesComboBox = new System.Windows.Forms.ComboBox();
             button1 = new System.Windows.Forms.Button();
             createCustomGolfActionsBtn = new System.Windows.Forms.Button();
+            golfCourseSelectLabel = new System.Windows.Forms.Label();
+            golfActionsPreviewLabel = new System.Windows.Forms.Label();
+            golfHelpGroupBox = new System.Windows.Forms.GroupBox();
+            golfInstructionsLabel = new System.Windows.Forms.Label();
             Doodles = new System.Windows.Forms.TabPage();
             richTextBox2 = new System.Windows.Forms.RichTextBox();
             groupBox8 = new System.Windows.Forms.GroupBox();
@@ -125,6 +129,7 @@
             groupBox3.SuspendLayout();
             Golf.SuspendLayout();
             groupBox10.SuspendLayout();
+            golfHelpGroupBox.SuspendLayout();
             Doodles.SuspendLayout();
             groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -568,7 +573,7 @@
             // Golf
             // 
             Golf.Controls.Add(groupBox10);
-            Golf.Controls.Add(createCustomGolfActionsBtn);
+            Golf.Controls.Add(golfHelpGroupBox);
             Golf.Location = new System.Drawing.Point(4, 25);
             Golf.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Golf.Name = "Golf";
@@ -577,9 +582,11 @@
             Golf.TabIndex = 6;
             Golf.Text = "Golf";
             Golf.UseVisualStyleBackColor = true;
-            // 
+            //
             // groupBox10
-            // 
+            //
+            groupBox10.Controls.Add(golfActionsPreviewLabel);
+            groupBox10.Controls.Add(golfCourseSelectLabel);
             groupBox10.Controls.Add(golfActionsListBox);
             groupBox10.Controls.Add(customGolfFilesComboBox);
             groupBox10.Controls.Add(button1);
@@ -588,27 +595,45 @@
             groupBox10.Size = new System.Drawing.Size(354, 314);
             groupBox10.TabIndex = 21;
             groupBox10.TabStop = false;
-            groupBox10.Text = "Golf Actions";
-            // 
-            // golfActionsListBox
-            // 
-            golfActionsListBox.FormattingEnabled = true;
-            golfActionsListBox.ItemHeight = 16;
-            golfActionsListBox.Location = new System.Drawing.Point(6, 59);
-            golfActionsListBox.Name = "golfActionsListBox";
-            golfActionsListBox.Size = new System.Drawing.Size(342, 196);
-            golfActionsListBox.TabIndex = 21;
-            // 
+            groupBox10.Text = "Run Golf Actions";
+            //
+            // golfCourseSelectLabel
+            //
+            golfCourseSelectLabel.AutoSize = true;
+            golfCourseSelectLabel.Location = new System.Drawing.Point(6, 20);
+            golfCourseSelectLabel.Name = "golfCourseSelectLabel";
+            golfCourseSelectLabel.Size = new System.Drawing.Size(150, 16);
+            golfCourseSelectLabel.TabIndex = 22;
+            golfCourseSelectLabel.Text = "Select a Golf Course:";
+            //
             // customGolfFilesComboBox
-            // 
+            //
             customGolfFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             customGolfFilesComboBox.FormattingEnabled = true;
-            customGolfFilesComboBox.Location = new System.Drawing.Point(6, 21);
+            customGolfFilesComboBox.Location = new System.Drawing.Point(6, 39);
             customGolfFilesComboBox.Name = "customGolfFilesComboBox";
             customGolfFilesComboBox.Size = new System.Drawing.Size(342, 24);
             customGolfFilesComboBox.Sorted = true;
             customGolfFilesComboBox.TabIndex = 19;
             customGolfFilesComboBox.SelectedIndexChanged += customGolfFilesComboBox_SelectedIndexChanged;
+            //
+            // golfActionsPreviewLabel
+            //
+            golfActionsPreviewLabel.AutoSize = true;
+            golfActionsPreviewLabel.Location = new System.Drawing.Point(6, 72);
+            golfActionsPreviewLabel.Name = "golfActionsPreviewLabel";
+            golfActionsPreviewLabel.Size = new System.Drawing.Size(120, 16);
+            golfActionsPreviewLabel.TabIndex = 23;
+            golfActionsPreviewLabel.Text = "Actions Preview:";
+            //
+            // golfActionsListBox
+            //
+            golfActionsListBox.FormattingEnabled = true;
+            golfActionsListBox.ItemHeight = 16;
+            golfActionsListBox.Location = new System.Drawing.Point(6, 91);
+            golfActionsListBox.Name = "golfActionsListBox";
+            golfActionsListBox.Size = new System.Drawing.Size(342, 164);
+            golfActionsListBox.TabIndex = 21;
             // 
             // button1
             // 
@@ -619,15 +644,33 @@
             button1.Text = "Start Golf";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
-            // 
+            //
+            // golfHelpGroupBox
+            //
+            golfHelpGroupBox.Controls.Add(golfInstructionsLabel);
+            golfHelpGroupBox.Controls.Add(createCustomGolfActionsBtn);
+            golfHelpGroupBox.Location = new System.Drawing.Point(367, 6);
+            golfHelpGroupBox.Name = "golfHelpGroupBox";
+            golfHelpGroupBox.Size = new System.Drawing.Size(172, 314);
+            golfHelpGroupBox.TabIndex = 24;
+            golfHelpGroupBox.TabStop = false;
+            golfHelpGroupBox.Text = "How to Use";
+            //
+            // golfInstructionsLabel
+            //
+            golfInstructionsLabel.Location = new System.Drawing.Point(6, 20);
+            golfInstructionsLabel.Name = "golfInstructionsLabel";
+            golfInstructionsLabel.Size = new System.Drawing.Size(160, 230);
+            golfInstructionsLabel.TabIndex = 0;
+            golfInstructionsLabel.Text = "1. Select a golf course from the dropdown\r\n\r\n2. Preview the actions that will run\r\n\r\n3. In TTR, go to the golf course and stand at the tee\r\n\r\n4. Click 'Start Golf' and switch to TTR quickly\r\n\r\n5. The bot will auto-swing!\r\n\r\nTip: Create custom actions for courses not listed.";
+            //
             // createCustomGolfActionsBtn
-            // 
-            createCustomGolfActionsBtn.Location = new System.Drawing.Point(392, 10);
+            //
+            createCustomGolfActionsBtn.Location = new System.Drawing.Point(6, 260);
             createCustomGolfActionsBtn.Name = "createCustomGolfActionsBtn";
-            createCustomGolfActionsBtn.Size = new System.Drawing.Size(126, 41);
+            createCustomGolfActionsBtn.Size = new System.Drawing.Size(160, 45);
             createCustomGolfActionsBtn.TabIndex = 18;
-            createCustomGolfActionsBtn.Text = "Create Custom Golf Actions";
-            toolTip1.SetToolTip(createCustomGolfActionsBtn, "This will allow you to build custom golf actions\r\nfor golfing any course");
+            createCustomGolfActionsBtn.Text = "Create/Edit Custom Actions";
             createCustomGolfActionsBtn.UseVisualStyleBackColor = true;
             createCustomGolfActionsBtn.Click += createCustomGolfActionsBtn_Click;
             // 
@@ -1121,6 +1164,8 @@
             groupBox3.ResumeLayout(false);
             Golf.ResumeLayout(false);
             groupBox10.ResumeLayout(false);
+            groupBox10.PerformLayout();
+            golfHelpGroupBox.ResumeLayout(false);
             Doodles.ResumeLayout(false);
             groupBox8.ResumeLayout(false);
             groupBox8.PerformLayout();
@@ -1220,6 +1265,10 @@
         public System.Windows.Forms.Button stopKeepToonAwakeButton;
         private System.Windows.Forms.Button createCustomGolfActionsBtn;
         private System.Windows.Forms.ComboBox customGolfFilesComboBox;
+        private System.Windows.Forms.Label golfCourseSelectLabel;
+        private System.Windows.Forms.Label golfActionsPreviewLabel;
+        private System.Windows.Forms.GroupBox golfHelpGroupBox;
+        private System.Windows.Forms.Label golfInstructionsLabel;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.ListBox golfActionsListBox;
