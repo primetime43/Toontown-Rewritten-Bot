@@ -58,7 +58,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static async Task KeepToonAwake(int timeInSeconds, CancellationToken cancellationToken)
         {
-            CoreFunctionality.MaximizeAndFocusTTRWindow(); // Ensure the game window is focused
+            CoreFunctionality.FocusTTRWindow(); // Ensure the game window is focused
             DateTime endTime = DateTime.Now.AddSeconds(timeInSeconds); // Calculate the end time based on seconds
             CoreFunctionality.DoMouseClick(); // Initial action to "keep awake"
 

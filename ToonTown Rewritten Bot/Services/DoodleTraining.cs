@@ -21,11 +21,12 @@ namespace ToonTown_Rewritten_Bot.Services
             justFeedCheckBox = justFeed;
             justScratchCheckBox = justScratch;
 
-            // Force game window to fullscreen/maximized before starting
-            if (!ForceGameWindowFullscreen())
+            // Check if game window is available and focus it
+            if (!IsGameWindowReady())
             {
                 throw new InvalidOperationException("Toontown Rewritten window not found. Please make sure the game is running.");
             }
+            FocusTTRWindow();
 
             await Task.Delay(2000, cancellationToken);
             await feedAndScratch(cancellationToken);

@@ -24,13 +24,14 @@ namespace ToonTown_Rewritten_Bot.Services
             if (confirmation == DialogResult.Cancel)
                 return;
 
-            // Force game window to fullscreen/maximized before starting
-            if (!ForceGameWindowFullscreen())
+            // Check if game window is available and focus it
+            if (!IsGameWindowReady())
             {
                 MessageBox.Show("Toontown Rewritten window not found. Please make sure the game is running.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            FocusTTRWindow();
 
             await Task.Delay(2000);
 
@@ -117,13 +118,14 @@ namespace ToonTown_Rewritten_Bot.Services
         {
             MessageBox.Show("Press OK when ready to begin!");
 
-            // Force game window to fullscreen/maximized before starting
-            if (!ForceGameWindowFullscreen())
+            // Check if game window is available and focus it
+            if (!IsGameWindowReady())
             {
                 MessageBox.Show("Toontown Rewritten window not found. Please make sure the game is running.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            FocusTTRWindow();
 
             await Task.Delay(2000, cancellationToken);
 

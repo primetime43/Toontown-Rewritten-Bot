@@ -330,7 +330,7 @@ namespace ToonTown_Rewritten_Bot
             Debug.WriteLine("HEX: " + CoreFunctionality.HexConverter(CoreFunctionality.GetColorAt(test.X, test.Y)) + " RGB: " + CoreFunctionality.GetColorAt(test.X, test.Y));
             MessageBox.Show("Done");
 
-            CoreFunctionality.MaximizeAndFocusTTRWindow();
+            CoreFunctionality.FocusTTRWindow();
 
             Image screenshot = ImageRecognition.GetWindowScreenshot();
             /*PictureBox pictureBox = new PictureBox();
