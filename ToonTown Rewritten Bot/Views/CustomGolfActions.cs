@@ -25,27 +25,22 @@ namespace ToonTown_Rewritten_Bot.Views
         private void addItemBtn_Click(object sender, EventArgs e)
         {
             string selectedItem = comboBox1.SelectedItem?.ToString() ?? "";
-            // Check if the action is one that can have a duration
-            if (selectedItem == "DELAY TIME" || selectedItem == "SWING POWER" || selectedItem == "TURN LEFT" || selectedItem == "TURN RIGHT")
+
+            if (string.IsNullOrEmpty(selectedItem))
             {
-                if (int.TryParse(actionTimeTxtBox.Text, out int timeInMilliseconds))
-                {
-                    actionItemsListBox.Items.Add($"{selectedItem} ({timeInMilliseconds} milliseconds)");
-                    actionTimeTxtBox.Clear(); // Clear the TextBox after adding
-                }
-                else
-                {
-                    MessageBox.Show("Please enter a valid time in milliseconds.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                MessageBox.Show("Please select an action from the dropdown.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
-            else if (!string.IsNullOrEmpty(selectedItem))
+
+            // All actions now support duration
+            if (int.TryParse(actionTimeTxtBox.Text, out int timeInMilliseconds) && timeInMilliseconds > 0)
             {
-                // For other selections like "MOVE TO LEFT TEE SPOT" or "MOVE TO RIGHT TEE SPOT" that do not require duration
-                actionItemsListBox.Items.Add(selectedItem);
+                actionItemsListBox.Items.Add($"{selectedItem} ({timeInMilliseconds} ms)");
+                actionTimeTxtBox.Clear();
             }
             else
             {
-                MessageBox.Show("Please select an item from the ComboBox.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a valid duration in milliseconds (must be greater than 0).", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -58,29 +53,26 @@ namespace ToonTown_Rewritten_Bot.Views
         {
             if (actionItemsListBox.SelectedItem == null)
             {
-                MessageBox.Show("No item is selected to update.");
+                MessageBox.Show("No item is selected to update.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             int selectedIndex = actionItemsListBox.SelectedIndex;
             string selectedItem = comboBox1.SelectedItem?.ToString() ?? "";
 
-            if (selectedItem == "DELAY TIME" || selectedItem == "SWING POWER" || selectedItem == "TURN LEFT" || selectedItem == "TURN RIGHT")
+            if (string.IsNullOrEmpty(selectedItem))
             {
-                if (int.TryParse(actionTimeTxtBox.Text, out int timeInMilliseconds))
-                {
-                    actionItemsListBox.Items[selectedIndex] = $"{selectedItem} ({timeInMilliseconds} milliseconds)";
-                }
-                else
-                {
-                    MessageBox.Show("Please enter a valid time in milliseconds.", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                MessageBox.Show("Please select an action from the dropdown.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (int.TryParse(actionTimeTxtBox.Text, out int timeInMilliseconds) && timeInMilliseconds > 0)
+            {
+                actionItemsListBox.Items[selectedIndex] = $"{selectedItem} ({timeInMilliseconds} ms)";
             }
             else
             {
-                // No duration to update, just update the action
-                actionItemsListBox.Items[selectedIndex] = selectedItem;
+                MessageBox.Show("Please enter a valid duration in milliseconds (must be greater than 0).", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -90,32 +82,36 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 Filter = "JSON File|*.json",
                 Title = "Open an Actions JSON File",
-                InitialDirectory = (string)CoreFunctionality.ManageCustomActionsFolder("Golf", false)  // Getting the folder path only
+                InitialDirectory = (string)CoreFunctionality.ManageCustomActionsFolder("Golf", false)
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string json = File.ReadAllText(openFileDialog.FileName);
-                var actionsList = JsonConvert.DeserializeObject<List<GolfActionCommand>>(json);
-
-                actionItemsListBox.Items.Clear();
-                foreach (var action in actionsList)
+                try
                 {
-                    string displayText;
-                    // Check if the action is associated with a duration and is not "TIME"
-                    if (action.Duration > 0 && action.Action != "TIME")
+                    string json = File.ReadAllText(openFileDialog.FileName);
+                    var actionsList = JsonConvert.DeserializeObject<List<GolfActionCommand>>(json);
+
+                    if (actionsList == null || actionsList.Count == 0)
                     {
-                        displayText = $"{action.Action} ({action.Duration} milliseconds)";
+                        MessageBox.Show("No actions found in the file.", "Empty File", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
                     }
-                    else if (action.Action == "TIME")
+
+                    actionItemsListBox.Items.Clear();
+                    foreach (var action in actionsList)
                     {
-                        displayText = $"TIME ({action.Duration} milliseconds)";
+                        // All actions are displayed with duration in the new format
+                        int duration = action.Duration > 0 ? action.Duration : 1000; // Default to 1000ms if not specified
+                        string displayText = $"{action.Action} ({duration} ms)";
+                        actionItemsListBox.Items.Add(displayText);
                     }
-                    else
-                    {
-                        displayText = action.Action; // For actions without a duration
-                    }
-                    actionItemsListBox.Items.Add(displayText);
+
+                    MessageBox.Show($"Loaded {actionsList.Count} actions.", "Load Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading file: {ex.Message}", "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -123,6 +119,12 @@ namespace ToonTown_Rewritten_Bot.Views
         private GolfActionKeys _golfActionKeys = new GolfActionKeys();
         private void saveActionItemBtn_Click(object sender, EventArgs e)
         {
+            if (actionItemsListBox.Items.Count == 0)
+            {
+                MessageBox.Show("No actions to save. Please add some actions first.", "No Actions", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             List<GolfActionCommand> actionsList = new List<GolfActionCommand>();
 
             foreach (var item in actionItemsListBox.Items)
@@ -130,48 +132,48 @@ namespace ToonTown_Rewritten_Bot.Views
                 string actionText = item.ToString();
                 GolfActionCommand actionCommand = new GolfActionCommand();
 
-                // Extract just the action name in case the text includes duration
-                string actionName = actionText.Contains("(") ? actionText.Substring(0, actionText.IndexOf('(')).Trim() : actionText;
-
-                // Check if the action text includes time specification and parse it
-                if (actionText.Contains("milliseconds"))
+                try
                 {
-                    actionCommand.Action = actionName;
-                    actionCommand.Command = actionName;  // Command is typically the action name or key command
-                                                         // Parse the duration from the list item
-                    actionCommand.Duration = int.Parse(actionText.Split('(')[1].Split(' ')[0].Replace("milliseconds", "").Trim());
-                }
-                else
-                {
-                    actionCommand.Action = actionName;
-                    if (_golfActionKeys.ActionKeyMap.TryGetValue(actionName, out VirtualKeyCode keyCode))
+                    // Parse action name and duration from format "ACTION NAME (123 ms)"
+                    int parenIndex = actionText.LastIndexOf('(');
+                    if (parenIndex <= 0)
                     {
-                        actionCommand.Command = keyCode.ToString();
-                        // Apply default duration for specific actions not specified as "milliseconds"
-                        if (actionName == "MOVE TO LEFT TEE SPOT" || actionName == "MOVE TO RIGHT TEE SPOT" || actionName == "TURN LEFT" || actionName == "TURN RIGHT")
-                        {
-                            actionCommand.Duration = 50; // Set a specific duration for tee and turn actions
-                        }
-                        else
-                        {
-                            // If no duration is specified in the list item, apply a default duration or leave as is
-                            // Consider providing a user interface to specify this default duration or set a logical default here
-                            actionCommand.Duration = 1000; // Example: Default duration for unspecified actions
-                        }
+                        MessageBox.Show($"Invalid action format: {actionText}\nExpected format: ACTION NAME (duration ms)", "Parse Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
                     }
-                    else
-                    {
-                        MessageBox.Show($"No key code found for the action: {actionName}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        continue; // Skip adding this action if the key code is not found
-                    }
-                }
 
-                actionsList.Add(actionCommand);
+                    string actionName = actionText.Substring(0, parenIndex).Trim();
+                    string durationPart = actionText.Substring(parenIndex);
+                    string durationStr = new string(durationPart.Where(char.IsDigit).ToArray());
+
+                    if (!int.TryParse(durationStr, out int duration) || duration <= 0)
+                    {
+                        MessageBox.Show($"Invalid duration in: {actionText}", "Parse Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    actionCommand.Action = actionName;
+                    actionCommand.Command = actionName;
+                    actionCommand.Duration = duration;
+
+                    // Validate action name (except DELAY TIME which doesn't need a key)
+                    if (actionName != "DELAY TIME" && !_golfActionKeys.ActionKeyMap.ContainsKey(actionName))
+                    {
+                        MessageBox.Show($"Unknown action: {actionName}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    actionsList.Add(actionCommand);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error parsing action: {actionText}\n{ex.Message}", "Parse Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
 
             string json = JsonConvert.SerializeObject(actionsList, Formatting.Indented);
             SaveToJsonFile(json);
-            actionItemsListBox.Items.Clear();
         }
 
         private void SaveToJsonFile(string jsonContent)
@@ -195,10 +197,35 @@ namespace ToonTown_Rewritten_Bot.Views
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedItem = comboBox1.SelectedItem?.ToString() ?? "";
-            if (selectedItem == "DELAY TIME" || selectedItem == "SWING POWER" || selectedItem == "TURN LEFT" || selectedItem == "TURN RIGHT")
-                actionTimeTxtBox.Enabled = true;
-            else
-                actionTimeTxtBox.Enabled = false;
+
+            // All actions now require duration
+            actionTimeTxtBox.Enabled = !string.IsNullOrEmpty(selectedItem);
+
+            // Update help text based on selected action
+            switch (selectedItem)
+            {
+                case "SWING POWER":
+                    helpLabel.Text = "SWING POWER: Hold CTRL to charge. Duration = how long to charge (longer = more power). Try 1000-3000ms.";
+                    break;
+                case "TURN LEFT":
+                    helpLabel.Text = "TURN LEFT: Rotates aim left. Duration = how long to turn. Small values (50-200ms) for fine adjustments.";
+                    break;
+                case "TURN RIGHT":
+                    helpLabel.Text = "TURN RIGHT: Rotates aim right. Duration = how long to turn. Small values (50-200ms) for fine adjustments.";
+                    break;
+                case "MOVE TO LEFT TEE SPOT":
+                    helpLabel.Text = "MOVE LEFT: Moves toon left on the tee. Duration = how long to walk (100-500ms typical).";
+                    break;
+                case "MOVE TO RIGHT TEE SPOT":
+                    helpLabel.Text = "MOVE RIGHT: Moves toon right on the tee. Duration = how long to walk (100-500ms typical).";
+                    break;
+                case "DELAY TIME":
+                    helpLabel.Text = "DELAY: Waits before next action. Use at start to wait for ball placement. Duration = wait time in ms.";
+                    break;
+                default:
+                    helpLabel.Text = "Select an action to see help.";
+                    break;
+            }
         }
 
         private void actionItemsListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -208,19 +235,30 @@ namespace ToonTown_Rewritten_Bot.Views
                 updateSelectedActionItemBtn.Enabled = true;
                 string selectedItem = actionItemsListBox.SelectedItem.ToString();
 
-                if (selectedItem.Contains("TIME") || selectedItem.Contains("SWING POWER") || selectedItem.Contains("TURN LEFT") || selectedItem.Contains("TURN RIGHT"))
+                // Parse the action name and duration from format "ACTION NAME (123 ms)"
+                string actionName;
+                string duration = "";
+
+                int parenIndex = selectedItem.LastIndexOf('(');
+                if (parenIndex > 0)
                 {
-                    comboBox1.SelectedItem = selectedItem.Split(' ')[0]; // Select the action type without duration
-                    string timeValue = new String(selectedItem.Where(char.IsDigit).ToArray());
-                    actionTimeTxtBox.Text = timeValue;
-                    actionTimeTxtBox.Enabled = true;
+                    actionName = selectedItem.Substring(0, parenIndex).Trim();
+                    // Extract just the digits from the duration part
+                    duration = new string(selectedItem.Substring(parenIndex).Where(char.IsDigit).ToArray());
                 }
                 else
                 {
-                    comboBox1.SelectedItem = selectedItem;
-                    actionTimeTxtBox.Clear();
-                    actionTimeTxtBox.Enabled = false;
+                    actionName = selectedItem.Trim();
                 }
+
+                // Select the matching action in the combobox
+                comboBox1.SelectedItem = actionName;
+                actionTimeTxtBox.Text = duration;
+                actionTimeTxtBox.Enabled = true;
+            }
+            else
+            {
+                updateSelectedActionItemBtn.Enabled = false;
             }
         }
     }

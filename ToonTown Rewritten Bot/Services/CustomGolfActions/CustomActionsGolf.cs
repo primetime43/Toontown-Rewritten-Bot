@@ -28,7 +28,7 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
             }
         }
 
-        private async void PrepareToHitBall()
+        private async Task PrepareToHitBall()
         {
             InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
             await Task.Delay(50);
@@ -58,11 +58,11 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
                     // Tee movements use the duration to wait after the movement, but do not apply delay during key press.
                     if (actionCommand.Action == "MOVE TO RIGHT TEE SPOT" || actionCommand.Action == "MOVE TO LEFT TEE SPOT")
                     {
+                        // Hold the key for the specified duration to move to the tee spot
                         InputSimulator.SimulateKeyDown(keyCode);
-                        // Press and release key immediately for tee spot moves
+                        await Task.Delay(actionCommand.Duration, cancellationToken);
                         InputSimulator.SimulateKeyUp(keyCode);
-                        PrepareToHitBall(); // Assuming this function correctly prepares for the next golf swing
-                        await Task.Delay(actionCommand.Duration, cancellationToken); // Use specified duration to delay after moving to tee spot
+                        await PrepareToHitBall(); // Prepare for the next golf swing
                     }
                     else
                     {

@@ -38,6 +38,7 @@
             comboBox1 = new System.Windows.Forms.ComboBox();
             removeItemBtn = new System.Windows.Forms.Button();
             addItemBtn = new System.Windows.Forms.Button();
+            helpLabel = new System.Windows.Forms.Label();
             SuspendLayout();
             // 
             // updateSelectedActionItemBtn
@@ -128,7 +129,16 @@
             addItemBtn.Text = "Add Item";
             addItemBtn.UseVisualStyleBackColor = true;
             addItemBtn.Click += addItemBtn_Click;
-            // 
+            //
+            // helpLabel
+            //
+            helpLabel.Location = new System.Drawing.Point(248, 210);
+            helpLabel.Name = "helpLabel";
+            helpLabel.Size = new System.Drawing.Size(200, 100);
+            helpLabel.TabIndex = 19;
+            helpLabel.Text = "Select an action to see help.";
+            helpLabel.ForeColor = System.Drawing.Color.DarkSlateGray;
+            //
             // CustomGolfActions
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -143,6 +153,7 @@
             Controls.Add(comboBox1);
             Controls.Add(removeItemBtn);
             Controls.Add(addItemBtn);
+            Controls.Add(helpLabel);
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             Name = "CustomGolfActions";
             Text = "Custom Golf Actions Manager";
@@ -161,5 +172,6 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button removeItemBtn;
         private System.Windows.Forms.Button addItemBtn;
+        private System.Windows.Forms.Label helpLabel;
     }
 }
