@@ -19,8 +19,50 @@ namespace ToonTown_Rewritten_Bot.Views
         private bool _isSelectingRegion;
         private Point _selectionStart;
         private List<ImageTemplateMatcher.MatchResult> _matchResults = new List<ImageTemplateMatcher.MatchResult>();
-        private static readonly string TemplatesFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates");
+        private static readonly string TemplatesFolder = GetTemplatesFolder();
         private CancellationTokenSource _searchCancellation;
+
+        /// <summary>
+        /// Gets the Templates folder path. Tries to find the project source folder first (for persistence),
+        /// falls back to the output directory.
+        /// </summary>
+        private static string GetTemplatesFolder()
+        {
+            // First, try to find the project source folder (for development)
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+
+            // Navigate up from bin/Debug/net10.0-windows to find the project folder
+            DirectoryInfo dir = new DirectoryInfo(baseDir);
+            while (dir != null && dir.Parent != null)
+            {
+                // Look for .csproj file to identify project root
+                if (Directory.GetFiles(dir.FullName, "*.csproj").Length > 0)
+                {
+                    string projectTemplates = Path.Combine(dir.FullName, "Templates");
+                    if (Directory.Exists(projectTemplates) || TryCreateDirectory(projectTemplates))
+                    {
+                        return projectTemplates;
+                    }
+                }
+                dir = dir.Parent;
+            }
+
+            // Fall back to output directory
+            return Path.Combine(baseDir, "Templates");
+        }
+
+        private static bool TryCreateDirectory(string path)
+        {
+            try
+            {
+                Directory.CreateDirectory(path);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         public ImageRecognitionDebugForm()
         {
