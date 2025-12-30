@@ -525,7 +525,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        //Settings page, button to reset all images
+        //Settings page, button to reset all images (legacy - kept for compatibility)
         private void resetImagesBtn_Click(object sender, EventArgs e)
         {
             foreach (SettingsProperty currentProperty in Properties.Settings.Default.Properties)
@@ -533,6 +533,73 @@ namespace ToonTown_Rewritten_Bot
                 Properties.Settings.Default[currentProperty.Name] = "";
             }
             Properties.Settings.Default.Save();
+        }
+
+        // Open Image Recognition Debug Window
+        private void openImageRecDebugBtn_Click(object sender, EventArgs e)
+        {
+            var debugForm = new ImageRecognitionDebugForm();
+            debugForm.Show();
+        }
+
+        // Download OCR data automatically
+        private async void downloadOcrDataBtn_Click(object sender, EventArgs e)
+        {
+            // Check if already exists
+            if (TessdataDownloader.LanguageDataExists())
+            {
+                MessageBox.Show(
+                    "OCR data is already downloaded and ready to use!\n\n" +
+                    "Click 'Open Debug Window' to test the OCR functionality.",
+                    "OCR Data Ready",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            // Download
+            var button = sender as Button;
+            if (button != null)
+            {
+                button.Enabled = false;
+                button.Text = "Downloading...";
+            }
+
+            try
+            {
+                bool success = await TessdataDownloader.EnsureLanguageDataExistsAsync();
+
+                if (success)
+                {
+                    MessageBox.Show(
+                        "OCR data downloaded successfully!\n\n" +
+                        "Click 'Open Debug Window' to test the OCR functionality.",
+                        "Download Complete",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "Failed to download OCR data.\n\n" +
+                        "Please check your internet connection and try again.",
+                        "Download Failed",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Download error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (button != null)
+                {
+                    button.Enabled = true;
+                    button.Text = "Download OCR Data";
+                }
+            }
         }
 
         private void fishingLocationscomboBox_SelectedIndexChanged(object sender, EventArgs e)
