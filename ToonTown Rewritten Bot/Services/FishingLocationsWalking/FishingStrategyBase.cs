@@ -42,6 +42,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// </remarks>
         public async Task StartFishingActionsAsync(int numberOfCasts, bool fishVariance, CancellationToken cancellationToken)
         {
+            // Force game window to fullscreen/maximized before starting
+            if (!ForceGameWindowFullscreen())
+            {
+                throw new InvalidOperationException("Toontown Rewritten window not found. Please make sure the game is running.");
+            }
+
             Stopwatch stopwatch = new Stopwatch();
             while (numberOfCasts != 0 && !shouldStopFishing)
             {

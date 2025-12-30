@@ -121,9 +121,10 @@ namespace ToonTown_Rewritten_Bot.Services
         /// <summary>
         /// Gets coordinates using image recognition as primary method, with manual coordinates as fallback.
         /// Will prompt user to capture template if none exists.
+        /// Coordinates are automatically converted to screen coordinates by adding the game window offset.
         /// </summary>
         /// <param name="key">The enum key for the coordinate</param>
-        /// <returns>The coordinates (x, y) of the element</returns>
+        /// <returns>The screen coordinates (x, y) of the element</returns>
         public static async Task<(int x, int y)> GetCoordsWithImageRecAsync(Enum key)
         {
             string keyAsString = Convert.ToInt32(key).ToString();
@@ -142,10 +143,18 @@ namespace ToonTown_Rewritten_Bot.Services
 
             if (location.HasValue)
             {
-                return (location.Value.X, location.Value.Y);
+                // Convert window-relative coordinates to screen coordinates
+                var windowOffset = CoreFunctionality.GetGameWindowOffset();
+                int screenX = location.Value.X + windowOffset.X;
+                int screenY = location.Value.Y + windowOffset.Y;
+
+                System.Diagnostics.Debug.WriteLine($"[CoordinatesManager] {elementName}: window coords ({location.Value.X}, {location.Value.Y}) + offset ({windowOffset.X}, {windowOffset.Y}) = screen ({screenX}, {screenY})");
+
+                return (screenX, screenY);
             }
 
             // If still not found, fall back to manual coordinates from the old system
+            // Manual coordinates are already screen coordinates
             if (manualCoords.x != 0 || manualCoords.y != 0)
             {
                 return manualCoords;

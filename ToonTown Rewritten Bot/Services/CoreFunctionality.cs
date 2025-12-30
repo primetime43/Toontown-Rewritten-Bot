@@ -93,6 +93,134 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
+        /// Forces the Toontown Rewritten window to fullscreen position (0,0) covering the primary screen.
+        /// Call this before starting any bot operations to ensure consistent window positioning.
+        /// </summary>
+        /// <returns>True if window was found and positioned, false otherwise</returns>
+        public static bool ForceGameWindowFullscreen()
+        {
+            nint hwnd = FindToontownWindow();
+            if (hwnd == IntPtr.Zero)
+            {
+                System.Diagnostics.Debug.WriteLine("[CoreFunctionality] Toontown window not found");
+                return false;
+            }
+
+            // Get primary screen dimensions
+            var screen = Screen.PrimaryScreen.Bounds;
+
+            // Restore window first if minimized
+            ShowWindow(hwnd, SW_RESTORE);
+            System.Threading.Thread.Sleep(100);
+
+            // Remove maximized state so we can position it manually
+            ShowWindow(hwnd, SW_SHOWNORMAL);
+            System.Threading.Thread.Sleep(50);
+
+            // Position window at (0, 0) and size it to fill the screen
+            // SWP_NOZORDER (0x0004) keeps the Z-order, SWP_SHOWWINDOW (0x0040) shows the window
+            bool positioned = SetWindowPos(hwnd, IntPtr.Zero, 0, 0, screen.Width, screen.Height, SWP_NOZORDER | SWP_SHOWWINDOW);
+
+            if (!positioned)
+            {
+                System.Diagnostics.Debug.WriteLine("[CoreFunctionality] SetWindowPos failed, falling back to maximize");
+                ShowWindow(hwnd, SW_MAXIMIZE);
+            }
+
+            // Bring to foreground
+            SetForegroundWindow(hwnd);
+
+            // Small delay to let window finish resizing
+            System.Threading.Thread.Sleep(300);
+
+            // Verify the window position
+            RECT rect;
+            if (GetWindowRect(hwnd, out rect))
+            {
+                System.Diagnostics.Debug.WriteLine($"[CoreFunctionality] Game window positioned at ({rect.Left}, {rect.Top}) size {rect.Right - rect.Left}x{rect.Bottom - rect.Top}");
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets the offset that needs to be added to window-relative coordinates to get screen coordinates.
+        /// </summary>
+        public static Point GetGameWindowOffset()
+        {
+            nint hwnd = FindToontownWindow();
+            if (hwnd == IntPtr.Zero)
+                return Point.Empty;
+
+            RECT rect;
+            if (GetWindowRect(hwnd, out rect))
+            {
+                return new Point(rect.Left, rect.Top);
+            }
+            return Point.Empty;
+        }
+
+        /// <summary>
+        /// Checks if the Toontown window is running and visible.
+        /// </summary>
+        public static bool IsGameWindowReady()
+        {
+            nint hwnd = FindToontownWindow();
+            if (hwnd == IntPtr.Zero)
+                return false;
+
+            return IsWindowVisible(hwnd);
+        }
+
+        /// <summary>
+        /// Gets the current position and size of the Toontown window.
+        /// </summary>
+        public static Rectangle GetGameWindowRect()
+        {
+            nint hwnd = FindToontownWindow();
+            if (hwnd == IntPtr.Zero)
+                return Rectangle.Empty;
+
+            RECT rect;
+            if (GetWindowRect(hwnd, out rect))
+            {
+                return new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
+            }
+            return Rectangle.Empty;
+        }
+
+        // Window show commands
+        private const int SW_RESTORE = 9;
+        private const int SW_MAXIMIZE = 3;
+        private const int SW_MINIMIZE = 6;
+        private const int SW_SHOWNORMAL = 1;
+
+        // SetWindowPos flags
+        private const uint SWP_NOZORDER = 0x0004;
+        private const uint SWP_SHOWWINDOW = 0x0040;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern bool IsWindowVisible(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        /// <summary>
         /// Brings the Toontown Rewritten Bot window to the foreground.
         /// </summary>
         /// <remarks>
