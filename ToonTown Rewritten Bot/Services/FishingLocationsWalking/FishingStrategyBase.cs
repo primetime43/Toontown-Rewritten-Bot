@@ -65,7 +65,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         protected async Task CastLine(bool fishVariance, CancellationToken cancellationToken)
         {
-            var (x, y) = CoordinatesManager.GetCoordsFromMap(FishingCoordinatesEnum.RedFishingButton);
+            // Use image recognition to find the red fishing button (will prompt for template capture if needed)
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
 
             int randX = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
             int randY = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
@@ -76,7 +77,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         protected async Task<bool> CheckIfFishCaught(CancellationToken cancellationToken)
         {
-            var (x, y) = CoordinatesManager.GetCoordsFromMap(FishingCoordinatesEnum.RedFishingButton);
+            // Use cached coords from image rec (already found during CastLine)
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
             string color = HexConverter(GetColorAt(x, y - 600));
             if (color.Equals("#FFFFBE") || color.Equals("#FFFFBF")) return true;
 
@@ -86,36 +88,20 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         protected async Task ExitFishing(CancellationToken cancellationToken)
         {
-            if (CoordinatesManager.CheckCoordinates(FishingCoordinatesEnum.ExitFishingButton))
-            {
-                var (x, y) = CoordinatesManager.GetCoordsFromMap(FishingCoordinatesEnum.ExitFishingButton);
-                MoveCursor(x, y);
-                DoMouseClick();
-            }
-            else
-            {
-                await CoordinatesManager.ManualUpdateCoordinates(FishingCoordinatesEnum.ExitFishingButton);
-                await ExitFishing(cancellationToken);
-            }
+            // Use image recognition to find exit button (will prompt for template capture if needed)
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.ExitFishingButton);
+            MoveCursor(x, y);
+            DoMouseClick();
             await Task.Delay(2000, cancellationToken);
         }
 
         protected async Task SellFishAsync(CancellationToken cancellationToken)
         {
-        retry:
-            if (CoordinatesManager.CheckCoordinates(FishingCoordinatesEnum.BlueSellAllButton))//returns true if they are not 0,0
-            {
-                await Task.Delay(2100, cancellationToken);
-                var (x, y) = CoordinatesManager.GetCoordsFromMap(FishingCoordinatesEnum.BlueSellAllButton);
-                MoveCursor(x, y);
-                DoMouseClick();
-            }
-            else
-            {
-                await CoordinatesManager.ManualUpdateCoordinates(FishingCoordinatesEnum.BlueSellAllButton);
-                //imgRecLocateSellBtn();
-                goto retry;
-            }
+            await Task.Delay(2100, cancellationToken);
+            // Use image recognition to find sell button (will prompt for template capture if needed)
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.BlueSellAllButton);
+            MoveCursor(x, y);
+            DoMouseClick();
             await Task.Delay(2000, cancellationToken);
         }
 

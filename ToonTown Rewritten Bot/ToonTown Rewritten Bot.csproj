@@ -133,4 +133,8 @@
     <!-- Tesseract OCR for reading text/numbers from the game -->
     <PackageReference Include="Tesseract" Version="5.2.0" />
   </ItemGroup>
+  <!-- Copy Templates folder to output directory -->
+  <ItemGroup>
+    <None Include="Templates\**\*" CopyToOutputDirectory="PreserveNewest" LinkBase="Templates" />
+  </ItemGroup>
 </Project>
