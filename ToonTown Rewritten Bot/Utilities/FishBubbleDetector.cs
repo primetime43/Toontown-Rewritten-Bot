@@ -303,7 +303,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             // destY = 846 + (169/428) * (820 - bubbleY)
 
             double factorX = 120.0 / 429.0;
-            double factorY = 169.0 / 428.0;  // Original formula from MouseClickSimulator
+            double factorY = 220.0 / 428.0;  // Increased from 169 to reach far fish better
 
             double yAdjustment = 0.75 + ((double)(BubbleRefY - bubbleY) / BubbleRefY) * 0.38;
 
