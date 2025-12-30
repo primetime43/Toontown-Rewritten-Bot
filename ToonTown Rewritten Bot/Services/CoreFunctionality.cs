@@ -126,7 +126,8 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
-        /// Focuses the TTR window without changing its size/position.
+        /// Focuses and maximizes the TTR window without the screen shake.
+        /// Uses restore→maximize (no minimize step which causes shake).
         /// </summary>
         public static void FocusTTRWindow()
         {
@@ -134,6 +135,11 @@ namespace ToonTown_Rewritten_Bot.Services
             if (hwnd == IntPtr.Zero)
                 return;
 
+            // Restore first if minimized, then maximize - no minimize step to avoid shake
+            ShowWindow(hwnd, SW_RESTORE);
+            Thread.Sleep(50);
+            ShowWindow(hwnd, SW_MAXIMIZE);
+            Thread.Sleep(50);
             SetForegroundWindow(hwnd);
         }
 
