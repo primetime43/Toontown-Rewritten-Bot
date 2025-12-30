@@ -66,7 +66,7 @@ Table of Contents
 </details>
 
 ## Requirements
-- [Microsoft .NET Framework 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
+- [Microsoft .NET 10.0](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 
 <br>
 
