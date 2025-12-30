@@ -17,7 +17,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
 {
     class ImageRecognition
     {
-        public static Image GetWindowScreenshot()
+        /// <summary>
+        /// Captures a screenshot of the game window.
+        /// </summary>
+        /// <param name="captureBackground">If true, captures the window even when obscured by other windows</param>
+        /// <returns>Screenshot of the game window</returns>
+        public static Image GetWindowScreenshot(bool captureBackground = true)
         {
             string windowName = "Toontown Rewritten";
             // Find the window by name
@@ -31,14 +36,79 @@ namespace ToonTown_Rewritten_Bot.Utilities
             NativeMethods.Rect windowRect = new NativeMethods.Rect();
             NativeMethods.GetWindowRect(windowHandle, ref windowRect);
 
-            // Take a screenshot of the window
-            Bitmap screenshot = new Bitmap(windowRect.Width, windowRect.Height);
-            using (Graphics graphics = Graphics.FromImage(screenshot))
+            if (captureBackground)
             {
-                graphics.CopyFromScreen(windowRect.Left, windowRect.Top, 0, 0, screenshot.Size);
+                // Use PrintWindow to capture even when window is behind other windows
+                return CaptureWindowWithPrintWindow(windowHandle, windowRect.Width, windowRect.Height);
+            }
+            else
+            {
+                // Traditional screen capture (only works when window is visible)
+                Bitmap screenshot = new Bitmap(windowRect.Width, windowRect.Height);
+                using (Graphics graphics = Graphics.FromImage(screenshot))
+                {
+                    graphics.CopyFromScreen(windowRect.Left, windowRect.Top, 0, 0, screenshot.Size);
+                }
+                return screenshot;
+            }
+        }
+
+        /// <summary>
+        /// Captures a window using PrintWindow API, which works even when the window is obscured.
+        /// </summary>
+        private static Bitmap CaptureWindowWithPrintWindow(nint windowHandle, int width, int height)
+        {
+            Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+
+            using (Graphics graphics = Graphics.FromImage(bitmap))
+            {
+                IntPtr hdc = graphics.GetHdc();
+                try
+                {
+                    // PW_RENDERFULLCONTENT (0x2) works better with DWM/hardware-accelerated windows
+                    bool success = NativeMethods.PrintWindow(windowHandle, hdc, NativeMethods.PW_RENDERFULLCONTENT);
+
+                    if (!success)
+                    {
+                        // Fallback: try without the flag
+                        success = NativeMethods.PrintWindow(windowHandle, hdc, 0);
+                    }
+
+                    if (!success)
+                    {
+                        // If PrintWindow fails completely, fall back to screen capture
+                        graphics.ReleaseHdc(hdc);
+                        NativeMethods.Rect windowRect = new NativeMethods.Rect();
+                        NativeMethods.GetWindowRect(windowHandle, ref windowRect);
+                        graphics.CopyFromScreen(windowRect.Left, windowRect.Top, 0, 0, bitmap.Size);
+                        return bitmap;
+                    }
+                }
+                finally
+                {
+                    graphics.ReleaseHdc(hdc);
+                }
             }
 
-            return screenshot;
+            return bitmap;
+        }
+
+        /// <summary>
+        /// Gets the game window handle.
+        /// </summary>
+        /// <returns>Window handle or IntPtr.Zero if not found</returns>
+        public static IntPtr GetGameWindowHandle()
+        {
+            return NativeMethods.FindWindow(null, "Toontown Rewritten");
+        }
+
+        /// <summary>
+        /// Checks if the game window exists and is visible.
+        /// </summary>
+        public static bool IsGameWindowAvailable()
+        {
+            IntPtr handle = GetGameWindowHandle();
+            return handle != IntPtr.Zero && NativeMethods.IsWindow(handle);
         }
 
         public static async Task<Point> locateColorInImage(Image screenShot, string hexValue, int tolerance)
@@ -108,6 +178,28 @@ namespace ToonTown_Rewritten_Bot.Utilities
             [DllImport("user32.dll")]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+            [DllImport("user32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool PrintWindow(IntPtr hwnd, IntPtr hdcBlt, uint nFlags);
+
+            [DllImport("user32.dll")]
+            public static extern IntPtr GetWindowDC(IntPtr hWnd);
+
+            [DllImport("user32.dll")]
+            public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
+            [DllImport("user32.dll")]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool IsWindow(IntPtr hWnd);
+
+            [DllImport("user32.dll")]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool IsWindowVisible(IntPtr hWnd);
+
+            // PrintWindow flags
+            public const uint PW_CLIENTONLY = 0x00000001;
+            public const uint PW_RENDERFULLCONTENT = 0x00000002; // Works better with DWM/hardware acceleration
         }
         #endregion
     }

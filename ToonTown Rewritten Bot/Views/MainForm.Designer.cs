@@ -1018,42 +1018,42 @@
             groupBox9.Size = new System.Drawing.Size(245, 156);
             groupBox9.TabIndex = 8;
             groupBox9.TabStop = false;
-            groupBox9.Text = "Image Rec";
-            groupBox9.Visible = false;
-            // 
+            groupBox9.Text = "Image Recognition";
+            groupBox9.Visible = true;
+            //
             // label11
-            // 
+            //
             label11.AutoSize = true;
             label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            label11.Location = new System.Drawing.Point(36, 21);
+            label11.Location = new System.Drawing.Point(10, 18);
             label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label11.Name = "label11";
-            label11.Size = new System.Drawing.Size(154, 30);
+            label11.Size = new System.Drawing.Size(220, 30);
             label11.TabIndex = 3;
-            label11.Text = "Update the images the bot \r\nuses for image recognition";
-            // 
+            label11.Text = "Debug tools for template matching\r\nand OCR text recognition";
+            //
             // updateImagesBtn
-            // 
-            updateImagesBtn.Location = new System.Drawing.Point(40, 59);
+            //
+            updateImagesBtn.Location = new System.Drawing.Point(10, 55);
             updateImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             updateImagesBtn.Name = "updateImagesBtn";
-            updateImagesBtn.Size = new System.Drawing.Size(163, 38);
+            updateImagesBtn.Size = new System.Drawing.Size(225, 40);
             updateImagesBtn.TabIndex = 2;
-            updateImagesBtn.Text = "Update Images";
+            updateImagesBtn.Text = "Open Debug Window";
             updateImagesBtn.UseVisualStyleBackColor = true;
-            updateImagesBtn.Click += updateImagesBtn_Click;
-            // 
+            updateImagesBtn.Click += openImageRecDebugBtn_Click;
+            //
             // resetImagesBtn
-            // 
-            resetImagesBtn.Location = new System.Drawing.Point(40, 104);
+            //
+            resetImagesBtn.Location = new System.Drawing.Point(10, 102);
             resetImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             resetImagesBtn.Name = "resetImagesBtn";
-            resetImagesBtn.Size = new System.Drawing.Size(163, 38);
+            resetImagesBtn.Size = new System.Drawing.Size(225, 40);
             resetImagesBtn.TabIndex = 0;
-            resetImagesBtn.Text = "Reset All Images";
-            toolTip1.SetToolTip(resetImagesBtn, "This will reset all of your images!");
+            resetImagesBtn.Text = "Download OCR Data";
+            toolTip1.SetToolTip(resetImagesBtn, "Download OCR language data for text recognition (automatic)");
             resetImagesBtn.UseVisualStyleBackColor = true;
-            resetImagesBtn.Click += resetImagesBtn_Click;
+            resetImagesBtn.Click += downloadOcrDataBtn_Click;
             // 
             // label5
             // 
