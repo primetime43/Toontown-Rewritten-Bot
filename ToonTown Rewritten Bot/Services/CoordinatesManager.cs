@@ -283,7 +283,7 @@ namespace ToonTown_Rewritten_Bot.Services
             string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
             File.WriteAllText(CoordinatesFilePath, updatedJson);
 
-            CoreFunctionality.MaximizeAndFocusTTRWindow();
+            CoreFunctionality.FocusTTRWindow();
         }
 
         public async Task ManualUpdateCoordinates(string locationToUpdate)

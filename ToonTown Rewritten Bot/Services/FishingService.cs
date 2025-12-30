@@ -80,8 +80,8 @@ namespace ToonTown_Rewritten_Bot.Services
             CustomActionsFishing customFishing = new CustomActionsFishing(jsonPath);
 
             // Prepare
-            MaximizeAndFocusTTRWindow();
-            await Task.Delay(3000, CancellationToken.None); // Initial delay before starting.
+            FocusTTRWindow();
+            await Task.Delay(1000, CancellationToken.None); // Initial delay before starting.
             await customFishing.LeaveDockAndSellAsync(CancellationToken.None); // Start the action sequence
             MessageBox.Show("Done Debugging Custom Action");
         }
