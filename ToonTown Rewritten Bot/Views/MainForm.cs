@@ -276,14 +276,14 @@ namespace ToonTown_Rewritten_Bot
                     }
                     else
                     {
-                        await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, filePath + ".json"); // Perform custom fishing actions
+                        await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, filePath + ".json", autoDetectFishCheckBox.Checked); // Perform custom fishing actions
                     }
                 }
                 else
                 {
                     FishingLocationMessages.TellFishingLocation(selectedLocation); // Provide location-specific messages
                     MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
-                    await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token); // Start standard fishing
+                    await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, "", autoDetectFishCheckBox.Checked); // Start standard fishing
                 }
             }
             catch (TaskCanceledException)
@@ -318,13 +318,6 @@ namespace ToonTown_Rewritten_Bot
             MessageBox.Show("Fishing stopped!");
         }
 
-        private void smartFishing_CheckedChanged(object sender, EventArgs e)
-        {
-            if (smartFishing.Checked)
-                CoreFunctionality.isAutoDetectFishingBtnActive = true;
-            else
-                CoreFunctionality.isAutoDetectFishingBtnActive = false;
-        }
 
         private async void button5_Click(object sender, EventArgs e)//racing test
         {

@@ -45,7 +45,7 @@
             button4 = new System.Windows.Forms.Button();
             customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
             randomFishingCheckBox = new System.Windows.Forms.CheckBox();
-            smartFishing = new System.Windows.Forms.CheckBox();
+            autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
             label4 = new System.Windows.Forms.Label();
             numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             label3 = new System.Windows.Forms.Label();
@@ -271,11 +271,11 @@
             // 
             // groupBox6
             // 
+            groupBox6.Controls.Add(autoDetectFishCheckBox);
             groupBox6.Controls.Add(debugCustomActionsCheckBox);
             groupBox6.Controls.Add(button4);
             groupBox6.Controls.Add(customFishingFilesComboBox);
             groupBox6.Controls.Add(randomFishingCheckBox);
-            groupBox6.Controls.Add(smartFishing);
             groupBox6.Controls.Add(label4);
             groupBox6.Controls.Add(numericUpDown4);
             groupBox6.Controls.Add(label3);
@@ -338,21 +338,18 @@
             toolTip1.SetToolTip(randomFishingCheckBox, "This add some randomness and will make it so you \r\nwon't cast your line at the same spot every time!");
             randomFishingCheckBox.UseVisualStyleBackColor = true;
             randomFishingCheckBox.CheckedChanged += randomFishing_CheckedChanged;
-            // 
-            // smartFishing
-            // 
-            smartFishing.AutoSize = true;
-            smartFishing.Checked = true;
-            smartFishing.CheckState = System.Windows.Forms.CheckState.Checked;
-            smartFishing.Location = new System.Drawing.Point(194, 70);
-            smartFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            smartFishing.Name = "smartFishing";
-            smartFishing.Size = new System.Drawing.Size(183, 20);
-            smartFishing.TabIndex = 10;
-            smartFishing.Text = "Auto Detect Casting Button";
-            toolTip1.SetToolTip(smartFishing, "Detects the red casting button itself");
-            smartFishing.UseVisualStyleBackColor = true;
-            smartFishing.CheckedChanged += smartFishing_CheckedChanged;
+            //
+            // autoDetectFishCheckBox
+            //
+            autoDetectFishCheckBox.AutoSize = true;
+            autoDetectFishCheckBox.Location = new System.Drawing.Point(7, 140);
+            autoDetectFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            autoDetectFishCheckBox.Name = "autoDetectFishCheckBox";
+            autoDetectFishCheckBox.Size = new System.Drawing.Size(180, 20);
+            autoDetectFishCheckBox.TabIndex = 14;
+            autoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
+            toolTip1.SetToolTip(autoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them");
+            autoDetectFishCheckBox.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -1256,7 +1253,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button updateImagesBtn;
         private System.Windows.Forms.Button resetImagesBtn;
-        public System.Windows.Forms.CheckBox smartFishing;
+        private System.Windows.Forms.CheckBox autoDetectFishCheckBox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button createCustomFishingActionsBtn;
         private System.Windows.Forms.ComboBox customFishingFilesComboBox;

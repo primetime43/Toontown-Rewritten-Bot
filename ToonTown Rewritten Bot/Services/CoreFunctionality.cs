@@ -17,8 +17,6 @@ namespace ToonTown_Rewritten_Bot.Services
 {
     public class CoreFunctionality
     {
-        public static bool isAutoDetectFishingBtnActive = true;
-
         public static void DoMouseClick()
         {
             DoMouseClick(getCursorLocation());
@@ -26,14 +24,42 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static void DoFishingClick()
         {
-            //click red button
-            DoMouseClickDown(getCursorLocation());
-            Thread.Sleep(500);//sleep 2 sec
+            // Get current cursor position (set by CastLine to the red fishing button location)
+            Point startPos = getCursorLocation();
 
-            // Retrieve coordinates for the red fishing button from the JSON-based coordinates map
-            (int x, int y) = CoordinatesManager.GetCoordsFromMap(FishingCoordinatesEnum.RedFishingButton);
-            MoveCursor(x, y + 150);//pull it back
+            // Click down at the current cursor position (on the red fishing button)
+            DoMouseClickDown(startPos);
             Thread.Sleep(500);
+
+            // Drag DOWN from where we clicked to cast the line forward
+            // The drag direction is opposite of cast direction - dragging down casts forward into the water
+            MoveCursor(startPos.X, startPos.Y + 150);
+            Thread.Sleep(500);
+            DoMouseClickUp(getCursorLocation());
+        }
+
+        /// <summary>
+        /// Performs a fishing click with a custom drag destination for auto-detect fishing.
+        /// Uses the same proven mechanism as DoFishingClick.
+        /// </summary>
+        /// <param name="destinationX">Screen X coordinate to drag to</param>
+        /// <param name="destinationY">Screen Y coordinate to drag to</param>
+        public static void DoFishingClickWithDestination(int destinationX, int destinationY)
+        {
+            // Get current cursor position (should be on the red fishing button)
+            Point startPos = getCursorLocation();
+
+            System.Diagnostics.Debug.WriteLine($"[DoFishingClickWithDestination] Start: ({startPos.X}, {startPos.Y}) -> Dest: ({destinationX}, {destinationY})");
+
+            // Click down at the current cursor position (on the red fishing button)
+            DoMouseClickDown(startPos);
+            Thread.Sleep(500);
+
+            // Drag to the calculated destination
+            MoveCursor(destinationX, destinationY);
+            Thread.Sleep(500);
+
+            // Release to cast
             DoMouseClickUp(getCursorLocation());
         }
         private static void DoMouseClick(Point location)//simulate left button mouse click
@@ -44,14 +70,14 @@ namespace ToonTown_Rewritten_Bot.Services
             mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, X, Y, 0, 0);
         }
 
-        private static void DoMouseClickDown(Point location)
+        public static void DoMouseClickDown(Point location)
         {
             uint X = Convert.ToUInt32(location.X);
             uint Y = Convert.ToUInt32(location.Y);
             mouse_event(MOUSEEVENTF_LEFTDOWN, X, Y, 0, 0);
         }
 
-        private static void DoMouseClickUp(Point location)
+        public static void DoMouseClickUp(Point location)
         {
             uint X = Convert.ToUInt32(location.X);
             uint Y = Convert.ToUInt32(location.Y);
@@ -84,12 +110,31 @@ namespace ToonTown_Rewritten_Bot.Services
             Cursor.Position = new Point(x, y);
         }
 
-        // Maximizes and Focuces TTR
+        // Maximizes and Focuses TTR
         public static void MaximizeAndFocusTTRWindow()
         {
             nint hwnd = FindToontownWindow();
-            ShowWindow(hwnd, 6);//6 min
-            ShowWindow(hwnd, 3);//3 max
+            if (hwnd == IntPtr.Zero)
+                return;
+
+            // Restore first if minimized, then maximize - DON'T minimize first as that causes screen shake
+            ShowWindow(hwnd, SW_RESTORE);
+            Thread.Sleep(50);
+            ShowWindow(hwnd, SW_MAXIMIZE);
+            Thread.Sleep(50);
+            SetForegroundWindow(hwnd);
+        }
+
+        /// <summary>
+        /// Focuses the TTR window without changing its size/position.
+        /// </summary>
+        public static void FocusTTRWindow()
+        {
+            nint hwnd = FindToontownWindow();
+            if (hwnd == IntPtr.Zero)
+                return;
+
+            SetForegroundWindow(hwnd);
         }
 
         /// <summary>
@@ -106,26 +151,13 @@ namespace ToonTown_Rewritten_Bot.Services
                 return false;
             }
 
-            // Get primary screen dimensions
-            var screen = Screen.PrimaryScreen.Bounds;
-
             // Restore window first if minimized
             ShowWindow(hwnd, SW_RESTORE);
             System.Threading.Thread.Sleep(100);
 
-            // Remove maximized state so we can position it manually
-            ShowWindow(hwnd, SW_SHOWNORMAL);
-            System.Threading.Thread.Sleep(50);
-
-            // Position window at (0, 0) and size it to fill the screen
-            // SWP_NOZORDER (0x0004) keeps the Z-order, SWP_SHOWWINDOW (0x0040) shows the window
-            bool positioned = SetWindowPos(hwnd, IntPtr.Zero, 0, 0, screen.Width, screen.Height, SWP_NOZORDER | SWP_SHOWWINDOW);
-
-            if (!positioned)
-            {
-                System.Diagnostics.Debug.WriteLine("[CoreFunctionality] SetWindowPos failed, falling back to maximize");
-                ShowWindow(hwnd, SW_MAXIMIZE);
-            }
+            // Maximize the window (same as clicking the maximize button)
+            ShowWindow(hwnd, SW_MAXIMIZE);
+            System.Threading.Thread.Sleep(100);
 
             // Bring to foreground
             SetForegroundWindow(hwnd);
@@ -137,7 +169,7 @@ namespace ToonTown_Rewritten_Bot.Services
             RECT rect;
             if (GetWindowRect(hwnd, out rect))
             {
-                System.Diagnostics.Debug.WriteLine($"[CoreFunctionality] Game window positioned at ({rect.Left}, {rect.Top}) size {rect.Right - rect.Left}x{rect.Bottom - rect.Top}");
+                System.Diagnostics.Debug.WriteLine($"[CoreFunctionality] Game window maximized at ({rect.Left}, {rect.Top}) size {rect.Right - rect.Left}x{rect.Bottom - rect.Top}");
             }
 
             return true;
