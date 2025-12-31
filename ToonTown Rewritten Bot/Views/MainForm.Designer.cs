@@ -108,6 +108,13 @@
             resetImagesBtn = new System.Windows.Forms.Button();
             label5 = new System.Windows.Forms.Label();
             groupBox7 = new System.Windows.Forms.GroupBox();
+            groupBoxTemplates = new System.Windows.Forms.GroupBox();
+            comboBoxTemplateItems = new System.Windows.Forms.ComboBox();
+            btnCaptureTemplate = new System.Windows.Forms.Button();
+            btnViewTemplate = new System.Windows.Forms.Button();
+            labelTemplateStatus = new System.Windows.Forms.Label();
+            btnAddTemplateItem = new System.Windows.Forms.Button();
+            btnOpenTemplateDefinitions = new System.Windows.Forms.Button();
             button2 = new System.Windows.Forms.Button();
             button6 = new System.Windows.Forms.Button();
             comboBox1 = new System.Windows.Forms.ComboBox();
@@ -989,9 +996,10 @@
             toolTip1.SetToolTip(startSpamButton, "Press the ALT key to stop the spamming loop at any time!");
             startSpamButton.UseVisualStyleBackColor = true;
             startSpamButton.Click += startSpamButton_Click;
-            // 
+            //
             // Dev
-            // 
+            //
+            Dev.Controls.Add(groupBoxTemplates);
             Dev.Controls.Add(groupBox9);
             Dev.Controls.Add(label5);
             Dev.Controls.Add(groupBox7);
@@ -1121,7 +1129,94 @@
             toolTip1.SetToolTip(button7, "This will reset all of your coordinates!");
             button7.UseVisualStyleBackColor = true;
             button7.Click += button7_Click;
-            // 
+            //
+            // groupBoxTemplates
+            //
+            groupBoxTemplates.Controls.Add(btnOpenTemplateDefinitions);
+            groupBoxTemplates.Controls.Add(btnAddTemplateItem);
+            groupBoxTemplates.Controls.Add(labelTemplateStatus);
+            groupBoxTemplates.Controls.Add(btnCaptureTemplate);
+            groupBoxTemplates.Controls.Add(btnViewTemplate);
+            groupBoxTemplates.Controls.Add(comboBoxTemplateItems);
+            groupBoxTemplates.Location = new System.Drawing.Point(9, 197);
+            groupBoxTemplates.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxTemplates.Name = "groupBoxTemplates";
+            groupBoxTemplates.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxTemplates.Size = new System.Drawing.Size(526, 115);
+            groupBoxTemplates.TabIndex = 9;
+            groupBoxTemplates.TabStop = false;
+            groupBoxTemplates.Text = "Item Templates (File-Based)";
+            //
+            // comboBoxTemplateItems
+            //
+            comboBoxTemplateItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBoxTemplateItems.Location = new System.Drawing.Point(7, 22);
+            comboBoxTemplateItems.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBoxTemplateItems.Name = "comboBoxTemplateItems";
+            comboBoxTemplateItems.Size = new System.Drawing.Size(280, 24);
+            comboBoxTemplateItems.TabIndex = 0;
+            toolTip1.SetToolTip(comboBoxTemplateItems, "Select a UI element to capture or update its template");
+            comboBoxTemplateItems.SelectedIndexChanged += comboBoxTemplateItems_SelectedIndexChanged;
+            //
+            // btnCaptureTemplate
+            //
+            btnCaptureTemplate.Location = new System.Drawing.Point(295, 20);
+            btnCaptureTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnCaptureTemplate.Name = "btnCaptureTemplate";
+            btnCaptureTemplate.Size = new System.Drawing.Size(70, 28);
+            btnCaptureTemplate.TabIndex = 1;
+            btnCaptureTemplate.Text = "Capture";
+            toolTip1.SetToolTip(btnCaptureTemplate, "Capture a new template for the selected item");
+            btnCaptureTemplate.UseVisualStyleBackColor = true;
+            btnCaptureTemplate.Click += btnCaptureTemplate_Click;
+            //
+            // btnViewTemplate
+            //
+            btnViewTemplate.Location = new System.Drawing.Point(370, 20);
+            btnViewTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnViewTemplate.Name = "btnViewTemplate";
+            btnViewTemplate.Size = new System.Drawing.Size(70, 28);
+            btnViewTemplate.TabIndex = 2;
+            btnViewTemplate.Text = "View";
+            toolTip1.SetToolTip(btnViewTemplate, "View the existing template for the selected item");
+            btnViewTemplate.UseVisualStyleBackColor = true;
+            btnViewTemplate.Click += btnViewTemplate_Click;
+            //
+            // btnAddTemplateItem
+            //
+            btnAddTemplateItem.Location = new System.Drawing.Point(445, 20);
+            btnAddTemplateItem.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnAddTemplateItem.Name = "btnAddTemplateItem";
+            btnAddTemplateItem.Size = new System.Drawing.Size(70, 28);
+            btnAddTemplateItem.TabIndex = 4;
+            btnAddTemplateItem.Text = "Add New";
+            toolTip1.SetToolTip(btnAddTemplateItem, "Add a new template item definition");
+            btnAddTemplateItem.UseVisualStyleBackColor = true;
+            btnAddTemplateItem.Click += btnAddTemplateItem_Click;
+            //
+            // labelTemplateStatus
+            //
+            labelTemplateStatus.AutoSize = true;
+            labelTemplateStatus.Location = new System.Drawing.Point(7, 55);
+            labelTemplateStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelTemplateStatus.Name = "labelTemplateStatus";
+            labelTemplateStatus.Size = new System.Drawing.Size(200, 16);
+            labelTemplateStatus.TabIndex = 3;
+            labelTemplateStatus.Text = "Select an item to view template status";
+            labelTemplateStatus.ForeColor = System.Drawing.Color.Gray;
+            //
+            // btnOpenTemplateDefinitions
+            //
+            btnOpenTemplateDefinitions.Location = new System.Drawing.Point(7, 80);
+            btnOpenTemplateDefinitions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnOpenTemplateDefinitions.Name = "btnOpenTemplateDefinitions";
+            btnOpenTemplateDefinitions.Size = new System.Drawing.Size(150, 28);
+            btnOpenTemplateDefinitions.TabIndex = 5;
+            btnOpenTemplateDefinitions.Text = "Edit Definitions File";
+            toolTip1.SetToolTip(btnOpenTemplateDefinitions, "Open the TemplateDefinitions.json file to manually edit items");
+            btnOpenTemplateDefinitions.UseVisualStyleBackColor = true;
+            btnOpenTemplateDefinitions.Click += btnOpenTemplateDefinitions_Click;
+            //
             // toolTip1
             // 
             toolTip1.ShowAlways = true;
@@ -1253,6 +1348,13 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button updateImagesBtn;
         private System.Windows.Forms.Button resetImagesBtn;
+        private System.Windows.Forms.GroupBox groupBoxTemplates;
+        private System.Windows.Forms.ComboBox comboBoxTemplateItems;
+        private System.Windows.Forms.Button btnCaptureTemplate;
+        private System.Windows.Forms.Button btnViewTemplate;
+        private System.Windows.Forms.Label labelTemplateStatus;
+        private System.Windows.Forms.Button btnAddTemplateItem;
+        private System.Windows.Forms.Button btnOpenTemplateDefinitions;
         private System.Windows.Forms.CheckBox autoDetectFishCheckBox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button createCustomFishingActionsBtn;

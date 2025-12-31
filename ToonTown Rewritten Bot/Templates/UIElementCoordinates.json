@@ -47,5 +47,12 @@
     "ManualCoordinates": null,
     "CachedCenter": "80, 259",
     "LastFoundTime": "2025-12-30T04:04:26.8506834-05:00"
+  },
+  "Sticker Book": {
+    "Name": "Sticker Book",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Sticker_Book.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
   }
 }
