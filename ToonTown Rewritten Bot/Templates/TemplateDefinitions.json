@@ -1,122 +1,147 @@
 [
   {
+    "Key": 1,
     "Name": "Plant Flower/Remove Button",
     "Category": "Gardening"
   },
   {
+    "Key": 2,
     "Name": "Red Jellybean Button",
     "Category": "Gardening"
   },
   {
+    "Key": 3,
     "Name": "Green Jellybean Button",
     "Category": "Gardening"
   },
   {
+    "Key": 4,
     "Name": "Orange Jellybean Button",
     "Category": "Gardening"
   },
   {
+    "Key": 5,
     "Name": "Purple Jellybean Button",
     "Category": "Gardening"
   },
   {
+    "Key": 6,
     "Name": "Blue Jellybean Button",
     "Category": "Gardening"
   },
   {
+    "Key": 7,
     "Name": "Pink Jellybean Button",
     "Category": "Gardening"
   },
   {
+    "Key": 8,
     "Name": "Yellow Jellybean Button",
     "Category": "Gardening"
   },
   {
+    "Key": 9,
     "Name": "Cyan Jellybean Button",
     "Category": "Gardening"
   },
   {
+    "Key": 10,
     "Name": "Silver Jellybean Button",
     "Category": "Gardening"
   },
   {
+    "Key": 11,
     "Name": "Blue Plant Button",
     "Category": "Gardening"
   },
   {
+    "Key": 12,
     "Name": "Blue Ok Button",
     "Category": "Gardening"
   },
   {
+    "Key": 13,
     "Name": "Watering Can Button",
     "Category": "Gardening"
   },
   {
+    "Key": 14,
     "Name": "Blue Yes Button",
     "Category": "Gardening"
   },
   {
+    "Key": 15,
     "Name": "Red Fishing Button",
     "Category": "Fishing"
   },
   {
+    "Key": 16,
     "Name": "Exit Fishing Button",
     "Category": "Fishing"
   },
   {
+    "Key": 17,
     "Name": "Blue Sell All Button",
     "Category": "Fishing"
   },
   {
+    "Key": 18,
     "Name": "Feed Doodle Button",
     "Category": "Doodle Training"
   },
   {
+    "Key": 19,
     "Name": "Scratch Doodle Button",
     "Category": "Doodle Training"
   },
   {
+    "Key": 20,
     "Name": "Green SpeedChat Button",
     "Category": "Doodle Training"
   },
   {
+    "Key": 21,
     "Name": "Pets Tab in SpeedChat",
     "Category": "Doodle Training"
   },
   {
+    "Key": 22,
     "Name": "Tricks Tab in SpeedChat",
     "Category": "Doodle Training"
   },
   {
+    "Key": 23,
     "Name": "Jump Trick Option in SpeedChat",
     "Category": "Doodle Training"
   },
   {
+    "Key": 24,
     "Name": "Beg Trick Option in SpeedChat",
     "Category": "Doodle Training"
   },
   {
+    "Key": 25,
     "Name": "Play Dead Trick Option in SpeedChat",
     "Category": "Doodle Training"
   },
   {
+    "Key": 26,
     "Name": "Rollover Trick Option in SpeedChat",
     "Category": "Doodle Training"
   },
   {
+    "Key": 27,
     "Name": "Backflip Trick Option in SpeedChat",
     "Category": "Doodle Training"
   },
   {
+    "Key": 28,
     "Name": "Dance Trick Option in SpeedChat",
     "Category": "Doodle Training"
   },
   {
+    "Key": 29,
     "Name": "Speak Trick Option in SpeedChat",
     "Category": "Doodle Training"
-  },
-  {
-    "Name": "Sticker Book",
-    "Category": "Misc"
   }
 ]

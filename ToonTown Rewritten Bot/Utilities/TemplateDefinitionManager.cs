@@ -19,6 +19,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         private readonly string _definitionsFilePath;
         private List<TemplateDefinition> _definitions;
+        private int _nextKey = 1;
 
         private TemplateDefinitionManager()
         {
@@ -60,6 +61,20 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     string json = File.ReadAllText(_definitionsFilePath);
                     _definitions = JsonSerializer.Deserialize<List<TemplateDefinition>>(json,
                         new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<TemplateDefinition>();
+
+                    // Handle existing files without keys - assign keys to items that don't have them
+                    bool needsSave = false;
+                    int maxKey = _definitions.Where(d => d.Key > 0).Select(d => d.Key).DefaultIfEmpty(0).Max();
+                    _nextKey = maxKey + 1;
+
+                    foreach (var def in _definitions.Where(d => d.Key == 0))
+                    {
+                        def.Key = _nextKey++;
+                        needsSave = true;
+                    }
+
+                    if (needsSave)
+                        SaveDefinitions();
                 }
                 catch
                 {
@@ -76,45 +91,46 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         private void CreateDefaultDefinitions()
         {
-            // Add default definitions from the original CoordinateActions
+            // Add default definitions with keys matching the original CoordinateActions
             _definitions = new List<TemplateDefinition>
             {
-                // Gardening
-                new TemplateDefinition { Name = "Plant Flower/Remove Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Red Jellybean Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Green Jellybean Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Orange Jellybean Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Purple Jellybean Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Blue Jellybean Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Pink Jellybean Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Yellow Jellybean Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Cyan Jellybean Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Silver Jellybean Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Blue Plant Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Blue Ok Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Watering Can Button", Category = "Gardening" },
-                new TemplateDefinition { Name = "Blue Yes Button", Category = "Gardening" },
+                // Gardening (keys 1-14)
+                new TemplateDefinition { Key = 1, Name = "Plant Flower/Remove Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 2, Name = "Red Jellybean Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 3, Name = "Green Jellybean Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 4, Name = "Orange Jellybean Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 5, Name = "Purple Jellybean Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 6, Name = "Blue Jellybean Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 7, Name = "Pink Jellybean Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 8, Name = "Yellow Jellybean Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 9, Name = "Cyan Jellybean Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 10, Name = "Silver Jellybean Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 11, Name = "Blue Plant Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 12, Name = "Blue Ok Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 13, Name = "Watering Can Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 14, Name = "Blue Yes Button", Category = "Gardening" },
 
-                // Fishing
-                new TemplateDefinition { Name = "Red Fishing Button", Category = "Fishing" },
-                new TemplateDefinition { Name = "Exit Fishing Button", Category = "Fishing" },
-                new TemplateDefinition { Name = "Blue Sell All Button", Category = "Fishing" },
+                // Fishing (keys 15-17)
+                new TemplateDefinition { Key = 15, Name = "Red Fishing Button", Category = "Fishing" },
+                new TemplateDefinition { Key = 16, Name = "Exit Fishing Button", Category = "Fishing" },
+                new TemplateDefinition { Key = 17, Name = "Blue Sell All Button", Category = "Fishing" },
 
-                // Doodle Training
-                new TemplateDefinition { Name = "Feed Doodle Button", Category = "Doodle Training" },
-                new TemplateDefinition { Name = "Scratch Doodle Button", Category = "Doodle Training" },
-                new TemplateDefinition { Name = "Green SpeedChat Button", Category = "Doodle Training" },
-                new TemplateDefinition { Name = "Pets Tab in SpeedChat", Category = "Doodle Training" },
-                new TemplateDefinition { Name = "Tricks Tab in SpeedChat", Category = "Doodle Training" },
-                new TemplateDefinition { Name = "Jump Trick Option in SpeedChat", Category = "Doodle Training" },
-                new TemplateDefinition { Name = "Beg Trick Option in SpeedChat", Category = "Doodle Training" },
-                new TemplateDefinition { Name = "Play Dead Trick Option in SpeedChat", Category = "Doodle Training" },
-                new TemplateDefinition { Name = "Rollover Trick Option in SpeedChat", Category = "Doodle Training" },
-                new TemplateDefinition { Name = "Backflip Trick Option in SpeedChat", Category = "Doodle Training" },
-                new TemplateDefinition { Name = "Dance Trick Option in SpeedChat", Category = "Doodle Training" },
-                new TemplateDefinition { Name = "Speak Trick Option in SpeedChat", Category = "Doodle Training" }
+                // Doodle Training (keys 18-29)
+                new TemplateDefinition { Key = 18, Name = "Feed Doodle Button", Category = "Doodle Training" },
+                new TemplateDefinition { Key = 19, Name = "Scratch Doodle Button", Category = "Doodle Training" },
+                new TemplateDefinition { Key = 20, Name = "Green SpeedChat Button", Category = "Doodle Training" },
+                new TemplateDefinition { Key = 21, Name = "Pets Tab in SpeedChat", Category = "Doodle Training" },
+                new TemplateDefinition { Key = 22, Name = "Tricks Tab in SpeedChat", Category = "Doodle Training" },
+                new TemplateDefinition { Key = 23, Name = "Jump Trick Option in SpeedChat", Category = "Doodle Training" },
+                new TemplateDefinition { Key = 24, Name = "Beg Trick Option in SpeedChat", Category = "Doodle Training" },
+                new TemplateDefinition { Key = 25, Name = "Play Dead Trick Option in SpeedChat", Category = "Doodle Training" },
+                new TemplateDefinition { Key = 26, Name = "Rollover Trick Option in SpeedChat", Category = "Doodle Training" },
+                new TemplateDefinition { Key = 27, Name = "Backflip Trick Option in SpeedChat", Category = "Doodle Training" },
+                new TemplateDefinition { Key = 28, Name = "Dance Trick Option in SpeedChat", Category = "Doodle Training" },
+                new TemplateDefinition { Key = 29, Name = "Speak Trick Option in SpeedChat", Category = "Doodle Training" }
             };
 
+            _nextKey = 30;
             SaveDefinitions();
         }
 
@@ -171,6 +187,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             _definitions.Add(new TemplateDefinition
             {
+                Key = _nextKey++,
                 Name = name,
                 Category = category ?? "Custom"
             });
@@ -197,10 +214,38 @@ namespace ToonTown_Rewritten_Bot.Utilities
         }
 
         public string GetDefinitionsFilePath() => _definitionsFilePath;
+
+        // Key-based methods for backward compatibility with CoordinateActions
+        public string GetDescriptionByKey(string key)
+        {
+            if (int.TryParse(key, out int keyInt))
+            {
+                var def = _definitions.FirstOrDefault(d => d.Key == keyInt);
+                return def?.Name;
+            }
+            return null;
+        }
+
+        public string GetKeyByDescription(string description)
+        {
+            var def = _definitions.FirstOrDefault(d => d.Name.Equals(description, StringComparison.OrdinalIgnoreCase));
+            return def?.Key.ToString();
+        }
+
+        public Dictionary<string, string> GetAllDescriptions()
+        {
+            return _definitions.ToDictionary(d => d.Key.ToString(), d => d.Name);
+        }
+
+        public TemplateDefinition GetDefinitionByKey(int key)
+        {
+            return _definitions.FirstOrDefault(d => d.Key == key);
+        }
     }
 
     public class TemplateDefinition
     {
+        public int Key { get; set; }
         public string Name { get; set; }
         public string Category { get; set; } = "Custom";
     }

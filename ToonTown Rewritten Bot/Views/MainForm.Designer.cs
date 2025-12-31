@@ -41,11 +41,11 @@
             createCustomFishingActionsBtn = new System.Windows.Forms.Button();
             label12 = new System.Windows.Forms.Label();
             groupBox6 = new System.Windows.Forms.GroupBox();
+            autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
             debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
             button4 = new System.Windows.Forms.Button();
             customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
             randomFishingCheckBox = new System.Windows.Forms.CheckBox();
-            autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
             label4 = new System.Windows.Forms.Label();
             numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             label3 = new System.Windows.Forms.Label();
@@ -67,14 +67,14 @@
             selectFlowerBeanAmountBtn = new System.Windows.Forms.Button();
             Golf = new System.Windows.Forms.TabPage();
             groupBox10 = new System.Windows.Forms.GroupBox();
+            golfActionsPreviewLabel = new System.Windows.Forms.Label();
+            golfCourseSelectLabel = new System.Windows.Forms.Label();
             golfActionsListBox = new System.Windows.Forms.ListBox();
             customGolfFilesComboBox = new System.Windows.Forms.ComboBox();
             button1 = new System.Windows.Forms.Button();
-            createCustomGolfActionsBtn = new System.Windows.Forms.Button();
-            golfCourseSelectLabel = new System.Windows.Forms.Label();
-            golfActionsPreviewLabel = new System.Windows.Forms.Label();
             golfHelpGroupBox = new System.Windows.Forms.GroupBox();
             golfInstructionsLabel = new System.Windows.Forms.Label();
+            createCustomGolfActionsBtn = new System.Windows.Forms.Button();
             Doodles = new System.Windows.Forms.TabPage();
             richTextBox2 = new System.Windows.Forms.RichTextBox();
             groupBox8 = new System.Windows.Forms.GroupBox();
@@ -102,19 +102,19 @@
             messageToType = new System.Windows.Forms.TextBox();
             startSpamButton = new System.Windows.Forms.Button();
             Dev = new System.Windows.Forms.TabPage();
+            groupBoxTemplates = new System.Windows.Forms.GroupBox();
+            btnOpenTemplateDefinitions = new System.Windows.Forms.Button();
+            btnAddTemplateItem = new System.Windows.Forms.Button();
+            labelTemplateStatus = new System.Windows.Forms.Label();
+            btnCaptureTemplate = new System.Windows.Forms.Button();
+            btnViewTemplate = new System.Windows.Forms.Button();
+            comboBoxTemplateItems = new System.Windows.Forms.ComboBox();
             groupBox9 = new System.Windows.Forms.GroupBox();
             label11 = new System.Windows.Forms.Label();
             updateImagesBtn = new System.Windows.Forms.Button();
             resetImagesBtn = new System.Windows.Forms.Button();
             label5 = new System.Windows.Forms.Label();
             groupBox7 = new System.Windows.Forms.GroupBox();
-            groupBoxTemplates = new System.Windows.Forms.GroupBox();
-            comboBoxTemplateItems = new System.Windows.Forms.ComboBox();
-            btnCaptureTemplate = new System.Windows.Forms.Button();
-            btnViewTemplate = new System.Windows.Forms.Button();
-            labelTemplateStatus = new System.Windows.Forms.Label();
-            btnAddTemplateItem = new System.Windows.Forms.Button();
-            btnOpenTemplateDefinitions = new System.Windows.Forms.Button();
             button2 = new System.Windows.Forms.Button();
             button6 = new System.Windows.Forms.Button();
             comboBox1 = new System.Windows.Forms.ComboBox();
@@ -148,6 +148,7 @@
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
             Dev.SuspendLayout();
+            groupBoxTemplates.SuspendLayout();
             groupBox9.SuspendLayout();
             groupBox7.SuspendLayout();
             SuspendLayout();
@@ -298,6 +299,18 @@
             groupBox6.TabStop = false;
             groupBox6.Text = "Fishing Locations";
             // 
+            // autoDetectFishCheckBox
+            // 
+            autoDetectFishCheckBox.AutoSize = true;
+            autoDetectFishCheckBox.Location = new System.Drawing.Point(7, 140);
+            autoDetectFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            autoDetectFishCheckBox.Name = "autoDetectFishCheckBox";
+            autoDetectFishCheckBox.Size = new System.Drawing.Size(182, 20);
+            autoDetectFishCheckBox.TabIndex = 14;
+            autoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
+            toolTip1.SetToolTip(autoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them");
+            autoDetectFishCheckBox.UseVisualStyleBackColor = true;
+            // 
             // debugCustomActionsCheckBox
             // 
             debugCustomActionsCheckBox.AutoSize = true;
@@ -345,18 +358,6 @@
             toolTip1.SetToolTip(randomFishingCheckBox, "This add some randomness and will make it so you \r\nwon't cast your line at the same spot every time!");
             randomFishingCheckBox.UseVisualStyleBackColor = true;
             randomFishingCheckBox.CheckedChanged += randomFishing_CheckedChanged;
-            //
-            // autoDetectFishCheckBox
-            //
-            autoDetectFishCheckBox.AutoSize = true;
-            autoDetectFishCheckBox.Location = new System.Drawing.Point(7, 140);
-            autoDetectFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            autoDetectFishCheckBox.Name = "autoDetectFishCheckBox";
-            autoDetectFishCheckBox.Size = new System.Drawing.Size(180, 20);
-            autoDetectFishCheckBox.TabIndex = 14;
-            autoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
-            toolTip1.SetToolTip(autoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them");
-            autoDetectFishCheckBox.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -586,9 +587,9 @@
             Golf.TabIndex = 6;
             Golf.Text = "Golf";
             Golf.UseVisualStyleBackColor = true;
-            //
+            // 
             // groupBox10
-            //
+            // 
             groupBox10.Controls.Add(golfActionsPreviewLabel);
             groupBox10.Controls.Add(golfCourseSelectLabel);
             groupBox10.Controls.Add(golfActionsListBox);
@@ -600,18 +601,35 @@
             groupBox10.TabIndex = 21;
             groupBox10.TabStop = false;
             groupBox10.Text = "Run Golf Actions";
-            //
+            // 
+            // golfActionsPreviewLabel
+            // 
+            golfActionsPreviewLabel.AutoSize = true;
+            golfActionsPreviewLabel.Location = new System.Drawing.Point(6, 72);
+            golfActionsPreviewLabel.Name = "golfActionsPreviewLabel";
+            golfActionsPreviewLabel.Size = new System.Drawing.Size(105, 16);
+            golfActionsPreviewLabel.TabIndex = 23;
+            golfActionsPreviewLabel.Text = "Actions Preview:";
+            // 
             // golfCourseSelectLabel
-            //
+            // 
             golfCourseSelectLabel.AutoSize = true;
             golfCourseSelectLabel.Location = new System.Drawing.Point(6, 20);
             golfCourseSelectLabel.Name = "golfCourseSelectLabel";
-            golfCourseSelectLabel.Size = new System.Drawing.Size(150, 16);
+            golfCourseSelectLabel.Size = new System.Drawing.Size(132, 16);
             golfCourseSelectLabel.TabIndex = 22;
             golfCourseSelectLabel.Text = "Select a Golf Course:";
-            //
+            // 
+            // golfActionsListBox
+            // 
+            golfActionsListBox.FormattingEnabled = true;
+            golfActionsListBox.Location = new System.Drawing.Point(6, 91);
+            golfActionsListBox.Name = "golfActionsListBox";
+            golfActionsListBox.Size = new System.Drawing.Size(342, 164);
+            golfActionsListBox.TabIndex = 21;
+            // 
             // customGolfFilesComboBox
-            //
+            // 
             customGolfFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             customGolfFilesComboBox.FormattingEnabled = true;
             customGolfFilesComboBox.Location = new System.Drawing.Point(6, 39);
@@ -620,24 +638,6 @@
             customGolfFilesComboBox.Sorted = true;
             customGolfFilesComboBox.TabIndex = 19;
             customGolfFilesComboBox.SelectedIndexChanged += customGolfFilesComboBox_SelectedIndexChanged;
-            //
-            // golfActionsPreviewLabel
-            //
-            golfActionsPreviewLabel.AutoSize = true;
-            golfActionsPreviewLabel.Location = new System.Drawing.Point(6, 72);
-            golfActionsPreviewLabel.Name = "golfActionsPreviewLabel";
-            golfActionsPreviewLabel.Size = new System.Drawing.Size(120, 16);
-            golfActionsPreviewLabel.TabIndex = 23;
-            golfActionsPreviewLabel.Text = "Actions Preview:";
-            //
-            // golfActionsListBox
-            //
-            golfActionsListBox.FormattingEnabled = true;
-            golfActionsListBox.ItemHeight = 16;
-            golfActionsListBox.Location = new System.Drawing.Point(6, 91);
-            golfActionsListBox.Name = "golfActionsListBox";
-            golfActionsListBox.Size = new System.Drawing.Size(342, 164);
-            golfActionsListBox.TabIndex = 21;
             // 
             // button1
             // 
@@ -648,9 +648,9 @@
             button1.Text = "Start Golf";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
-            //
+            // 
             // golfHelpGroupBox
-            //
+            // 
             golfHelpGroupBox.Controls.Add(golfInstructionsLabel);
             golfHelpGroupBox.Controls.Add(createCustomGolfActionsBtn);
             golfHelpGroupBox.Location = new System.Drawing.Point(367, 6);
@@ -659,17 +659,17 @@
             golfHelpGroupBox.TabIndex = 24;
             golfHelpGroupBox.TabStop = false;
             golfHelpGroupBox.Text = "How to Use";
-            //
+            // 
             // golfInstructionsLabel
-            //
+            // 
             golfInstructionsLabel.Location = new System.Drawing.Point(6, 20);
             golfInstructionsLabel.Name = "golfInstructionsLabel";
             golfInstructionsLabel.Size = new System.Drawing.Size(160, 230);
             golfInstructionsLabel.TabIndex = 0;
-            golfInstructionsLabel.Text = "1. Select a golf course from the dropdown\r\n\r\n2. Preview the actions that will run\r\n\r\n3. In TTR, go to the golf course and stand at the tee\r\n\r\n4. Click 'Start Golf' and switch to TTR quickly\r\n\r\n5. The bot will auto-swing!\r\n\r\nTip: Create custom actions for courses not listed.";
-            //
+            golfInstructionsLabel.Text = resources.GetString("golfInstructionsLabel.Text");
+            // 
             // createCustomGolfActionsBtn
-            //
+            // 
             createCustomGolfActionsBtn.Location = new System.Drawing.Point(6, 260);
             createCustomGolfActionsBtn.Name = "createCustomGolfActionsBtn";
             createCustomGolfActionsBtn.Size = new System.Drawing.Size(160, 45);
@@ -996,9 +996,9 @@
             toolTip1.SetToolTip(startSpamButton, "Press the ALT key to stop the spamming loop at any time!");
             startSpamButton.UseVisualStyleBackColor = true;
             startSpamButton.Click += startSpamButton_Click;
-            //
+            // 
             // Dev
-            //
+            // 
             Dev.Controls.Add(groupBoxTemplates);
             Dev.Controls.Add(groupBox9);
             Dev.Controls.Add(label5);
@@ -1010,6 +1010,93 @@
             Dev.TabIndex = 5;
             Dev.Text = "Dev";
             Dev.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxTemplates
+            // 
+            groupBoxTemplates.Controls.Add(btnOpenTemplateDefinitions);
+            groupBoxTemplates.Controls.Add(btnAddTemplateItem);
+            groupBoxTemplates.Controls.Add(labelTemplateStatus);
+            groupBoxTemplates.Controls.Add(btnCaptureTemplate);
+            groupBoxTemplates.Controls.Add(btnViewTemplate);
+            groupBoxTemplates.Controls.Add(comboBoxTemplateItems);
+            groupBoxTemplates.Location = new System.Drawing.Point(9, 197);
+            groupBoxTemplates.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxTemplates.Name = "groupBoxTemplates";
+            groupBoxTemplates.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxTemplates.Size = new System.Drawing.Size(526, 115);
+            groupBoxTemplates.TabIndex = 9;
+            groupBoxTemplates.TabStop = false;
+            groupBoxTemplates.Text = "Item Templates (File-Based)";
+            // 
+            // btnOpenTemplateDefinitions
+            // 
+            btnOpenTemplateDefinitions.Location = new System.Drawing.Point(7, 80);
+            btnOpenTemplateDefinitions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnOpenTemplateDefinitions.Name = "btnOpenTemplateDefinitions";
+            btnOpenTemplateDefinitions.Size = new System.Drawing.Size(150, 28);
+            btnOpenTemplateDefinitions.TabIndex = 5;
+            btnOpenTemplateDefinitions.Text = "Edit Definitions File";
+            toolTip1.SetToolTip(btnOpenTemplateDefinitions, "Open the TemplateDefinitions.json file to manually edit items");
+            btnOpenTemplateDefinitions.UseVisualStyleBackColor = true;
+            btnOpenTemplateDefinitions.Click += btnOpenTemplateDefinitions_Click;
+            // 
+            // btnAddTemplateItem
+            // 
+            btnAddTemplateItem.Location = new System.Drawing.Point(445, 20);
+            btnAddTemplateItem.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnAddTemplateItem.Name = "btnAddTemplateItem";
+            btnAddTemplateItem.Size = new System.Drawing.Size(70, 28);
+            btnAddTemplateItem.TabIndex = 4;
+            btnAddTemplateItem.Text = "Add New";
+            toolTip1.SetToolTip(btnAddTemplateItem, "Add a new template item definition");
+            btnAddTemplateItem.UseVisualStyleBackColor = true;
+            btnAddTemplateItem.Click += btnAddTemplateItem_Click;
+            // 
+            // labelTemplateStatus
+            // 
+            labelTemplateStatus.AutoSize = true;
+            labelTemplateStatus.ForeColor = System.Drawing.Color.Gray;
+            labelTemplateStatus.Location = new System.Drawing.Point(8, 55);
+            labelTemplateStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelTemplateStatus.Name = "labelTemplateStatus";
+            labelTemplateStatus.Size = new System.Drawing.Size(228, 16);
+            labelTemplateStatus.TabIndex = 3;
+            labelTemplateStatus.Text = "Select an item to view template status";
+            // 
+            // btnCaptureTemplate
+            // 
+            btnCaptureTemplate.Location = new System.Drawing.Point(295, 20);
+            btnCaptureTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnCaptureTemplate.Name = "btnCaptureTemplate";
+            btnCaptureTemplate.Size = new System.Drawing.Size(70, 28);
+            btnCaptureTemplate.TabIndex = 1;
+            btnCaptureTemplate.Text = "Capture";
+            toolTip1.SetToolTip(btnCaptureTemplate, "Capture a new template for the selected item");
+            btnCaptureTemplate.UseVisualStyleBackColor = true;
+            btnCaptureTemplate.Click += btnCaptureTemplate_Click;
+            // 
+            // btnViewTemplate
+            // 
+            btnViewTemplate.Location = new System.Drawing.Point(370, 20);
+            btnViewTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnViewTemplate.Name = "btnViewTemplate";
+            btnViewTemplate.Size = new System.Drawing.Size(70, 28);
+            btnViewTemplate.TabIndex = 2;
+            btnViewTemplate.Text = "View";
+            toolTip1.SetToolTip(btnViewTemplate, "View the existing template for the selected item");
+            btnViewTemplate.UseVisualStyleBackColor = true;
+            btnViewTemplate.Click += btnViewTemplate_Click;
+            // 
+            // comboBoxTemplateItems
+            // 
+            comboBoxTemplateItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBoxTemplateItems.Location = new System.Drawing.Point(7, 22);
+            comboBoxTemplateItems.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBoxTemplateItems.Name = "comboBoxTemplateItems";
+            comboBoxTemplateItems.Size = new System.Drawing.Size(280, 24);
+            comboBoxTemplateItems.TabIndex = 0;
+            toolTip1.SetToolTip(comboBoxTemplateItems, "Select a UI element to capture or update its template");
+            comboBoxTemplateItems.SelectedIndexChanged += comboBoxTemplateItems_SelectedIndexChanged;
             // 
             // groupBox9
             // 
@@ -1024,21 +1111,20 @@
             groupBox9.TabIndex = 8;
             groupBox9.TabStop = false;
             groupBox9.Text = "Image Recognition";
-            groupBox9.Visible = true;
-            //
+            // 
             // label11
-            //
+            // 
             label11.AutoSize = true;
             label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             label11.Location = new System.Drawing.Point(10, 18);
             label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label11.Name = "label11";
-            label11.Size = new System.Drawing.Size(220, 30);
+            label11.Size = new System.Drawing.Size(195, 30);
             label11.TabIndex = 3;
             label11.Text = "Debug tools for template matching\r\nand OCR text recognition";
-            //
+            // 
             // updateImagesBtn
-            //
+            // 
             updateImagesBtn.Location = new System.Drawing.Point(10, 55);
             updateImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             updateImagesBtn.Name = "updateImagesBtn";
@@ -1047,9 +1133,9 @@
             updateImagesBtn.Text = "Open Debug Window";
             updateImagesBtn.UseVisualStyleBackColor = true;
             updateImagesBtn.Click += openImageRecDebugBtn_Click;
-            //
+            // 
             // resetImagesBtn
-            //
+            // 
             resetImagesBtn.Location = new System.Drawing.Point(10, 102);
             resetImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             resetImagesBtn.Name = "resetImagesBtn";
@@ -1083,7 +1169,7 @@
             groupBox7.Size = new System.Drawing.Size(274, 156);
             groupBox7.TabIndex = 7;
             groupBox7.TabStop = false;
-            groupBox7.Text = "Coordinates";
+            groupBox7.Text = "Manual Coordinates";
             // 
             // button2
             // 
@@ -1129,94 +1215,7 @@
             toolTip1.SetToolTip(button7, "This will reset all of your coordinates!");
             button7.UseVisualStyleBackColor = true;
             button7.Click += button7_Click;
-            //
-            // groupBoxTemplates
-            //
-            groupBoxTemplates.Controls.Add(btnOpenTemplateDefinitions);
-            groupBoxTemplates.Controls.Add(btnAddTemplateItem);
-            groupBoxTemplates.Controls.Add(labelTemplateStatus);
-            groupBoxTemplates.Controls.Add(btnCaptureTemplate);
-            groupBoxTemplates.Controls.Add(btnViewTemplate);
-            groupBoxTemplates.Controls.Add(comboBoxTemplateItems);
-            groupBoxTemplates.Location = new System.Drawing.Point(9, 197);
-            groupBoxTemplates.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBoxTemplates.Name = "groupBoxTemplates";
-            groupBoxTemplates.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBoxTemplates.Size = new System.Drawing.Size(526, 115);
-            groupBoxTemplates.TabIndex = 9;
-            groupBoxTemplates.TabStop = false;
-            groupBoxTemplates.Text = "Item Templates (File-Based)";
-            //
-            // comboBoxTemplateItems
-            //
-            comboBoxTemplateItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            comboBoxTemplateItems.Location = new System.Drawing.Point(7, 22);
-            comboBoxTemplateItems.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            comboBoxTemplateItems.Name = "comboBoxTemplateItems";
-            comboBoxTemplateItems.Size = new System.Drawing.Size(280, 24);
-            comboBoxTemplateItems.TabIndex = 0;
-            toolTip1.SetToolTip(comboBoxTemplateItems, "Select a UI element to capture or update its template");
-            comboBoxTemplateItems.SelectedIndexChanged += comboBoxTemplateItems_SelectedIndexChanged;
-            //
-            // btnCaptureTemplate
-            //
-            btnCaptureTemplate.Location = new System.Drawing.Point(295, 20);
-            btnCaptureTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            btnCaptureTemplate.Name = "btnCaptureTemplate";
-            btnCaptureTemplate.Size = new System.Drawing.Size(70, 28);
-            btnCaptureTemplate.TabIndex = 1;
-            btnCaptureTemplate.Text = "Capture";
-            toolTip1.SetToolTip(btnCaptureTemplate, "Capture a new template for the selected item");
-            btnCaptureTemplate.UseVisualStyleBackColor = true;
-            btnCaptureTemplate.Click += btnCaptureTemplate_Click;
-            //
-            // btnViewTemplate
-            //
-            btnViewTemplate.Location = new System.Drawing.Point(370, 20);
-            btnViewTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            btnViewTemplate.Name = "btnViewTemplate";
-            btnViewTemplate.Size = new System.Drawing.Size(70, 28);
-            btnViewTemplate.TabIndex = 2;
-            btnViewTemplate.Text = "View";
-            toolTip1.SetToolTip(btnViewTemplate, "View the existing template for the selected item");
-            btnViewTemplate.UseVisualStyleBackColor = true;
-            btnViewTemplate.Click += btnViewTemplate_Click;
-            //
-            // btnAddTemplateItem
-            //
-            btnAddTemplateItem.Location = new System.Drawing.Point(445, 20);
-            btnAddTemplateItem.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            btnAddTemplateItem.Name = "btnAddTemplateItem";
-            btnAddTemplateItem.Size = new System.Drawing.Size(70, 28);
-            btnAddTemplateItem.TabIndex = 4;
-            btnAddTemplateItem.Text = "Add New";
-            toolTip1.SetToolTip(btnAddTemplateItem, "Add a new template item definition");
-            btnAddTemplateItem.UseVisualStyleBackColor = true;
-            btnAddTemplateItem.Click += btnAddTemplateItem_Click;
-            //
-            // labelTemplateStatus
-            //
-            labelTemplateStatus.AutoSize = true;
-            labelTemplateStatus.Location = new System.Drawing.Point(7, 55);
-            labelTemplateStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            labelTemplateStatus.Name = "labelTemplateStatus";
-            labelTemplateStatus.Size = new System.Drawing.Size(200, 16);
-            labelTemplateStatus.TabIndex = 3;
-            labelTemplateStatus.Text = "Select an item to view template status";
-            labelTemplateStatus.ForeColor = System.Drawing.Color.Gray;
-            //
-            // btnOpenTemplateDefinitions
-            //
-            btnOpenTemplateDefinitions.Location = new System.Drawing.Point(7, 80);
-            btnOpenTemplateDefinitions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            btnOpenTemplateDefinitions.Name = "btnOpenTemplateDefinitions";
-            btnOpenTemplateDefinitions.Size = new System.Drawing.Size(150, 28);
-            btnOpenTemplateDefinitions.TabIndex = 5;
-            btnOpenTemplateDefinitions.Text = "Edit Definitions File";
-            toolTip1.SetToolTip(btnOpenTemplateDefinitions, "Open the TemplateDefinitions.json file to manually edit items");
-            btnOpenTemplateDefinitions.UseVisualStyleBackColor = true;
-            btnOpenTemplateDefinitions.Click += btnOpenTemplateDefinitions_Click;
-            //
+            // 
             // toolTip1
             // 
             toolTip1.ShowAlways = true;
@@ -1274,6 +1273,8 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).EndInit();
             Dev.ResumeLayout(false);
             Dev.PerformLayout();
+            groupBoxTemplates.ResumeLayout(false);
+            groupBoxTemplates.PerformLayout();
             groupBox9.ResumeLayout(false);
             groupBox9.PerformLayout();
             groupBox7.ResumeLayout(false);
