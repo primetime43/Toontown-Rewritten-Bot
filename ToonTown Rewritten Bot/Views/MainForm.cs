@@ -834,6 +834,130 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
+        private void btnEditTemplate_Click(object sender, EventArgs e)
+        {
+            string currentName = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(currentName))
+            {
+                MessageBox.Show("Please select a template to edit.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var definition = TemplateDefinitionManager.Instance.GetDefinition(currentName);
+            if (definition == null)
+            {
+                MessageBox.Show("Template definition not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (var dialog = new Form())
+            {
+                dialog.Text = "Edit Template";
+                dialog.ClientSize = new Size(380, 180);
+                dialog.FormBorderStyle = FormBorderStyle.FixedDialog;
+                dialog.StartPosition = FormStartPosition.CenterParent;
+                dialog.MaximizeBox = false;
+                dialog.MinimizeBox = false;
+
+                var nameLabel = new Label { Text = "Name:", Location = new Point(15, 20), AutoSize = true };
+                var nameTextBox = new TextBox { Text = definition.Name, Location = new Point(80, 17), Size = new Size(280, 23) };
+
+                var categoryLabel = new Label { Text = "Category:", Location = new Point(15, 55), AutoSize = true };
+                var categoryComboBox = new ComboBox { Text = definition.Category, Location = new Point(80, 52), Size = new Size(280, 23), DropDownStyle = ComboBoxStyle.DropDown };
+
+                // Add existing categories
+                foreach (var cat in TemplateDefinitionManager.Instance.GetCategories())
+                    categoryComboBox.Items.Add(cat);
+
+                var saveBtn = new Button { Text = "Save", DialogResult = DialogResult.OK, Location = new Point(185, 130), Size = new Size(80, 30) };
+                var cancelBtn = new Button { Text = "Cancel", DialogResult = DialogResult.Cancel, Location = new Point(275, 130), Size = new Size(80, 30) };
+
+                dialog.Controls.AddRange(new Control[] { nameLabel, nameTextBox, categoryLabel, categoryComboBox, saveBtn, cancelBtn });
+                dialog.AcceptButton = saveBtn;
+                dialog.CancelButton = cancelBtn;
+
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    string newName = nameTextBox.Text.Trim();
+                    string newCategory = categoryComboBox.Text.Trim();
+
+                    if (string.IsNullOrEmpty(newName))
+                    {
+                        MessageBox.Show("Name cannot be empty.", "Invalid Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // If name changed, rename the template file too
+                    if (!currentName.Equals(newName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        string oldPath = UIElementManager.Instance.GetTemplatePath(currentName);
+                        string newPath = UIElementManager.Instance.GetTemplatePath(newName);
+
+                        if (System.IO.File.Exists(oldPath) && !System.IO.File.Exists(newPath))
+                        {
+                            try
+                            {
+                                System.IO.File.Move(oldPath, newPath);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"Failed to rename template file: {ex.Message}", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                        }
+                    }
+
+                    if (TemplateDefinitionManager.Instance.UpdateDefinition(currentName, newName, newCategory))
+                    {
+                        MessageBox.Show($"Updated template: {newName}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadTemplateItemsComboBox();
+
+                        // Re-select the renamed item (format is "[Category] Name")
+                        for (int i = 0; i < comboBoxTemplateItems.Items.Count; i++)
+                        {
+                            if (comboBoxTemplateItems.Items[i].ToString().EndsWith("] " + newName))
+                            {
+                                comboBoxTemplateItems.SelectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to update template. Name may already exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void btnDeleteTemplate_Click(object sender, EventArgs e)
+        {
+            string templateName = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(templateName))
+            {
+                MessageBox.Show("Please select a template to delete.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete the template definition '{templateName}'?\n\nThis will NOT delete the template image file.",
+                "Confirm Delete",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                if (TemplateDefinitionManager.Instance.RemoveDefinition(templateName))
+                {
+                    MessageBox.Show($"Deleted template definition: {templateName}", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadTemplateItemsComboBox();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to delete template definition.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
         private void fishingLocationscomboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Ensure there's a selected item to avoid NullReferenceException

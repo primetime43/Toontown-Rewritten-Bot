@@ -105,6 +105,8 @@
             groupBoxTemplates = new System.Windows.Forms.GroupBox();
             btnOpenTemplateDefinitions = new System.Windows.Forms.Button();
             btnAddTemplateItem = new System.Windows.Forms.Button();
+            btnEditTemplate = new System.Windows.Forms.Button();
+            btnDeleteTemplate = new System.Windows.Forms.Button();
             labelTemplateStatus = new System.Windows.Forms.Label();
             btnCaptureTemplate = new System.Windows.Forms.Button();
             btnViewTemplate = new System.Windows.Forms.Button();
@@ -1015,6 +1017,8 @@
             // 
             groupBoxTemplates.Controls.Add(btnOpenTemplateDefinitions);
             groupBoxTemplates.Controls.Add(btnAddTemplateItem);
+            groupBoxTemplates.Controls.Add(btnEditTemplate);
+            groupBoxTemplates.Controls.Add(btnDeleteTemplate);
             groupBoxTemplates.Controls.Add(labelTemplateStatus);
             groupBoxTemplates.Controls.Add(btnCaptureTemplate);
             groupBoxTemplates.Controls.Add(btnViewTemplate);
@@ -1051,7 +1055,32 @@
             toolTip1.SetToolTip(btnAddTemplateItem, "Add a new template item definition");
             btnAddTemplateItem.UseVisualStyleBackColor = true;
             btnAddTemplateItem.Click += btnAddTemplateItem_Click;
-            // 
+            //
+            // btnEditTemplate
+            //
+            btnEditTemplate.Location = new System.Drawing.Point(165, 80);
+            btnEditTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnEditTemplate.Name = "btnEditTemplate";
+            btnEditTemplate.Size = new System.Drawing.Size(60, 28);
+            btnEditTemplate.TabIndex = 6;
+            btnEditTemplate.Text = "Edit";
+            toolTip1.SetToolTip(btnEditTemplate, "Edit the selected template definition");
+            btnEditTemplate.UseVisualStyleBackColor = true;
+            btnEditTemplate.Click += btnEditTemplate_Click;
+            //
+            // btnDeleteTemplate
+            //
+            btnDeleteTemplate.Location = new System.Drawing.Point(233, 80);
+            btnDeleteTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnDeleteTemplate.Name = "btnDeleteTemplate";
+            btnDeleteTemplate.Size = new System.Drawing.Size(60, 28);
+            btnDeleteTemplate.TabIndex = 7;
+            btnDeleteTemplate.Text = "Delete";
+            btnDeleteTemplate.ForeColor = System.Drawing.Color.Red;
+            toolTip1.SetToolTip(btnDeleteTemplate, "Delete the selected template definition");
+            btnDeleteTemplate.UseVisualStyleBackColor = true;
+            btnDeleteTemplate.Click += btnDeleteTemplate_Click;
+            //
             // labelTemplateStatus
             // 
             labelTemplateStatus.AutoSize = true;
@@ -1090,6 +1119,7 @@
             // comboBoxTemplateItems
             // 
             comboBoxTemplateItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBoxTemplateItems.DropDownHeight = 300;
             comboBoxTemplateItems.Location = new System.Drawing.Point(7, 22);
             comboBoxTemplateItems.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             comboBoxTemplateItems.Name = "comboBoxTemplateItems";
@@ -1356,6 +1386,8 @@
         private System.Windows.Forms.Label labelTemplateStatus;
         private System.Windows.Forms.Button btnAddTemplateItem;
         private System.Windows.Forms.Button btnOpenTemplateDefinitions;
+        private System.Windows.Forms.Button btnEditTemplate;
+        private System.Windows.Forms.Button btnDeleteTemplate;
         private System.Windows.Forms.CheckBox autoDetectFishCheckBox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button createCustomFishingActionsBtn;
