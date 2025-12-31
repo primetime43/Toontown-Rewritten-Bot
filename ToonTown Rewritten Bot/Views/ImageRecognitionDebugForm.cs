@@ -175,7 +175,7 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 Text = "1. Capture",
                 Location = new Point(5, yPos),
-                Size = new Size(210, 55)
+                Size = new Size(300, 55)
             };
             controlsPanel.Controls.Add(captureGroup);
 
@@ -211,11 +211,20 @@ namespace ToonTown_Rewritten_Bot.Views
             var msLabel = new Label { Text = "ms", Location = new Point(182, 23), AutoSize = true };
             captureGroup.Controls.Add(msLabel);
 
+            alwaysOnTopCheckBox = new CheckBox
+            {
+                Text = "On Top",
+                Location = new Point(215, 22),
+                AutoSize = true
+            };
+            alwaysOnTopCheckBox.CheckedChanged += AlwaysOnTopCheckBox_CheckedChanged;
+            captureGroup.Controls.Add(alwaysOnTopCheckBox);
+
             // Template Creation controls
             var createTemplateGroup = new GroupBox
             {
                 Text = "2. Create Template (select region first)",
-                Location = new Point(220, yPos),
+                Location = new Point(310, yPos),
                 Size = new Size(220, 55)
             };
             controlsPanel.Controls.Add(createTemplateGroup);
@@ -756,6 +765,11 @@ namespace ToonTown_Rewritten_Bot.Views
                 _refreshTimer.Stop();
                 Log("Auto-refresh disabled");
             }
+        }
+
+        private void AlwaysOnTopCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            this.TopMost = alwaysOnTopCheckBox.Checked;
         }
 
         private void LoadTemplateBtn_Click(object sender, EventArgs e)
@@ -1611,6 +1625,7 @@ namespace ToonTown_Rewritten_Bot.Views
         private PictureBox templatePreviewPictureBox;
         private Button captureBtn;
         private CheckBox autoRefreshCheckBox;
+        private CheckBox alwaysOnTopCheckBox;
         private NumericUpDown refreshIntervalNumeric;
         private Button loadTemplateBtn;
         private Button useSelectionBtn;

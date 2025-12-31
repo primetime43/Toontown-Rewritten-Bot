@@ -42,6 +42,7 @@ namespace ToonTown_Rewritten_Bot
             BotFunctions.CreateItemsDataFileMap();
             LoadCoordinatesIntoResetBox();
             doodleTrickComboBox.SelectedIndex = 0; // clean this up/move this eventually
+            LoadTemplateItemsComboBox();
         }
 
         //important functions for bot
@@ -605,6 +606,231 @@ namespace ToonTown_Rewritten_Bot
                     button.Enabled = true;
                     button.Text = "Download OCR Data";
                 }
+            }
+        }
+
+        // Template management methods
+        private void LoadTemplateItemsComboBox()
+        {
+            comboBoxTemplateItems.Items.Clear();
+
+            // Load from file-based TemplateDefinitionManager
+            var definitions = TemplateDefinitionManager.Instance.GetAllDefinitions();
+            foreach (var def in definitions)
+            {
+                comboBoxTemplateItems.Items.Add($"[{def.Category}] {def.Name}");
+            }
+
+            if (comboBoxTemplateItems.Items.Count > 0)
+            {
+                comboBoxTemplateItems.SelectedIndex = 0;
+            }
+        }
+
+        private string GetSelectedTemplateName()
+        {
+            if (comboBoxTemplateItems.SelectedItem == null)
+                return null;
+
+            string selected = comboBoxTemplateItems.SelectedItem.ToString();
+            // Extract name from "[Category] Name" format
+            int bracketEnd = selected.IndexOf("] ");
+            if (bracketEnd >= 0)
+                return selected.Substring(bracketEnd + 2);
+            return selected;
+        }
+
+        private void comboBoxTemplateItems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedItem = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(selectedItem))
+                return;
+
+            // Check if template exists
+            bool hasTemplate = UIElementManager.Instance.HasTemplate(selectedItem);
+
+            if (hasTemplate)
+            {
+                labelTemplateStatus.Text = $"Template exists";
+                labelTemplateStatus.ForeColor = Color.Green;
+                btnViewTemplate.Enabled = true;
+            }
+            else
+            {
+                labelTemplateStatus.Text = $"No template - click 'Capture' to create";
+                labelTemplateStatus.ForeColor = Color.Orange;
+                btnViewTemplate.Enabled = false;
+            }
+        }
+
+        private void btnCaptureTemplate_Click(object sender, EventArgs e)
+        {
+            string selectedItem = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(selectedItem))
+            {
+                MessageBox.Show("Please select an item first.", "No Item Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Use the existing TemplateCaptureForm
+            bool captured = TemplateCaptureForm.CaptureTemplate(selectedItem);
+
+            if (captured)
+            {
+                MessageBox.Show($"Template captured successfully for: {selectedItem}", "Template Captured", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Refresh the status
+                comboBoxTemplateItems_SelectedIndexChanged(sender, e);
+            }
+        }
+
+        private void btnViewTemplate_Click(object sender, EventArgs e)
+        {
+            string selectedItem = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(selectedItem))
+            {
+                MessageBox.Show("Please select an item first.", "No Item Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string templatePath = UIElementManager.Instance.GetTemplatePath(selectedItem);
+
+            if (string.IsNullOrEmpty(templatePath) || !System.IO.File.Exists(templatePath))
+            {
+                MessageBox.Show($"No template found for: {selectedItem}\n\nClick 'Capture Template' to create one.", "Template Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Open the template image in a simple viewer
+            try
+            {
+                using (var viewerForm = new Form())
+                {
+                    viewerForm.Text = $"Template: {selectedItem}";
+                    viewerForm.StartPosition = FormStartPosition.CenterParent;
+
+                    var pictureBox = new PictureBox
+                    {
+                        Dock = DockStyle.Fill,
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        Image = Image.FromFile(templatePath)
+                    };
+                    viewerForm.Controls.Add(pictureBox);
+
+                    // Size the form based on image size
+                    viewerForm.ClientSize = new Size(
+                        Math.Max(200, Math.Min(pictureBox.Image.Width + 20, 600)),
+                        Math.Max(150, Math.Min(pictureBox.Image.Height + 20, 400))
+                    );
+
+                    var openFolderBtn = new Button
+                    {
+                        Text = "Open Folder",
+                        Dock = DockStyle.Bottom,
+                        Height = 30
+                    };
+                    openFolderBtn.Click += (s, args) =>
+                    {
+                        System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{templatePath}\"");
+                    };
+                    viewerForm.Controls.Add(openFolderBtn);
+
+                    viewerForm.ShowDialog(this);
+
+                    // Dispose the image properly
+                    pictureBox.Image?.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error viewing template: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnAddTemplateItem_Click(object sender, EventArgs e)
+        {
+            using (var inputForm = new Form())
+            {
+                inputForm.Text = "Add New Template Item";
+                inputForm.ClientSize = new Size(380, 180);
+                inputForm.StartPosition = FormStartPosition.CenterParent;
+                inputForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                inputForm.MaximizeBox = false;
+                inputForm.MinimizeBox = false;
+
+                var lblName = new Label { Text = "Item Name:", Location = new Point(15, 15), AutoSize = true };
+                var txtName = new TextBox { Location = new Point(15, 35), Size = new Size(350, 25) };
+
+                var lblCategory = new Label { Text = "Category (select existing or type new):", Location = new Point(15, 70), AutoSize = true };
+                var cmbCategory = new ComboBox
+                {
+                    Location = new Point(15, 90),
+                    Size = new Size(350, 25),
+                    DropDownStyle = ComboBoxStyle.DropDown
+                };
+
+                // Add existing categories as suggestions
+                var categories = TemplateDefinitionManager.Instance.GetCategories();
+                cmbCategory.Items.AddRange(categories.ToArray());
+                cmbCategory.Text = categories.Count > 0 ? categories[0] : "Custom";
+
+                var btnOk = new Button { Text = "Add", Location = new Point(205, 135), Size = new Size(75, 30), DialogResult = DialogResult.OK };
+                var btnCancel = new Button { Text = "Cancel", Location = new Point(290, 135), Size = new Size(75, 30), DialogResult = DialogResult.Cancel };
+
+                inputForm.Controls.AddRange(new Control[] { lblName, txtName, lblCategory, cmbCategory, btnOk, btnCancel });
+                inputForm.AcceptButton = btnOk;
+                inputForm.CancelButton = btnCancel;
+
+                if (inputForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    string name = txtName.Text.Trim();
+                    string category = string.IsNullOrWhiteSpace(cmbCategory.Text) ? "Custom" : cmbCategory.Text.Trim();
+
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        MessageBox.Show("Please enter a name for the template item.", "Invalid Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    if (TemplateDefinitionManager.Instance.AddDefinition(name, category))
+                    {
+                        MessageBox.Show($"Added new template item: {name}\n\nYou can now capture a template for it.", "Item Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadTemplateItemsComboBox();
+
+                        // Select the newly added item
+                        for (int i = 0; i < comboBoxTemplateItems.Items.Count; i++)
+                        {
+                            if (comboBoxTemplateItems.Items[i].ToString().Contains(name))
+                            {
+                                comboBoxTemplateItems.SelectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show($"An item with that name already exists.", "Duplicate Item", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+        }
+
+        private void btnOpenTemplateDefinitions_Click(object sender, EventArgs e)
+        {
+            string filePath = TemplateDefinitionManager.Instance.GetDefinitionsFilePath();
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                MessageBox.Show("Definitions file not found. It will be created when you add the first item.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                System.Diagnostics.Process.Start("notepad.exe", filePath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
