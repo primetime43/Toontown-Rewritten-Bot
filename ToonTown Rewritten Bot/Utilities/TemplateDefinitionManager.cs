@@ -208,6 +208,23 @@ namespace ToonTown_Rewritten_Bot.Utilities
             return false;
         }
 
+        public bool UpdateDefinition(string oldName, string newName, string newCategory)
+        {
+            var definition = _definitions.FirstOrDefault(d => d.Name.Equals(oldName, StringComparison.OrdinalIgnoreCase));
+            if (definition == null)
+                return false;
+
+            // Check if new name already exists (if name is changing)
+            if (!oldName.Equals(newName, StringComparison.OrdinalIgnoreCase) &&
+                _definitions.Any(d => d.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
+                return false;
+
+            definition.Name = newName;
+            definition.Category = newCategory ?? "Custom";
+            SaveDefinitions();
+            return true;
+        }
+
         public void ReloadDefinitions()
         {
             LoadDefinitions();

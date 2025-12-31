@@ -143,5 +143,15 @@
     "Key": 29,
     "Name": "Speak Trick Option in SpeedChat",
     "Category": "Doodle Training"
+  },
+  {
+    "Key": 30,
+    "Name": "Friends Button",
+    "Category": "Misc"
+  },
+  {
+    "Key": 32,
+    "Name": "Sticker Book",
+    "Category": "Misc"
   }
 ]

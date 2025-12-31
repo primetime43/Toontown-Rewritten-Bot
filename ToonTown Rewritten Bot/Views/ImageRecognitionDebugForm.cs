@@ -79,6 +79,111 @@ namespace ToonTown_Rewritten_Bot.Views
             InitializeOCR();
             SetupRefreshTimer();
             EnsureTemplatesFolderExists();
+            LoadTemplateDefinitions();
+        }
+
+        private void LoadTemplateDefinitions()
+        {
+            templateDefinitionsComboBox.Items.Clear();
+            var definitions = TemplateDefinitionManager.Instance.GetAllDefinitions();
+            foreach (var def in definitions.OrderBy(d => d.Category).ThenBy(d => d.Name))
+            {
+                templateDefinitionsComboBox.Items.Add($"{def.Name}");
+            }
+            if (templateDefinitionsComboBox.Items.Count > 0)
+                templateDefinitionsComboBox.SelectedIndex = 0;
+        }
+
+        private void TemplateDefinitionsComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (templateDefinitionsComboBox.SelectedItem == null) return;
+
+            string templateName = templateDefinitionsComboBox.SelectedItem.ToString();
+            string templateFileName = GetTemplateFileName(templateName);
+            string templatePath = Path.Combine(TemplatesFolder, templateFileName);
+
+            if (File.Exists(templatePath))
+            {
+                try
+                {
+                    _currentTemplate?.Dispose();
+                    _currentTemplate = new Bitmap(templatePath);
+                    templatePreviewPictureBox.Image = _currentTemplate;
+                    templatePathLabel.Text = templateFileName;
+                    templatePathLabel.ForeColor = Color.LightGreen;
+                    Log($"Loaded template: {templateName} ({_currentTemplate.Width}x{_currentTemplate.Height})");
+                }
+                catch (Exception ex)
+                {
+                    Log($"Failed to load template: {ex.Message}");
+                    templatePathLabel.ForeColor = Color.Red;
+                }
+            }
+            else
+            {
+                templatePreviewPictureBox.Image = null;
+                templatePathLabel.Text = "Not captured";
+                templatePathLabel.ForeColor = Color.Orange;
+            }
+        }
+
+        private async void TestTemplateBtn_Click(object sender, EventArgs e)
+        {
+            if (_currentScreenshot == null)
+            {
+                // Capture a screenshot first
+                CaptureScreenshot();
+                if (_currentScreenshot == null)
+                {
+                    Log("Please capture a screenshot first.");
+                    return;
+                }
+            }
+
+            if (templateDefinitionsComboBox.SelectedItem == null)
+            {
+                Log("Please select a template from the dropdown.");
+                return;
+            }
+
+            string templateName = templateDefinitionsComboBox.SelectedItem.ToString();
+            string templateFileName = GetTemplateFileName(templateName);
+            string templatePath = Path.Combine(TemplatesFolder, templateFileName);
+
+            if (!File.Exists(templatePath))
+            {
+                Log($"Template image not found: {templateFileName}");
+                Log($"Please capture this template first using the Dev tab.");
+                return;
+            }
+
+            // Load the template if not already loaded
+            if (_currentTemplate == null || templatePathLabel.Text != templateFileName)
+            {
+                try
+                {
+                    _currentTemplate?.Dispose();
+                    _currentTemplate = new Bitmap(templatePath);
+                    templatePreviewPictureBox.Image = _currentTemplate;
+                    templatePathLabel.Text = templateFileName;
+                }
+                catch (Exception ex)
+                {
+                    Log($"Failed to load template: {ex.Message}");
+                    return;
+                }
+            }
+
+            Log($"Testing template: {templateName}...");
+
+            // Use the existing find template logic
+            FindTemplateBtn_Click(sender, e);
+        }
+
+        private string GetTemplateFileName(string templateName)
+        {
+            // Convert template name to filename format (same as UIElementManager)
+            return templateName.Replace(" ", "_").Replace("/", "_") + ".png";
         }
 
         private void EnsureTemplatesFolderExists()
@@ -93,43 +198,64 @@ namespace ToonTown_Rewritten_Bot.Views
         private void InitializeComponent()
         {
             this.Text = "Image Recognition Debug";
-            this.Size = new Size(1000, 750);
+            this.Size = new Size(1200, 750);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.Sizable;
-            this.MinimumSize = new Size(800, 600);
+            this.MinimumSize = new Size(1000, 650);
 
-            // Main layout
+            // Main vertical split - Preview on top, Controls on bottom
             var mainSplit = new SplitContainer
             {
                 Dock = DockStyle.Fill,
-                Orientation = Orientation.Horizontal,
-                SplitterDistance = 450
+                Orientation = Orientation.Horizontal
             };
             this.Controls.Add(mainSplit);
 
-            // Top panel - Preview with template preview on the side
-            var topSplit = new SplitContainer
+            // Set splitter constraints after form is loaded to avoid constraint errors
+            this.Load += (s, e) =>
+            {
+                try
+                {
+                    mainSplit.Panel1MinSize = 200;
+                    mainSplit.Panel2MinSize = 180;
+                    mainSplit.SplitterDistance = Math.Max(200, this.ClientSize.Height - 280);
+                }
+                catch { /* Ignore if constraints can't be satisfied */ }
+            };
+
+            // === TOP PANEL: Preview Areas ===
+            var previewSplit = new SplitContainer
             {
                 Dock = DockStyle.Fill,
-                Orientation = Orientation.Vertical,
-                SplitterDistance = 700
+                Orientation = Orientation.Vertical
             };
-            mainSplit.Panel1.Controls.Add(topSplit);
+            mainSplit.Panel1.Controls.Add(previewSplit);
 
-            // Left - Main preview
+            // Set preview split constraints in Load event
+            this.Load += (s, e) =>
+            {
+                try
+                {
+                    previewSplit.Panel2MinSize = 180;
+                    previewSplit.SplitterDistance = Math.Max(100, this.ClientSize.Width - 250);
+                }
+                catch { }
+            };
+
+            // Main preview
             var previewGroup = new GroupBox
             {
                 Text = "Game Window Preview (Click and drag to select region)",
                 Dock = DockStyle.Fill,
                 Padding = new Padding(5)
             };
-            topSplit.Panel1.Controls.Add(previewGroup);
+            previewSplit.Panel1.Controls.Add(previewGroup);
 
             previewPictureBox = new PictureBox
             {
                 Dock = DockStyle.Fill,
                 SizeMode = PictureBoxSizeMode.Zoom,
-                BackColor = Color.DarkGray
+                BackColor = Color.FromArgb(45, 45, 48)
             };
             previewPictureBox.MouseDown += PreviewPictureBox_MouseDown;
             previewPictureBox.MouseMove += PreviewPictureBox_MouseMove;
@@ -137,374 +263,267 @@ namespace ToonTown_Rewritten_Bot.Views
             previewPictureBox.Paint += PreviewPictureBox_Paint;
             previewGroup.Controls.Add(previewPictureBox);
 
-            // Right - Template preview
+            // Template preview panel
+            var templatePanel = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 2
+            };
+            templatePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            templatePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            previewSplit.Panel2.Controls.Add(templatePanel);
+
             var templatePreviewGroup = new GroupBox
             {
-                Text = "Current Template",
+                Text = "Template",
                 Dock = DockStyle.Fill,
-                Padding = new Padding(5)
+                Margin = new Padding(0, 0, 0, 2)
             };
-            topSplit.Panel2.Controls.Add(templatePreviewGroup);
+            templatePanel.Controls.Add(templatePreviewGroup, 0, 0);
 
             templatePreviewPictureBox = new PictureBox
             {
                 Dock = DockStyle.Fill,
                 SizeMode = PictureBoxSizeMode.Zoom,
-                BackColor = Color.LightGray,
+                BackColor = Color.FromArgb(60, 60, 65),
                 BorderStyle = BorderStyle.FixedSingle
             };
             templatePreviewGroup.Controls.Add(templatePreviewPictureBox);
 
-            // Bottom panel - Controls and Output
-            var bottomSplit = new SplitContainer
-            {
-                Dock = DockStyle.Fill,
-                Orientation = Orientation.Vertical,
-                SplitterDistance = 450
-            };
-            mainSplit.Panel2.Controls.Add(bottomSplit);
-
-            // Left side - Controls
-            var controlsPanel = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
-            bottomSplit.Panel1.Controls.Add(controlsPanel);
-
-            int yPos = 5;
-
-            // Row 1: Capture and Create Template
-            var captureGroup = new GroupBox
-            {
-                Text = "1. Capture",
-                Location = new Point(5, yPos),
-                Size = new Size(300, 55)
-            };
-            controlsPanel.Controls.Add(captureGroup);
-
-            captureBtn = new Button
-            {
-                Text = "Capture",
-                Location = new Point(10, 18),
-                Size = new Size(65, 28)
-            };
-            captureBtn.Click += CaptureBtn_Click;
-            captureGroup.Controls.Add(captureBtn);
-
-            autoRefreshCheckBox = new CheckBox
-            {
-                Text = "Auto",
-                Location = new Point(80, 22),
-                AutoSize = true
-            };
-            autoRefreshCheckBox.CheckedChanged += AutoRefreshCheckBox_CheckedChanged;
-            captureGroup.Controls.Add(autoRefreshCheckBox);
-
-            refreshIntervalNumeric = new NumericUpDown
-            {
-                Location = new Point(130, 20),
-                Size = new Size(50, 25),
-                Minimum = 100,
-                Maximum = 5000,
-                Value = 500,
-                Increment = 100
-            };
-            captureGroup.Controls.Add(refreshIntervalNumeric);
-
-            var msLabel = new Label { Text = "ms", Location = new Point(182, 23), AutoSize = true };
-            captureGroup.Controls.Add(msLabel);
-
-            alwaysOnTopCheckBox = new CheckBox
-            {
-                Text = "On Top",
-                Location = new Point(215, 22),
-                AutoSize = true
-            };
-            alwaysOnTopCheckBox.CheckedChanged += AlwaysOnTopCheckBox_CheckedChanged;
-            captureGroup.Controls.Add(alwaysOnTopCheckBox);
-
-            // Template Creation controls
-            var createTemplateGroup = new GroupBox
-            {
-                Text = "2. Create Template (select region first)",
-                Location = new Point(310, yPos),
-                Size = new Size(220, 55)
-            };
-            controlsPanel.Controls.Add(createTemplateGroup);
-
-            useSelectionBtn = new Button
-            {
-                Text = "Use Selection",
-                Location = new Point(10, 18),
-                Size = new Size(100, 28)
-            };
-            useSelectionBtn.Click += UseSelectionBtn_Click;
-            createTemplateGroup.Controls.Add(useSelectionBtn);
-
-            saveTemplateBtn = new Button
-            {
-                Text = "Save to File",
-                Location = new Point(115, 18),
-                Size = new Size(95, 28)
-            };
-            saveTemplateBtn.Click += SaveTemplateBtn_Click;
-            createTemplateGroup.Controls.Add(saveTemplateBtn);
-
-            yPos += 60;
-
-            // Row 2: Template Matching controls
-            var templateGroup = new GroupBox
-            {
-                Text = "3. Template Matching",
-                Location = new Point(5, yPos),
-                Size = new Size(435, 55)
-            };
-            controlsPanel.Controls.Add(templateGroup);
-
-            loadTemplateBtn = new Button
-            {
-                Text = "Load",
-                Location = new Point(10, 20),
-                Size = new Size(55, 28)
-            };
-            loadTemplateBtn.Click += LoadTemplateBtn_Click;
-            templateGroup.Controls.Add(loadTemplateBtn);
-
-            templatePathLabel = new Label
-            {
-                Text = "No template loaded",
-                Location = new Point(70, 25),
-                Size = new Size(130, 20),
-                AutoEllipsis = true
-            };
-            templateGroup.Controls.Add(templatePathLabel);
-
-            findTemplateBtn = new Button
-            {
-                Text = "Find",
-                Location = new Point(205, 20),
-                Size = new Size(50, 28)
-            };
-            findTemplateBtn.Click += FindTemplateBtn_Click;
-            templateGroup.Controls.Add(findTemplateBtn);
-
-            findAllTemplatesBtn = new Button
-            {
-                Text = "Find All",
-                Location = new Point(258, 20),
-                Size = new Size(55, 28)
-            };
-            findAllTemplatesBtn.Click += FindAllTemplatesBtn_Click;
-            templateGroup.Controls.Add(findAllTemplatesBtn);
-
-            stopSearchBtn = new Button
-            {
-                Text = "Stop",
-                Location = new Point(316, 20),
-                Size = new Size(45, 28),
-                Enabled = false,
-                BackColor = Color.IndianRed,
-                ForeColor = Color.White
-            };
-            stopSearchBtn.Click += StopSearchBtn_Click;
-            templateGroup.Controls.Add(stopSearchBtn);
-
-            thresholdNumeric = new NumericUpDown
-            {
-                Location = new Point(365, 20),
-                Size = new Size(45, 25),
-                Minimum = 50,
-                Maximum = 100,
-                Value = 85,
-                DecimalPlaces = 0
-            };
-            templateGroup.Controls.Add(thresholdNumeric);
-
-            var percentLabel = new Label { Text = "%", Location = new Point(412, 24), AutoSize = true };
-            templateGroup.Controls.Add(percentLabel);
-
-            yPos += 60;
-
-            // Row 3: Template folder and clear button
-            var templateFolderGroup = new GroupBox
-            {
-                Text = "Templates & Results",
-                Location = new Point(5, yPos),
-                Size = new Size(435, 55)
-            };
-            controlsPanel.Controls.Add(templateFolderGroup);
-
-            openTemplatesFolderBtn = new Button
-            {
-                Text = "Open Templates Folder",
-                Location = new Point(10, 20),
-                Size = new Size(140, 28)
-            };
-            openTemplatesFolderBtn.Click += (s, e) => System.Diagnostics.Process.Start("explorer.exe", TemplatesFolder);
-            templateFolderGroup.Controls.Add(openTemplatesFolderBtn);
-
-            clearMatchesBtn = new Button
-            {
-                Text = "Clear Results",
-                Location = new Point(160, 20),
-                Size = new Size(100, 28)
-            };
-            clearMatchesBtn.Click += (s, e) => {
-                _matchResults.Clear();
-                _selectedRegion = Rectangle.Empty;
-                previewPictureBox.Invalidate();
-                Log("Cleared matches and selection.");
-            };
-            templateFolderGroup.Controls.Add(clearMatchesBtn);
-
-            var folderHintLabel = new Label
-            {
-                Text = "Store templates for reuse",
-                Location = new Point(270, 25),
-                AutoSize = true,
-                ForeColor = Color.Gray
-            };
-            templateFolderGroup.Controls.Add(folderHintLabel);
-
-            yPos += 60;
-
-            // Row 4: OCR controls
-            var ocrGroup = new GroupBox
-            {
-                Text = "4. OCR (Read Text/Numbers)",
-                Location = new Point(5, yPos),
-                Size = new Size(435, 55)
-            };
-            controlsPanel.Controls.Add(ocrGroup);
-
-            readTextBtn = new Button
-            {
-                Text = "Read Text",
-                Location = new Point(10, 20),
-                Size = new Size(80, 28)
-            };
-            readTextBtn.Click += ReadTextBtn_Click;
-            ocrGroup.Controls.Add(readTextBtn);
-
-            readNumbersBtn = new Button
-            {
-                Text = "Read Numbers",
-                Location = new Point(95, 20),
-                Size = new Size(95, 28)
-            };
-            readNumbersBtn.Click += ReadNumbersBtn_Click;
-            ocrGroup.Controls.Add(readNumbersBtn);
-
-            readFullScreenBtn = new Button
-            {
-                Text = "Read Full Screen",
-                Location = new Point(195, 20),
-                Size = new Size(110, 28)
-            };
-            readFullScreenBtn.Click += ReadFullScreenBtn_Click;
-            ocrGroup.Controls.Add(readFullScreenBtn);
-
-            var ocrStatusLabel = new Label
-            {
-                Text = "(auto-downloads)",
-                Location = new Point(310, 25),
-                AutoSize = true,
-                ForeColor = Color.Gray
-            };
-            ocrGroup.Controls.Add(ocrStatusLabel);
-
-            yPos += 60;
-
-            // Row 5: Fish Shadow Detection
-            var fishGroup = new GroupBox
-            {
-                Text = "5. Fish Shadow Detection (Debug)",
-                Location = new Point(5, yPos),
-                Size = new Size(435, 55)
-            };
-            controlsPanel.Controls.Add(fishGroup);
-
-            var locationLabel = new Label
-            {
-                Text = "Location:",
-                Location = new Point(10, 24),
-                AutoSize = true
-            };
-            fishGroup.Controls.Add(locationLabel);
-
-            fishLocationComboBox = new ComboBox
-            {
-                Location = new Point(70, 20),
-                Size = new Size(180, 25),
-                DropDownStyle = ComboBoxStyle.DropDownList
-            };
-            fishLocationComboBox.Items.AddRange(new object[]
-            {
-                "TOONTOWN CENTRAL PUNCHLINE PLACE",
-                "DONALD DREAM LAND LULLABY LANE",
-                "BRRRGH POLAR PLACE",
-                "BRRRGH WALRUS WAY",
-                "BRRRGH SLEET STREET",
-                "MINNIE'S MELODYLAND TENOR TERRACE",
-                "DONALD DOCK LIGHTHOUSE LANE",
-                "DAISY'S GARDEN ELM STREET",
-                "FISH ANYWHERE"
-            });
-            fishLocationComboBox.SelectedIndex = 0;
-            fishGroup.Controls.Add(fishLocationComboBox);
-
-            findFishBtn = new Button
-            {
-                Text = "Find Fish",
-                Location = new Point(260, 18),
-                Size = new Size(80, 28)
-            };
-            findFishBtn.Click += FindFishBtn_Click;
-            fishGroup.Controls.Add(findFishBtn);
-
-            sampleColorBtn = new Button
-            {
-                Text = "Sample Color",
-                Location = new Point(345, 18),
-                Size = new Size(85, 28)
-            };
-            sampleColorBtn.Click += SampleColorBtn_Click;
-            fishGroup.Controls.Add(sampleColorBtn);
-
-            // Right side - Output
+            // Output panel (small)
             var outputGroup = new GroupBox
             {
-                Text = "Output / Results",
+                Text = "Output",
                 Dock = DockStyle.Fill,
-                Padding = new Padding(5)
+                Margin = new Padding(0, 2, 0, 0)
             };
-            bottomSplit.Panel2.Controls.Add(outputGroup);
+            templatePanel.Controls.Add(outputGroup, 0, 1);
 
             outputTextBox = new TextBox
             {
                 Multiline = true,
                 Dock = DockStyle.Fill,
                 ScrollBars = ScrollBars.Vertical,
-                Font = new Font("Consolas", 9),
-                ReadOnly = true
+                Font = new Font("Consolas", 8),
+                ReadOnly = true,
+                BackColor = Color.FromArgb(30, 30, 30),
+                ForeColor = Color.LightGray
             };
             outputGroup.Controls.Add(outputTextBox);
 
-            var clearBtn = new Button
+            // === BOTTOM PANEL: All Controls ===
+            var controlsPanel = new Panel
             {
-                Text = "Clear Output",
-                Dock = DockStyle.Bottom,
-                Height = 28
+                Dock = DockStyle.Fill,
+                Padding = new Padding(5)
             };
-            clearBtn.Click += (s, e) => outputTextBox.Clear();
-            outputGroup.Controls.Add(clearBtn);
+            mainSplit.Panel2.Controls.Add(controlsPanel);
 
-            // Coordinate display label (status bar)
+            var controlsTable = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 5,
+                RowCount = 1
+            };
+            controlsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 170)); // Capture
+            controlsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 170)); // Create Template
+            controlsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 270)); // Test Templates
+            controlsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // OCR
+            controlsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F)); // Fish
+            controlsPanel.Controls.Add(controlsTable);
+
+            // === GROUP 1: Capture ===
+            var captureGroup = new GroupBox { Text = "Capture", Dock = DockStyle.Fill, Margin = new Padding(0, 0, 3, 0) };
+            controlsTable.Controls.Add(captureGroup, 0, 0);
+
+            var captureFlow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, Padding = new Padding(5) };
+            captureGroup.Controls.Add(captureFlow);
+
+            var captureRow1 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true };
+            captureFlow.Controls.Add(captureRow1);
+
+            captureBtn = new Button { Text = "Capture", Size = new Size(75, 28), Margin = new Padding(0, 0, 5, 0) };
+            captureBtn.Click += CaptureBtn_Click;
+            captureRow1.Controls.Add(captureBtn);
+
+            clearMatchesBtn = new Button { Text = "Clear", Size = new Size(55, 28) };
+            clearMatchesBtn.Click += (s, e) => {
+                _matchResults.Clear();
+                _selectedRegion = Rectangle.Empty;
+                previewPictureBox.Invalidate();
+                Log("Cleared.");
+            };
+            captureRow1.Controls.Add(clearMatchesBtn);
+
+            var captureRow2 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
+            captureFlow.Controls.Add(captureRow2);
+
+            autoRefreshCheckBox = new CheckBox { Text = "Auto", AutoSize = true, Margin = new Padding(0, 3, 3, 0) };
+            autoRefreshCheckBox.CheckedChanged += AutoRefreshCheckBox_CheckedChanged;
+            captureRow2.Controls.Add(autoRefreshCheckBox);
+
+            refreshIntervalNumeric = new NumericUpDown { Size = new Size(50, 22), Minimum = 100, Maximum = 5000, Value = 500, Increment = 100 };
+            captureRow2.Controls.Add(refreshIntervalNumeric);
+
+            captureRow2.Controls.Add(new Label { Text = "ms", AutoSize = true, Margin = new Padding(2, 4, 0, 0) });
+
+            var captureRow3 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
+            captureFlow.Controls.Add(captureRow3);
+
+            alwaysOnTopCheckBox = new CheckBox { Text = "Always On Top", AutoSize = true };
+            alwaysOnTopCheckBox.CheckedChanged += AlwaysOnTopCheckBox_CheckedChanged;
+            captureRow3.Controls.Add(alwaysOnTopCheckBox);
+
+            // === GROUP 2: Create Template ===
+            var templateGroup = new GroupBox { Text = "Create Template", Dock = DockStyle.Fill, Margin = new Padding(3, 0, 3, 0) };
+            controlsTable.Controls.Add(templateGroup, 1, 0);
+
+            var templateFlow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, Padding = new Padding(5) };
+            templateGroup.Controls.Add(templateFlow);
+
+            var templateRow1 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true };
+            templateFlow.Controls.Add(templateRow1);
+
+            useSelectionBtn = new Button { Text = "Use Selection", Size = new Size(95, 28), Margin = new Padding(0, 0, 5, 0) };
+            useSelectionBtn.Click += UseSelectionBtn_Click;
+            templateRow1.Controls.Add(useSelectionBtn);
+
+            saveTemplateBtn = new Button { Text = "Save", Size = new Size(55, 28) };
+            saveTemplateBtn.Click += SaveTemplateBtn_Click;
+            templateRow1.Controls.Add(saveTemplateBtn);
+
+            var templateRow2 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
+            templateFlow.Controls.Add(templateRow2);
+
+            openTemplatesFolderBtn = new Button { Text = "Open Folder", Size = new Size(95, 28) };
+            openTemplatesFolderBtn.Click += (s, e) => System.Diagnostics.Process.Start("explorer.exe", TemplatesFolder);
+            templateRow2.Controls.Add(openTemplatesFolderBtn);
+
+            // === GROUP 3: Test Templates ===
+            var searchGroup = new GroupBox { Text = "Test Templates", Dock = DockStyle.Fill, Margin = new Padding(3, 0, 3, 0) };
+            controlsTable.Controls.Add(searchGroup, 2, 0);
+
+            var searchFlow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, Padding = new Padding(5) };
+            searchGroup.Controls.Add(searchFlow);
+
+            // Template dropdown row
+            var templateSelectRow = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true };
+            searchFlow.Controls.Add(templateSelectRow);
+
+            templateDefinitionsComboBox = new ComboBox { Size = new Size(180, 24), DropDownStyle = ComboBoxStyle.DropDownList, DropDownHeight = 300 };
+            templateDefinitionsComboBox.SelectedIndexChanged += TemplateDefinitionsComboBox_SelectedIndexChanged;
+            templateSelectRow.Controls.Add(templateDefinitionsComboBox);
+
+            testTemplateBtn = new Button { Text = "Test", Size = new Size(50, 26), Margin = new Padding(5, 0, 0, 0) };
+            testTemplateBtn.Click += TestTemplateBtn_Click;
+            templateSelectRow.Controls.Add(testTemplateBtn);
+
+            // Load from file row
+            var searchRow1 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
+            searchFlow.Controls.Add(searchRow1);
+
+            loadTemplateBtn = new Button { Text = "Load File", Size = new Size(65, 26), Margin = new Padding(0, 0, 5, 0) };
+            loadTemplateBtn.Click += LoadTemplateBtn_Click;
+            searchRow1.Controls.Add(loadTemplateBtn);
+
+            templatePathLabel = new Label { Text = "No template", AutoSize = true, Margin = new Padding(0, 5, 0, 0), ForeColor = Color.Gray, MaximumSize = new Size(120, 0) };
+            searchRow1.Controls.Add(templatePathLabel);
+
+            // Find buttons row
+            var searchRow2 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
+            searchFlow.Controls.Add(searchRow2);
+
+            findTemplateBtn = new Button { Text = "Find", Size = new Size(50, 26), Margin = new Padding(0, 0, 3, 0) };
+            findTemplateBtn.Click += FindTemplateBtn_Click;
+            searchRow2.Controls.Add(findTemplateBtn);
+
+            findAllTemplatesBtn = new Button { Text = "Find All", Size = new Size(60, 26), Margin = new Padding(0, 0, 3, 0) };
+            findAllTemplatesBtn.Click += FindAllTemplatesBtn_Click;
+            searchRow2.Controls.Add(findAllTemplatesBtn);
+
+            stopSearchBtn = new Button { Text = "Stop", Size = new Size(45, 26), Enabled = false, BackColor = Color.IndianRed, ForeColor = Color.White };
+            stopSearchBtn.Click += StopSearchBtn_Click;
+            searchRow2.Controls.Add(stopSearchBtn);
+
+            // Threshold row
+            var searchRow3 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
+            searchFlow.Controls.Add(searchRow3);
+
+            searchRow3.Controls.Add(new Label { Text = "Threshold:", AutoSize = true, Margin = new Padding(0, 4, 3, 0) });
+            thresholdNumeric = new NumericUpDown { Size = new Size(45, 22), Minimum = 50, Maximum = 100, Value = 85 };
+            searchRow3.Controls.Add(thresholdNumeric);
+            searchRow3.Controls.Add(new Label { Text = "%", AutoSize = true, Margin = new Padding(2, 4, 0, 0) });
+
+            // === GROUP 4: OCR ===
+            var ocrGroup = new GroupBox { Text = "OCR (Text Recognition)", Dock = DockStyle.Fill, Margin = new Padding(3, 0, 3, 0) };
+            controlsTable.Controls.Add(ocrGroup, 3, 0);
+
+            var ocrFlow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, Padding = new Padding(5) };
+            ocrGroup.Controls.Add(ocrFlow);
+
+            var ocrRow1 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true };
+            ocrFlow.Controls.Add(ocrRow1);
+
+            readTextBtn = new Button { Text = "Read Text", Size = new Size(80, 28), Margin = new Padding(0, 0, 5, 0) };
+            readTextBtn.Click += ReadTextBtn_Click;
+            ocrRow1.Controls.Add(readTextBtn);
+
+            readNumbersBtn = new Button { Text = "Numbers", Size = new Size(70, 28) };
+            readNumbersBtn.Click += ReadNumbersBtn_Click;
+            ocrRow1.Controls.Add(readNumbersBtn);
+
+            var ocrRow2 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
+            ocrFlow.Controls.Add(ocrRow2);
+
+            readFullScreenBtn = new Button { Text = "Full Screen", Size = new Size(85, 28) };
+            readFullScreenBtn.Click += ReadFullScreenBtn_Click;
+            ocrRow2.Controls.Add(readFullScreenBtn);
+
+            // === GROUP 5: Fish Detection ===
+            var fishGroup = new GroupBox { Text = "Fish Detection", Dock = DockStyle.Fill, Margin = new Padding(3, 0, 0, 0) };
+            controlsTable.Controls.Add(fishGroup, 4, 0);
+
+            var fishFlow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, Padding = new Padding(5) };
+            fishGroup.Controls.Add(fishFlow);
+
+            fishLocationComboBox = new ComboBox { Size = new Size(160, 24), DropDownStyle = ComboBoxStyle.DropDownList, DropDownHeight = 250 };
+            fishLocationComboBox.Items.AddRange(new object[]
+            {
+                "TTC Punchline Place",
+                "DDL Lullaby Lane",
+                "Brrrgh Polar Place",
+                "Brrrgh Walrus Way",
+                "Brrrgh Sleet Street",
+                "MML Tenor Terrace",
+                "DD Lighthouse Lane",
+                "DG Elm Street",
+                "Fish Anywhere"
+            });
+            fishLocationComboBox.SelectedIndex = 0;
+            fishFlow.Controls.Add(fishLocationComboBox);
+
+            var fishRow2 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
+            fishFlow.Controls.Add(fishRow2);
+
+            findFishBtn = new Button { Text = "Find Fish", Size = new Size(75, 28), Margin = new Padding(0, 0, 5, 0) };
+            findFishBtn.Click += FindFishBtn_Click;
+            fishRow2.Controls.Add(findFishBtn);
+
+            sampleColorBtn = new Button { Text = "Sample", Size = new Size(65, 28) };
+            sampleColorBtn.Click += SampleColorBtn_Click;
+            fishRow2.Controls.Add(sampleColorBtn);
+
+            // === STATUS BAR ===
             coordsLabel = new Label
             {
                 Text = "Coordinates: (-, -) | Selection: none",
                 Dock = DockStyle.Bottom,
                 Height = 22,
                 TextAlign = ContentAlignment.MiddleLeft,
-                BackColor = SystemColors.Control,
-                BorderStyle = BorderStyle.Fixed3D
+                BackColor = Color.FromArgb(45, 45, 48),
+                ForeColor = Color.LightGray,
+                Padding = new Padding(5, 0, 0, 0)
             };
             this.Controls.Add(coordsLabel);
         }
@@ -1513,35 +1532,36 @@ namespace ToonTown_Rewritten_Bot.Views
 
         private FishingSpotConfig GetFishingSpotConfig(string locationName)
         {
-            // Hardcoded fishing spot configurations from MouseClickSimulator
+            // Fishing spot configurations - supports both short and full location names
             return locationName switch
             {
-                "TOONTOWN CENTRAL PUNCHLINE PLACE" => new FishingSpotConfig(
+                "TTC Punchline Place" or "TOONTOWN CENTRAL PUNCHLINE PLACE" => new FishingSpotConfig(
                     new Rectangle(260, 196, 1089, 430),
                     Color.FromArgb(20, 123, 114),
                     new Tolerance(8, 8, 8),
                     15),
-                "DONALD DREAM LAND LULLABY LANE" => new FishingSpotConfig(
+                "DDL Lullaby Lane" or "DONALD DREAM LAND LULLABY LANE" => new FishingSpotConfig(
                     new Rectangle(248, 239, 1244, 421),
                     Color.FromArgb(55, 103, 116),
                     new Tolerance(8, 14, 11),
                     0),
+                "Brrrgh Polar Place" or "Brrrgh Walrus Way" or "Brrrgh Sleet Street" or
                 "BRRRGH POLAR PLACE" or "BRRRGH WALRUS WAY" or "BRRRGH SLEET STREET" => new FishingSpotConfig(
                     new Rectangle(153, 134, 1297, 569),
                     Color.FromArgb(25, 144, 148),
                     new Tolerance(10, 11, 11),
                     10),
-                "MINNIE'S MELODYLAND TENOR TERRACE" => new FishingSpotConfig(
+                "MML Tenor Terrace" or "MINNIE'S MELODYLAND TENOR TERRACE" => new FishingSpotConfig(
                     new Rectangle(200, 150, 1292, 510),
                     Color.FromArgb(56, 129, 122),
                     new Tolerance(10, 10, 10),
                     20),
-                "DONALD DOCK LIGHTHOUSE LANE" => new FishingSpotConfig(
+                "DD Lighthouse Lane" or "DONALD DOCK LIGHTHOUSE LANE" => new FishingSpotConfig(
                     new Rectangle(200, 150, 1292, 510),
                     Color.FromArgb(22, 140, 118),
                     new Tolerance(13, 13, 15),
                     15),
-                "DAISY'S GARDEN ELM STREET" => new FishingSpotConfig(
+                "DG Elm Street" or "DAISY'S GARDEN ELM STREET" => new FishingSpotConfig(
                     new Rectangle(200, 80, 1230, 712),
                     Color.FromArgb(17, 102, 75),
                     new Tolerance(5, 4, 5),
@@ -1645,6 +1665,8 @@ namespace ToonTown_Rewritten_Bot.Views
         private ComboBox fishLocationComboBox;
         private Button findFishBtn;
         private Button sampleColorBtn;
+        private ComboBox templateDefinitionsComboBox;
+        private Button testTemplateBtn;
         #endregion
     }
 }
