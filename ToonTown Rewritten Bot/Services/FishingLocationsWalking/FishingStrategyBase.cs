@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Utilities;
 using static ToonTown_Rewritten_Bot.Models.Coordinates;
 
@@ -108,11 +109,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 numberOfCasts--;
                 await Task.Delay(1000, cancellationToken);
             }
-            if (!shouldStopFishing)
-            {
-                await ExitFishing(cancellationToken);
-                await Task.Delay(3000, cancellationToken);
-            }
+            // Note: ExitFishing is now called by FishingService after optionally straightening
         }
 
         /// <summary>
@@ -198,16 +195,118 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         protected async Task<bool> CheckIfFishCaught(CancellationToken cancellationToken)
         {
-            // Use cached coords from image rec (already found during CastLine)
-            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
-            string color = HexConverter(GetColorAt(x, y - 600));
-            if (color.Equals("#FFFFBE") || color.Equals("#FFFFBF")) return true;
+            // Get game window info for proper coordinate scaling
+            var windowRect = CoreFunctionality.GetGameWindowRect();
+            if (windowRect.IsEmpty) return false;
 
-            color = HexConverter(GetColorAt(x, 110));
-            return color.Equals("#FFFFBE") || color.Equals("#FFFFBF");
+            // The fish caught popup appears in the upper-right area of the screen
+            // It has a cream/beige background color and green border
+
+            // Check multiple positions where the popup typically appears
+            // Popup is roughly in the right third of the screen, upper half
+            int popupCenterX = windowRect.X + (int)(windowRect.Width * 0.7);  // 70% from left
+            int popupTopY = windowRect.Y + (int)(windowRect.Height * 0.15);   // 15% from top
+            int popupMidY = windowRect.Y + (int)(windowRect.Height * 0.25);   // 25% from top
+
+            // Check several positions for the cream popup background
+            var positionsToCheck = new[]
+            {
+                new Point(popupCenterX, popupTopY),
+                new Point(popupCenterX, popupMidY),
+                new Point(popupCenterX - 50, popupTopY),
+                new Point(popupCenterX + 50, popupTopY),
+                new Point(popupCenterX, popupTopY + 50),
+            };
+
+            foreach (var pos in positionsToCheck)
+            {
+                var color = GetColorAt(pos.X, pos.Y);
+
+                // Check for cream/beige background (the popup card)
+                // Cream colors have high R and G, lower B
+                if (IsCreamColor(color))
+                {
+                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Detected cream popup at ({pos.X}, {pos.Y}) - RGB({color.R},{color.G},{color.B})");
+                    return true;
+                }
+
+                // Also check for the green border of the popup
+                if (IsPopupGreenBorder(color))
+                {
+                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Detected green border at ({pos.X}, {pos.Y}) - RGB({color.R},{color.G},{color.B})");
+                    return true;
+                }
+            }
+
+            // Fallback: Check the original positions relative to cast button
+            var (btnX, btnY) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
+            var fallbackColor = GetColorAt(btnX, Math.Max(windowRect.Y + 50, btnY - 600));
+            if (IsCreamColor(fallbackColor))
+            {
+                System.Diagnostics.Debug.WriteLine($"[FishCatch] Detected via fallback position");
+                return true;
+            }
+
+            return false;
         }
 
-        protected async Task ExitFishing(CancellationToken cancellationToken)
+        /// <summary>
+        /// Checks if a color is the cream/beige background of the fish popup.
+        /// </summary>
+        private bool IsCreamColor(Color color)
+        {
+            // Cream/beige colors: high R (240-255), high G (240-255), lower B (170-210)
+            // The popup background is approximately #FFFFBE which is RGB(255, 255, 190)
+            return color.R >= 240 && color.G >= 240 && color.B >= 170 && color.B <= 220;
+        }
+
+        /// <summary>
+        /// Checks if a color is the green border of the fish popup card.
+        /// </summary>
+        private bool IsPopupGreenBorder(Color color)
+        {
+            // The popup has a teal/green border, approximately RGB(91, 192, 137) or similar
+            // Green border: G is highest, R and B are lower
+            return color.G >= 150 && color.G > color.R && color.G > color.B &&
+                   color.R >= 50 && color.R <= 150 &&
+                   color.B >= 100 && color.B <= 180;
+        }
+
+        /// <summary>
+        /// Straightens the toon by pulling the fishing rod straight ahead and canceling.
+        /// This ensures the toon faces forward before walking to sell fish.
+        /// Must be called while still in fishing mode (before ExitFishing).
+        /// </summary>
+        public async Task StraightenToonAsync(CancellationToken cancellationToken)
+        {
+            System.Diagnostics.Debug.WriteLine("[FishingStrategy] Straightening toon before leaving dock...");
+
+            // Find the red fishing button
+            var (btnX, btnY) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
+
+            // Click and hold the button
+            MoveCursor(btnX, btnY);
+            await Task.Delay(100, cancellationToken);
+            DoMouseClickDown(new Point(btnX, btnY));
+            await Task.Delay(200, cancellationToken);
+
+            // Drag straight down (this makes the toon face forward/center)
+            int straightY = btnY + 150; // Drag down 150 pixels
+            MoveCursor(btnX, straightY);
+            await Task.Delay(300, cancellationToken);
+
+            // Press ESC to cancel the cast WHILE still holding the mouse button
+            SendKeys.SendWait("{ESC}");
+            await Task.Delay(200, cancellationToken);
+
+            // Now release the mouse (cast is already cancelled)
+            DoMouseClickUp(new Point(btnX, straightY));
+            await Task.Delay(300, cancellationToken);
+
+            System.Diagnostics.Debug.WriteLine("[FishingStrategy] Toon straightened.");
+        }
+
+        public async Task ExitFishing(CancellationToken cancellationToken)
         {
             // Use image recognition to find exit button (will prompt for template capture if needed)
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.ExitFishingButton);
