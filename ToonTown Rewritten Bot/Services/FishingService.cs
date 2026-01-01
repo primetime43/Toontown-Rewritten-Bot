@@ -39,6 +39,11 @@ namespace ToonTown_Rewritten_Bot.Services
 
                 if (locationName != FishingLocationNames.FishAnywhere && locationName != FishingLocationNames.CustomFishingAction)
                 {
+                    // Straighten the toon before exiting so they face forward for walking to sell
+                    await StraightenToonAsync(cancellationToken);
+                    await ExitFishing(cancellationToken);
+                    await Task.Delay(3000, cancellationToken);
+
                     // Hardcoded Fishing Locations' if
                     FishingStrategyBase fishingStrategy = DetermineFishingStrategy(locationName);
                     await fishingStrategy.LeaveDockAndSellAsync(cancellationToken);
@@ -46,6 +51,11 @@ namespace ToonTown_Rewritten_Bot.Services
                 }
                 else if(locationName == FishingLocationNames.CustomFishingAction && customFishingFilePath != "")
                 {
+                    // Straighten the toon before exiting so they face forward for walking to sell
+                    await StraightenToonAsync(cancellationToken);
+                    await ExitFishing(cancellationToken);
+                    await Task.Delay(3000, cancellationToken);
+
                     // Custom Fishing's if
                     CustomActionsFishing customFishing = new CustomActionsFishing(customFishingFilePath);
                     await customFishing.LeaveDockAndSellAsync(cancellationToken); // Start the action sequence
@@ -53,7 +63,9 @@ namespace ToonTown_Rewritten_Bot.Services
                 }
                 else
                 {
-                    // If "FISH ANYWHERE" is selected, skip the selling process.
+                    // If "FISH ANYWHERE" is selected, just exit fishing without straightening
+                    await ExitFishing(cancellationToken);
+                    await Task.Delay(3000, cancellationToken);
                     sells = 0;
                 }
             }

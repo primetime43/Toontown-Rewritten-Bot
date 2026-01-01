@@ -3,15 +3,15 @@
     "Name": "Red Fishing Button",
     "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Red_Fishing_Button.png",
     "ManualCoordinates": "960, 765",
-    "CachedCenter": "959, 784",
-    "LastFoundTime": "2025-12-30T14:30:05.8107421-05:00"
+    "CachedCenter": "960, 784",
+    "LastFoundTime": "2025-12-31T19:14:49.1785063-05:00"
   },
   "Exit Fishing Button": {
     "Name": "Exit Fishing Button",
     "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Exit_Fishing_Button.png",
     "ManualCoordinates": "468, 38",
-    "CachedCenter": "1562, 984",
-    "LastFoundTime": "2025-12-30T05:36:02.2687922-05:00"
+    "CachedCenter": "928, 993",
+    "LastFoundTime": "2025-12-31T18:54:21.6007655-05:00"
   },
   "Blue Sell All Button": {
     "Name": "Blue Sell All Button",
