@@ -248,6 +248,13 @@ namespace ToonTown_Rewritten_Bot
         /// </remarks>
         private async void startFishing_Click(object sender, EventArgs e)
         {
+            // Reset the CancellationTokenSource if it's null or was previously cancelled
+            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+            {
+                _cancellationTokenSource?.Dispose();
+                _cancellationTokenSource = new CancellationTokenSource();
+            }
+
             var token = _cancellationTokenSource.Token; // Token to handle task cancellation
 
             try
