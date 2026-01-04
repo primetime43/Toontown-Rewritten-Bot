@@ -480,6 +480,48 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
+        private void EditScanAreaBtn_Click(object sender, EventArgs e)
+        {
+            string selectedLocation = fishingLocationscomboBox.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selectedLocation))
+            {
+                MessageBox.Show("Please select a fishing location first.", "No Location Selected",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (selectedLocation == "CUSTOM FISHING ACTION")
+            {
+                MessageBox.Show("Scan area editing is not available for custom fishing actions.",
+                    "Not Available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // Get the default scan area for this location
+            var detector = new Utilities.FishBubbleDetector(selectedLocation);
+            var defaultScanArea = detector.GetDefaultScanArea();
+
+            if (defaultScanArea.IsEmpty)
+            {
+                MessageBox.Show($"No scan area defined for location: {selectedLocation}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Open the calibration form
+            using (var calibrationForm = new ScanAreaCalibrationForm(selectedLocation, defaultScanArea))
+            {
+                calibrationForm.ShowDialog();
+
+                if (calibrationForm.WasSaved)
+                {
+                    MessageBox.Show($"Custom scan area saved for '{selectedLocation}'.\n\n" +
+                        $"New dimensions: {calibrationForm.ResultScanArea.Width} x {calibrationForm.ResultScanArea.Height}",
+                        "Scan Area Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
         /// <summary>
         /// Called when fishing ends to auto-uncheck the overlay checkbox.
         /// </summary>
