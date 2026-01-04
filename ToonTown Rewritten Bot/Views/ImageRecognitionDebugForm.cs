@@ -30,6 +30,8 @@ namespace ToonTown_Rewritten_Bot.Views
         private Color _fishBubbleColor = Color.Empty;
         private Point _calculatedRodPosition = Point.Empty;
         private Point _calculatedCastPosition = Point.Empty;
+        private FishBubbleDetector _currentFishDetector;
+        private Bitmap _lastFishScreenshot;
 
         /// <summary>
         /// Gets the Templates folder path. Tries to find the project source folder first (for persistence),
@@ -513,6 +515,22 @@ namespace ToonTown_Rewritten_Bot.Views
             sampleColorBtn = new Button { Text = "Sample", Size = new Size(65, 28) };
             sampleColorBtn.Click += SampleColorBtn_Click;
             fishRow2.Controls.Add(sampleColorBtn);
+
+            // Calibration row
+            var fishRow3 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
+            fishFlow.Controls.Add(fishRow3);
+
+            confirmFishBtn = new Button { Text = "Yes, Fish!", Size = new Size(70, 28), Margin = new Padding(0, 0, 5, 0), BackColor = Color.DarkGreen, ForeColor = Color.White, Enabled = false };
+            confirmFishBtn.Click += ConfirmFishBtn_Click;
+            fishRow3.Controls.Add(confirmFishBtn);
+
+            rejectFishBtn = new Button { Text = "Not Fish", Size = new Size(65, 28), BackColor = Color.DarkRed, ForeColor = Color.White, Enabled = false };
+            rejectFishBtn.Click += RejectFishBtn_Click;
+            fishRow3.Controls.Add(rejectFishBtn);
+
+            resetCalibrationBtn = new Button { Text = "Reset", Size = new Size(50, 28), Margin = new Padding(5, 0, 0, 0) };
+            resetCalibrationBtn.Click += ResetCalibrationBtn_Click;
+            fishRow3.Controls.Add(resetCalibrationBtn);
 
             // === STATUS BAR ===
             coordsLabel = new Label
@@ -1318,164 +1336,102 @@ namespace ToonTown_Rewritten_Bot.Views
                 return;
             }
 
-            string locationName = fishLocationComboBox.SelectedItem?.ToString() ?? "FISH ANYWHERE";
+            string locationName = fishLocationComboBox.SelectedItem?.ToString() ?? "Fish Anywhere";
             Log($"=== Scanning for fish shadows at {locationName} ===");
+            Log($"(Using shared FishBubbleDetector - same code as actual fishing)");
 
             findFishBtn.Enabled = false;
+            confirmFishBtn.Enabled = false;
+            rejectFishBtn.Enabled = false;
 
             try
             {
-                var config = GetFishingSpotConfig(locationName);
-                if (config == null)
-                {
-                    Log("Unknown fishing location.");
-                    return;
-                }
+                // Use the shared FishBubbleDetector - same code as actual fishing
+                _currentFishDetector = new FishBubbleDetector(locationName);
+                var config = _currentFishDetector.GetCurrentConfig();
 
                 _fishBubbleColor = config.BubbleColor;
 
-                // Calculate scale factors based on screenshot size vs reference
-                const int ReferenceWidth = 1600;
-                const int ReferenceHeight = 1151;
-                float scaleX = (float)_currentScreenshot.Width / ReferenceWidth;
-                float scaleY = (float)_currentScreenshot.Height / ReferenceHeight;
+                // Store screenshot for confirmation
+                _lastFishScreenshot?.Dispose();
+                _lastFishScreenshot = (Bitmap)_currentScreenshot.Clone();
 
-                // Scale the scan area
-                _fishScanArea = new Rectangle(
-                    (int)(config.ScanArea.X * scaleX),
-                    (int)(config.ScanArea.Y * scaleY),
-                    (int)(config.ScanArea.Width * scaleX),
-                    (int)(config.ScanArea.Height * scaleY)
-                );
+                // Run detection using shared detector
+                var result = await Task.Run(() => _currentFishDetector.DetectFromScreenshot(_lastFishScreenshot));
 
-                Log($"Scan area: ({_fishScanArea.X}, {_fishScanArea.Y}) - {_fishScanArea.Width}x{_fishScanArea.Height}");
-
+                // Store results for visualization
+                _fishScanArea = result.ScanArea;
+                _shadowBlobs = result.Blobs ?? new List<List<Point>>();
                 _fishBubbleResults.Clear();
-                _shadowBlobs.Clear();
-                var screenshotCopy = (Bitmap)_currentScreenshot.Clone();
 
-                // ============ METHOD 1: Computer Vision Shadow Detection ============
+                // Show calibration status
+                if (result.UsingLearnedColor && result.LearnedColor.HasValue)
+                {
+                    var lc = result.LearnedColor.Value;
+                    Log($"CALIBRATED: Using learned color RGB({lc.R}, {lc.G}, {lc.B})");
+                }
+                else
+                {
+                    Log("NOT CALIBRATED: Using general dark pixel detection");
+                    Log("  -> If a fish is detected, click 'Yes, Fish!' to calibrate");
+                }
+
+                string detectionMethod = result.UsedDynamicPondDetection ? "DYNAMIC (auto-detected pond)" : "CONFIG (predefined)";
+                Log($"Scan area: ({result.ScanArea.X}, {result.ScanArea.Y}) - {result.ScanArea.Width}x{result.ScanArea.Height}");
+                Log($"Detection method: {detectionMethod}");
+                Log($"Target color: RGB({result.TargetBubbleColor.R}, {result.TargetBubbleColor.G}, {result.TargetBubbleColor.B})");
+                Log($"Tolerance: R±{result.ColorTolerance.R}, G±{result.ColorTolerance.G}, B±{result.ColorTolerance.B}");
                 Log("");
-                Log("--- METHOD 1: Shadow Detection (Computer Vision) ---");
+                Log("--- Shadow Detection Results ---");
+                Log($"Avg brightness: {result.AvgBrightness}, Threshold: {result.DarkThreshold}");
+                Log($"Dark pixels found: {result.DarkPixelCount}");
+                Log($"Blobs found: {result.Blobs?.Count ?? 0} ({result.RejectedBlobCount} rejected)");
+                Log($"Valid candidates: {result.CandidateCount} ({result.CandidatesWithBubbles} with bubbles above)");
 
-                var shadowResult = await Task.Run(() =>
+                if (result.BestShadowPosition.HasValue)
                 {
-                    return DetectFishShadowsWithVisualization(screenshotCopy, _fishScanArea);
-                });
+                    string bubbleStatus = result.HasBubblesAbove ? "YES - CONFIRMED FISH!" : "no bubbles detected";
+                    Log($"SHADOW DETECTED at ({result.BestShadowPosition.Value.X}, {result.BestShadowPosition.Value.Y})");
+                    Log($"  Shadow color: RGB({result.BestShadowColor.R}, {result.BestShadowColor.G}, {result.BestShadowColor.B})");
+                    Log($"  Bubbles above: {bubbleStatus}");
 
-                if (shadowResult.BestShadow.HasValue)
-                {
-                    Log($"SHADOW DETECTED at ({shadowResult.BestShadow.Value.X}, {shadowResult.BestShadow.Value.Y})");
-                    Log($"  Shadow color: RGB({shadowResult.BestShadowColor.R}, {shadowResult.BestShadowColor.G}, {shadowResult.BestShadowColor.B})");
-                    Log($"  Avg brightness: {shadowResult.AvgBrightness}, Threshold: {shadowResult.DarkThreshold}");
-                    Log($"  Dark pixels found: {shadowResult.DarkPixelCount}");
-                    Log($"  Blobs found: {shadowResult.Blobs.Count} ({shadowResult.RejectedBlobCount} rejected as non-fish)");
+                    _fishBubbleResults.Add(result.BestShadowPosition.Value);
 
-                    _shadowBlobs = shadowResult.Blobs;
+                    if (result.RodButtonPosition.HasValue && result.CastDestination.HasValue)
+                    {
+                        _calculatedRodPosition = result.RodButtonPosition.Value;
+                        _calculatedCastPosition = result.CastDestination.Value;
 
-                    // Add shadow center to fish results for visualization
-                    _fishBubbleResults.Add(shadowResult.BestShadow.Value);
+                        Log("");
+                        Log("=== CAST CALCULATION ===");
+                        Log($"Rod position: ({_calculatedRodPosition.X}, {_calculatedRodPosition.Y})");
+                        Log($"Cast to: ({_calculatedCastPosition.X}, {_calculatedCastPosition.Y})");
+                    }
+
+                    // Enable confirm/reject buttons if we found something
+                    confirmFishBtn.Enabled = true;
+                    rejectFishBtn.Enabled = true;
+                    Log("");
+                    Log(">>> Is this a fish? Click 'Yes, Fish!' to learn this color, or 'Not Fish' to reject <<<");
                 }
                 else
                 {
-                    Log($"No fish shadows detected.");
-                    Log($"  Avg brightness: {shadowResult.AvgBrightness}, Threshold: {shadowResult.DarkThreshold}");
-                    Log($"  Dark pixels found: {shadowResult.DarkPixelCount}");
-                    Log($"  Blobs found: {shadowResult.Blobs.Count} ({shadowResult.RejectedBlobCount} rejected as non-fish colors)");
-                    if (shadowResult.RejectedBlobCount > 0)
+                    Log("No fish shadows detected.");
+                    if (result.CandidateCount > 0)
                     {
-                        Log($"  (Rejected blobs may be dock posts or other non-fish objects)");
+                        Log($"  ({result.CandidateCount} candidates found but none passed validation)");
                     }
-                }
-
-                // ============ METHOD 2: Color Matching (Fallback) ============
-                Log("");
-                Log("--- METHOD 2: Color Matching (Original) ---");
-                Log($"Target color: RGB({config.BubbleColor.R}, {config.BubbleColor.G}, {config.BubbleColor.B})");
-                Log($"Tolerance: R±{config.ColorTolerance.R}, G±{config.ColorTolerance.G}, B±{config.ColorTolerance.B}");
-
-                var colorResults = await Task.Run(() =>
-                {
-                    var found = new List<Point>();
-                    int scaledStep = Math.Max(1, (int)(5 * Math.Min(scaleX, scaleY)));
-
-                    for (int y = _fishScanArea.Y; y < _fishScanArea.Y + _fishScanArea.Height; y += scaledStep)
+                    if (result.RejectedBlobCount > 0)
                     {
-                        for (int x = _fishScanArea.X; x < _fishScanArea.X + _fishScanArea.Width; x += scaledStep)
-                        {
-                            if (x >= 0 && x < screenshotCopy.Width && y >= 0 && y < screenshotCopy.Height)
-                            {
-                                var color = screenshotCopy.GetPixel(x, y);
-                                if (IsMatchingColor(color, config.BubbleColor, config.ColorTolerance))
-                                {
-                                    found.Add(new Point(x, y));
-                                }
-                            }
-                        }
+                        Log($"  ({result.RejectedBlobCount} blobs rejected - may be dock posts)");
                     }
-                    return found;
-                });
-
-                screenshotCopy.Dispose();
-
-                if (colorResults.Count > 0)
-                {
-                    Log($"Color matches found: {colorResults.Count} pixels");
-                    var clusters = ClusterPoints(colorResults, 30);
-                    Log($"Clustered into {clusters.Count} location(s)");
-
-                    foreach (var cluster in clusters)
-                    {
-                        _fishBubbleResults.Add(cluster);
-                        Log($"  - Color match at ({cluster.X}, {cluster.Y})");
-                    }
-                }
-                else
-                {
-                    Log("No color matches found.");
-                }
-
-                // ============ Calculate Cast if we found anything ============
-                if (_fishBubbleResults.Count > 0)
-                {
-                    var bestFish = _fishBubbleResults[0]; // Prefer shadow detection result
-
-                    const int RodButtonX = 800;
-                    const int RodButtonY = 846;
-                    const int BubbleRefX = 800;
-                    const int BubbleRefY = 820;
-
-                    float refFishX = bestFish.X / scaleX + 20;
-                    float refFishY = bestFish.Y / scaleY + 20 + config.YAdjustment;
-
-                    double factorX = 120.0 / 429.0;
-                    double factorY = 220.0 / 428.0;
-                    double yAdjustment = 0.75 + ((double)(BubbleRefY - refFishY) / BubbleRefY) * 0.38;
-                    int destX = (int)(RodButtonX + factorX * (BubbleRefX - refFishX) * yAdjustment);
-                    int destY = (int)(RodButtonY + factorY * (BubbleRefY - refFishY));
-
-                    destX = Math.Max(100, Math.Min(destX, ReferenceWidth - 100));
-                    destY = Math.Max(RodButtonY - 200, Math.Min(destY, 1009));
-
-                    _calculatedRodPosition = new Point((int)(RodButtonX * scaleX), (int)(RodButtonY * scaleY));
-                    _calculatedCastPosition = new Point((int)(destX * scaleX), (int)(destY * scaleY));
-
-                    Log("");
-                    Log("=== CAST CALCULATION ===");
-                    Log($"Best fish at: ({bestFish.X}, {bestFish.Y})");
-                    Log($"Rod position: ({_calculatedRodPosition.X}, {_calculatedRodPosition.Y})");
-                    Log($"Cast to: ({_calculatedCastPosition.X}, {_calculatedCastPosition.Y})");
-                    Log("");
-                    Log("LEGEND: GREEN = shadow blobs, YELLOW = color matches");
-                    Log("        RED circle = rod button, CYAN line = cast direction");
-                }
-                else
-                {
-                    Log("");
-                    Log("No fish found by either method.");
                     _calculatedRodPosition = Point.Empty;
                     _calculatedCastPosition = Point.Empty;
                 }
+
+                Log("");
+                Log("LEGEND: GREEN = shadow blobs, LIME circle = best shadow");
+                Log("        RED circle = rod button, CYAN line = cast direction");
 
                 previewPictureBox.Invalidate();
             }
@@ -1489,202 +1445,8 @@ namespace ToonTown_Rewritten_Bot.Views
             }
         }
 
-        /// <summary>
-        /// Shadow detection result for visualization
-        /// </summary>
-        private class ShadowDetectionResult
-        {
-            public Point? BestShadow { get; set; }
-            public Color BestShadowColor { get; set; } = Color.Empty;
-            public int AvgBrightness { get; set; }
-            public int DarkThreshold { get; set; }
-            public int DarkPixelCount { get; set; }
-            public int RejectedBlobCount { get; set; }
-            public List<List<Point>> Blobs { get; set; } = new List<List<Point>>();
-        }
-
+        // Shadow blobs for visualization (populated from FishBubbleDetector results)
         private List<List<Point>> _shadowBlobs = new List<List<Point>>();
-
-        /// <summary>
-        /// Detects fish shadows and returns detailed results for visualization.
-        /// Uses color validation to reject non-fish blobs (like dock posts).
-        /// </summary>
-        private ShadowDetectionResult DetectFishShadowsWithVisualization(Bitmap screenshot, Rectangle scanArea)
-        {
-            var result = new ShadowDetectionResult();
-            const int step = 3;
-            const int minBlobSize = 50;
-            const int maxBlobSize = 2000;
-
-            int startX = scanArea.X;
-            int startY = scanArea.Y;
-            int endX = Math.Min(screenshot.Width, scanArea.X + scanArea.Width);
-            int endY = Math.Min(screenshot.Height, scanArea.Y + scanArea.Height);
-
-            // Calculate average brightness
-            long totalBrightness = 0;
-            int pixelCount = 0;
-
-            for (int y = startY; y < endY; y += step * 2)
-            {
-                for (int x = startX; x < endX; x += step * 2)
-                {
-                    if (x >= 0 && x < screenshot.Width && y >= 0 && y < screenshot.Height)
-                    {
-                        var color = screenshot.GetPixel(x, y);
-                        totalBrightness += (color.R + color.G + color.B) / 3;
-                        pixelCount++;
-                    }
-                }
-            }
-
-            if (pixelCount == 0) return result;
-
-            result.AvgBrightness = (int)(totalBrightness / pixelCount);
-            result.DarkThreshold = Math.Max(10, result.AvgBrightness - 25);
-
-            // Find dark pixels
-            var darkPixels = new List<Point>();
-            for (int y = startY; y < endY; y += step)
-            {
-                for (int x = startX; x < endX; x += step)
-                {
-                    if (x >= 0 && x < screenshot.Width && y >= 0 && y < screenshot.Height)
-                    {
-                        var color = screenshot.GetPixel(x, y);
-                        int brightness = (color.R + color.G + color.B) / 3;
-
-                        if (brightness < result.DarkThreshold)
-                        {
-                            darkPixels.Add(new Point(x, y));
-                        }
-                    }
-                }
-            }
-
-            result.DarkPixelCount = darkPixels.Count;
-
-            if (darkPixels.Count < minBlobSize / (step * step))
-                return result;
-
-            // Find blobs
-            result.Blobs = FindBlobsClustering(darkPixels, step * 3);
-
-            // Find best blob (with color validation)
-            Point scanCenter = new Point((startX + endX) / 2, (startY + endY) / 2);
-            Point? bestBlob = null;
-            Color bestBlobColor = Color.Empty;
-            double bestScore = double.MaxValue;
-            int rejectedCount = 0;
-
-            foreach (var blob in result.Blobs)
-            {
-                int blobSize = blob.Count * step * step;
-
-                if (blobSize < minBlobSize || blobSize > maxBlobSize)
-                    continue;
-
-                int sumX = 0, sumY = 0;
-                foreach (var p in blob)
-                {
-                    sumX += p.X;
-                    sumY += p.Y;
-                }
-                Point blobCenter = new Point(sumX / blob.Count, sumY / blob.Count);
-
-                // Sample the color at blob center
-                Color blobColor = screenshot.GetPixel(blobCenter.X, blobCenter.Y);
-
-                // Validate: fish shadows are teal/cyan (more green+blue than red)
-                // Reject brown/wood colors (dock posts) where R > G
-                if (!IsFishShadowColor(blobColor))
-                {
-                    rejectedCount++;
-                    continue;
-                }
-
-                double distance = Math.Sqrt(Math.Pow(blobCenter.X - scanCenter.X, 2) +
-                                           Math.Pow(blobCenter.Y - scanCenter.Y, 2));
-                double score = distance - blobSize * 0.1;
-
-                if (score < bestScore)
-                {
-                    bestScore = score;
-                    bestBlob = blobCenter;
-                    bestBlobColor = blobColor;
-                }
-            }
-
-            result.BestShadow = bestBlob;
-            result.BestShadowColor = bestBlobColor;
-            result.RejectedBlobCount = rejectedCount;
-            return result;
-        }
-
-        /// <summary>
-        /// Checks if a color looks like a fish shadow (teal/cyan tones, not brown/wood).
-        /// Fish shadows typically have more green and blue than red.
-        /// This is a lenient check to avoid rejecting valid fish.
-        /// </summary>
-        private bool IsFishShadowColor(Color color)
-        {
-            int brightness = (color.R + color.G + color.B) / 3;
-
-            // Must be somewhat dark (allow up to 180 for lighter shadows)
-            if (brightness > 180)
-                return false;
-
-            // Reject obvious brown/wood (dock posts) - R significantly greater than G and B
-            // Only reject if clearly brown (R > G + 20 AND R > B + 20)
-            if (color.R > color.G + 20 && color.R > color.B + 20)
-                return false;
-
-            // Accept most other dark colors - fish shadows can vary
-            return true;
-        }
-
-        /// <summary>
-        /// Blob clustering for visualization
-        /// </summary>
-        private List<List<Point>> FindBlobsClustering(List<Point> points, int maxDistance)
-        {
-            var blobs = new List<List<Point>>();
-            var visited = new HashSet<int>();
-
-            for (int i = 0; i < points.Count; i++)
-            {
-                if (visited.Contains(i)) continue;
-
-                var blob = new List<Point>();
-                var queue = new Queue<int>();
-                queue.Enqueue(i);
-                visited.Add(i);
-
-                while (queue.Count > 0)
-                {
-                    int current = queue.Dequeue();
-                    blob.Add(points[current]);
-
-                    for (int j = 0; j < points.Count; j++)
-                    {
-                        if (visited.Contains(j)) continue;
-
-                        double dist = Math.Sqrt(Math.Pow(points[current].X - points[j].X, 2) +
-                                               Math.Pow(points[current].Y - points[j].Y, 2));
-                        if (dist <= maxDistance)
-                        {
-                            queue.Enqueue(j);
-                            visited.Add(j);
-                        }
-                    }
-                }
-
-                if (blob.Count > 0)
-                    blobs.Add(blob);
-            }
-
-            return blobs;
-        }
 
         private void SampleColorBtn_Click(object sender, EventArgs e)
         {
@@ -1731,28 +1493,27 @@ namespace ToonTown_Rewritten_Bot.Views
                     int avgB = (int)colors.Average(c => c.B);
                     Log($"  Area average (10x10): RGB({avgR}, {avgG}, {avgB})");
 
-                    // Compare to expected color for selected location
-                    string locationName = fishLocationComboBox.SelectedItem?.ToString() ?? "FISH ANYWHERE";
-                    var config = GetFishingSpotConfig(locationName);
-                    if (config != null)
-                    {
-                        var expected = config.BubbleColor;
-                        Log($"  Expected for {locationName}: RGB({expected.R}, {expected.G}, {expected.B})");
-                        int diffR = Math.Abs(color.R - expected.R);
-                        int diffG = Math.Abs(color.G - expected.G);
-                        int diffB = Math.Abs(color.B - expected.B);
-                        Log($"  Difference: R={diffR}, G={diffG}, B={diffB}");
+                    // Compare to expected color for selected location using shared FishBubbleDetector
+                    string locationName = fishLocationComboBox.SelectedItem?.ToString() ?? "Fish Anywhere";
+                    var detector = new FishBubbleDetector(locationName);
+                    var config = detector.GetCurrentConfig();
 
-                        if (diffR <= config.ColorTolerance.R &&
-                            diffG <= config.ColorTolerance.G &&
-                            diffB <= config.ColorTolerance.B)
-                        {
-                            Log("  ✓ This color MATCHES the expected fish bubble color!");
-                        }
-                        else
-                        {
-                            Log("  ✗ This color does NOT match the expected fish bubble color.");
-                        }
+                    var expected = config.BubbleColor;
+                    Log($"  Expected for {locationName}: RGB({expected.R}, {expected.G}, {expected.B})");
+                    int diffR = Math.Abs(color.R - expected.R);
+                    int diffG = Math.Abs(color.G - expected.G);
+                    int diffB = Math.Abs(color.B - expected.B);
+                    Log($"  Difference: R={diffR}, G={diffG}, B={diffB}");
+
+                    if (diffR <= config.ColorTolerance.R &&
+                        diffG <= config.ColorTolerance.G &&
+                        diffB <= config.ColorTolerance.B)
+                    {
+                        Log("  This color MATCHES the expected fish bubble color!");
+                    }
+                    else
+                    {
+                        Log("  This color does NOT match the expected fish bubble color.");
                     }
                 }
             }
@@ -1762,88 +1523,54 @@ namespace ToonTown_Rewritten_Bot.Views
             }
         }
 
-        private FishingSpotConfig GetFishingSpotConfig(string locationName)
+        private void ConfirmFishBtn_Click(object sender, EventArgs e)
         {
-            // Fishing spot configurations - supports both short and full location names
-            return locationName switch
+            if (_currentFishDetector == null || _lastFishScreenshot == null || _fishBubbleResults.Count == 0)
             {
-                "TTC Punchline Place" or "TOONTOWN CENTRAL PUNCHLINE PLACE" => new FishingSpotConfig(
-                    new Rectangle(260, 196, 1089, 430),
-                    Color.FromArgb(20, 123, 114),
-                    new Tolerance(8, 8, 8),
-                    15),
-                "DDL Lullaby Lane" or "DONALD DREAM LAND LULLABY LANE" => new FishingSpotConfig(
-                    new Rectangle(248, 239, 1244, 421),
-                    Color.FromArgb(55, 103, 116),
-                    new Tolerance(8, 14, 11),
-                    0),
-                "Brrrgh Polar Place" or "Brrrgh Walrus Way" or "Brrrgh Sleet Street" or
-                "BRRRGH POLAR PLACE" or "BRRRGH WALRUS WAY" or "BRRRGH SLEET STREET" => new FishingSpotConfig(
-                    new Rectangle(153, 134, 1297, 569),
-                    Color.FromArgb(25, 144, 148),
-                    new Tolerance(10, 11, 11),
-                    10),
-                "MML Tenor Terrace" or "MINNIE'S MELODYLAND TENOR TERRACE" => new FishingSpotConfig(
-                    new Rectangle(200, 150, 1292, 510),
-                    Color.FromArgb(56, 129, 122),
-                    new Tolerance(10, 10, 10),
-                    20),
-                "DD Lighthouse Lane" or "DONALD DOCK LIGHTHOUSE LANE" => new FishingSpotConfig(
-                    new Rectangle(200, 150, 1292, 510),
-                    Color.FromArgb(22, 140, 118),
-                    new Tolerance(13, 13, 15),
-                    15),
-                "DG Elm Street" or "DAISY'S GARDEN ELM STREET" => new FishingSpotConfig(
-                    new Rectangle(200, 80, 1230, 712),
-                    Color.FromArgb(17, 102, 75),
-                    new Tolerance(5, 4, 5),
-                    35),
-                _ => new FishingSpotConfig(
-                    new Rectangle(200, 150, 1292, 510),
-                    Color.FromArgb(56, 129, 122),
-                    new Tolerance(7, 5, 5),
-                    35)
-            };
-        }
-
-        private bool IsMatchingColor(Color actual, Color target, Tolerance tolerance)
-        {
-            return Math.Abs(actual.R - target.R) <= tolerance.R &&
-                   Math.Abs(actual.G - target.G) <= tolerance.G &&
-                   Math.Abs(actual.B - target.B) <= tolerance.B;
-        }
-
-        private List<Point> ClusterPoints(List<Point> points, int clusterRadius)
-        {
-            var clusters = new List<Point>();
-            var used = new HashSet<int>();
-
-            for (int i = 0; i < points.Count; i++)
-            {
-                if (used.Contains(i)) continue;
-
-                var cluster = new List<Point> { points[i] };
-                used.Add(i);
-
-                for (int j = i + 1; j < points.Count; j++)
-                {
-                    if (used.Contains(j)) continue;
-
-                    if (Math.Abs(points[i].X - points[j].X) <= clusterRadius &&
-                        Math.Abs(points[i].Y - points[j].Y) <= clusterRadius)
-                    {
-                        cluster.Add(points[j]);
-                        used.Add(j);
-                    }
-                }
-
-                // Calculate cluster center
-                int avgX = (int)cluster.Average(p => p.X);
-                int avgY = (int)cluster.Average(p => p.Y);
-                clusters.Add(new Point(avgX, avgY));
+                Log("No fish detection to confirm. Run 'Find Fish' first.");
+                return;
             }
 
-            return clusters;
+            var shadowPos = _fishBubbleResults[0];
+            _currentFishDetector.ConfirmFishShadow(_lastFishScreenshot, shadowPos);
+
+            var learnedColor = _currentFishDetector.GetLearnedShadowColor();
+            if (learnedColor.HasValue)
+            {
+                var lc = learnedColor.Value;
+                Log($"CALIBRATED! Learned fish shadow color: RGB({lc.R}, {lc.G}, {lc.B})");
+                Log("Future scans will use this color for faster, more accurate detection.");
+            }
+
+            confirmFishBtn.Enabled = false;
+            rejectFishBtn.Enabled = false;
+        }
+
+        private void RejectFishBtn_Click(object sender, EventArgs e)
+        {
+            if (_currentFishDetector == null)
+            {
+                Log("No fish detection to reject.");
+                return;
+            }
+
+            _currentFishDetector.RejectFishShadow();
+            Log("Detection rejected. Try 'Find Fish' again to find a different shadow.");
+
+            confirmFishBtn.Enabled = false;
+            rejectFishBtn.Enabled = false;
+        }
+
+        private void ResetCalibrationBtn_Click(object sender, EventArgs e)
+        {
+            if (_currentFishDetector != null)
+            {
+                _currentFishDetector.ResetLearnedColor();
+            }
+            Log("Calibration reset. Detection will use general dark pixel detection until you confirm a fish.");
+
+            confirmFishBtn.Enabled = false;
+            rejectFishBtn.Enabled = false;
         }
 
         #endregion
@@ -1868,6 +1595,7 @@ namespace ToonTown_Rewritten_Bot.Views
             _refreshTimer?.Dispose();
             _currentScreenshot?.Dispose();
             _currentTemplate?.Dispose();
+            _lastFishScreenshot?.Dispose();
             _ocr?.Dispose();
             base.OnFormClosing(e);
         }
@@ -1897,6 +1625,9 @@ namespace ToonTown_Rewritten_Bot.Views
         private ComboBox fishLocationComboBox;
         private Button findFishBtn;
         private Button sampleColorBtn;
+        private Button confirmFishBtn;
+        private Button rejectFishBtn;
+        private Button resetCalibrationBtn;
         private ComboBox templateDefinitionsComboBox;
         private Button testTemplateBtn;
         #endregion

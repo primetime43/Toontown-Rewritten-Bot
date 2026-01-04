@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Utilities;
+using ToonTown_Rewritten_Bot.Views;
 using static ToonTown_Rewritten_Bot.Models.Coordinates;
 
 namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
@@ -27,6 +29,17 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// Current fishing location name.
         /// </summary>
         protected string _locationName = "FISH ANYWHERE";
+
+        /// <summary>
+        /// Static reference to the fishing overlay for visualization.
+        /// Set from MainForm when overlay is enabled.
+        /// </summary>
+        public static FishingOverlayForm Overlay { get; set; }
+
+        /// <summary>
+        /// Callback to notify MainForm when fishing ends, so it can uncheck the overlay checkbox.
+        /// </summary>
+        public static Action OnFishingEnded { get; set; }
 
         /// <summary>
         /// Sets the fishing location for proper bubble detection configuration.
@@ -87,29 +100,40 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 throw new InvalidOperationException("Toontown Rewritten window not found. Please make sure the game is running.");
             }
 
-            Stopwatch stopwatch = new Stopwatch();
-            while (numberOfCasts != 0 && !shouldStopFishing)
+            try
             {
-                if (autoDetectFish)
+                Stopwatch stopwatch = new Stopwatch();
+                while (numberOfCasts != 0 && !shouldStopFishing)
                 {
-                    await CastLineAuto(cancellationToken);
-                }
-                else
-                {
-                    await CastLine(fishVariance, cancellationToken);
-                }
+                    if (autoDetectFish)
+                    {
+                        await CastLineAuto(cancellationToken);
+                    }
+                    else
+                    {
+                        await CastLine(fishVariance, cancellationToken);
+                    }
 
-                stopwatch.Start();
-                while (stopwatch.Elapsed.Seconds < 30 && !await CheckIfFishCaught(cancellationToken))
-                {
-                    if (cancellationToken.IsCancellationRequested) return;
+                    stopwatch.Start();
+                    while (stopwatch.Elapsed.Seconds < 30 && !await CheckIfFishCaught(cancellationToken))
+                    {
+                        if (cancellationToken.IsCancellationRequested) return;
+                    }
+                    stopwatch.Stop();
+                    stopwatch.Reset();
+                    numberOfCasts--;
+                    await Task.Delay(1000, cancellationToken);
                 }
-                stopwatch.Stop();
-                stopwatch.Reset();
-                numberOfCasts--;
-                await Task.Delay(1000, cancellationToken);
+                // Note: ExitFishing is now called by FishingService after optionally straightening
             }
-            // Note: ExitFishing is now called by FishingService after optionally straightening
+            finally
+            {
+                // Clear the overlay when fishing ends (completed or canceled)
+                ClearOverlay();
+
+                // Notify MainForm to uncheck the overlay checkbox
+                OnFishingEnded?.Invoke();
+            }
         }
 
         /// <summary>
@@ -129,7 +153,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         /// <summary>
         /// Casts the fishing line by automatically detecting fish shadows and aiming at them.
-        /// Holds the cast button down while scanning to dismiss the fish popup.
+        /// Detects all fish, picks the closest one, waits for it to stop moving, then casts.
         /// </summary>
         protected async Task CastLineAuto(CancellationToken cancellationToken)
         {
@@ -139,55 +163,184 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 _bubbleDetector = new FishBubbleDetector(_locationName);
             }
 
-            // First, find the cast button location
-            var (actualBtnX, actualBtnY) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
+            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] === CastLineAuto === Location: {_locationName}");
 
-            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Cast button at ({actualBtnX}, {actualBtnY}), clicking down to dismiss popup...");
+            // Find the cast button
+            var (btnX, btnY) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
 
-            // Move to cast button and click DOWN (this dismisses the fish popup)
-            MoveCursor(actualBtnX, actualBtnY);
+            // Hold down on cast button to dismiss any popup and enter aim mode
+            MoveCursor(btnX, btnY);
             await Task.Delay(100, cancellationToken);
-            DoMouseClickDown(new System.Drawing.Point(actualBtnX, actualBtnY));
+            DoMouseClickDown(new Point(btnX, btnY));
+            await Task.Delay(400, cancellationToken); // Wait for popup to close and aim mode to activate
 
-            // Wait for popup to close
-            await Task.Delay(300, cancellationToken);
+            Point? castTarget = null;
 
-            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Scanning for fish at {_locationName} while holding button...");
-
-            // Now scan for fish shadows while button is held down (popup is gone, pond is visible)
-            var castResult = await _bubbleDetector.DetectFishAndCalculateCastAsync(cancellationToken);
-
-            if (castResult != null)
+            try
             {
-                // Calculate the drag offset from the bubble detector's calculation
-                int dragOffsetX = castResult.CastDestination.X - castResult.RodButtonPosition.X;
-                int dragOffsetY = castResult.CastDestination.Y - castResult.RodButtonPosition.Y;
+                // Track fish position across multiple scans to detect when it stops moving
+                const int maxScans = 25;  // More scans = more time to wait for fish to stop (5 seconds)
+                const int scanDelayMs = 200;
+                const int positionTolerance = 20; // Pixels - fish is "stopped" if within this range
+                const int requiredStableScans = 3; // Need 3 consecutive stable scans to confirm stopped
 
-                // Calculate actual drag destination based on real button position
-                int actualDragX = actualBtnX + dragOffsetX;
-                int actualDragY = actualBtnY + dragOffsetY;
+                Point? lastClosestFish = null;
+                int stableCount = 0;
+                bool fishEverDetected = false;
 
-                System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Fish found! Dragging to ({actualDragX}, {actualDragY})");
+                for (int scan = 0; scan < maxScans; scan++)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
 
-                // Drag to the target position
-                await Task.Delay(200, cancellationToken);
-                MoveCursor(actualDragX, actualDragY);
-                await Task.Delay(300, cancellationToken);
+                    using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
+                    {
+                        if (screenshot == null)
+                        {
+                            System.Diagnostics.Debug.WriteLine("[FishingStrategy] Failed to capture screenshot");
+                            await Task.Delay(scanDelayMs, cancellationToken);
+                            continue;
+                        }
 
-                // Release to cast
-                DoMouseClickUp(getCursorLocation());
+                        // Run detection - get all candidates
+                        var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot);
 
-                System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Cast completed: Button({actualBtnX},{actualBtnY}) -> Drag({actualDragX},{actualDragY})");
+                        if (detectionResult.AllCandidates.Count == 0 && !detectionResult.BestShadowPosition.HasValue)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Scan {scan + 1}: No fish detected");
+                            UpdateOverlay(detectionResult, null, "Scanning... no fish found");
+                            // Don't reset lastClosestFish - fish might have temporarily disappeared
+                            stableCount = 0;
+                            await Task.Delay(scanDelayMs, cancellationToken);
+                            continue;
+                        }
+
+                        // Mark that we've seen fish at some point
+                        fishEverDetected = true;
+
+                        // Find the closest fish to the cast button (center of screen)
+                        Point closestFish;
+                        if (detectionResult.AllCandidates.Count > 0)
+                        {
+                            // Sort by distance from center and pick closest
+                            var closest = detectionResult.AllCandidates
+                                .OrderBy(c => c.DistanceFromCenter)
+                                .First();
+                            closestFish = closest.Position;
+                            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Scan {scan + 1}: Found {detectionResult.AllCandidates.Count} fish, closest at ({closestFish.X}, {closestFish.Y})");
+                        }
+                        else
+                        {
+                            closestFish = detectionResult.BestShadowPosition.Value;
+                            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Scan {scan + 1}: Using best shadow at ({closestFish.X}, {closestFish.Y})");
+                        }
+
+                        // Check if fish is at same position as last scan (stopped moving)
+                        string statusText;
+                        if (lastClosestFish.HasValue)
+                        {
+                            int dx = Math.Abs(closestFish.X - lastClosestFish.Value.X);
+                            int dy = Math.Abs(closestFish.Y - lastClosestFish.Value.Y);
+
+                            if (dx <= positionTolerance && dy <= positionTolerance)
+                            {
+                                stableCount++;
+                                statusText = $"Fish stable ({stableCount}/{requiredStableScans})";
+                                System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Fish stable (moved {dx},{dy}px) - stable count: {stableCount}/{requiredStableScans}");
+
+                                if (stableCount >= requiredStableScans)
+                                {
+                                    // Fish has stopped moving - use this position
+                                    castTarget = closestFish;
+                                    UpdateOverlay(detectionResult, closestFish, "CASTING!");
+                                    System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Fish STOPPED at ({closestFish.X}, {closestFish.Y}) - casting!");
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                // Fish moved - reset stable count
+                                stableCount = 0;
+                                statusText = "Tracking fish movement...";
+                                System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Fish moving (moved {dx},{dy}px) - waiting...");
+                            }
+                        }
+                        else
+                        {
+                            statusText = "Fish detected - tracking...";
+                        }
+
+                        // Update overlay with current detection
+                        UpdateOverlay(detectionResult, closestFish, statusText);
+                        lastClosestFish = closestFish;
+                    }
+
+                    await Task.Delay(scanDelayMs, cancellationToken);
+                }
+
+                // Only use last known position if fish stabilized at some point
+                // If fish was detected but NEVER stabilized (kept moving), don't cast to moving target
+                if (!castTarget.HasValue && lastClosestFish.HasValue && stableCount > 0)
+                {
+                    // Fish was detected and showed some stability - use last known position
+                    castTarget = lastClosestFish;
+                    System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Using last known fish position (had some stability): ({castTarget.Value.X}, {castTarget.Value.Y})");
+                }
+                else if (!castTarget.HasValue && fishEverDetected)
+                {
+                    // Fish was detected but never stopped moving - do NOT cast to moving target
+                    System.Diagnostics.Debug.WriteLine("[FishingStrategy] Fish detected but never stabilized - will do default cast instead");
+                }
+
+                // Calculate where to drag and release
+                if (castTarget.HasValue)
+                {
+                    var castResult = _bubbleDetector.CalculateCastFromPosition(castTarget.Value.X, castTarget.Value.Y);
+
+                    if (castResult != null)
+                    {
+                        // Calculate drag offset from current button position
+                        int dragOffsetX = castResult.CastDestination.X - castResult.RodButtonPosition.X;
+                        int dragOffsetY = castResult.CastDestination.Y - castResult.RodButtonPosition.Y;
+                        int dragX = btnX + dragOffsetX;
+                        int dragY = btnY + dragOffsetY;
+
+                        System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Casting: drag to ({dragX}, {dragY})");
+
+                        // Drag to target position and release
+                        MoveCursor(dragX, dragY);
+                        await Task.Delay(200, cancellationToken);
+                        DoMouseClickUp(new Point(dragX, dragY));
+                    }
+                    else
+                    {
+                        // Cast calculation failed - do default cast
+                        System.Diagnostics.Debug.WriteLine("[FishingStrategy] Cast calculation failed - default cast");
+                        int defaultY = btnY + 150;
+                        MoveCursor(btnX, defaultY);
+                        await Task.Delay(200, cancellationToken);
+                        DoMouseClickUp(new Point(btnX, defaultY));
+                    }
+                }
+                else
+                {
+                    // No fish detected - do default cast (straight down)
+                    System.Diagnostics.Debug.WriteLine("[FishingStrategy] No fish found after scanning - default cast");
+                    int defaultY = btnY + 150;
+                    MoveCursor(btnX, defaultY);
+                    await Task.Delay(200, cancellationToken);
+                    DoMouseClickUp(new Point(btnX, defaultY));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("[FishingStrategy] No fish detected, using default cast (dragging down)");
-
-                // No fish found - do a default cast by dragging down
-                await Task.Delay(200, cancellationToken);
-                MoveCursor(actualBtnX, actualBtnY + 150);
-                await Task.Delay(300, cancellationToken);
+                System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Error during cast: {ex.Message}");
+                // Make sure we release the mouse button
                 DoMouseClickUp(getCursorLocation());
+            }
+            finally
+            {
+                // Clear overlay after cast
+                ClearOverlay();
             }
 
             await Task.Delay(100, cancellationToken);
@@ -328,6 +481,65 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         protected async Task ManuallyLocateRedFishingButton()
         {
             await CoordinatesManager.ManualUpdateCoordinates(FishingCoordinatesEnum.RedFishingButton);//update the red fishing button coords
+        }
+
+        /// <summary>
+        /// Updates the fishing overlay with current detection results.
+        /// Thread-safe - can be called from any thread.
+        /// </summary>
+        private void UpdateOverlay(FishDetectionDebugResult result, Point? targetFish, string status)
+        {
+            if (Overlay == null || Overlay.IsDisposed)
+                return;
+
+            try
+            {
+                if (Overlay.InvokeRequired)
+                {
+                    Overlay.BeginInvoke(new Action(() =>
+                    {
+                        if (Overlay != null && !Overlay.IsDisposed)
+                            Overlay.UpdateDetection(result, targetFish, status);
+                    }));
+                }
+                else
+                {
+                    Overlay.UpdateDetection(result, targetFish, status);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Error updating overlay: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Clears the fishing overlay.
+        /// </summary>
+        private void ClearOverlay()
+        {
+            if (Overlay == null || Overlay.IsDisposed)
+                return;
+
+            try
+            {
+                if (Overlay.InvokeRequired)
+                {
+                    Overlay.BeginInvoke(new Action(() =>
+                    {
+                        if (Overlay != null && !Overlay.IsDisposed)
+                            Overlay.ClearOverlay();
+                    }));
+                }
+                else
+                {
+                    Overlay.ClearOverlay();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Error clearing overlay: {ex.Message}");
+            }
         }
     }
 }
