@@ -42,6 +42,7 @@
             label12 = new System.Windows.Forms.Label();
             groupBox6 = new System.Windows.Forms.GroupBox();
             autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
+            showOverlayCheckBox = new System.Windows.Forms.CheckBox();
             debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
             button4 = new System.Windows.Forms.Button();
             customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
@@ -281,7 +282,10 @@
             // 
             // groupBox6
             // 
+            groupBox6.Controls.Add(showOverlayCheckBox);
             groupBox6.Controls.Add(autoDetectFishCheckBox);
+            groupBox6.Controls.Add(calibrateFishBtn);
+            groupBox6.Controls.Add(fishCalibrationLabel);
             groupBox6.Controls.Add(debugCustomActionsCheckBox);
             groupBox6.Controls.Add(button4);
             groupBox6.Controls.Add(customFishingFilesComboBox);
@@ -310,9 +314,46 @@
             autoDetectFishCheckBox.Size = new System.Drawing.Size(182, 20);
             autoDetectFishCheckBox.TabIndex = 14;
             autoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
-            toolTip1.SetToolTip(autoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them");
+            toolTip1.SetToolTip(autoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them.\nClick 'Calibrate' to teach it the fish shadow color for better accuracy.");
             autoDetectFishCheckBox.UseVisualStyleBackColor = true;
-            // 
+            //
+            // calibrateFishBtn
+            //
+            calibrateFishBtn = new System.Windows.Forms.Button();
+            calibrateFishBtn.Location = new System.Drawing.Point(194, 136);
+            calibrateFishBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            calibrateFishBtn.Name = "calibrateFishBtn";
+            calibrateFishBtn.Size = new System.Drawing.Size(80, 26);
+            calibrateFishBtn.TabIndex = 15;
+            calibrateFishBtn.Text = "Calibrate";
+            toolTip1.SetToolTip(calibrateFishBtn, "Click when fish is on screen. The first detected shadow will be shown - confirm if it's a fish to improve detection accuracy.");
+            calibrateFishBtn.UseVisualStyleBackColor = true;
+            calibrateFishBtn.Click += CalibrateFishBtn_Click;
+            //
+            // fishCalibrationLabel
+            //
+            fishCalibrationLabel = new System.Windows.Forms.Label();
+            fishCalibrationLabel.AutoSize = true;
+            fishCalibrationLabel.Location = new System.Drawing.Point(278, 140);
+            fishCalibrationLabel.Name = "fishCalibrationLabel";
+            fishCalibrationLabel.Size = new System.Drawing.Size(90, 16);
+            fishCalibrationLabel.TabIndex = 16;
+            fishCalibrationLabel.Text = "Not calibrated";
+            fishCalibrationLabel.ForeColor = System.Drawing.Color.Gray;
+            //
+            // showOverlayCheckBox
+            //
+            showOverlayCheckBox.AutoSize = true;
+            showOverlayCheckBox.Location = new System.Drawing.Point(7, 165);
+            showOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            showOverlayCheckBox.Name = "showOverlayCheckBox";
+            showOverlayCheckBox.Size = new System.Drawing.Size(175, 20);
+            showOverlayCheckBox.TabIndex = 17;
+            showOverlayCheckBox.Text = "Show Detection Overlay";
+            toolTip1.SetToolTip(showOverlayCheckBox, "Shows a transparent overlay on the game window displaying detected fish shadows and targeting info.");
+            showOverlayCheckBox.UseVisualStyleBackColor = true;
+            showOverlayCheckBox.CheckedChanged += ShowOverlayCheckBox_CheckedChanged;
+            //
             // debugCustomActionsCheckBox
             // 
             debugCustomActionsCheckBox.AutoSize = true;
@@ -1389,6 +1430,9 @@
         private System.Windows.Forms.Button btnEditTemplate;
         private System.Windows.Forms.Button btnDeleteTemplate;
         private System.Windows.Forms.CheckBox autoDetectFishCheckBox;
+        private System.Windows.Forms.Button calibrateFishBtn;
+        private System.Windows.Forms.Label fishCalibrationLabel;
+        private System.Windows.Forms.CheckBox showOverlayCheckBox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button createCustomFishingActionsBtn;
         private System.Windows.Forms.ComboBox customFishingFilesComboBox;
