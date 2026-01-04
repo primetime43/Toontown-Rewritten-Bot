@@ -74,6 +74,9 @@ namespace ToonTown_Rewritten_Bot.Services
                 // Update the location name to only the file name without the extension
                 locationName = Path.GetFileNameWithoutExtension(customFishingFilePath);
 
+            // Notify MainForm to uncheck the overlay checkbox - fishing is completely done
+            OnFishingEnded?.Invoke();
+
             BringBotWindowToFront();
             MessageBox.Show($"Done Fishing in '{locationName}'.");
         }

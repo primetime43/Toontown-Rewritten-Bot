@@ -18,6 +18,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public int Size { get; set; }
         public bool HasBubblesAbove { get; set; }
         public double DistanceFromCenter { get; set; }
+        public double CastPower { get; set; }  // How much drag power needed (lower = closer/easier)
     }
 
     /// <summary>
@@ -400,11 +401,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
             result.Blobs = allBlobs;
 
             // Find best blob (fish shadow) - prefer ones with bubbles above
-            Point scanCenter = new Point((startX + endX) / 2, (startY + endY) / 2);
+            // Calculate distance from toon position (rod button), not scan area center
+            Point toonPosition = new Point(
+                (int)(RodButtonX * scaleX),
+                (int)(RodButtonY * scaleY));
             int rejectedCount = 0;
 
             // Collect valid candidates
-            var candidates = new List<(Point center, Color color, int size, double distance)>();
+            var candidates = new List<(Point center, Color color, int size, double distance, double castPower)>();
 
             foreach (var blob in allBlobs)
             {
@@ -444,10 +448,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     Math.Min(Math.Max(blobCenter.X, 0), screenshot.Width - 1),
                     Math.Min(Math.Max(blobCenter.Y, 0), screenshot.Height - 1));
 
-                double distance = Math.Sqrt(Math.Pow(blobCenter.X - scanCenter.X, 2) +
-                                           Math.Pow(blobCenter.Y - scanCenter.Y, 2));
+                // Calculate cast power needed (lower = closer/easier to catch)
+                double castPower = CalculateCastPower(blobCenter.X, blobCenter.Y, screenshot.Width, screenshot.Height);
 
-                candidates.Add((blobCenter, blobColor, blobSize, distance));
+                // Also keep distance for reference
+                double distance = Math.Sqrt(Math.Pow(blobCenter.X - toonPosition.X, 2) +
+                                           Math.Pow(blobCenter.Y - toonPosition.Y, 2));
+
+                candidates.Add((blobCenter, blobColor, blobSize, distance, castPower));
             }
 
             result.RejectedBlobCount = rejectedCount;
@@ -461,7 +469,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     Position = candidate.center,
                     Color = candidate.color,
                     Size = candidate.size,
-                    DistanceFromCenter = candidate.distance,
+                    DistanceFromCenter = candidate.castPower,  // Use cast power for sorting
+                    CastPower = candidate.castPower,
                     HasBubblesAbove = false // Will be updated in the loop below
                 });
             }
@@ -479,9 +488,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
             int candidatesWithBubbles = 0;
             const int edgeMargin = 50; // Reject edge candidates without bubbles
 
-            foreach (var candidate in candidates.OrderBy(c => c.distance))
+            // Sort by cast power (lowest first = easiest to catch)
+            foreach (var candidate in candidates.OrderBy(c => c.castPower))
             {
-                double score = candidate.distance - candidate.size * 0.1;
+                double score = candidate.castPower - candidate.size * 0.1;  // Lower cast power = better
                 bool hasBubbles = HasBubblesAbove(screenshot, candidate.center, result.AvgBrightness);
 
                 // Update the AllCandidates list with bubble info
@@ -537,6 +547,51 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 bestBlobColor = bestNoBubblesColor;
                 result.HasBubblesAbove = false;
             }
+            else if (allBlobs.Count > 0 && candidates.Count == 0)
+            {
+                // FALLBACK: No candidates passed filters, but we have raw blobs
+                // Use the largest blob that's roughly in the center of scan area
+                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] No candidates passed filters, using blob fallback");
+
+                var centerX = (startX + endX) / 2;
+                var centerY = (startY + endY) / 2;
+
+                // Find the largest blob closest to center
+                var bestFallbackBlob = allBlobs
+                    .Where(b => b.Count >= 3) // At least 3 points
+                    .Select(b => {
+                        int sumX = 0, sumY = 0;
+                        foreach (var p in b) { sumX += p.X; sumY += p.Y; }
+                        var center = new Point(sumX / b.Count, sumY / b.Count);
+                        var distToCenter = Math.Sqrt(Math.Pow(center.X - centerX, 2) + Math.Pow(center.Y - centerY, 2));
+                        return (blob: b, center: center, size: b.Count, distToCenter: distToCenter);
+                    })
+                    .OrderByDescending(x => x.size) // Prefer larger blobs
+                    .ThenBy(x => x.distToCenter)    // Then prefer closer to center
+                    .FirstOrDefault();
+
+                if (bestFallbackBlob.blob != null)
+                {
+                    bestBlob = bestFallbackBlob.center;
+                    bestBlobColor = screenshot.GetPixel(
+                        Math.Min(Math.Max(bestFallbackBlob.center.X, 0), screenshot.Width - 1),
+                        Math.Min(Math.Max(bestFallbackBlob.center.Y, 0), screenshot.Height - 1));
+                    result.HasBubblesAbove = false;
+
+                    // Add to AllCandidates so casting logic can use it
+                    result.AllCandidates.Add(new FishCandidate
+                    {
+                        Position = bestFallbackBlob.center,
+                        Color = bestBlobColor,
+                        Size = bestFallbackBlob.size * step * step,
+                        DistanceFromCenter = bestFallbackBlob.distToCenter,
+                        CastPower = CalculateCastPower(bestFallbackBlob.center.X, bestFallbackBlob.center.Y, screenshot.Width, screenshot.Height),
+                        HasBubblesAbove = false
+                    });
+
+                    System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Fallback blob at ({bestFallbackBlob.center.X},{bestFallbackBlob.center.Y}), size={bestFallbackBlob.size}");
+                }
+            }
 
             if (bestBlob.HasValue)
             {
@@ -544,8 +599,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 result.BestShadowColor = bestBlobColor;
 
                 // Calculate casting destination
-                float refX = bestBlob.Value.X / scaleX + 20;
-                float refY = bestBlob.Value.Y / scaleY + 20 + _spotConfig.YAdjustment;
+                // Note: No +20 offset - we detect blob CENTER, not edge
+                float refX = bestBlob.Value.X / scaleX;
+                float refY = bestBlob.Value.Y / scaleY + _spotConfig.YAdjustment;
                 var destCoords = CalculateCastingDestination((int)refX, (int)refY);
 
                 result.RodButtonPosition = new Point(
@@ -775,12 +831,17 @@ namespace ToonTown_Rewritten_Bot.Utilities
             System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Found {blobs.Count} blobs");
 
             // Find the best blob that has bubbles above it (confirmed fish)
-            Point scanCenter = new Point((startX + endX) / 2, (startY + endY) / 2);
+            // Calculate distance from toon position (rod button), not scan area center
+            float scaleX = (float)screenshot.Width / ReferenceWidth;
+            float scaleY = (float)screenshot.Height / ReferenceHeight;
+            Point toonPosition = new Point(
+                (int)(RodButtonX * scaleX),
+                (int)(RodButtonY * scaleY));
             Point? bestBlob = null;
             Color bestBlobColor = Color.Empty;
 
             // Collect all valid candidates first, then check for bubbles
-            var candidates = new List<(Point center, Color color, int size, double distance)>();
+            var candidates = new List<(Point center, Color color, int size, double castPower)>();
 
             foreach (var blob in blobs)
             {
@@ -809,11 +870,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 // Sample the color at blob center (for logging/debug)
                 Color blobColor = screenshot.GetPixel(blobCenter.X, blobCenter.Y);
 
-                // Calculate distance to center
-                double distance = Math.Sqrt(Math.Pow(blobCenter.X - scanCenter.X, 2) +
-                                           Math.Pow(blobCenter.Y - scanCenter.Y, 2));
+                // Calculate cast power needed (lower = closer/easier to catch)
+                double castPower = CalculateCastPower(blobCenter.X, blobCenter.Y, screenshot.Width, screenshot.Height);
 
-                candidates.Add((blobCenter, blobColor, blobSize, distance));
+                candidates.Add((blobCenter, blobColor, blobSize, castPower));
             }
 
             System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] {candidates.Count} candidates passed color check, now checking for bubbles...");
@@ -831,9 +891,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             const int edgeMargin = 50; // Reject edge candidates without bubbles
 
-            foreach (var candidate in candidates.OrderBy(c => c.distance))
+            // Sort by cast power (lowest first = easiest to catch)
+            foreach (var candidate in candidates.OrderBy(c => c.castPower))
             {
-                double score = candidate.distance - candidate.size * 0.1;
+                double score = candidate.castPower - candidate.size * 0.1;
 
                 // Check if candidate is near the edge of scan area
                 bool isNearEdge = candidate.center.X < startX + edgeMargin ||
@@ -1325,33 +1386,23 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         /// <summary>
         /// Calculates the casting destination based on bubble position.
-        /// Formula adapted from MouseClickSimulator project with bounds clamping.
+        /// Uses the EXACT formula from MouseClickSimulator project.
         /// </summary>
         private Point CalculateCastingDestination(int bubbleX, int bubbleY)
         {
-            // Formula from MouseClickSimulator:
+            // EXACT formula from MouseClickSimulator - do not modify!
             // destX = 800 + (120/429) * (800 - bubbleX) * (0.75 + (820 - bubbleY) / 820 * 0.38)
             // destY = 846 + (169/428) * (820 - bubbleY)
 
-            // X factor controls left/right aim - higher = more horizontal movement
-            // Original was 120/429 ≈ 0.28, tuned for better aiming
-            double factorX = 150.0 / 429.0;  // ~0.35 - balanced horizontal offset
-
-            // Y factor controls cast power - higher = more power for far fish
-            // Original was 169/428 ≈ 0.39, tuned for distance
-            double factorY = 210.0 / 428.0;  // ~0.49 - balanced power
+            double factorX = 120.0 / 429.0;  // ~0.28 - ORIGINAL value
+            double factorY = 169.0 / 428.0;  // ~0.39 - ORIGINAL value
 
             double yAdjustment = 0.75 + ((double)(BubbleRefY - bubbleY) / BubbleRefY) * 0.38;
 
             int destX = (int)(RodButtonX + factorX * (BubbleRefX - bubbleX) * yAdjustment);
             int destY = (int)(RodButtonY + factorY * (BubbleRefY - bubbleY));
 
-            // Clamp destination to stay within reasonable casting bounds
-            // Allow larger max Y for more casting power on far fish
-            destX = Math.Max(100, Math.Min(destX, ReferenceWidth - 100));
-            destY = Math.Max(RodButtonY - 200, Math.Min(destY, 1150)); // Allow more drag for far casts
-
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Cast calc: bubble({bubbleX},{bubbleY}) -> dest({destX},{destY}), factorY={factorY:F2}");
+            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Cast calc: bubble({bubbleX},{bubbleY}) -> dest({destX},{destY})");
 
             return new Point(destX, destY);
         }
@@ -1422,10 +1473,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         /// <summary>
         /// Calculates the casting destination for a given shadow position.
+        /// Returns SCREEN coordinates (including window offset) for direct mouse positioning.
+        /// Uses the same calculation as DetectFromScreenshot for consistency.
         /// </summary>
         /// <param name="shadowX">X position of shadow in screenshot coordinates</param>
         /// <param name="shadowY">Y position of shadow in screenshot coordinates</param>
-        /// <returns>CastingResult with rod position and cast destination, or null if calculation fails</returns>
+        /// <returns>CastingResult with rod position and cast destination in SCREEN coordinates, or null if calculation fails</returns>
         public CastingResult CalculateCastFromPosition(int shadowX, int shadowY)
         {
             var windowRect = CoreFunctionality.GetGameWindowRect();
@@ -1435,37 +1488,59 @@ namespace ToonTown_Rewritten_Bot.Utilities
             float scaleY = (float)windowRect.Height / ReferenceHeight;
 
             // Convert shadow position to reference coordinates
+            // Note: We detect blob CENTER, so no +20 offset needed (MouseClickSimulator adds +20 because they detect edges)
             float refX = shadowX / scaleX;
-            float refY = shadowY / scaleY;
+            float refY = shadowY / scaleY + _spotConfig.YAdjustment;
 
-            // Original MouseClickSimulator formula:
-            // destX = 800 + (120/429) * (800 - bubbleX) * (0.75 + (820 - bubbleY) / 820 * 0.38)
-            // destY = 846 + (169/428) * (820 - bubbleY)
+            // Use the same CalculateCastingDestination method as DetectFromScreenshot
+            var destCoords = CalculateCastingDestination((int)refX, (int)refY);
 
-            double factorX = 120.0 / 429.0;  // Original: ~0.28
-            double factorY = 169.0 / 428.0;  // Original: ~0.39
+            // Convert to SCREEN coordinates by scaling and adding window offset
+            int screenDestX = (int)(destCoords.X * scaleX) + windowRect.X;
+            int screenDestY = (int)(destCoords.Y * scaleY) + windowRect.Y;
+            int screenRodX = (int)(RodButtonX * scaleX) + windowRect.X;
+            int screenRodY = (int)(RodButtonY * scaleY) + windowRect.Y;
 
-            double yAdjustment = 0.75 + ((double)(BubbleRefY - refY) / BubbleRefY) * 0.38;
-
-            int destX = (int)(RodButtonX + factorX * (BubbleRefX - refX) * yAdjustment);
-            int destY = (int)(RodButtonY + factorY * (BubbleRefY - refY));
-
-            // Clamp to reasonable bounds
-            destX = Math.Max(100, Math.Min(destX, ReferenceWidth - 100));
-            destY = Math.Max(RodButtonY - 200, Math.Min(destY, 1100));
-
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Cast: shadow({shadowX},{shadowY}) ref({refX:F0},{refY:F0}) -> dest({destX},{destY})");
+            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Cast: shadow({shadowX},{shadowY}) ref({refX:F0},{refY:F0}) -> screen dest({screenDestX},{screenDestY})");
 
             return new CastingResult
             {
                 BubblePosition = new Point(shadowX, shadowY),
-                RodButtonPosition = new Point(
-                    (int)(RodButtonX * scaleX),
-                    (int)(RodButtonY * scaleY)),
-                CastDestination = new Point(
-                    (int)(destX * scaleX),
-                    (int)(destY * scaleY))
+                RodButtonPosition = new Point(screenRodX, screenRodY),
+                CastDestination = new Point(screenDestX, screenDestY)
             };
+        }
+
+        /// <summary>
+        /// Calculates how much cast power (drag distance) is needed to reach a fish at the given position.
+        /// Lower values mean the fish is closer/easier to catch.
+        /// </summary>
+        /// <param name="fishX">Fish X position in screenshot coordinates</param>
+        /// <param name="fishY">Fish Y position in screenshot coordinates</param>
+        /// <param name="screenshotWidth">Width of the screenshot</param>
+        /// <param name="screenshotHeight">Height of the screenshot</param>
+        /// <returns>Cast power needed (drag distance from rod button to cast destination)</returns>
+        public double CalculateCastPower(int fishX, int fishY, int screenshotWidth, int screenshotHeight)
+        {
+            float scaleX = (float)screenshotWidth / ReferenceWidth;
+            float scaleY = (float)screenshotHeight / ReferenceHeight;
+
+            // Convert fish position to reference coordinates
+            float refX = fishX / scaleX;
+            float refY = fishY / scaleY;
+
+            // Calculate cast destination using same formula as CalculateCastingDestination
+            double factorX = 120.0 / 429.0;  // ORIGINAL value
+            double factorY = 169.0 / 428.0;  // ORIGINAL value
+            double yAdjustment = 0.75 + ((double)(BubbleRefY - refY) / BubbleRefY) * 0.38;
+
+            double destX = RodButtonX + factorX * (BubbleRefX - refX) * yAdjustment;
+            double destY = RodButtonY + factorY * (BubbleRefY - refY);
+
+            // Cast power = distance from rod button to cast destination (in reference coords)
+            double dragX = destX - RodButtonX;
+            double dragY = destY - RodButtonY;
+            return Math.Sqrt(dragX * dragX + dragY * dragY);
         }
 
         /// <summary>

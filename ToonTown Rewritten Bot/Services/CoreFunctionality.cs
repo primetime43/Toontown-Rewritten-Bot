@@ -451,9 +451,124 @@ namespace ToonTown_Rewritten_Bot.Services
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         private static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
+
+        private const int MOUSEEVENTF_MOVE = 0x0001;
         private const int MOUSEEVENTF_LEFTDOWN = 0x02;
         private const int MOUSEEVENTF_LEFTUP = 0x04;
         private const int MOUSEEVENTF_RIGHTDOWN = 0x08;
         private const int MOUSEEVENTF_RIGHTUP = 0x10;
+        private const int MOUSEEVENTF_ABSOLUTE = 0x8000;
+
+        private const int INPUT_MOUSE = 0;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct INPUT
+        {
+            public int type;
+            public MOUSEINPUT mi;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MOUSEINPUT
+        {
+            public int dx;
+            public int dy;
+            public uint mouseData;
+            public uint dwFlags;
+            public uint time;
+            public IntPtr dwExtraInfo;
+        }
+
+        /// <summary>
+        /// Converts screen coordinates to normalized mouse coordinates (0-65535 range).
+        /// </summary>
+        private static (int mouseX, int mouseY) GetNormalizedMouseCoordinates(int screenX, int screenY)
+        {
+            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+
+            // Normalize to 0-65535 range as required by SendInput with ABSOLUTE flag
+            int mouseX = (int)((screenX * 65536L) / screenWidth);
+            int mouseY = (int)((screenY * 65536L) / screenHeight);
+
+            return (mouseX, mouseY);
+        }
+
+        /// <summary>
+        /// Moves the mouse during a drag operation using SendInput (modern API).
+        /// This is more reliable than mouse_event for drag operations.
+        /// </summary>
+        public static void SimulateDragMove(int x, int y)
+        {
+            var (mouseX, mouseY) = GetNormalizedMouseCoordinates(x, y);
+
+            var input = new INPUT
+            {
+                type = INPUT_MOUSE,
+                mi = new MOUSEINPUT
+                {
+                    dx = mouseX,
+                    dy = mouseY,
+                    mouseData = 0,
+                    dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
+                    time = 0,
+                    dwExtraInfo = IntPtr.Zero
+                }
+            };
+
+            SendInput(1, new INPUT[] { input }, Marshal.SizeOf(typeof(INPUT)));
+        }
+
+        /// <summary>
+        /// Presses the left mouse button down using SendInput.
+        /// </summary>
+        public static void SendInputMouseDown()
+        {
+            var currentPos = getCursorLocation();
+            var (mouseX, mouseY) = GetNormalizedMouseCoordinates(currentPos.X, currentPos.Y);
+
+            var input = new INPUT
+            {
+                type = INPUT_MOUSE,
+                mi = new MOUSEINPUT
+                {
+                    dx = mouseX,
+                    dy = mouseY,
+                    mouseData = 0,
+                    dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE,
+                    time = 0,
+                    dwExtraInfo = IntPtr.Zero
+                }
+            };
+
+            SendInput(1, new INPUT[] { input }, Marshal.SizeOf(typeof(INPUT)));
+        }
+
+        /// <summary>
+        /// Releases the left mouse button using SendInput.
+        /// </summary>
+        public static void SendInputMouseUp()
+        {
+            var currentPos = getCursorLocation();
+            var (mouseX, mouseY) = GetNormalizedMouseCoordinates(currentPos.X, currentPos.Y);
+
+            var input = new INPUT
+            {
+                type = INPUT_MOUSE,
+                mi = new MOUSEINPUT
+                {
+                    dx = mouseX,
+                    dy = mouseY,
+                    mouseData = 0,
+                    dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE,
+                    time = 0,
+                    dwExtraInfo = IntPtr.Zero
+                }
+            };
+
+            SendInput(1, new INPUT[] { input }, Marshal.SizeOf(typeof(INPUT)));
+        }
     }
 }

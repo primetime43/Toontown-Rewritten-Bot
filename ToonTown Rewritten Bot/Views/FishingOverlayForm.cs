@@ -54,14 +54,15 @@ namespace ToonTown_Rewritten_Bot.Views
             this.StartPosition = FormStartPosition.Manual;
             this.DoubleBuffered = true;
 
-            // Start repositioning timer
+            // Set initial size (will be repositioned by timer)
+            this.Size = new Size(800, 600);
+            this.Location = new Point(100, 100);
+
+            // Start repositioning timer - will position over game window
             _repositionTimer = new Timer();
             _repositionTimer.Interval = 100; // Update position every 100ms
             _repositionTimer.Tick += RepositionTimer_Tick;
             _repositionTimer.Start();
-
-            // Initial position
-            RepositionOverGameWindow();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -237,21 +238,25 @@ namespace ToonTown_Rewritten_Bot.Views
                 }
             }
 
-            // Draw status text
+            // Draw status text (centered at top)
             if (!string.IsNullOrEmpty(_statusText))
             {
                 using (var font = new Font("Arial", 12, FontStyle.Bold))
                 using (var brush = new SolidBrush(Color.White))
                 using (var shadowBrush = new SolidBrush(Color.Black))
                 {
+                    // Measure text to center it
+                    var textSize = g.MeasureString(_statusText, font);
+                    float centerX = (this.Width - textSize.Width) / 2;
+
                     // Draw shadow
-                    g.DrawString(_statusText, font, shadowBrush, 12, 12);
+                    g.DrawString(_statusText, font, shadowBrush, centerX + 2, 12);
                     // Draw text
-                    g.DrawString(_statusText, font, brush, 10, 10);
+                    g.DrawString(_statusText, font, brush, centerX, 10);
                 }
             }
 
-            // Draw detection stats
+            // Draw detection stats (centered)
             int yOffset = 35;
             using (var font = new Font("Arial", 10, FontStyle.Regular))
             using (var shadowBrush = new SolidBrush(Color.Black))
@@ -260,10 +265,12 @@ namespace ToonTown_Rewritten_Bot.Views
                 if (_darkPixelCount > 0 || _blobs.Count > 0)
                 {
                     string blobText = $"Blobs: {_blobs.Count} | Dark pixels: {_darkPixelCount}";
+                    var textSize = g.MeasureString(blobText, font);
+                    float centerX = (this.Width - textSize.Width) / 2;
                     using (var brush = new SolidBrush(Color.LimeGreen))
                     {
-                        g.DrawString(blobText, font, shadowBrush, 12, yOffset + 2);
-                        g.DrawString(blobText, font, brush, 10, yOffset);
+                        g.DrawString(blobText, font, shadowBrush, centerX + 2, yOffset + 2);
+                        g.DrawString(blobText, font, brush, centerX, yOffset);
                     }
                     yOffset += 18;
                 }
@@ -272,10 +279,12 @@ namespace ToonTown_Rewritten_Bot.Views
                 if (_candidates.Count > 0)
                 {
                     string countText = $"Fish candidates: {_candidates.Count}";
+                    var textSize = g.MeasureString(countText, font);
+                    float centerX = (this.Width - textSize.Width) / 2;
                     using (var brush = new SolidBrush(Color.Cyan))
                     {
-                        g.DrawString(countText, font, shadowBrush, 12, yOffset + 2);
-                        g.DrawString(countText, font, brush, 10, yOffset);
+                        g.DrawString(countText, font, shadowBrush, centerX + 2, yOffset + 2);
+                        g.DrawString(countText, font, brush, centerX, yOffset);
                     }
                 }
             }
