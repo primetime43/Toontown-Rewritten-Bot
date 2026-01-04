@@ -1388,16 +1388,64 @@ namespace ToonTown_Rewritten_Bot.Views
                 Log($"Blobs found: {result.Blobs?.Count ?? 0} ({result.RejectedBlobCount} rejected)");
                 Log($"Valid candidates: {result.CandidateCount} ({result.CandidatesWithBubbles} with bubbles above)");
 
-                if (result.BestShadowPosition.HasValue)
+                // Show all candidates with their cast power (same info actual fishing uses)
+                if (result.AllCandidates != null && result.AllCandidates.Count > 0)
                 {
+                    Log("");
+                    Log("--- All Candidates (sorted by ease) ---");
+                    var sortedCandidates = result.AllCandidates.OrderBy(c => c.CastPower).ToList();
+                    for (int i = 0; i < sortedCandidates.Count; i++)
+                    {
+                        var c = sortedCandidates[i];
+                        string marker = i == 0 ? " ← SELECTED (easiest)" : "";
+                        string bubbles = c.HasBubblesAbove ? " [BUBBLES]" : "";
+                        Log($"  #{i + 1}: ({c.Position.X},{c.Position.Y}) CastPower={c.CastPower:F1}{bubbles}{marker}");
+                    }
+                }
+
+                // USE SAME SELECTION LOGIC AS ACTUAL FISHING:
+                // Pick the easiest candidate (lowest CastPower), not just BestShadowPosition
+                Point? selectedFishPosition = null;
+                if (result.AllCandidates != null && result.AllCandidates.Count > 0)
+                {
+                    var easiest = result.AllCandidates.OrderBy(c => c.CastPower).First();
+                    selectedFishPosition = easiest.Position;
+                    Log("");
+                    Log($"=== FISH SELECTED (same as actual fishing) ===");
+                    Log($"Position: ({easiest.Position.X}, {easiest.Position.Y})");
+                    Log($"CastPower: {easiest.CastPower:F1} (lower = easier)");
+                    Log($"Has bubbles: {(easiest.HasBubblesAbove ? "YES" : "no")}");
+                }
+                else if (result.BestShadowPosition.HasValue)
+                {
+                    selectedFishPosition = result.BestShadowPosition.Value;
+                    Log("");
+                    Log($"=== SHADOW DETECTED (fallback) ===");
+                    Log($"Position: ({result.BestShadowPosition.Value.X}, {result.BestShadowPosition.Value.Y})");
                     string bubbleStatus = result.HasBubblesAbove ? "YES - CONFIRMED FISH!" : "no bubbles detected";
-                    Log($"SHADOW DETECTED at ({result.BestShadowPosition.Value.X}, {result.BestShadowPosition.Value.Y})");
-                    Log($"  Shadow color: RGB({result.BestShadowColor.R}, {result.BestShadowColor.G}, {result.BestShadowColor.B})");
-                    Log($"  Bubbles above: {bubbleStatus}");
+                    Log($"Shadow color: RGB({result.BestShadowColor.R}, {result.BestShadowColor.G}, {result.BestShadowColor.B})");
+                    Log($"Bubbles above: {bubbleStatus}");
+                }
 
-                    _fishBubbleResults.Add(result.BestShadowPosition.Value);
+                if (selectedFishPosition.HasValue)
+                {
+                    _fishBubbleResults.Add(selectedFishPosition.Value);
 
-                    if (result.RodButtonPosition.HasValue && result.CastDestination.HasValue)
+                    // Calculate cast using same method as actual fishing
+                    var castResult = _currentFishDetector.CalculateCastFromPosition(
+                        selectedFishPosition.Value.X, selectedFishPosition.Value.Y);
+
+                    if (castResult != null)
+                    {
+                        _calculatedRodPosition = castResult.RodButtonPosition;
+                        _calculatedCastPosition = castResult.CastDestination;
+
+                        Log("");
+                        Log("=== CAST CALCULATION (same as actual fishing) ===");
+                        Log($"Rod position: ({_calculatedRodPosition.X}, {_calculatedRodPosition.Y})");
+                        Log($"Cast to: ({_calculatedCastPosition.X}, {_calculatedCastPosition.Y})");
+                    }
+                    else if (result.RodButtonPosition.HasValue && result.CastDestination.HasValue)
                     {
                         _calculatedRodPosition = result.RodButtonPosition.Value;
                         _calculatedCastPosition = result.CastDestination.Value;

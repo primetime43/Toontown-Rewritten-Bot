@@ -43,6 +43,7 @@
             groupBox6 = new System.Windows.Forms.GroupBox();
             autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
             showOverlayCheckBox = new System.Windows.Forms.CheckBox();
+            editScanAreaBtn = new System.Windows.Forms.Button();
             debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
             button4 = new System.Windows.Forms.Button();
             customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
@@ -172,7 +173,7 @@
             tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new System.Drawing.Size(554, 357);
+            tabControl1.Size = new System.Drawing.Size(620, 420);
             tabControl1.TabIndex = 5;
             // 
             // Main
@@ -186,7 +187,7 @@
             Main.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Main.Name = "Main";
             Main.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Main.Size = new System.Drawing.Size(546, 328);
+            Main.Size = new System.Drawing.Size(612, 391);
             Main.TabIndex = 0;
             Main.Text = "Main";
             Main.UseVisualStyleBackColor = true;
@@ -254,16 +255,16 @@
             Fishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Fishing.Name = "Fishing";
             Fishing.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Fishing.Size = new System.Drawing.Size(546, 328);
+            Fishing.Size = new System.Drawing.Size(612, 391);
             Fishing.TabIndex = 1;
             Fishing.Text = "Fishing";
             Fishing.UseVisualStyleBackColor = true;
-            // 
+            //
             // createCustomFishingActionsBtn
-            // 
-            createCustomFishingActionsBtn.Location = new System.Drawing.Point(401, 12);
+            //
+            createCustomFishingActionsBtn.Location = new System.Drawing.Point(460, 12);
             createCustomFishingActionsBtn.Name = "createCustomFishingActionsBtn";
-            createCustomFishingActionsBtn.Size = new System.Drawing.Size(137, 43);
+            createCustomFishingActionsBtn.Size = new System.Drawing.Size(140, 50);
             createCustomFishingActionsBtn.TabIndex = 10;
             createCustomFishingActionsBtn.Text = "Create Custom Fishing Actions";
             toolTip1.SetToolTip(createCustomFishingActionsBtn, "This will allow you to build custom fishing actions\r\nfor walking from the fishing dock to the fisherman\r\n to sell and back to the fishing dock");
@@ -282,6 +283,7 @@
             // 
             // groupBox6
             // 
+            groupBox6.Controls.Add(editScanAreaBtn);
             groupBox6.Controls.Add(showOverlayCheckBox);
             groupBox6.Controls.Add(autoDetectFishCheckBox);
             groupBox6.Controls.Add(calibrateFishBtn);
@@ -300,15 +302,15 @@
             groupBox6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox6.Name = "groupBox6";
             groupBox6.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox6.Size = new System.Drawing.Size(385, 236);
+            groupBox6.Size = new System.Drawing.Size(440, 280);
             groupBox6.TabIndex = 8;
             groupBox6.TabStop = false;
             groupBox6.Text = "Fishing Locations";
-            // 
+            //
             // autoDetectFishCheckBox
-            // 
+            //
             autoDetectFishCheckBox.AutoSize = true;
-            autoDetectFishCheckBox.Location = new System.Drawing.Point(7, 140);
+            autoDetectFishCheckBox.Location = new System.Drawing.Point(10, 140);
             autoDetectFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             autoDetectFishCheckBox.Name = "autoDetectFishCheckBox";
             autoDetectFishCheckBox.Size = new System.Drawing.Size(182, 20);
@@ -320,10 +322,10 @@
             // calibrateFishBtn
             //
             calibrateFishBtn = new System.Windows.Forms.Button();
-            calibrateFishBtn.Location = new System.Drawing.Point(194, 136);
+            calibrateFishBtn.Location = new System.Drawing.Point(200, 136);
             calibrateFishBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             calibrateFishBtn.Name = "calibrateFishBtn";
-            calibrateFishBtn.Size = new System.Drawing.Size(80, 26);
+            calibrateFishBtn.Size = new System.Drawing.Size(85, 28);
             calibrateFishBtn.TabIndex = 15;
             calibrateFishBtn.Text = "Calibrate";
             toolTip1.SetToolTip(calibrateFishBtn, "Click when fish is on screen. The first detected shadow will be shown - confirm if it's a fish to improve detection accuracy.");
@@ -334,7 +336,7 @@
             //
             fishCalibrationLabel = new System.Windows.Forms.Label();
             fishCalibrationLabel.AutoSize = true;
-            fishCalibrationLabel.Location = new System.Drawing.Point(278, 140);
+            fishCalibrationLabel.Location = new System.Drawing.Point(295, 142);
             fishCalibrationLabel.Name = "fishCalibrationLabel";
             fishCalibrationLabel.Size = new System.Drawing.Size(90, 16);
             fishCalibrationLabel.TabIndex = 16;
@@ -344,7 +346,7 @@
             // showOverlayCheckBox
             //
             showOverlayCheckBox.AutoSize = true;
-            showOverlayCheckBox.Location = new System.Drawing.Point(7, 165);
+            showOverlayCheckBox.Location = new System.Drawing.Point(10, 170);
             showOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             showOverlayCheckBox.Name = "showOverlayCheckBox";
             showOverlayCheckBox.Size = new System.Drawing.Size(175, 20);
@@ -353,6 +355,18 @@
             toolTip1.SetToolTip(showOverlayCheckBox, "Shows a transparent overlay on the game window displaying detected fish shadows and targeting info.");
             showOverlayCheckBox.UseVisualStyleBackColor = true;
             showOverlayCheckBox.CheckedChanged += ShowOverlayCheckBox_CheckedChanged;
+            //
+            // editScanAreaBtn
+            //
+            editScanAreaBtn.Location = new System.Drawing.Point(200, 166);
+            editScanAreaBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            editScanAreaBtn.Name = "editScanAreaBtn";
+            editScanAreaBtn.Size = new System.Drawing.Size(110, 28);
+            editScanAreaBtn.TabIndex = 18;
+            editScanAreaBtn.Text = "Edit Scan Area";
+            toolTip1.SetToolTip(editScanAreaBtn, "Adjust the scan area to match the pond boundaries. Drag corners/edges to resize.");
+            editScanAreaBtn.UseVisualStyleBackColor = true;
+            editScanAreaBtn.Click += EditScanAreaBtn_Click;
             //
             // debugCustomActionsCheckBox
             // 
@@ -367,13 +381,13 @@
             toolTip1.SetToolTip(debugCustomActionsCheckBox, "This will allow you to debug the custom action\r\nwalk from the dock to the fisherman");
             debugCustomActionsCheckBox.UseVisualStyleBackColor = true;
             debugCustomActionsCheckBox.Visible = false;
-            // 
+            //
             // button4
-            // 
-            button4.Location = new System.Drawing.Point(193, 183);
+            //
+            button4.Location = new System.Drawing.Point(220, 230);
             button4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button4.Name = "button4";
-            button4.Size = new System.Drawing.Size(184, 38);
+            button4.Size = new System.Drawing.Size(200, 40);
             button4.TabIndex = 12;
             button4.Text = "Stop Fishing";
             button4.UseVisualStyleBackColor = true;
@@ -388,11 +402,11 @@
             customFishingFilesComboBox.Size = new System.Drawing.Size(373, 24);
             customFishingFilesComboBox.TabIndex = 11;
             customFishingFilesComboBox.Visible = false;
-            // 
+            //
             // randomFishingCheckBox
-            // 
+            //
             randomFishingCheckBox.AutoSize = true;
-            randomFishingCheckBox.Location = new System.Drawing.Point(194, 96);
+            randomFishingCheckBox.Location = new System.Drawing.Point(220, 68);
             randomFishingCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             randomFishingCheckBox.Name = "randomFishingCheckBox";
             randomFishingCheckBox.Size = new System.Drawing.Size(135, 20);
@@ -401,70 +415,70 @@
             toolTip1.SetToolTip(randomFishingCheckBox, "This add some randomness and will make it so you \r\nwon't cast your line at the same spot every time!");
             randomFishingCheckBox.UseVisualStyleBackColor = true;
             randomFishingCheckBox.CheckedChanged += randomFishing_CheckedChanged;
-            // 
+            //
             // label4
-            // 
+            //
             label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(4, 114);
+            label4.Location = new System.Drawing.Point(10, 100);
             label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label4.Name = "label4";
             label4.Size = new System.Drawing.Size(105, 16);
             label4.TabIndex = 9;
             label4.Text = "Number of Sells:";
-            // 
+            //
             // numericUpDown4
-            // 
-            numericUpDown4.Location = new System.Drawing.Point(139, 112);
+            //
+            numericUpDown4.Location = new System.Drawing.Point(145, 98);
             numericUpDown4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numericUpDown4.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
             numericUpDown4.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDown4.Name = "numericUpDown4";
-            numericUpDown4.Size = new System.Drawing.Size(48, 22);
+            numericUpDown4.Size = new System.Drawing.Size(55, 22);
             numericUpDown4.TabIndex = 8;
             toolTip1.SetToolTip(numericUpDown4, "This number indicates the number of times to go to the fisherman to sell the fish");
             numericUpDown4.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            // 
+            //
             // label3
-            // 
+            //
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(4, 70);
+            label3.Location = new System.Drawing.Point(10, 68);
             label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(109, 16);
             label3.TabIndex = 7;
             label3.Text = "Number of Casts:";
-            // 
+            //
             // numericUpDown3
-            // 
-            numericUpDown3.Location = new System.Drawing.Point(139, 68);
+            //
+            numericUpDown3.Location = new System.Drawing.Point(145, 66);
             numericUpDown3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numericUpDown3.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
             numericUpDown3.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDown3.Name = "numericUpDown3";
-            numericUpDown3.Size = new System.Drawing.Size(48, 22);
+            numericUpDown3.Size = new System.Drawing.Size(55, 22);
             numericUpDown3.TabIndex = 6;
             toolTip1.SetToolTip(numericUpDown3, "This number indicates the number of times to cast your fishing rod");
             numericUpDown3.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            // 
+            //
             // startFishing
-            // 
-            startFishing.Location = new System.Drawing.Point(6, 183);
+            //
+            startFishing.Location = new System.Drawing.Point(10, 230);
             startFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             startFishing.Name = "startFishing";
-            startFishing.Size = new System.Drawing.Size(184, 38);
+            startFishing.Size = new System.Drawing.Size(200, 40);
             startFishing.TabIndex = 2;
             startFishing.Text = "Start Fishing";
             startFishing.UseVisualStyleBackColor = true;
             startFishing.Click += startFishing_Click;
-            // 
+            //
             // fishingLocationscomboBox
-            // 
+            //
             fishingLocationscomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             fishingLocationscomboBox.Items.AddRange(new object[] { "TOONTOWN CENTRAL PUNCHLINE PLACE", "DONALD DREAM LAND LULLABY LANE", "BRRRGH POLAR PLACE", "BRRRGH WALRUS WAY", "BRRRGH SLEET STREET", "MINNIE'S MELODYLAND TENOR TERRACE", "DONALD DOCK LIGHTHOUSE LANE", "DAISY'S GARDEN ELM STREET", "FISH ANYWHERE", "CUSTOM FISHING ACTION" });
-            fishingLocationscomboBox.Location = new System.Drawing.Point(7, 24);
+            fishingLocationscomboBox.Location = new System.Drawing.Point(10, 28);
             fishingLocationscomboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             fishingLocationscomboBox.Name = "fishingLocationscomboBox";
-            fishingLocationscomboBox.Size = new System.Drawing.Size(370, 24);
+            fishingLocationscomboBox.Size = new System.Drawing.Size(420, 24);
             fishingLocationscomboBox.TabIndex = 1;
             toolTip1.SetToolTip(fishingLocationscomboBox, "Select the location you wish to fish at");
             fishingLocationscomboBox.SelectedIndexChanged += fishingLocationscomboBox_SelectedIndexChanged;
@@ -1039,9 +1053,9 @@
             toolTip1.SetToolTip(startSpamButton, "Press the ALT key to stop the spamming loop at any time!");
             startSpamButton.UseVisualStyleBackColor = true;
             startSpamButton.Click += startSpamButton_Click;
-            // 
+            //
             // Dev
-            // 
+            //
             Dev.Controls.Add(groupBoxTemplates);
             Dev.Controls.Add(groupBox9);
             Dev.Controls.Add(label5);
@@ -1049,13 +1063,13 @@
             Dev.Location = new System.Drawing.Point(4, 25);
             Dev.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Dev.Name = "Dev";
-            Dev.Size = new System.Drawing.Size(546, 328);
+            Dev.Size = new System.Drawing.Size(612, 391);
             Dev.TabIndex = 5;
             Dev.Text = "Dev";
             Dev.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxTemplates
-            // 
+            //
+            // groupBoxTemplates - UI Element Templates
+            //
             groupBoxTemplates.Controls.Add(btnOpenTemplateDefinitions);
             groupBoxTemplates.Controls.Add(btnAddTemplateItem);
             groupBoxTemplates.Controls.Add(btnEditTemplate);
@@ -1064,33 +1078,33 @@
             groupBoxTemplates.Controls.Add(btnCaptureTemplate);
             groupBoxTemplates.Controls.Add(btnViewTemplate);
             groupBoxTemplates.Controls.Add(comboBoxTemplateItems);
-            groupBoxTemplates.Location = new System.Drawing.Point(9, 197);
+            groupBoxTemplates.Location = new System.Drawing.Point(10, 180);
             groupBoxTemplates.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBoxTemplates.Name = "groupBoxTemplates";
             groupBoxTemplates.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBoxTemplates.Size = new System.Drawing.Size(526, 115);
+            groupBoxTemplates.Size = new System.Drawing.Size(590, 120);
             groupBoxTemplates.TabIndex = 9;
             groupBoxTemplates.TabStop = false;
-            groupBoxTemplates.Text = "Item Templates (File-Based)";
-            // 
+            groupBoxTemplates.Text = "UI Element Templates";
+            //
             // btnOpenTemplateDefinitions
-            // 
-            btnOpenTemplateDefinitions.Location = new System.Drawing.Point(7, 80);
+            //
+            btnOpenTemplateDefinitions.Location = new System.Drawing.Point(10, 82);
             btnOpenTemplateDefinitions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnOpenTemplateDefinitions.Name = "btnOpenTemplateDefinitions";
-            btnOpenTemplateDefinitions.Size = new System.Drawing.Size(150, 28);
+            btnOpenTemplateDefinitions.Size = new System.Drawing.Size(130, 30);
             btnOpenTemplateDefinitions.TabIndex = 5;
-            btnOpenTemplateDefinitions.Text = "Edit Definitions File";
-            toolTip1.SetToolTip(btnOpenTemplateDefinitions, "Open the TemplateDefinitions.json file to manually edit items");
+            btnOpenTemplateDefinitions.Text = "Edit JSON File";
+            toolTip1.SetToolTip(btnOpenTemplateDefinitions, "Open the TemplateDefinitions.json file to manually edit");
             btnOpenTemplateDefinitions.UseVisualStyleBackColor = true;
             btnOpenTemplateDefinitions.Click += btnOpenTemplateDefinitions_Click;
-            // 
+            //
             // btnAddTemplateItem
-            // 
-            btnAddTemplateItem.Location = new System.Drawing.Point(445, 20);
+            //
+            btnAddTemplateItem.Location = new System.Drawing.Point(500, 22);
             btnAddTemplateItem.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnAddTemplateItem.Name = "btnAddTemplateItem";
-            btnAddTemplateItem.Size = new System.Drawing.Size(70, 28);
+            btnAddTemplateItem.Size = new System.Drawing.Size(80, 28);
             btnAddTemplateItem.TabIndex = 4;
             btnAddTemplateItem.Text = "Add New";
             toolTip1.SetToolTip(btnAddTemplateItem, "Add a new template item definition");
@@ -1099,10 +1113,10 @@
             //
             // btnEditTemplate
             //
-            btnEditTemplate.Location = new System.Drawing.Point(165, 80);
+            btnEditTemplate.Location = new System.Drawing.Point(150, 82);
             btnEditTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnEditTemplate.Name = "btnEditTemplate";
-            btnEditTemplate.Size = new System.Drawing.Size(60, 28);
+            btnEditTemplate.Size = new System.Drawing.Size(70, 30);
             btnEditTemplate.TabIndex = 6;
             btnEditTemplate.Text = "Edit";
             toolTip1.SetToolTip(btnEditTemplate, "Edit the selected template definition");
@@ -1111,10 +1125,10 @@
             //
             // btnDeleteTemplate
             //
-            btnDeleteTemplate.Location = new System.Drawing.Point(233, 80);
+            btnDeleteTemplate.Location = new System.Drawing.Point(230, 82);
             btnDeleteTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnDeleteTemplate.Name = "btnDeleteTemplate";
-            btnDeleteTemplate.Size = new System.Drawing.Size(60, 28);
+            btnDeleteTemplate.Size = new System.Drawing.Size(70, 30);
             btnDeleteTemplate.TabIndex = 7;
             btnDeleteTemplate.Text = "Delete";
             btnDeleteTemplate.ForeColor = System.Drawing.Color.Red;
@@ -1123,167 +1137,168 @@
             btnDeleteTemplate.Click += btnDeleteTemplate_Click;
             //
             // labelTemplateStatus
-            // 
+            //
             labelTemplateStatus.AutoSize = true;
             labelTemplateStatus.ForeColor = System.Drawing.Color.Gray;
-            labelTemplateStatus.Location = new System.Drawing.Point(8, 55);
+            labelTemplateStatus.Location = new System.Drawing.Point(10, 55);
             labelTemplateStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             labelTemplateStatus.Name = "labelTemplateStatus";
             labelTemplateStatus.Size = new System.Drawing.Size(228, 16);
             labelTemplateStatus.TabIndex = 3;
             labelTemplateStatus.Text = "Select an item to view template status";
-            // 
+            //
             // btnCaptureTemplate
-            // 
-            btnCaptureTemplate.Location = new System.Drawing.Point(295, 20);
+            //
+            btnCaptureTemplate.Location = new System.Drawing.Point(330, 22);
             btnCaptureTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnCaptureTemplate.Name = "btnCaptureTemplate";
-            btnCaptureTemplate.Size = new System.Drawing.Size(70, 28);
+            btnCaptureTemplate.Size = new System.Drawing.Size(80, 28);
             btnCaptureTemplate.TabIndex = 1;
             btnCaptureTemplate.Text = "Capture";
-            toolTip1.SetToolTip(btnCaptureTemplate, "Capture a new template for the selected item");
+            toolTip1.SetToolTip(btnCaptureTemplate, "Capture a new template image for the selected item");
             btnCaptureTemplate.UseVisualStyleBackColor = true;
             btnCaptureTemplate.Click += btnCaptureTemplate_Click;
-            // 
+            //
             // btnViewTemplate
-            // 
-            btnViewTemplate.Location = new System.Drawing.Point(370, 20);
+            //
+            btnViewTemplate.Location = new System.Drawing.Point(415, 22);
             btnViewTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnViewTemplate.Name = "btnViewTemplate";
-            btnViewTemplate.Size = new System.Drawing.Size(70, 28);
+            btnViewTemplate.Size = new System.Drawing.Size(80, 28);
             btnViewTemplate.TabIndex = 2;
             btnViewTemplate.Text = "View";
-            toolTip1.SetToolTip(btnViewTemplate, "View the existing template for the selected item");
+            toolTip1.SetToolTip(btnViewTemplate, "View the existing template image");
             btnViewTemplate.UseVisualStyleBackColor = true;
             btnViewTemplate.Click += btnViewTemplate_Click;
-            // 
+            //
             // comboBoxTemplateItems
-            // 
+            //
             comboBoxTemplateItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             comboBoxTemplateItems.DropDownHeight = 300;
-            comboBoxTemplateItems.Location = new System.Drawing.Point(7, 22);
+            comboBoxTemplateItems.Location = new System.Drawing.Point(10, 24);
             comboBoxTemplateItems.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             comboBoxTemplateItems.Name = "comboBoxTemplateItems";
-            comboBoxTemplateItems.Size = new System.Drawing.Size(280, 24);
+            comboBoxTemplateItems.Size = new System.Drawing.Size(310, 24);
             comboBoxTemplateItems.TabIndex = 0;
             toolTip1.SetToolTip(comboBoxTemplateItems, "Select a UI element to capture or update its template");
             comboBoxTemplateItems.SelectedIndexChanged += comboBoxTemplateItems_SelectedIndexChanged;
-            // 
-            // groupBox9
-            // 
+            //
+            // groupBox9 - Image Recognition & Debug
+            //
             groupBox9.Controls.Add(label11);
             groupBox9.Controls.Add(updateImagesBtn);
             groupBox9.Controls.Add(resetImagesBtn);
-            groupBox9.Location = new System.Drawing.Point(290, 3);
+            groupBox9.Location = new System.Drawing.Point(10, 10);
             groupBox9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox9.Name = "groupBox9";
             groupBox9.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox9.Size = new System.Drawing.Size(245, 156);
+            groupBox9.Size = new System.Drawing.Size(290, 160);
             groupBox9.TabIndex = 8;
             groupBox9.TabStop = false;
-            groupBox9.Text = "Image Recognition";
-            // 
+            groupBox9.Text = "Debug & Testing";
+            //
             // label11
-            // 
+            //
             label11.AutoSize = true;
             label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            label11.Location = new System.Drawing.Point(10, 18);
+            label11.Location = new System.Drawing.Point(10, 22);
             label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label11.Name = "label11";
-            label11.Size = new System.Drawing.Size(195, 30);
+            label11.Size = new System.Drawing.Size(250, 30);
             label11.TabIndex = 3;
-            label11.Text = "Debug tools for template matching\r\nand OCR text recognition";
-            // 
+            label11.Text = "Test image recognition, fish detection,\nOCR text reading, and template matching";
+            //
             // updateImagesBtn
-            // 
-            updateImagesBtn.Location = new System.Drawing.Point(10, 55);
+            //
+            updateImagesBtn.Location = new System.Drawing.Point(10, 60);
             updateImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             updateImagesBtn.Name = "updateImagesBtn";
-            updateImagesBtn.Size = new System.Drawing.Size(225, 40);
+            updateImagesBtn.Size = new System.Drawing.Size(270, 40);
             updateImagesBtn.TabIndex = 2;
             updateImagesBtn.Text = "Open Debug Window";
             updateImagesBtn.UseVisualStyleBackColor = true;
             updateImagesBtn.Click += openImageRecDebugBtn_Click;
-            // 
+            //
             // resetImagesBtn
-            // 
-            resetImagesBtn.Location = new System.Drawing.Point(10, 102);
+            //
+            resetImagesBtn.Location = new System.Drawing.Point(10, 108);
             resetImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             resetImagesBtn.Name = "resetImagesBtn";
-            resetImagesBtn.Size = new System.Drawing.Size(225, 40);
+            resetImagesBtn.Size = new System.Drawing.Size(270, 40);
             resetImagesBtn.TabIndex = 0;
             resetImagesBtn.Text = "Download OCR Data";
-            toolTip1.SetToolTip(resetImagesBtn, "Download OCR language data for text recognition (automatic)");
+            toolTip1.SetToolTip(resetImagesBtn, "Download OCR language data for text recognition (runs automatically if needed)");
             resetImagesBtn.UseVisualStyleBackColor = true;
             resetImagesBtn.Click += downloadOcrDataBtn_Click;
-            // 
+            //
             // label5
-            // 
+            //
             label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(9, 162);
+            label5.ForeColor = System.Drawing.Color.Gray;
+            label5.Location = new System.Drawing.Point(10, 310);
             label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(282, 32);
+            label5.Size = new System.Drawing.Size(400, 32);
             label5.TabIndex = 8;
-            label5.Text = "Only use this if the bot is not working \r\nproperly or the coordinates need reconfigured!";
-            // 
-            // groupBox7
-            // 
+            label5.Text = "Note: Manual coordinates are for advanced users only.\nUse the Debug Window for testing and troubleshooting.";
+            //
+            // groupBox7 - Manual Coordinates (Advanced)
+            //
             groupBox7.Controls.Add(button2);
             groupBox7.Controls.Add(button6);
             groupBox7.Controls.Add(comboBox1);
             groupBox7.Controls.Add(button7);
-            groupBox7.Location = new System.Drawing.Point(9, 3);
+            groupBox7.Location = new System.Drawing.Point(310, 10);
             groupBox7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox7.Name = "groupBox7";
             groupBox7.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox7.Size = new System.Drawing.Size(274, 156);
+            groupBox7.Size = new System.Drawing.Size(290, 160);
             groupBox7.TabIndex = 7;
             groupBox7.TabStop = false;
-            groupBox7.Text = "Manual Coordinates";
-            // 
+            groupBox7.Text = "Manual Coordinates (Advanced)";
+            //
             // button2
-            // 
-            button2.Location = new System.Drawing.Point(143, 104);
+            //
+            button2.Location = new System.Drawing.Point(150, 108);
             button2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(123, 38);
+            button2.Size = new System.Drawing.Size(130, 40);
             button2.TabIndex = 3;
-            button2.Text = "Open File";
-            toolTip1.SetToolTip(button2, "This will reset all of your coordinates!");
+            button2.Text = "Open Config File";
+            toolTip1.SetToolTip(button2, "Open the coordinates configuration file");
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
-            // 
+            //
             // button6
-            // 
-            button6.Location = new System.Drawing.Point(56, 59);
+            //
+            button6.Location = new System.Drawing.Point(10, 60);
             button6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button6.Name = "button6";
-            button6.Size = new System.Drawing.Size(163, 38);
+            button6.Size = new System.Drawing.Size(270, 38);
             button6.TabIndex = 2;
-            button6.Text = "Update Coordinate";
+            button6.Text = "Update Selected Coordinate";
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
-            // 
+            //
             // comboBox1
-            // 
+            //
             comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            comboBox1.Location = new System.Drawing.Point(7, 24);
+            comboBox1.Location = new System.Drawing.Point(10, 26);
             comboBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new System.Drawing.Size(259, 24);
+            comboBox1.Size = new System.Drawing.Size(270, 24);
             comboBox1.TabIndex = 1;
-            toolTip1.SetToolTip(comboBox1, "Select the one you wish to reset the coordiates of...");
-            // 
+            toolTip1.SetToolTip(comboBox1, "Select a coordinate to update");
+            //
             // button7
-            // 
-            button7.Location = new System.Drawing.Point(12, 104);
+            //
+            button7.Location = new System.Drawing.Point(10, 108);
             button7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button7.Name = "button7";
-            button7.Size = new System.Drawing.Size(123, 38);
+            button7.Size = new System.Drawing.Size(130, 40);
             button7.TabIndex = 0;
             button7.Text = "Reset All";
-            toolTip1.SetToolTip(button7, "This will reset all of your coordinates!");
+            toolTip1.SetToolTip(button7, "Reset all coordinates to default values");
             button7.UseVisualStyleBackColor = true;
             button7.Click += button7_Click;
             // 
@@ -1296,15 +1311,16 @@
             // 
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
-            // 
+            //
             // MainForm
-            // 
+            //
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(554, 357);
+            ClientSize = new System.Drawing.Size(620, 420);
             Controls.Add(tabControl1);
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MinimumSize = new System.Drawing.Size(636, 459);
             Name = "MainForm";
             Text = "Toontown Rewritten Bot by primetime43";
             tabControl1.ResumeLayout(false);
@@ -1433,6 +1449,7 @@
         private System.Windows.Forms.Button calibrateFishBtn;
         private System.Windows.Forms.Label fishCalibrationLabel;
         private System.Windows.Forms.CheckBox showOverlayCheckBox;
+        private System.Windows.Forms.Button editScanAreaBtn;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button createCustomFishingActionsBtn;
         private System.Windows.Forms.ComboBox customFishingFilesComboBox;

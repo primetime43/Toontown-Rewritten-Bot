@@ -114,6 +114,16 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         await CastLine(fishVariance, cancellationToken);
                     }
 
+                    // Check if "no jellybeans" popup appeared (out of bait money)
+                    await Task.Delay(300, cancellationToken); // Brief delay for popup to appear
+                    if (NoJellybeansDetector.IsNoJellybeansPopupVisible())
+                    {
+                        System.Diagnostics.Debug.WriteLine("[FishingStrategy] NO JELLYBEANS - Out of bait! Stopping fishing.");
+                        await HandleNoJellybeansPopup(cancellationToken);
+                        shouldStopFishing = true;
+                        return;
+                    }
+
                     stopwatch.Start();
                     while (stopwatch.Elapsed.Seconds < 30 && !await CheckIfFishCaught(cancellationToken))
                     {
@@ -387,6 +397,32 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             return color.G >= 150 && color.G > color.R && color.G > color.B &&
                    color.R >= 50 && color.R <= 150 &&
                    color.B >= 100 && color.B <= 180;
+        }
+
+        /// <summary>
+        /// Handles the "no jellybeans" popup by clicking the Exit button.
+        /// </summary>
+        protected async Task HandleNoJellybeansPopup(CancellationToken cancellationToken)
+        {
+            System.Diagnostics.Debug.WriteLine("[FishingStrategy] Handling 'no jellybeans' popup - clicking Exit...");
+
+            // Get the Exit button position
+            var exitPos = NoJellybeansDetector.GetExitButtonPosition();
+            if (exitPos.HasValue)
+            {
+                MoveCursor(exitPos.Value.X, exitPos.Value.Y);
+                await Task.Delay(100, cancellationToken);
+                DoMouseClick();
+                await Task.Delay(500, cancellationToken);
+                System.Diagnostics.Debug.WriteLine("[FishingStrategy] Exit button clicked. Fishing stopped due to no jellybeans.");
+            }
+            else
+            {
+                // Fallback: press ESC to close the popup
+                System.Diagnostics.Debug.WriteLine("[FishingStrategy] Could not find Exit button, pressing ESC...");
+                SendKeys.SendWait("{ESC}");
+                await Task.Delay(500, cancellationToken);
+            }
         }
 
         /// <summary>

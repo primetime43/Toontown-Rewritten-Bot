@@ -312,14 +312,27 @@ namespace ToonTown_Rewritten_Bot.Utilities
             float scaleX = (float)screenshot.Width / ReferenceWidth;
             float scaleY = (float)screenshot.Height / ReferenceHeight;
 
-            // Use the predefined config scan area
-            result.ScanArea = new Rectangle(
-                (int)(_spotConfig.ScanArea.X * scaleX),
-                (int)(_spotConfig.ScanArea.Y * scaleY),
-                (int)(_spotConfig.ScanArea.Width * scaleX),
-                (int)(_spotConfig.ScanArea.Height * scaleY)
-            );
-            result.UsedDynamicPondDetection = false;
+            // Check for custom user-defined scan area first
+            var customScanArea = CustomScanAreaManager.GetCustomScanArea(
+                _currentLocationName, screenshot.Width, screenshot.Height);
+
+            if (customScanArea.HasValue)
+            {
+                result.ScanArea = customScanArea.Value;
+                result.UsedDynamicPondDetection = false;
+                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using CUSTOM scan area for '{_currentLocationName}': {result.ScanArea}");
+            }
+            else
+            {
+                // Use the predefined config scan area
+                result.ScanArea = new Rectangle(
+                    (int)(_spotConfig.ScanArea.X * scaleX),
+                    (int)(_spotConfig.ScanArea.Y * scaleY),
+                    (int)(_spotConfig.ScanArea.Width * scaleX),
+                    (int)(_spotConfig.ScanArea.Height * scaleY)
+                );
+                result.UsedDynamicPondDetection = false;
+            }
 
             int startX = result.ScanArea.X;
             int startY = result.ScanArea.Y;
@@ -642,13 +655,32 @@ namespace ToonTown_Rewritten_Bot.Utilities
             float scaleX = (float)windowRect.Width / ReferenceWidth;
             float scaleY = (float)windowRect.Height / ReferenceHeight;
 
-            // Scale the scan area to current window size
-            var scaledScanArea = new Rectangle(
-                (int)(_spotConfig.ScanArea.X * scaleX) + windowRect.X,
-                (int)(_spotConfig.ScanArea.Y * scaleY) + windowRect.Y,
-                (int)(_spotConfig.ScanArea.Width * scaleX),
-                (int)(_spotConfig.ScanArea.Height * scaleY)
-            );
+            // Check for custom user-defined scan area first
+            Rectangle scaledScanArea;
+            var customScanArea = CustomScanAreaManager.GetCustomScanArea(
+                _currentLocationName, windowRect.Width, windowRect.Height);
+
+            if (customScanArea.HasValue)
+            {
+                // Custom scan area - add window offset
+                scaledScanArea = new Rectangle(
+                    customScanArea.Value.X + windowRect.X,
+                    customScanArea.Value.Y + windowRect.Y,
+                    customScanArea.Value.Width,
+                    customScanArea.Value.Height
+                );
+                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using CUSTOM scan area: {scaledScanArea}");
+            }
+            else
+            {
+                // Scale the default config scan area to current window size
+                scaledScanArea = new Rectangle(
+                    (int)(_spotConfig.ScanArea.X * scaleX) + windowRect.X,
+                    (int)(_spotConfig.ScanArea.Y * scaleY) + windowRect.Y,
+                    (int)(_spotConfig.ScanArea.Width * scaleX),
+                    (int)(_spotConfig.ScanArea.Height * scaleY)
+                );
+            }
 
             System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Scanning area: {scaledScanArea}, " +
                 $"looking for color ({_spotConfig.BubbleColor.R},{_spotConfig.BubbleColor.G},{_spotConfig.BubbleColor.B})");
@@ -1512,6 +1544,30 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// When true, the UI should prompt the user to confirm detected shadows.
         /// </summary>
         public bool NeedsCalibration => !_learnedShadowColor.HasValue || _learnedColorConfidence < 1;
+
+        /// <summary>
+        /// Gets the default scan area for the current location, scaled to the current window size.
+        /// Used for the scan area calibration UI.
+        /// </summary>
+        /// <returns>The default scan area rectangle, or Empty if no config exists.</returns>
+        public Rectangle GetDefaultScanArea()
+        {
+            if (_spotConfig == null) return Rectangle.Empty;
+
+            var windowRect = CoreFunctionality.GetGameWindowRect();
+            if (windowRect.IsEmpty) return _spotConfig.ScanArea;
+
+            // Scale to current window size
+            float scaleX = (float)windowRect.Width / ReferenceWidth;
+            float scaleY = (float)windowRect.Height / ReferenceHeight;
+
+            return new Rectangle(
+                (int)(_spotConfig.ScanArea.X * scaleX),
+                (int)(_spotConfig.ScanArea.Y * scaleY),
+                (int)(_spotConfig.ScanArea.Width * scaleX),
+                (int)(_spotConfig.ScanArea.Height * scaleY)
+            );
+        }
 
         /// <summary>
         /// Calculates the casting destination for a given shadow position.
