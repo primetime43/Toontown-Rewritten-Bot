@@ -44,6 +44,7 @@
             autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
             showOverlayCheckBox = new System.Windows.Forms.CheckBox();
             editScanAreaBtn = new System.Windows.Forms.Button();
+            calibrateColorsBtn = new System.Windows.Forms.Button();
             debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
             button4 = new System.Windows.Forms.Button();
             customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
@@ -283,6 +284,7 @@
             // 
             // groupBox6
             // 
+            groupBox6.Controls.Add(calibrateColorsBtn);
             groupBox6.Controls.Add(editScanAreaBtn);
             groupBox6.Controls.Add(showOverlayCheckBox);
             groupBox6.Controls.Add(autoDetectFishCheckBox);
@@ -361,12 +363,24 @@
             editScanAreaBtn.Location = new System.Drawing.Point(200, 166);
             editScanAreaBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             editScanAreaBtn.Name = "editScanAreaBtn";
-            editScanAreaBtn.Size = new System.Drawing.Size(110, 28);
+            editScanAreaBtn.Size = new System.Drawing.Size(100, 28);
             editScanAreaBtn.TabIndex = 18;
-            editScanAreaBtn.Text = "Edit Scan Area";
-            toolTip1.SetToolTip(editScanAreaBtn, "Adjust the scan area to match the pond boundaries. Drag corners/edges to resize.");
+            editScanAreaBtn.Text = "Scan Area";
+            toolTip1.SetToolTip(editScanAreaBtn, "Adjust the scan area to match the pond boundaries.");
             editScanAreaBtn.UseVisualStyleBackColor = true;
             editScanAreaBtn.Click += EditScanAreaBtn_Click;
+            //
+            // calibrateColorsBtn
+            //
+            calibrateColorsBtn.Location = new System.Drawing.Point(310, 166);
+            calibrateColorsBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            calibrateColorsBtn.Name = "calibrateColorsBtn";
+            calibrateColorsBtn.Size = new System.Drawing.Size(100, 28);
+            calibrateColorsBtn.TabIndex = 19;
+            calibrateColorsBtn.Text = "Pond Colors";
+            toolTip1.SetToolTip(calibrateColorsBtn, "Calibrate pond water and fish shadow colors for better detection.");
+            calibrateColorsBtn.UseVisualStyleBackColor = true;
+            calibrateColorsBtn.Click += CalibrateColorsBtn_Click;
             //
             // debugCustomActionsCheckBox
             // 
@@ -1450,6 +1464,7 @@
         private System.Windows.Forms.Label fishCalibrationLabel;
         private System.Windows.Forms.CheckBox showOverlayCheckBox;
         private System.Windows.Forms.Button editScanAreaBtn;
+        private System.Windows.Forms.Button calibrateColorsBtn;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button createCustomFishingActionsBtn;
         private System.Windows.Forms.ComboBox customFishingFilesComboBox;

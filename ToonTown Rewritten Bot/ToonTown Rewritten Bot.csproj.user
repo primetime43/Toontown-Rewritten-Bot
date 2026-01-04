@@ -51,6 +51,9 @@
     <Compile Update="Views\Plants.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Views\PondColorCalibrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Views\ScanAreaCalibrationForm.cs">
       <SubType>Form</SubType>
     </Compile>

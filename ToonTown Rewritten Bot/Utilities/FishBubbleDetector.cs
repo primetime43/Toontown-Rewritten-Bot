@@ -300,11 +300,23 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// </summary>
         public FishDetectionDebugResult DetectFromScreenshot(Bitmap screenshot)
         {
+            // Check for custom user-defined colors first
+            var customColors = PondColorManager.GetPondColors(_currentLocationName);
+
             var result = new FishDetectionDebugResult
             {
-                TargetBubbleColor = _spotConfig.BubbleColor,
-                ColorTolerance = _spotConfig.ColorTolerance
+                TargetBubbleColor = customColors?.ShadowColor ?? _spotConfig.BubbleColor,
+                ColorTolerance = customColors != null
+                    ? new Tolerance(customColors.ToleranceR, customColors.ToleranceG, customColors.ToleranceB)
+                    : _spotConfig.ColorTolerance
             };
+
+            if (customColors != null)
+            {
+                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using CUSTOM colors for '{_currentLocationName}': " +
+                    $"Shadow=({customColors.ShadowR},{customColors.ShadowG},{customColors.ShadowB}), " +
+                    $"Tolerance=({customColors.ToleranceR},{customColors.ToleranceG},{customColors.ToleranceB})");
+            }
 
             if (screenshot == null) return result;
 
@@ -397,6 +409,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         if (usingLearnedColor)
                         {
                             isMatch = MatchesLearnedColor(color);
+                        }
+                        else if (HasCustomPondColors())
+                        {
+                            // Use user-defined custom colors (highest priority)
+                            isMatch = MatchesCustomShadowColor(color);
                         }
                         else
                         {
@@ -854,6 +871,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     {
                         isMatch = MatchesLearnedColor(color);
                     }
+                    else if (HasCustomPondColors())
+                    {
+                        // Use user-defined custom colors (highest priority)
+                        isMatch = MatchesCustomShadowColor(color);
+                    }
                     else
                     {
                         // Try location-specific config color first, then general dark detection
@@ -1180,6 +1202,36 @@ namespace ToonTown_Rewritten_Bot.Utilities
                           Math.Abs(color.B - target.B) <= tolB;
 
             return matches;
+        }
+
+        /// <summary>
+        /// Checks if a color matches the user-defined custom shadow color for this location.
+        /// Custom colors are set via the pond color calibration UI.
+        /// </summary>
+        private bool MatchesCustomShadowColor(Color color)
+        {
+            var customColors = PondColorManager.GetPondColors(_currentLocationName);
+            if (customColors == null)
+                return false;
+
+            var target = customColors.ShadowColor;
+            int tolR = customColors.ToleranceR;
+            int tolG = customColors.ToleranceG;
+            int tolB = customColors.ToleranceB;
+
+            bool matches = Math.Abs(color.R - target.R) <= tolR &&
+                          Math.Abs(color.G - target.G) <= tolG &&
+                          Math.Abs(color.B - target.B) <= tolB;
+
+            return matches;
+        }
+
+        /// <summary>
+        /// Checks if custom pond colors are defined for the current location.
+        /// </summary>
+        private bool HasCustomPondColors()
+        {
+            return PondColorManager.HasCustomColors(_currentLocationName);
         }
 
         /// <summary>

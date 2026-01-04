@@ -522,6 +522,30 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
+        private void CalibrateColorsBtn_Click(object sender, EventArgs e)
+        {
+            string selectedLocation = fishingLocationscomboBox.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selectedLocation))
+            {
+                MessageBox.Show("Please select a fishing location first.", "No Location Selected",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (selectedLocation == "CUSTOM FISHING ACTION")
+            {
+                MessageBox.Show("Color calibration is not available for custom fishing actions.",
+                    "Not Available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // Open the color calibration form
+            using (var colorForm = new PondColorCalibrationForm(selectedLocation))
+            {
+                colorForm.ShowDialog();
+            }
+        }
+
         /// <summary>
         /// Called when fishing ends to auto-uncheck the overlay checkbox.
         /// </summary>
