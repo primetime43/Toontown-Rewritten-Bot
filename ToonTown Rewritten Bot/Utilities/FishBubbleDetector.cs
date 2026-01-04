@@ -353,7 +353,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             result.DarkThreshold = Math.Max(10, result.AvgBrightness - 25);
 
             // Second pass: Find dark pixels that could be fish shadows
-            // If we have a learned color, use that; otherwise use general dark detection
+            // Priority: 1) Learned color, 2) Location-specific config color, 3) General dark detection
             var fishShadowPixels = new List<Point>();
             bool usingLearnedColor = _learnedShadowColor.HasValue && _learnedColorConfidence >= 1;
 
@@ -368,7 +368,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using general dark detection (threshold={result.DarkThreshold})");
+                var bc = _spotConfig.BubbleColor;
+                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using location config color RGB({bc.R},{bc.G},{bc.B}) + general dark detection (threshold={result.DarkThreshold})");
             }
 
             for (int y = startY; y < endY; y += step)
@@ -379,9 +380,16 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     {
                         var color = screenshot.GetPixel(x, y);
 
-                        bool isMatch = usingLearnedColor
-                            ? MatchesLearnedColor(color)
-                            : IsFishShadowColor(color, result.DarkThreshold);
+                        bool isMatch;
+                        if (usingLearnedColor)
+                        {
+                            isMatch = MatchesLearnedColor(color);
+                        }
+                        else
+                        {
+                            // Try location-specific config color first, then general dark detection
+                            isMatch = MatchesConfigColor(color) || IsFishShadowColor(color, result.DarkThreshold);
+                        }
 
                         if (isMatch)
                         {
@@ -798,7 +806,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Avg brightness: {avgBrightness}");
 
             // Second pass: Find dark pixels that could be fish shadows
-            // If we have a learned color, use that; otherwise use general dark detection
+            // Priority: 1) Learned color, 2) Location-specific config color, 3) General dark detection
             int darkThreshold = Math.Max(10, avgBrightness - 25);
             var fishShadowPixels = new List<Point>();
             bool usingLearnedColor = _learnedShadowColor.HasValue && _learnedColorConfidence >= 1;
@@ -809,9 +817,16 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 {
                     var color = screenshot.GetPixel(x, y);
 
-                    bool isMatch = usingLearnedColor
-                        ? MatchesLearnedColor(color)
-                        : IsFishShadowColor(color, darkThreshold);
+                    bool isMatch;
+                    if (usingLearnedColor)
+                    {
+                        isMatch = MatchesLearnedColor(color);
+                    }
+                    else
+                    {
+                        // Try location-specific config color first, then general dark detection
+                        isMatch = MatchesConfigColor(color) || IsFishShadowColor(color, darkThreshold);
+                    }
 
                     if (isMatch)
                     {
@@ -1052,18 +1067,20 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// <summary>
         /// Checks if a color could be a fish shadow (darker than water, teal-ish).
         /// Fish shadows are in water, so they should have a teal/cyan quality.
+        /// Supports various water colors including TTC green/teal and other locations.
         /// </summary>
         private bool IsFishShadowColor(Color color, int darkThreshold)
         {
             int brightness = (color.R + color.G + color.B) / 3;
 
             // Must be reasonably dark (fish shadows are darker than surrounding water)
-            if (brightness > Math.Min(darkThreshold, 110))
+            // Increased max from 110 to 130 to catch lighter shadows in TTC green water
+            if (brightness > Math.Min(darkThreshold, 130))
                 return false;
 
             // Reject very dark pixels (black text, UI borders)
-            // Fish shadows are dark but not pure black - lowered to 15
-            if (brightness < 15)
+            // Fish shadows are dark but not pure black
+            if (brightness < 12)
                 return false;
 
             // Reject grayscale pixels (black text has R ≈ G ≈ B)
@@ -1072,7 +1089,6 @@ namespace ToonTown_Rewritten_Bot.Utilities
             int colorRange = maxChannel - minChannel;
 
             // If all channels are very similar (grayscale) AND very dark, reject - likely text
-            // Relaxed: range < 10 (was 15) and brightness < 40 (was 60)
             if (colorRange < 10 && brightness < 40)
                 return false;
 
@@ -1080,13 +1096,16 @@ namespace ToonTown_Rewritten_Bot.Utilities
             if (color.R > color.G + 25 && color.R > color.B + 25)
                 return false;
 
-            // Fish shadows should have some blue/teal quality
+            // Fish shadows should have some blue/teal/green quality
             // Either G or B should be >= R (not strictly greater, allow equal)
             if (color.R > color.G + 15 && color.R > color.B + 15)
                 return false;
 
-            // B should be at least 35% of G to distinguish from grass (relaxed from 40%)
-            if (color.G > 60 && color.B < color.G * 0.35)
+            // Distinguish from pure grass (G much higher than B)
+            // But allow teal/cyan water (G and B both present)
+            // TTC water is green-tinted so we need to be more lenient
+            // Only reject if B is very low compared to G AND G is high (pure grass)
+            if (color.G > 80 && color.B < color.G * 0.25)
                 return false;
 
             return true;
@@ -1106,6 +1125,27 @@ namespace ToonTown_Rewritten_Bot.Utilities
             bool matches = Math.Abs(color.R - learned.R) <= tolerance &&
                           Math.Abs(color.G - learned.G) <= tolerance &&
                           Math.Abs(color.B - learned.B) <= tolerance;
+
+            return matches;
+        }
+
+        /// <summary>
+        /// Checks if a color matches the location-specific configured fish shadow color.
+        /// Uses a wider tolerance than the strict color matching since fish shadows vary.
+        /// </summary>
+        private bool MatchesConfigColor(Color color)
+        {
+            var target = _spotConfig.BubbleColor;
+            var tolerance = _spotConfig.ColorTolerance;
+
+            // Use wider tolerance (2x config tolerance) for more reliable detection
+            int tolR = Math.Max(tolerance.R * 2, 20);
+            int tolG = Math.Max(tolerance.G * 2, 20);
+            int tolB = Math.Max(tolerance.B * 2, 20);
+
+            bool matches = Math.Abs(color.R - target.R) <= tolR &&
+                          Math.Abs(color.G - target.G) <= tolG &&
+                          Math.Abs(color.B - target.B) <= tolB;
 
             return matches;
         }
@@ -1171,36 +1211,38 @@ namespace ToonTown_Rewritten_Bot.Utilities
         }
 
         /// <summary>
-        /// Checks if a color looks like water (teal/cyan tones).
-        /// Water in TTR is teal/cyan - both G and B are high and similar.
-        /// Grass is green - G is high but B is much lower.
+        /// Checks if a color looks like water (teal/cyan/green tones).
+        /// Water in TTR varies by location - from blue/cyan to green/teal.
+        /// TTC has notably green-tinted water.
         /// </summary>
         private bool IsWaterColor(Color color)
         {
             int brightness = (color.R + color.G + color.B) / 3;
 
-            // Water should be moderately bright (relaxed range for darker water)
-            if (brightness < 40 || brightness > 200)
+            // Water should be moderately bright (relaxed range for darker/lighter water)
+            if (brightness < 35 || brightness > 210)
                 return false;
 
-            // Water is teal/cyan: G and B should be higher than R
+            // Water has G and/or B higher than R
             // Relaxed: only need one of G or B to be notably higher
-            if (color.G < color.R + 10 && color.B < color.R + 10)
+            if (color.G < color.R + 5 && color.B < color.R + 5)
                 return false;
 
-            // CRITICAL: Distinguish water from grass
-            // Water: B is close to G (teal/cyan)
-            // Grass: G is much higher than B (green)
-            // B should be at least 60% of G for water (relaxed from 70%)
-            if (color.B < color.G * 0.6)
+            // Distinguish water from pure grass
+            // Water: B is reasonably present (teal/cyan/green-teal)
+            // Pure grass: G is MUCH higher than B
+            // TTC water is green-tinted, so allow lower B ratio
+            // Only reject if B is very low compared to G
+            if (color.B < color.G * 0.4)
                 return false;
 
-            // G and B should both be reasonably present for water (relaxed)
-            if (color.G < 60 || color.B < 50)
+            // G should be reasonably present for water
+            // Relaxed B requirement for green-tinted water like TTC
+            if (color.G < 50)
                 return false;
 
-            // R should be lower than G and B for water (relaxed)
-            if (color.R > 100)
+            // R should be lower than G for water (more lenient)
+            if (color.R > 120)
                 return false;
 
             return true;

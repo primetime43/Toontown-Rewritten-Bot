@@ -30,6 +30,10 @@ namespace ToonTown_Rewritten_Bot
         {
             InitializeComponent();
 
+            // Enable keyboard shortcuts
+            this.KeyPreview = true;
+            this.KeyDown += MainForm_KeyDown;
+
             // Check if a new version of the program is available
             GithubReleaseChecker.CheckForNewVersion().ContinueWith(t =>
             {
@@ -49,6 +53,32 @@ namespace ToonTown_Rewritten_Bot
             LoadCoordinatesIntoResetBox();
             doodleTrickComboBox.SelectedIndex = 0; // clean this up/move this eventually
             LoadTemplateItemsComboBox();
+        }
+
+        /// <summary>
+        /// Global keyboard shortcut handler.
+        /// Press Escape or F12 to stop fishing/other active tasks.
+        /// </summary>
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Escape or F12 stops fishing and other active tasks
+            if (e.KeyCode == Keys.Escape || e.KeyCode == Keys.F12)
+            {
+                StopAllActiveTasks();
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Stops all active tasks (fishing, training, etc.) by cancelling the token.
+        /// </summary>
+        private void StopAllActiveTasks()
+        {
+            if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
+            {
+                _cancellationTokenSource.Cancel();
+                System.Diagnostics.Debug.WriteLine("[MainForm] Tasks stopped via keyboard shortcut");
+            }
         }
 
         //important functions for bot
