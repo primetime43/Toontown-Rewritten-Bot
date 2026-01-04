@@ -17,71 +17,75 @@ namespace ToonTown_Rewritten_Bot.Services
 {
     public class CoreFunctionality
     {
+        /// <summary>
+        /// Performs a mouse click at the current cursor position using SendInput (modern API).
+        /// </summary>
         public static void DoMouseClick()
         {
-            DoMouseClick(getCursorLocation());
+            SendInputMouseClick();
         }
 
+        /// <summary>
+        /// Performs a fishing click - drag down from current position.
+        /// Uses SendInput for reliable mouse simulation.
+        /// </summary>
         public static void DoFishingClick()
         {
-            // Get current cursor position (set by CastLine to the red fishing button location)
             Point startPos = getCursorLocation();
 
-            // Click down at the current cursor position (on the red fishing button)
-            DoMouseClickDown(startPos);
+            SendInputMouseDown();
             Thread.Sleep(500);
 
-            // Drag DOWN from where we clicked to cast the line forward
-            // The drag direction is opposite of cast direction - dragging down casts forward into the water
-            MoveCursor(startPos.X, startPos.Y + 150);
+            SimulateDragMove(startPos.X, startPos.Y + 150);
             Thread.Sleep(500);
-            DoMouseClickUp(getCursorLocation());
+
+            SendInputMouseUp();
         }
 
         /// <summary>
         /// Performs a fishing click with a custom drag destination for auto-detect fishing.
-        /// Uses the same proven mechanism as DoFishingClick.
+        /// Uses SendInput for reliable mouse simulation.
         /// </summary>
-        /// <param name="destinationX">Screen X coordinate to drag to</param>
-        /// <param name="destinationY">Screen Y coordinate to drag to</param>
         public static void DoFishingClickWithDestination(int destinationX, int destinationY)
         {
-            // Get current cursor position (should be on the red fishing button)
             Point startPos = getCursorLocation();
 
             System.Diagnostics.Debug.WriteLine($"[DoFishingClickWithDestination] Start: ({startPos.X}, {startPos.Y}) -> Dest: ({destinationX}, {destinationY})");
 
-            // Click down at the current cursor position (on the red fishing button)
-            DoMouseClickDown(startPos);
+            SendInputMouseDown();
             Thread.Sleep(500);
 
-            // Drag to the calculated destination
-            MoveCursor(destinationX, destinationY);
+            SimulateDragMove(destinationX, destinationY);
             Thread.Sleep(500);
 
-            // Release to cast
-            DoMouseClickUp(getCursorLocation());
+            SendInputMouseUp();
         }
-        private static void DoMouseClick(Point location)//simulate left button mouse click
+
+        /// <summary>
+        /// Performs a mouse click at the specified location using SendInput (modern API).
+        /// </summary>
+        private static void DoMouseClick(Point location)
         {
-            //Call the imported function with the cursor's current position
-            uint X = Convert.ToUInt32(location.X);
-            uint Y = Convert.ToUInt32(location.Y);
-            mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, X, Y, 0, 0);
+            SimulateDragMove(location.X, location.Y);
+            SendInputMouseClick();
         }
 
+        /// <summary>
+        /// Presses the left mouse button down using SendInput (modern API).
+        /// </summary>
         public static void DoMouseClickDown(Point location)
         {
-            uint X = Convert.ToUInt32(location.X);
-            uint Y = Convert.ToUInt32(location.Y);
-            mouse_event(MOUSEEVENTF_LEFTDOWN, X, Y, 0, 0);
+            SimulateDragMove(location.X, location.Y);
+            SendInputMouseDown();
         }
 
+        /// <summary>
+        /// Releases the left mouse button using SendInput (modern API).
+        /// </summary>
         public static void DoMouseClickUp(Point location)
         {
-            uint X = Convert.ToUInt32(location.X);
-            uint Y = Convert.ToUInt32(location.Y);
-            mouse_event(MOUSEEVENTF_LEFTUP, X, Y, 0, 0);
+            SimulateDragMove(location.X, location.Y);
+            SendInputMouseUp();
         }
 
         public static Color GetColorAt(int x, int y)
@@ -448,18 +452,18 @@ namespace ToonTown_Rewritten_Bot.Services
         private static extern uint GetPixel(nint dc, int x, int y);
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int ReleaseDC(nint window, nint dc);
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        private static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
 
+        // Modern SendInput API for mouse simulation
         [DllImport("user32.dll", SetLastError = true)]
         private static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
 
-        private const int MOUSEEVENTF_MOVE = 0x0001;
-        private const int MOUSEEVENTF_LEFTDOWN = 0x02;
-        private const int MOUSEEVENTF_LEFTUP = 0x04;
-        private const int MOUSEEVENTF_RIGHTDOWN = 0x08;
-        private const int MOUSEEVENTF_RIGHTUP = 0x10;
-        private const int MOUSEEVENTF_ABSOLUTE = 0x8000;
+        // Mouse event flags for SendInput
+        private const uint MOUSEEVENTF_MOVE = 0x0001;
+        private const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
+        private const uint MOUSEEVENTF_LEFTUP = 0x0004;
+        private const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
+        private const uint MOUSEEVENTF_RIGHTUP = 0x0010;
+        private const uint MOUSEEVENTF_ABSOLUTE = 0x8000;
 
         private const int INPUT_MOUSE = 0;
 
@@ -569,6 +573,48 @@ namespace ToonTown_Rewritten_Bot.Services
             };
 
             SendInput(1, new INPUT[] { input }, Marshal.SizeOf(typeof(INPUT)));
+        }
+
+        /// <summary>
+        /// Performs a complete mouse click (down + up) at the current cursor position using SendInput.
+        /// </summary>
+        public static void SendInputMouseClick()
+        {
+            var currentPos = getCursorLocation();
+            var (mouseX, mouseY) = GetNormalizedMouseCoordinates(currentPos.X, currentPos.Y);
+
+            // Send both down and up events
+            var inputs = new INPUT[]
+            {
+                new INPUT
+                {
+                    type = INPUT_MOUSE,
+                    mi = new MOUSEINPUT
+                    {
+                        dx = mouseX,
+                        dy = mouseY,
+                        mouseData = 0,
+                        dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE,
+                        time = 0,
+                        dwExtraInfo = IntPtr.Zero
+                    }
+                },
+                new INPUT
+                {
+                    type = INPUT_MOUSE,
+                    mi = new MOUSEINPUT
+                    {
+                        dx = mouseX,
+                        dy = mouseY,
+                        mouseData = 0,
+                        dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE,
+                        time = 0,
+                        dwExtraInfo = IntPtr.Zero
+                    }
+                }
+            };
+
+            SendInput(2, inputs, Marshal.SizeOf(typeof(INPUT)));
         }
     }
 }
