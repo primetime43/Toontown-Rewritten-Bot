@@ -58,5 +58,17 @@ namespace ToonTown_Rewritten_Bot.Properties {
                 this["sellFishBtn"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GolfPencilTemplate {
+            get {
+                return ((string)(this["GolfPencilTemplate"]));
+            }
+            set {
+                this["GolfPencilTemplate"] = value;
+            }
+        }
     }
 }

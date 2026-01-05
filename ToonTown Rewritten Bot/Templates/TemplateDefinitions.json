@@ -153,5 +153,10 @@
     "Key": 32,
     "Name": "Sticker Book",
     "Category": "Misc"
+  },
+  {
+    "Key": 33,
+    "Name": "Golf Pencil Button",
+    "Category": "Golf"
   }
 ]

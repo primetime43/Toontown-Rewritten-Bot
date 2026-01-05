@@ -54,5 +54,26 @@
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
+  },
+  "Golf Pencil Button": {
+    "Name": "Golf Pencil Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Golf_Pencil_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Golf_Close_Button": {
+    "Name": "Golf_Close_Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Golf_Close_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Golf_Turn_Timer": {
+    "Name": "Golf_Turn_Timer",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Golf_Turn_Timer.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
   }
 }
