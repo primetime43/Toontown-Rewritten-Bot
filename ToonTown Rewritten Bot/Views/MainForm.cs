@@ -1291,18 +1291,93 @@ namespace ToonTown_Rewritten_Bot
 
             try
             {
-                await GolfService.StartCustomGolfAction(filePath, _cancellationTokenSource.Token);
+                bool showOverlay = showGolfOverlayCheckBox.Checked;
+                await GolfService.StartCustomGolfAction(filePath, _cancellationTokenSource.Token, showOverlay);
+                GolfService.HideOverlay();
                 CoreFunctionality.BringBotWindowToFront();
                 MessageBox.Show("Golf actions completed successfully.", "Golf Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (OperationCanceledException)
             {
+                GolfService.HideOverlay();
                 MessageBox.Show("Golf actions were cancelled.");
             }
             catch (Exception ex)
             {
+                GolfService.HideOverlay();
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
+        }
+
+        private bool _isAutoGolfRunning = false;
+
+        private async void startAutoGolfBtn_Click(object sender, EventArgs e)
+        {
+            if (_isAutoGolfRunning)
+            {
+                // Cancel running auto-golf
+                _cancellationTokenSource?.Cancel();
+                startAutoGolfBtn.Text = "Auto Golf";
+                autoGolfStatusLabel.Text = "Cancelled";
+                _isAutoGolfRunning = false;
+                return;
+            }
+
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+            }
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            _isAutoGolfRunning = true;
+            startAutoGolfBtn.Text = "Stop";
+            autoGolfStatusLabel.Text = "Starting...";
+
+            // Subscribe to status updates
+            GolfService.AutoGolfStatusChanged += OnAutoGolfStatusChanged;
+
+            try
+            {
+                bool showOverlay = showGolfOverlayCheckBox.Checked;
+
+                // Run on background thread to avoid blocking UI
+                // Templates will be auto-prompted if missing
+                await Task.Run(() => GolfService.StartContinuousAutoGolfAsync(_cancellationTokenSource.Token, showOverlay));
+            }
+            catch (OperationCanceledException)
+            {
+                autoGolfStatusLabel.Text = "Stopped";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Auto-golf error: {ex.Message}");
+                autoGolfStatusLabel.Text = "Error";
+            }
+            finally
+            {
+                GolfService.AutoGolfStatusChanged -= OnAutoGolfStatusChanged;
+                GolfService.HideOverlay();
+                startAutoGolfBtn.Text = "Auto Golf";
+                _isAutoGolfRunning = false;
+            }
+        }
+
+        private void OnAutoGolfStatusChanged(object sender, AutoGolfStatusEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => OnAutoGolfStatusChanged(sender, e)));
+                return;
+            }
+
+            // Update the status label
+            string statusText = e.Status;
+            if (!string.IsNullOrEmpty(e.DetectedCourse))
+            {
+                statusText = $"{e.DetectedCourse}";
+            }
+            autoGolfStatusLabel.Text = statusText;
         }
 
         private void customGolfFilesComboBox_SelectedIndexChanged(object sender, EventArgs e)
