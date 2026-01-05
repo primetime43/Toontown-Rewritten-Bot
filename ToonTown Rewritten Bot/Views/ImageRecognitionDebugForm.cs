@@ -200,64 +200,51 @@ namespace ToonTown_Rewritten_Bot.Views
         private void InitializeComponent()
         {
             this.Text = "Image Recognition Debug";
-            this.Size = new Size(1200, 750);
+            this.Size = new Size(1000, 650);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.Sizable;
-            this.MinimumSize = new Size(1000, 650);
+            this.MinimumSize = new Size(800, 500);
 
-            // Main vertical split - Preview on top, Controls on bottom
+            // === MAIN LAYOUT: Left (Preview + Output) | Right (Controls) ===
             var mainSplit = new SplitContainer
             {
                 Dock = DockStyle.Fill,
-                Orientation = Orientation.Horizontal
+                Orientation = Orientation.Vertical,
+                SplitterWidth = 6
             };
             this.Controls.Add(mainSplit);
 
-            // Set splitter constraints after form is loaded to avoid constraint errors
             this.Load += (s, e) =>
             {
-                try
-                {
-                    mainSplit.Panel1MinSize = 200;
-                    mainSplit.Panel2MinSize = 180;
-                    mainSplit.SplitterDistance = Math.Max(200, this.ClientSize.Height - 280);
-                }
-                catch { /* Ignore if constraints can't be satisfied */ }
-            };
-
-            // === TOP PANEL: Preview Areas ===
-            var previewSplit = new SplitContainer
-            {
-                Dock = DockStyle.Fill,
-                Orientation = Orientation.Vertical
-            };
-            mainSplit.Panel1.Controls.Add(previewSplit);
-
-            // Set preview split constraints in Load event
-            this.Load += (s, e) =>
-            {
-                try
-                {
-                    previewSplit.Panel2MinSize = 180;
-                    previewSplit.SplitterDistance = Math.Max(100, this.ClientSize.Width - 250);
-                }
+                try { mainSplit.SplitterDistance = Math.Max(400, this.ClientSize.Width - 280); }
                 catch { }
             };
 
-            // Main preview
+            // === LEFT PANEL: Preview + Output ===
+            var leftPanel = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 2
+            };
+            leftPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 75F));
+            leftPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            mainSplit.Panel1.Controls.Add(leftPanel);
+
+            // Preview group
             var previewGroup = new GroupBox
             {
-                Text = "Game Window Preview (Click and drag to select region)",
+                Text = "Preview (Click & drag to select region)",
                 Dock = DockStyle.Fill,
-                Padding = new Padding(5)
+                Margin = new Padding(3)
             };
-            previewSplit.Panel1.Controls.Add(previewGroup);
+            leftPanel.Controls.Add(previewGroup, 0, 0);
 
             previewPictureBox = new PictureBox
             {
                 Dock = DockStyle.Fill,
                 SizeMode = PictureBoxSizeMode.Zoom,
-                BackColor = Color.FromArgb(45, 45, 48)
+                BackColor = Color.Black
             };
             previewPictureBox.MouseDown += PreviewPictureBox_MouseDown;
             previewPictureBox.MouseMove += PreviewPictureBox_MouseMove;
@@ -265,285 +252,211 @@ namespace ToonTown_Rewritten_Bot.Views
             previewPictureBox.Paint += PreviewPictureBox_Paint;
             previewGroup.Controls.Add(previewPictureBox);
 
-            // Template preview panel
-            var templatePanel = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 1,
-                RowCount = 2
-            };
-            templatePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            templatePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            previewSplit.Panel2.Controls.Add(templatePanel);
-
-            var templatePreviewGroup = new GroupBox
-            {
-                Text = "Template",
-                Dock = DockStyle.Fill,
-                Margin = new Padding(0, 0, 0, 2)
-            };
-            templatePanel.Controls.Add(templatePreviewGroup, 0, 0);
-
-            templatePreviewPictureBox = new PictureBox
-            {
-                Dock = DockStyle.Fill,
-                SizeMode = PictureBoxSizeMode.Zoom,
-                BackColor = Color.FromArgb(60, 60, 65),
-                BorderStyle = BorderStyle.FixedSingle
-            };
-            templatePreviewGroup.Controls.Add(templatePreviewPictureBox);
-
-            // Output panel (small)
+            // Output group
             var outputGroup = new GroupBox
             {
-                Text = "Output",
+                Text = "Output Log",
                 Dock = DockStyle.Fill,
-                Margin = new Padding(0, 2, 0, 0)
+                Margin = new Padding(3)
             };
-            templatePanel.Controls.Add(outputGroup, 0, 1);
+            leftPanel.Controls.Add(outputGroup, 0, 1);
 
             outputTextBox = new TextBox
             {
                 Multiline = true,
                 Dock = DockStyle.Fill,
                 ScrollBars = ScrollBars.Vertical,
-                Font = new Font("Consolas", 8),
-                ReadOnly = true,
-                BackColor = Color.FromArgb(30, 30, 30),
-                ForeColor = Color.LightGray
+                Font = new Font("Consolas", 9),
+                ReadOnly = true
             };
             outputGroup.Controls.Add(outputTextBox);
 
-            // === BOTTOM PANEL: All Controls ===
-            var controlsPanel = new Panel
+            // === RIGHT PANEL: All Controls ===
+            var rightPanel = new Panel
             {
                 Dock = DockStyle.Fill,
+                AutoScroll = true,
                 Padding = new Padding(5)
             };
-            mainSplit.Panel2.Controls.Add(controlsPanel);
+            mainSplit.Panel2.Controls.Add(rightPanel);
 
-            var controlsTable = new TableLayoutPanel
+            var controlsFlow = new FlowLayoutPanel
             {
-                Dock = DockStyle.Fill,
-                ColumnCount = 5,
-                RowCount = 1
+                Dock = DockStyle.Top,
+                FlowDirection = FlowDirection.TopDown,
+                AutoSize = true,
+                WrapContents = false,
+                Padding = new Padding(0)
             };
-            controlsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 170)); // Capture
-            controlsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 170)); // Create Template
-            controlsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 270)); // Test Templates
-            controlsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180)); // OCR
-            controlsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F)); // Fish
-            controlsPanel.Controls.Add(controlsTable);
+            rightPanel.Controls.Add(controlsFlow);
 
-            // === GROUP 1: Capture ===
-            var captureGroup = new GroupBox { Text = "Capture", Dock = DockStyle.Fill, Margin = new Padding(0, 0, 3, 0) };
-            controlsTable.Controls.Add(captureGroup, 0, 0);
+            // === CAPTURE GROUP ===
+            var captureGroup = CreateGroupBox("Capture", 250);
+            controlsFlow.Controls.Add(captureGroup);
 
-            var captureFlow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, Padding = new Padding(5) };
-            captureGroup.Controls.Add(captureFlow);
+            var captureInner = new FlowLayoutPanel { AutoSize = true, FlowDirection = FlowDirection.TopDown, Padding = new Padding(8), WrapContents = false };
+            captureGroup.Controls.Add(captureInner);
 
-            var captureRow1 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true };
-            captureFlow.Controls.Add(captureRow1);
-
-            captureBtn = new Button { Text = "Capture", Size = new Size(75, 28), Margin = new Padding(0, 0, 5, 0) };
+            var captureRow1 = CreateFlowRow();
+            captureInner.Controls.Add(captureRow1);
+            captureBtn = CreateButton("Capture", 80);
             captureBtn.Click += CaptureBtn_Click;
             captureRow1.Controls.Add(captureBtn);
-
-            clearMatchesBtn = new Button { Text = "Clear", Size = new Size(55, 28) };
-            clearMatchesBtn.Click += (s, e) => {
-                _matchResults.Clear();
-                _selectedRegion = Rectangle.Empty;
-                previewPictureBox.Invalidate();
-                Log("Cleared.");
-            };
+            clearMatchesBtn = CreateButton("Clear", 60);
+            clearMatchesBtn.Click += (s, e) => { _matchResults.Clear(); _selectedRegion = Rectangle.Empty; _fishBubbleResults.Clear(); _fishScanArea = Rectangle.Empty; _shadowBlobs.Clear(); previewPictureBox.Invalidate(); Log("Cleared."); };
             captureRow1.Controls.Add(clearMatchesBtn);
 
-            var captureRow2 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
-            captureFlow.Controls.Add(captureRow2);
-
-            autoRefreshCheckBox = new CheckBox { Text = "Auto", AutoSize = true, Margin = new Padding(0, 3, 3, 0) };
+            var captureRow2 = CreateFlowRow();
+            captureInner.Controls.Add(captureRow2);
+            autoRefreshCheckBox = new CheckBox { Text = "Auto", AutoSize = true, Margin = new Padding(0, 4, 5, 0) };
             autoRefreshCheckBox.CheckedChanged += AutoRefreshCheckBox_CheckedChanged;
             captureRow2.Controls.Add(autoRefreshCheckBox);
-
-            refreshIntervalNumeric = new NumericUpDown { Size = new Size(50, 22), Minimum = 100, Maximum = 5000, Value = 500, Increment = 100 };
+            refreshIntervalNumeric = new NumericUpDown { Size = new Size(55, 24), Minimum = 100, Maximum = 5000, Value = 500, Increment = 100 };
             captureRow2.Controls.Add(refreshIntervalNumeric);
-
-            captureRow2.Controls.Add(new Label { Text = "ms", AutoSize = true, Margin = new Padding(2, 4, 0, 0) });
-
-            var captureRow3 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
-            captureFlow.Controls.Add(captureRow3);
-
-            alwaysOnTopCheckBox = new CheckBox { Text = "Always On Top", AutoSize = true };
+            captureRow2.Controls.Add(new Label { Text = "ms", AutoSize = true, Margin = new Padding(2, 5, 0, 0) });
+            alwaysOnTopCheckBox = new CheckBox { Text = "On top", AutoSize = true, Margin = new Padding(10, 4, 0, 0) };
             alwaysOnTopCheckBox.CheckedChanged += AlwaysOnTopCheckBox_CheckedChanged;
-            captureRow3.Controls.Add(alwaysOnTopCheckBox);
+            captureRow2.Controls.Add(alwaysOnTopCheckBox);
 
-            // === GROUP 2: Create Template ===
-            var templateGroup = new GroupBox { Text = "Create Template", Dock = DockStyle.Fill, Margin = new Padding(3, 0, 3, 0) };
-            controlsTable.Controls.Add(templateGroup, 1, 0);
+            // === TEMPLATE MATCHING GROUP ===
+            var templateGroup = CreateGroupBox("Template Matching", 250);
+            controlsFlow.Controls.Add(templateGroup);
 
-            var templateFlow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, Padding = new Padding(5) };
-            templateGroup.Controls.Add(templateFlow);
+            var templateInner = new FlowLayoutPanel { AutoSize = true, FlowDirection = FlowDirection.TopDown, Padding = new Padding(8), WrapContents = false };
+            templateGroup.Controls.Add(templateInner);
 
-            var templateRow1 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true };
-            templateFlow.Controls.Add(templateRow1);
-
-            useSelectionBtn = new Button { Text = "Use Selection", Size = new Size(95, 28), Margin = new Padding(0, 0, 5, 0) };
-            useSelectionBtn.Click += UseSelectionBtn_Click;
-            templateRow1.Controls.Add(useSelectionBtn);
-
-            saveTemplateBtn = new Button { Text = "Save", Size = new Size(55, 28) };
-            saveTemplateBtn.Click += SaveTemplateBtn_Click;
-            templateRow1.Controls.Add(saveTemplateBtn);
-
-            var templateRow2 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
-            templateFlow.Controls.Add(templateRow2);
-
-            openTemplatesFolderBtn = new Button { Text = "Open Folder", Size = new Size(95, 28) };
-            openTemplatesFolderBtn.Click += (s, e) => System.Diagnostics.Process.Start("explorer.exe", TemplatesFolder);
-            templateRow2.Controls.Add(openTemplatesFolderBtn);
-
-            // === GROUP 3: Test Templates ===
-            var searchGroup = new GroupBox { Text = "Test Templates", Dock = DockStyle.Fill, Margin = new Padding(3, 0, 3, 0) };
-            controlsTable.Controls.Add(searchGroup, 2, 0);
-
-            var searchFlow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, Padding = new Padding(5) };
-            searchGroup.Controls.Add(searchFlow);
-
-            // Template dropdown row
-            var templateSelectRow = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true };
-            searchFlow.Controls.Add(templateSelectRow);
-
-            templateDefinitionsComboBox = new ComboBox { Size = new Size(180, 24), DropDownStyle = ComboBoxStyle.DropDownList, DropDownHeight = 300 };
+            templateDefinitionsComboBox = new ComboBox { Size = new Size(230, 24), DropDownStyle = ComboBoxStyle.DropDownList, DropDownHeight = 300, Margin = new Padding(0, 0, 0, 5) };
             templateDefinitionsComboBox.SelectedIndexChanged += TemplateDefinitionsComboBox_SelectedIndexChanged;
-            templateSelectRow.Controls.Add(templateDefinitionsComboBox);
+            templateInner.Controls.Add(templateDefinitionsComboBox);
 
-            testTemplateBtn = new Button { Text = "Test", Size = new Size(50, 26), Margin = new Padding(5, 0, 0, 0) };
-            testTemplateBtn.Click += TestTemplateBtn_Click;
-            templateSelectRow.Controls.Add(testTemplateBtn);
+            templatePreviewPictureBox = new PictureBox
+            {
+                Size = new Size(230, 50),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                BackColor = Color.LightGray,
+                BorderStyle = BorderStyle.FixedSingle,
+                Margin = new Padding(0, 0, 0, 5)
+            };
+            templateInner.Controls.Add(templatePreviewPictureBox);
 
-            // Load from file row
-            var searchRow1 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
-            searchFlow.Controls.Add(searchRow1);
-
-            loadTemplateBtn = new Button { Text = "Load File", Size = new Size(65, 26), Margin = new Padding(0, 0, 5, 0) };
-            loadTemplateBtn.Click += LoadTemplateBtn_Click;
-            searchRow1.Controls.Add(loadTemplateBtn);
-
-            templatePathLabel = new Label { Text = "No template", AutoSize = true, Margin = new Padding(0, 5, 0, 0), ForeColor = Color.Gray, MaximumSize = new Size(120, 0) };
-            searchRow1.Controls.Add(templatePathLabel);
-
-            // Find buttons row
-            var searchRow2 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
-            searchFlow.Controls.Add(searchRow2);
-
-            findTemplateBtn = new Button { Text = "Find", Size = new Size(50, 26), Margin = new Padding(0, 0, 3, 0) };
+            var templateRow1 = CreateFlowRow();
+            templateInner.Controls.Add(templateRow1);
+            findTemplateBtn = CreateButton("Find", 55);
             findTemplateBtn.Click += FindTemplateBtn_Click;
-            searchRow2.Controls.Add(findTemplateBtn);
-
-            findAllTemplatesBtn = new Button { Text = "Find All", Size = new Size(60, 26), Margin = new Padding(0, 0, 3, 0) };
+            templateRow1.Controls.Add(findTemplateBtn);
+            findAllTemplatesBtn = CreateButton("Find All", 65);
             findAllTemplatesBtn.Click += FindAllTemplatesBtn_Click;
-            searchRow2.Controls.Add(findAllTemplatesBtn);
+            templateRow1.Controls.Add(findAllTemplatesBtn);
+            templatePathLabel = new Label { Text = "", AutoSize = true, ForeColor = Color.Gray, Margin = new Padding(5, 5, 0, 0), MaximumSize = new Size(100, 0) };
+            templateRow1.Controls.Add(templatePathLabel);
 
-            stopSearchBtn = new Button { Text = "Stop", Size = new Size(45, 26), Enabled = false, BackColor = Color.IndianRed, ForeColor = Color.White };
-            stopSearchBtn.Click += StopSearchBtn_Click;
-            searchRow2.Controls.Add(stopSearchBtn);
+            // === OCR GROUP ===
+            var ocrGroup = CreateGroupBox("OCR (select region first)", 250);
+            controlsFlow.Controls.Add(ocrGroup);
 
-            // Threshold row
-            var searchRow3 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
-            searchFlow.Controls.Add(searchRow3);
+            var ocrInner = new FlowLayoutPanel { AutoSize = true, FlowDirection = FlowDirection.TopDown, Padding = new Padding(8), WrapContents = false };
+            ocrGroup.Controls.Add(ocrInner);
 
-            searchRow3.Controls.Add(new Label { Text = "Threshold:", AutoSize = true, Margin = new Padding(0, 4, 3, 0) });
-            thresholdNumeric = new NumericUpDown { Size = new Size(45, 22), Minimum = 50, Maximum = 100, Value = 85 };
-            searchRow3.Controls.Add(thresholdNumeric);
-            searchRow3.Controls.Add(new Label { Text = "%", AutoSize = true, Margin = new Padding(2, 4, 0, 0) });
-
-            // === GROUP 4: OCR ===
-            var ocrGroup = new GroupBox { Text = "OCR (Text Recognition)", Dock = DockStyle.Fill, Margin = new Padding(3, 0, 3, 0) };
-            controlsTable.Controls.Add(ocrGroup, 3, 0);
-
-            var ocrFlow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, Padding = new Padding(5) };
-            ocrGroup.Controls.Add(ocrFlow);
-
-            var ocrRow1 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true };
-            ocrFlow.Controls.Add(ocrRow1);
-
-            readTextBtn = new Button { Text = "Read Text", Size = new Size(80, 28), Margin = new Padding(0, 0, 5, 0) };
+            var ocrRow1 = CreateFlowRow();
+            ocrInner.Controls.Add(ocrRow1);
+            readTextBtn = CreateButton("Read Text", 80);
             readTextBtn.Click += ReadTextBtn_Click;
             ocrRow1.Controls.Add(readTextBtn);
-
-            readNumbersBtn = new Button { Text = "Numbers", Size = new Size(70, 28) };
+            readNumbersBtn = CreateButton("Numbers", 70);
             readNumbersBtn.Click += ReadNumbersBtn_Click;
             ocrRow1.Controls.Add(readNumbersBtn);
-
-            var ocrRow2 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
-            ocrFlow.Controls.Add(ocrRow2);
-
-            readFullScreenBtn = new Button { Text = "Full Screen", Size = new Size(85, 28) };
+            readFullScreenBtn = CreateButton("Full", 50);
             readFullScreenBtn.Click += ReadFullScreenBtn_Click;
-            ocrRow2.Controls.Add(readFullScreenBtn);
+            ocrRow1.Controls.Add(readFullScreenBtn);
 
-            // === GROUP 5: Fish Detection ===
-            var fishGroup = new GroupBox { Text = "Fish Detection", Dock = DockStyle.Fill, Margin = new Padding(3, 0, 0, 0) };
-            controlsTable.Controls.Add(fishGroup, 4, 0);
+            // === FISH DETECTION GROUP ===
+            var fishGroup = CreateGroupBox("Fish Detection", 250);
+            controlsFlow.Controls.Add(fishGroup);
 
-            var fishFlow = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, Padding = new Padding(5) };
-            fishGroup.Controls.Add(fishFlow);
+            var fishInner = new FlowLayoutPanel { AutoSize = true, FlowDirection = FlowDirection.TopDown, Padding = new Padding(8), WrapContents = false };
+            fishGroup.Controls.Add(fishInner);
 
-            fishLocationComboBox = new ComboBox { Size = new Size(160, 24), DropDownStyle = ComboBoxStyle.DropDownList, DropDownHeight = 250 };
-            fishLocationComboBox.Items.AddRange(new object[]
-            {
-                "TTC Punchline Place",
-                "DDL Lullaby Lane",
-                "Brrrgh Polar Place",
-                "Brrrgh Walrus Way",
-                "Brrrgh Sleet Street",
-                "MML Tenor Terrace",
-                "DD Lighthouse Lane",
-                "DG Elm Street",
-                "Fish Anywhere"
-            });
+            fishLocationComboBox = new ComboBox { Size = new Size(230, 24), DropDownStyle = ComboBoxStyle.DropDownList, DropDownHeight = 250, Margin = new Padding(0, 0, 0, 5) };
+            fishLocationComboBox.Items.AddRange(new object[] { "TTC Punchline Place", "DDL Lullaby Lane", "Brrrgh Polar Place", "Brrrgh Walrus Way", "Brrrgh Sleet Street", "MML Tenor Terrace", "DD Lighthouse Lane", "DG Elm Street", "Fish Anywhere" });
             fishLocationComboBox.SelectedIndex = 0;
-            fishFlow.Controls.Add(fishLocationComboBox);
+            fishInner.Controls.Add(fishLocationComboBox);
 
-            var fishRow2 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
-            fishFlow.Controls.Add(fishRow2);
-
-            findFishBtn = new Button { Text = "Find Fish", Size = new Size(75, 28), Margin = new Padding(0, 0, 5, 0) };
+            var fishRow1 = CreateFlowRow();
+            fishInner.Controls.Add(fishRow1);
+            findFishBtn = CreateButton("Find Fish", 80);
             findFishBtn.Click += FindFishBtn_Click;
-            fishRow2.Controls.Add(findFishBtn);
-
-            sampleColorBtn = new Button { Text = "Sample", Size = new Size(65, 28) };
-            sampleColorBtn.Click += SampleColorBtn_Click;
-            fishRow2.Controls.Add(sampleColorBtn);
-
-            // Calibration row
-            var fishRow3 = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
-            fishFlow.Controls.Add(fishRow3);
-
-            confirmFishBtn = new Button { Text = "Yes, Fish!", Size = new Size(70, 28), Margin = new Padding(0, 0, 5, 0), BackColor = Color.DarkGreen, ForeColor = Color.White, Enabled = false };
-            confirmFishBtn.Click += ConfirmFishBtn_Click;
-            fishRow3.Controls.Add(confirmFishBtn);
-
-            rejectFishBtn = new Button { Text = "Not Fish", Size = new Size(65, 28), BackColor = Color.DarkRed, ForeColor = Color.White, Enabled = false };
-            rejectFishBtn.Click += RejectFishBtn_Click;
-            fishRow3.Controls.Add(rejectFishBtn);
-
-            resetCalibrationBtn = new Button { Text = "Reset", Size = new Size(50, 28), Margin = new Padding(5, 0, 0, 0) };
+            fishRow1.Controls.Add(findFishBtn);
+            resetCalibrationBtn = CreateButton("Reset Calibration", 110);
             resetCalibrationBtn.Click += ResetCalibrationBtn_Click;
-            fishRow3.Controls.Add(resetCalibrationBtn);
+            fishRow1.Controls.Add(resetCalibrationBtn);
+
+            var fishRow2 = CreateFlowRow();
+            fishInner.Controls.Add(fishRow2);
+            confirmFishBtn = CreateButton("Confirm Fish", 90);
+            confirmFishBtn.BackColor = Color.LightGreen;
+            confirmFishBtn.Enabled = false;
+            confirmFishBtn.Click += ConfirmFishBtn_Click;
+            fishRow2.Controls.Add(confirmFishBtn);
+            rejectFishBtn = CreateButton("Not Fish", 70);
+            rejectFishBtn.BackColor = Color.LightCoral;
+            rejectFishBtn.Enabled = false;
+            rejectFishBtn.Click += RejectFishBtn_Click;
+            fishRow2.Controls.Add(rejectFishBtn);
 
             // === STATUS BAR ===
             coordsLabel = new Label
             {
-                Text = "Coordinates: (-, -) | Selection: none",
+                Text = "Ready | Click preview to select region",
                 Dock = DockStyle.Bottom,
                 Height = 22,
                 TextAlign = ContentAlignment.MiddleLeft,
-                BackColor = Color.FromArgb(45, 45, 48),
-                ForeColor = Color.LightGray,
+                BorderStyle = BorderStyle.Fixed3D,
                 Padding = new Padding(5, 0, 0, 0)
             };
             this.Controls.Add(coordsLabel);
+
+            // Initialize dummy controls that are no longer in UI but referenced elsewhere
+            thresholdNumeric = new NumericUpDown { Value = 85, Minimum = 50, Maximum = 100 };
+            stopSearchBtn = new Button();
+            testTemplateBtn = new Button();
+            loadTemplateBtn = new Button();
+            useSelectionBtn = new Button();
+            saveTemplateBtn = new Button();
+            openTemplatesFolderBtn = new Button();
+            sampleColorBtn = new Button();
+        }
+
+        private GroupBox CreateGroupBox(string title, int width)
+        {
+            return new GroupBox
+            {
+                Text = title,
+                Size = new Size(width, 0),
+                AutoSize = true,
+                Margin = new Padding(0, 0, 0, 8),
+                Padding = new Padding(3)
+            };
+        }
+
+        private FlowLayoutPanel CreateFlowRow()
+        {
+            return new FlowLayoutPanel
+            {
+                FlowDirection = FlowDirection.LeftToRight,
+                AutoSize = true,
+                WrapContents = false,
+                Margin = new Padding(0, 0, 0, 3)
+            };
+        }
+
+        private Button CreateButton(string text, int width)
+        {
+            return new Button
+            {
+                Text = text,
+                Size = new Size(width, 25),
+                Margin = new Padding(0, 0, 5, 0)
+            };
         }
 
         private void UseSelectionBtn_Click(object sender, EventArgs e)
