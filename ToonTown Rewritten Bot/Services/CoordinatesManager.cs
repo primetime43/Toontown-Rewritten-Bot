@@ -338,8 +338,6 @@ namespace ToonTown_Rewritten_Bot.Services
             // Serialize the list back to JSON and write it to the file
             string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
             File.WriteAllText(CoordinatesFilePath, updatedJson);
-
-            //CoreFunctionality.MaximizeAndFocusTTRWindow();
         }
 
         /// <summary>

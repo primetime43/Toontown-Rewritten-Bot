@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using WindowsInput;
 
 namespace ToonTown_Rewritten_Bot.Services
@@ -133,11 +128,6 @@ namespace ToonTown_Rewritten_Bot.Services
             InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
             Thread.Sleep(1000);
             InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
-
-            /*//short turn left
-            robot.keyPress(KeyEvent.VK_LEFT);
-            robot.delay(500);
-            robot.keyRelease(KeyEvent.VK_LEFT);*/
 
             //go straight more
             InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
