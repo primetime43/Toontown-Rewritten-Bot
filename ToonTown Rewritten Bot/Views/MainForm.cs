@@ -49,7 +49,6 @@ namespace ToonTown_Rewritten_Bot
             LoadCustomActions("Golf", customGolfFilesComboBox);
 
             CoordinatesManager.ReadCoordinates();
-            BotFunctions.CreateItemsDataFileMap();
             LoadCoordinatesIntoResetBox();
             doodleTrickComboBox.SelectedIndex = 0; // clean this up/move this eventually
             LoadTemplateItemsComboBox();
@@ -157,12 +156,6 @@ namespace ToonTown_Rewritten_Bot
             else
                 TopMost = false;
         }
-
-        /*private void loadActonItemBtn_Click(object sender, EventArgs e)
-        {
-            //Thread.Sleep(4000);
-            //textBox1.Text = BotFunctions.HexConverter(BotFunctions.GetColorAt(BotFunctions.getCursorLocation().X, BotFunctions.getCursorLocation().Y));
-        }*/
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -565,55 +558,20 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private async void button5_Click(object sender, EventArgs e)//racing test
+        private async void button5_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Press OK when ready to begin!");
             Thread.Sleep(5000);
             Point test = CoreFunctionality.getCursorLocation();
             CoreFunctionality.GetColorAt(test.X, test.Y);
-            string hexColor = CoreFunctionality.HexConverter(CoreFunctionality.GetColorAt(test.X, test.Y));
-            //Debug.WriteLine("HEX: " + BotFunctions.HexConverter(BotFunctions.GetColorAt(test.X, test.Y)) + " RGB: " + BotFunctions.GetColorAt(test.X, test.Y));
             Debug.WriteLine("HEX: " + CoreFunctionality.HexConverter(CoreFunctionality.GetColorAt(test.X, test.Y)) + " RGB: " + CoreFunctionality.GetColorAt(test.X, test.Y));
             MessageBox.Show("Done");
 
             CoreFunctionality.FocusTTRWindow();
 
             Image screenshot = ImageRecognition.GetWindowScreenshot();
-            /*PictureBox pictureBox = new PictureBox();
-            pictureBox.Image = screenshot;
-            pictureBox.SizeMode = PictureBoxSizeMode.AutoSize;*/
-
             string redFishingButton = "#FD0000";
-            string fishingExitButton = "#E6A951";
-
             await ImageRecognition.locateColorInImage(screenshot, redFishingButton, 10);
-
-            // Set the size of the form to the size of the image
-            /*Form form = new Form();
-            form.ClientSize = screenshot.Size;
-            form.Controls.Add(pictureBox);
-            form.ShowDialog();*/
-
-
-            /*BotFunctions.DoMouseClick();
-            ToonTown_Rewritten_Bot.Racing.startRacing();
-
-            Rectangle bounds = Screen.GetWorkingArea(Point.Empty);
-            using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
-            {
-                using (Graphics g = Graphics.FromImage(bitmap))
-                {
-                    g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
-                }
-                int x = 950;
-                int y = 755;
-                while (y <= 780 && x <= 970)
-                {
-                    richTextBox1.AppendText(BotFunctions.HexConverter(bitmap.GetPixel(x, y)) + "\n");
-                    x++;
-                    y++;
-                }
-            }*/
         }
 
         private void button8_Click(object sender, EventArgs e)

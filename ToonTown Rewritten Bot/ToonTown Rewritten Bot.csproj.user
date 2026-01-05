@@ -21,9 +21,6 @@
     <Compile Update="Views\AdvancedSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\AdvancedTemp.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Views\CustomFishingActions.cs">
       <SubType>Form</SubType>
     </Compile>
