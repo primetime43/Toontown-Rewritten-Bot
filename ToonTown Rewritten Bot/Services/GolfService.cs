@@ -131,8 +131,9 @@ namespace ToonTown_Rewritten_Bot.Services
 
                     await detector.WaitUntilReadyToSwingAsync(cancellationToken);
 
-                    // Small delay before starting
-                    await Task.Delay(500, cancellationToken);
+                    // Delay before starting to ensure game is fully ready
+                    UpdateOverlayStatus("Get ready...");
+                    await Task.Delay(1500, cancellationToken);
 
                     // Execute golf actions
                     string filePath = GetCustomGolfActionFilePath(courseFile);
@@ -226,8 +227,9 @@ namespace ToonTown_Rewritten_Bot.Services
 
                     await detector.WaitUntilReadyToSwingAsync(cancellationToken);
 
-                    // Small delay before starting
-                    await Task.Delay(500, cancellationToken);
+                    // Delay before starting to ensure game is fully ready
+                    UpdateOverlayStatus("Get ready...");
+                    await Task.Delay(1500, cancellationToken);
 
                     // Execute golf actions
                     string filePath = GetCustomGolfActionFilePath(courseFile);
