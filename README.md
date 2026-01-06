@@ -23,14 +23,17 @@ Table of Contents
 - **Keep Awake** - Prevents AFK timeout when you're away from your PC.
 - **Custom Action Management** - Create and manage custom actions for fishing and golfing directly within the application without modifying source code.
 
+## Images of fishing in 2.0.0:
+<details>
+  <summary>Click to view screenshots of version 2.0.0</summary>
 <img width="622" height="452" alt="Screenshot 2026-01-06 014315" src="https://github.com/user-attachments/assets/eed20fdf-1640-4ea1-8dd7-f7bb80fcf53c" />
-Calibrate the color of the pond & fish shadows for the bot to find
+<br> Calibrate the color of the pond & fish shadows for the bot to find
 <img width="886" height="693" alt="Pond_Color_Calibration_v2 0 0" src="https://github.com/user-attachments/assets/e3e00a8a-5919-463e-b46f-20484ec0d6e3" />
 Adjust the bot's scan area for fish in the pond
 <img width="1920" height="1035" alt="Fishing_Scan_Area_v2 0 0" src="https://github.com/user-attachments/assets/f1f19675-0eee-4a07-bbca-b7e16962a956" />
 Bot's scan area for fish
 <img width="1920" height="1033" alt="Fishing_Example_v2 0 0" src="https://github.com/user-attachments/assets/54f076ea-9fb7-46a7-a4ff-4fbf85cbe22a" />
-
+</details>
 
 ## Requirements
 - Windows 10/11 (64-bit)
