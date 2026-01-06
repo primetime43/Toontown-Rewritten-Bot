@@ -25,6 +25,10 @@
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
     <!-- Suppress platform compatibility warnings since this is a Windows-only app -->
     <NoWarn>$(NoWarn);CA1416</NoWarn>
+    <!-- Single-file publish settings (applied during dotnet publish) -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <UseVSHostingProcess>true</UseVSHostingProcess>
