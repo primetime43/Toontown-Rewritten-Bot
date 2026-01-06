@@ -678,6 +678,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 var mainForm = Application.OpenForms[0];
                 Action showDialog = () =>
                 {
+                    // Bring main form to front so user sees the dialog
+                    mainForm.WindowState = FormWindowState.Normal;
+                    mainForm.BringToFront();
+                    mainForm.Activate();
+
                     using (var dialog = new Form())
                     {
                         dialog.Text = "Select Golf Course";
@@ -686,6 +691,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         dialog.FormBorderStyle = FormBorderStyle.FixedDialog;
                         dialog.MaximizeBox = false;
                         dialog.MinimizeBox = false;
+                        dialog.TopMost = true;
 
                         var label = new Label
                         {
