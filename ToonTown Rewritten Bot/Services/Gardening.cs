@@ -14,15 +14,6 @@ namespace ToonTown_Rewritten_Bot.Services
     {
         public static async Task PlantFlowerAsync(string flowerCombo, CancellationToken cancellationToken)
         {
-            if (!CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton))
-            {
-                await CoordinatesManager.ManualUpdateCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
-                if (!CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton)) 
-                    return;
-            }
-
-            //BringBotWindowToFront();
-            //var confirmation = MessageBox.Show("Press OK when ready to begin!", "", MessageBoxButtons.OKCancel);
             var confirmation = MessageBox.Show(
             "Press OK when ready to begin!",
             "Begin Gardening",
@@ -30,17 +21,25 @@ namespace ToonTown_Rewritten_Bot.Services
             MessageBoxIcon.None,
             MessageBoxDefaultButton.Button1,
             MessageBoxOptions.DefaultDesktopOnly);
-            if (confirmation == DialogResult.Cancel) 
+            if (confirmation == DialogResult.Cancel)
                 return;
+
+            // Check if game window is available and focus it
+            if (!IsGameWindowReady())
+            {
+                MessageBox.Show("Toontown Rewritten window not found. Please make sure the game is running.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            FocusTTRWindow();
 
             await Task.Delay(2000);
 
-            var (x, y) = CoordinatesManager.GetCoordsFromMap(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
+            // Use image recognition to find button (will prompt for template capture if needed)
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
             MoveCursor(x, y);
             DoMouseClick();
             await Task.Delay(2000);
-
-            await CheckBeansAsync(GardeningCoordinatesEnum.RedJellybeanButton, cancellationToken);
 
             char[] beans = flowerCombo.ToCharArray();
             foreach (var bean in beans)
@@ -74,95 +73,41 @@ namespace ToonTown_Rewritten_Bot.Services
                 _ => throw new ArgumentException("Invalid bean type", nameof(beanType)),
             };
 
-            if (!CoordinatesManager.CheckCoordinates(location))
-            {
-                await CoordinatesManager.ManualUpdateCoordinates(location);
-                if (!CoordinatesManager.CheckCoordinates(location)) return; // Ensure coordinates are set after update.
-            }
-            var (x, y) = CoordinatesManager.GetCoordsFromMap(location);
+            // Use image recognition to find button (will prompt for template capture if needed)
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(location);
             MoveCursor(x, y);
             DoMouseClick();
             await Task.Delay(2000, cancellationToken);
         }
 
-        private static async Task CheckBeansAsync(GardeningCoordinatesEnum location, CancellationToken cancellationToken)
-        {
-            int locationNumericalVal = Convert.ToInt32(location);
-            if (locationNumericalVal <= 10)
-            {
-                if (!CoordinatesManager.CheckCoordinates(location))//if they're 0,0
-                {
-                    await CoordinatesManager.ManualUpdateCoordinates(location);
-                    GardeningCoordinatesEnum nextLocation = (GardeningCoordinatesEnum)(locationNumericalVal + 1);
-                    if (Enum.IsDefined(typeof(GardeningCoordinatesEnum), nextLocation))
-                    {
-                        await CheckBeansAsync(nextLocation, cancellationToken);
-                    }
-                }
-                else
-                {
-                    GardeningCoordinatesEnum nextLocation = (GardeningCoordinatesEnum)(locationNumericalVal + 1);
-                    if (Enum.IsDefined(typeof(GardeningCoordinatesEnum), nextLocation))
-                    {
-                        await CheckBeansAsync(nextLocation, cancellationToken);
-                    }
-                }
-            }
-        }
-
         private static async Task PressPlantButtonAsync(CancellationToken cancellationToken)
         {
-            if (CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.BluePlantButton))
-            {
-                var (x, y) = CoordinatesManager.GetCoordsFromMap(GardeningCoordinatesEnum.BluePlantButton);
-                MoveCursor(x, y);
-                DoMouseClick();
-                Thread.Sleep(8000);
-                await ClickOKAfterPlantAsync(cancellationToken);
-                await WaterPlantAsync(3, cancellationToken);
-            }
-            else
-            {
-                await CoordinatesManager.ManualUpdateCoordinates(GardeningCoordinatesEnum.BluePlantButton);
-                Thread.Sleep(2000);
-                await PressPlantButtonAsync(cancellationToken);
-            }
+            // Use image recognition to find button (will prompt for template capture if needed)
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.BluePlantButton);
+            MoveCursor(x, y);
+            DoMouseClick();
+            await Task.Delay(8000, cancellationToken);
+            await ClickOKAfterPlantAsync(cancellationToken);
+            await WaterPlantAsync(3, cancellationToken);
         }
 
         private static async Task ClickOKAfterPlantAsync(CancellationToken cancellationToken)
         {
-            if (CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.BlueOkButton))
-            {
-                var (x, y) = CoordinatesManager.GetCoordsFromMap(GardeningCoordinatesEnum.BlueOkButton);
-                CoreFunctionality.MoveCursor(x, y);
-                CoreFunctionality.DoMouseClick();
-                Thread.Sleep(2000);
-            }
-            else
-            {
-                await CoordinatesManager.ManualUpdateCoordinates(GardeningCoordinatesEnum.BlueOkButton);
-                Thread.Sleep(2000);
-                await ClickOKAfterPlantAsync(cancellationToken);
-            }
+            // Use image recognition to find button (will prompt for template capture if needed)
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.BlueOkButton);
+            CoreFunctionality.MoveCursor(x, y);
+            CoreFunctionality.DoMouseClick();
+            await Task.Delay(2000, cancellationToken);
         }
 
         public static async Task WaterPlantAsync(int waterPlantCount, CancellationToken cancellationToken)
         {
-            if (!CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.WateringCanButton))
-            {
-                await CoordinatesManager.ManualUpdateCoordinates(GardeningCoordinatesEnum.WateringCanButton);
-                // Recheck coordinates after update
-                if (!CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.WateringCanButton))
-                {
-                    throw new InvalidOperationException("Watering can button coordinates not set.");
-                }
-            }
-
-            var (x, y) = CoordinatesManager.GetCoordsFromMap(GardeningCoordinatesEnum.WateringCanButton);
+            // Use image recognition to find button (will prompt for template capture if needed)
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.WateringCanButton);
 
             for (int i = 0; i < waterPlantCount; i++)
             {
-                cancellationToken.ThrowIfCancellationRequested(); // Check if the operation has been cancelled
+                cancellationToken.ThrowIfCancellationRequested();
                 CoreFunctionality.MoveCursor(x, y);
                 CoreFunctionality.DoMouseClick();
                 await Task.Delay(4000, cancellationToken);
@@ -171,38 +116,37 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static async Task RemovePlantAsync(CancellationToken cancellationToken)
         {
-            if (CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton))
-            {
-                var (x, y) = CoordinatesManager.GetCoordsFromMap(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
-                MessageBox.Show("Press OK when ready to begin!");
-                Thread.Sleep(2000);
-                CoreFunctionality.MoveCursor(x, y);
-                CoreFunctionality.DoMouseClick();
-                await SelectYESToRemoveAsync(cancellationToken);
-            }
-            else
-            {
-                await CoordinatesManager.ManualUpdateCoordinates(GardeningCoordinatesEnum.PlantFlowerRemoveButton);//update the plant flower button coords
-                await RemovePlantAsync(cancellationToken);
-                Thread.Sleep(2000);
-            }
+            MessageBox.Show("Press OK when ready to begin!");
 
+            // Check if game window is available and focus it
+            if (!IsGameWindowReady())
+            {
+                MessageBox.Show("Toontown Rewritten window not found. Please make sure the game is running.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            FocusTTRWindow();
+
+            await Task.Delay(2000, cancellationToken);
+
+            // Use image recognition to find button (will prompt for template capture if needed)
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
+            CoreFunctionality.MoveCursor(x, y);
+            CoreFunctionality.DoMouseClick();
+
+            // Wait for the confirmation dialog to appear
+            await Task.Delay(2000, cancellationToken);
+
+            await SelectYESToRemoveAsync(cancellationToken);
         }
 
         private static async Task SelectYESToRemoveAsync(CancellationToken cancellationToken)
         {
-            if (CoordinatesManager.CheckCoordinates(GardeningCoordinatesEnum.BlueYesButton))
-            {
-                var (x, y) = CoordinatesManager.GetCoordsFromMap(GardeningCoordinatesEnum.BlueYesButton);
-                CoreFunctionality.MoveCursor(x, y);
-                CoreFunctionality.DoMouseClick();
-            }
-            else
-            {
-                await CoordinatesManager.ManualUpdateCoordinates(GardeningCoordinatesEnum.BlueYesButton);//update the plant flower button coords
-                await SelectYESToRemoveAsync(cancellationToken);
-                Thread.Sleep(2000);
-            }
+            // Use image recognition to find button (will prompt for template capture if needed)
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.BlueYesButton);
+            CoreFunctionality.MoveCursor(x, y);
+            CoreFunctionality.DoMouseClick();
+            await Task.Delay(1000, cancellationToken);
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
+using ToonTown_Rewritten_Bot.Utilities;
 
 namespace ToonTown_Rewritten_Bot.Services
 {
@@ -118,6 +119,75 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
+        /// Gets coordinates using image recognition as primary method, with manual coordinates as fallback.
+        /// Will prompt user to capture template if none exists.
+        /// Coordinates are automatically converted to screen coordinates by adding the game window offset.
+        /// </summary>
+        /// <param name="key">The enum key for the coordinate</param>
+        /// <returns>The screen coordinates (x, y) of the element</returns>
+        public static async Task<(int x, int y)> GetCoordsWithImageRecAsync(Enum key)
+        {
+            string keyAsString = Convert.ToInt32(key).ToString();
+            string description = CoordinateActions.GetDescription(keyAsString);
+            string elementName = description ?? $"Element_{keyAsString}";
+
+            // First, load manual coordinates as fallback for UIElementManager
+            var manualCoords = GetManualCoordsOrDefault(key);
+            if (manualCoords.x != 0 || manualCoords.y != 0)
+            {
+                UIElementManager.Instance.SetManualCoordinates(elementName, new Point(manualCoords.x, manualCoords.y));
+            }
+
+            // Try to find using image recognition (will prompt for template capture if needed)
+            var location = await UIElementManager.Instance.GetElementLocationAsync(elementName, description);
+
+            if (location.HasValue)
+            {
+                // Convert window-relative coordinates to screen coordinates
+                var windowOffset = CoreFunctionality.GetGameWindowOffset();
+                int screenX = location.Value.X + windowOffset.X;
+                int screenY = location.Value.Y + windowOffset.Y;
+
+                System.Diagnostics.Debug.WriteLine($"[CoordinatesManager] {elementName}: window coords ({location.Value.X}, {location.Value.Y}) + offset ({windowOffset.X}, {windowOffset.Y}) = screen ({screenX}, {screenY})");
+
+                return (screenX, screenY);
+            }
+
+            // If still not found, fall back to manual coordinates from the old system
+            // Manual coordinates are already screen coordinates
+            if (manualCoords.x != 0 || manualCoords.y != 0)
+            {
+                return manualCoords;
+            }
+
+            throw new Exception($"Could not find element '{elementName}' via image recognition or manual coordinates.");
+        }
+
+        /// <summary>
+        /// Gets manual coordinates from the JSON file, returning (0,0) if not found or not set.
+        /// </summary>
+        private static (int x, int y) GetManualCoordsOrDefault(Enum key)
+        {
+            try
+            {
+                string keyAsString = Convert.ToInt32(key).ToString();
+
+                if (File.Exists(CoordinatesFilePath))
+                {
+                    string json = File.ReadAllText(CoordinatesFilePath);
+                    var coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
+                    var action = coordinateActions.FirstOrDefault(a => a.Key == keyAsString);
+                    if (action != null)
+                    {
+                        return (action.X, action.Y);
+                    }
+                }
+            }
+            catch { }
+            return (0, 0);
+        }
+
+        /// <summary>
         /// Updates the coordinates for a specified location programmatically without user interaction.
         /// This function reads the existing coordinates from the JSON file, updates them with new values,
         /// and then writes the updated coordinates back to the file.
@@ -213,7 +283,7 @@ namespace ToonTown_Rewritten_Bot.Services
             string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
             File.WriteAllText(CoordinatesFilePath, updatedJson);
 
-            CoreFunctionality.MaximizeAndFocusTTRWindow();
+            CoreFunctionality.FocusTTRWindow();
         }
 
         public async Task ManualUpdateCoordinates(string locationToUpdate)
@@ -268,8 +338,6 @@ namespace ToonTown_Rewritten_Bot.Services
             // Serialize the list back to JSON and write it to the file
             string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
             File.WriteAllText(CoordinatesFilePath, updatedJson);
-
-            //CoreFunctionality.MaximizeAndFocusTTRWindow();
         }
 
         /// <summary>

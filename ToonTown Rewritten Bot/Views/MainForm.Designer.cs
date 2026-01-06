@@ -41,17 +41,21 @@
             createCustomFishingActionsBtn = new System.Windows.Forms.Button();
             label12 = new System.Windows.Forms.Label();
             groupBox6 = new System.Windows.Forms.GroupBox();
-            debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
+            calibrateColorsBtn = new System.Windows.Forms.Button();
+            editScanAreaBtn = new System.Windows.Forms.Button();
+            showOverlayCheckBox = new System.Windows.Forms.CheckBox();
+            autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
             button4 = new System.Windows.Forms.Button();
-            customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
             randomFishingCheckBox = new System.Windows.Forms.CheckBox();
-            smartFishing = new System.Windows.Forms.CheckBox();
             label4 = new System.Windows.Forms.Label();
             numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             label3 = new System.Windows.Forms.Label();
             numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             startFishing = new System.Windows.Forms.Button();
             fishingLocationscomboBox = new System.Windows.Forms.ComboBox();
+            debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
+            customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
+            fishingShortcutsLabel = new System.Windows.Forms.Label();
             Racing = new System.Windows.Forms.TabPage();
             label6 = new System.Windows.Forms.Label();
             richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -67,9 +71,16 @@
             selectFlowerBeanAmountBtn = new System.Windows.Forms.Button();
             Golf = new System.Windows.Forms.TabPage();
             groupBox10 = new System.Windows.Forms.GroupBox();
+            autoGolfStatusLabel = new System.Windows.Forms.Label();
+            startAutoGolfBtn = new System.Windows.Forms.Button();
+            showGolfOverlayCheckBox = new System.Windows.Forms.CheckBox();
+            golfActionsPreviewLabel = new System.Windows.Forms.Label();
+            golfCourseSelectLabel = new System.Windows.Forms.Label();
             golfActionsListBox = new System.Windows.Forms.ListBox();
             customGolfFilesComboBox = new System.Windows.Forms.ComboBox();
             button1 = new System.Windows.Forms.Button();
+            golfHelpGroupBox = new System.Windows.Forms.GroupBox();
+            golfInstructionsLabel = new System.Windows.Forms.Label();
             createCustomGolfActionsBtn = new System.Windows.Forms.Button();
             Doodles = new System.Windows.Forms.TabPage();
             richTextBox2 = new System.Windows.Forms.RichTextBox();
@@ -98,6 +109,15 @@
             messageToType = new System.Windows.Forms.TextBox();
             startSpamButton = new System.Windows.Forms.Button();
             Dev = new System.Windows.Forms.TabPage();
+            groupBoxTemplates = new System.Windows.Forms.GroupBox();
+            btnOpenTemplateDefinitions = new System.Windows.Forms.Button();
+            btnAddTemplateItem = new System.Windows.Forms.Button();
+            btnEditTemplate = new System.Windows.Forms.Button();
+            btnDeleteTemplate = new System.Windows.Forms.Button();
+            labelTemplateStatus = new System.Windows.Forms.Label();
+            btnCaptureTemplate = new System.Windows.Forms.Button();
+            btnViewTemplate = new System.Windows.Forms.Button();
+            comboBoxTemplateItems = new System.Windows.Forms.ComboBox();
             groupBox9 = new System.Windows.Forms.GroupBox();
             label11 = new System.Windows.Forms.Label();
             updateImagesBtn = new System.Windows.Forms.Button();
@@ -125,6 +145,7 @@
             groupBox3.SuspendLayout();
             Golf.SuspendLayout();
             groupBox10.SuspendLayout();
+            golfHelpGroupBox.SuspendLayout();
             Doodles.SuspendLayout();
             groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -136,6 +157,7 @@
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
             Dev.SuspendLayout();
+            groupBoxTemplates.SuspendLayout();
             groupBox9.SuspendLayout();
             groupBox7.SuspendLayout();
             SuspendLayout();
@@ -156,7 +178,7 @@
             tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new System.Drawing.Size(554, 357);
+            tabControl1.Size = new System.Drawing.Size(620, 420);
             tabControl1.TabIndex = 5;
             // 
             // Main
@@ -170,7 +192,7 @@
             Main.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Main.Name = "Main";
             Main.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Main.Size = new System.Drawing.Size(546, 328);
+            Main.Size = new System.Drawing.Size(612, 391);
             Main.TabIndex = 0;
             Main.Text = "Main";
             Main.UseVisualStyleBackColor = true;
@@ -234,20 +256,23 @@
             Fishing.Controls.Add(createCustomFishingActionsBtn);
             Fishing.Controls.Add(label12);
             Fishing.Controls.Add(groupBox6);
+            Fishing.Controls.Add(debugCustomActionsCheckBox);
+            Fishing.Controls.Add(customFishingFilesComboBox);
+            Fishing.Controls.Add(fishingShortcutsLabel);
             Fishing.Location = new System.Drawing.Point(4, 25);
             Fishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Fishing.Name = "Fishing";
             Fishing.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Fishing.Size = new System.Drawing.Size(546, 328);
+            Fishing.Size = new System.Drawing.Size(612, 391);
             Fishing.TabIndex = 1;
             Fishing.Text = "Fishing";
             Fishing.UseVisualStyleBackColor = true;
             // 
             // createCustomFishingActionsBtn
             // 
-            createCustomFishingActionsBtn.Location = new System.Drawing.Point(401, 12);
+            createCustomFishingActionsBtn.Location = new System.Drawing.Point(460, 12);
             createCustomFishingActionsBtn.Name = "createCustomFishingActionsBtn";
-            createCustomFishingActionsBtn.Size = new System.Drawing.Size(137, 43);
+            createCustomFishingActionsBtn.Size = new System.Drawing.Size(140, 50);
             createCustomFishingActionsBtn.TabIndex = 10;
             createCustomFishingActionsBtn.Text = "Create Custom Fishing Actions";
             toolTip1.SetToolTip(createCustomFishingActionsBtn, "This will allow you to build custom fishing actions\r\nfor walking from the fishing dock to the fisherman\r\n to sell and back to the fishing dock");
@@ -257,7 +282,7 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new System.Drawing.Point(13, 278);
+            label12.Location = new System.Drawing.Point(9, 290);
             label12.Name = "label12";
             label12.Size = new System.Drawing.Size(51, 16);
             label12.TabIndex = 9;
@@ -266,11 +291,12 @@
             // 
             // groupBox6
             // 
-            groupBox6.Controls.Add(debugCustomActionsCheckBox);
+            groupBox6.Controls.Add(calibrateColorsBtn);
+            groupBox6.Controls.Add(editScanAreaBtn);
+            groupBox6.Controls.Add(showOverlayCheckBox);
+            groupBox6.Controls.Add(autoDetectFishCheckBox);
             groupBox6.Controls.Add(button4);
-            groupBox6.Controls.Add(customFishingFilesComboBox);
             groupBox6.Controls.Add(randomFishingCheckBox);
-            groupBox6.Controls.Add(smartFishing);
             groupBox6.Controls.Add(label4);
             groupBox6.Controls.Add(numericUpDown4);
             groupBox6.Controls.Add(label3);
@@ -281,50 +307,75 @@
             groupBox6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox6.Name = "groupBox6";
             groupBox6.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox6.Size = new System.Drawing.Size(385, 236);
+            groupBox6.Size = new System.Drawing.Size(440, 280);
             groupBox6.TabIndex = 8;
             groupBox6.TabStop = false;
             groupBox6.Text = "Fishing Locations";
             // 
-            // debugCustomActionsCheckBox
+            // calibrateColorsBtn
             // 
-            debugCustomActionsCheckBox.AutoSize = true;
-            debugCustomActionsCheckBox.Enabled = false;
-            debugCustomActionsCheckBox.Location = new System.Drawing.Point(194, 122);
-            debugCustomActionsCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            debugCustomActionsCheckBox.Name = "debugCustomActionsCheckBox";
-            debugCustomActionsCheckBox.Size = new System.Drawing.Size(162, 20);
-            debugCustomActionsCheckBox.TabIndex = 13;
-            debugCustomActionsCheckBox.Text = "Debug Custom Actions";
-            toolTip1.SetToolTip(debugCustomActionsCheckBox, "This will allow you to debug the custom action\r\nwalk from the dock to the fisherman");
-            debugCustomActionsCheckBox.UseVisualStyleBackColor = true;
-            debugCustomActionsCheckBox.Visible = false;
+            calibrateColorsBtn.Location = new System.Drawing.Point(310, 166);
+            calibrateColorsBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            calibrateColorsBtn.Name = "calibrateColorsBtn";
+            calibrateColorsBtn.Size = new System.Drawing.Size(100, 28);
+            calibrateColorsBtn.TabIndex = 19;
+            calibrateColorsBtn.Text = "Pond Colors";
+            toolTip1.SetToolTip(calibrateColorsBtn, "Calibrate pond water and fish shadow colors for better detection.");
+            calibrateColorsBtn.UseVisualStyleBackColor = true;
+            calibrateColorsBtn.Click += CalibrateColorsBtn_Click;
+            // 
+            // editScanAreaBtn
+            // 
+            editScanAreaBtn.Location = new System.Drawing.Point(200, 166);
+            editScanAreaBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            editScanAreaBtn.Name = "editScanAreaBtn";
+            editScanAreaBtn.Size = new System.Drawing.Size(100, 28);
+            editScanAreaBtn.TabIndex = 18;
+            editScanAreaBtn.Text = "Scan Area";
+            toolTip1.SetToolTip(editScanAreaBtn, "Adjust the scan area to match the pond boundaries.");
+            editScanAreaBtn.UseVisualStyleBackColor = true;
+            editScanAreaBtn.Click += EditScanAreaBtn_Click;
+            // 
+            // showOverlayCheckBox
+            // 
+            showOverlayCheckBox.AutoSize = true;
+            showOverlayCheckBox.Location = new System.Drawing.Point(10, 170);
+            showOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            showOverlayCheckBox.Name = "showOverlayCheckBox";
+            showOverlayCheckBox.Size = new System.Drawing.Size(169, 20);
+            showOverlayCheckBox.TabIndex = 17;
+            showOverlayCheckBox.Text = "Show Detection Overlay";
+            toolTip1.SetToolTip(showOverlayCheckBox, "Shows a transparent overlay on the game window displaying detected fish shadows and targeting info.");
+            showOverlayCheckBox.UseVisualStyleBackColor = true;
+            showOverlayCheckBox.CheckedChanged += ShowOverlayCheckBox_CheckedChanged;
+            // 
+            // autoDetectFishCheckBox
+            // 
+            autoDetectFishCheckBox.AutoSize = true;
+            autoDetectFishCheckBox.Location = new System.Drawing.Point(10, 140);
+            autoDetectFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            autoDetectFishCheckBox.Name = "autoDetectFishCheckBox";
+            autoDetectFishCheckBox.Size = new System.Drawing.Size(182, 20);
+            autoDetectFishCheckBox.TabIndex = 14;
+            autoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
+            toolTip1.SetToolTip(autoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them.\nClick 'Calibrate' to teach it the fish shadow color for better accuracy.");
+            autoDetectFishCheckBox.UseVisualStyleBackColor = true;
             // 
             // button4
             // 
-            button4.Location = new System.Drawing.Point(193, 183);
+            button4.Location = new System.Drawing.Point(220, 230);
             button4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button4.Name = "button4";
-            button4.Size = new System.Drawing.Size(184, 38);
+            button4.Size = new System.Drawing.Size(200, 40);
             button4.TabIndex = 12;
             button4.Text = "Stop Fishing";
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
-            // customFishingFilesComboBox
-            // 
-            customFishingFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            customFishingFilesComboBox.FormattingEnabled = true;
-            customFishingFilesComboBox.Location = new System.Drawing.Point(4, 153);
-            customFishingFilesComboBox.Name = "customFishingFilesComboBox";
-            customFishingFilesComboBox.Size = new System.Drawing.Size(373, 24);
-            customFishingFilesComboBox.TabIndex = 11;
-            customFishingFilesComboBox.Visible = false;
-            // 
             // randomFishingCheckBox
             // 
             randomFishingCheckBox.AutoSize = true;
-            randomFishingCheckBox.Location = new System.Drawing.Point(194, 96);
+            randomFishingCheckBox.Location = new System.Drawing.Point(220, 68);
             randomFishingCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             randomFishingCheckBox.Name = "randomFishingCheckBox";
             randomFishingCheckBox.Size = new System.Drawing.Size(135, 20);
@@ -334,25 +385,10 @@
             randomFishingCheckBox.UseVisualStyleBackColor = true;
             randomFishingCheckBox.CheckedChanged += randomFishing_CheckedChanged;
             // 
-            // smartFishing
-            // 
-            smartFishing.AutoSize = true;
-            smartFishing.Checked = true;
-            smartFishing.CheckState = System.Windows.Forms.CheckState.Checked;
-            smartFishing.Location = new System.Drawing.Point(194, 70);
-            smartFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            smartFishing.Name = "smartFishing";
-            smartFishing.Size = new System.Drawing.Size(183, 20);
-            smartFishing.TabIndex = 10;
-            smartFishing.Text = "Auto Detect Casting Button";
-            toolTip1.SetToolTip(smartFishing, "Detects the red casting button itself");
-            smartFishing.UseVisualStyleBackColor = true;
-            smartFishing.CheckedChanged += smartFishing_CheckedChanged;
-            // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(4, 114);
+            label4.Location = new System.Drawing.Point(10, 100);
             label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label4.Name = "label4";
             label4.Size = new System.Drawing.Size(105, 16);
@@ -361,12 +397,12 @@
             // 
             // numericUpDown4
             // 
-            numericUpDown4.Location = new System.Drawing.Point(139, 112);
+            numericUpDown4.Location = new System.Drawing.Point(145, 98);
             numericUpDown4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numericUpDown4.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
             numericUpDown4.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDown4.Name = "numericUpDown4";
-            numericUpDown4.Size = new System.Drawing.Size(48, 22);
+            numericUpDown4.Size = new System.Drawing.Size(55, 22);
             numericUpDown4.TabIndex = 8;
             toolTip1.SetToolTip(numericUpDown4, "This number indicates the number of times to go to the fisherman to sell the fish");
             numericUpDown4.Value = new decimal(new int[] { 1, 0, 0, 0 });
@@ -374,7 +410,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(4, 70);
+            label3.Location = new System.Drawing.Point(10, 68);
             label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(109, 16);
@@ -383,22 +419,22 @@
             // 
             // numericUpDown3
             // 
-            numericUpDown3.Location = new System.Drawing.Point(139, 68);
+            numericUpDown3.Location = new System.Drawing.Point(145, 66);
             numericUpDown3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numericUpDown3.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
             numericUpDown3.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDown3.Name = "numericUpDown3";
-            numericUpDown3.Size = new System.Drawing.Size(48, 22);
+            numericUpDown3.Size = new System.Drawing.Size(55, 22);
             numericUpDown3.TabIndex = 6;
             toolTip1.SetToolTip(numericUpDown3, "This number indicates the number of times to cast your fishing rod");
             numericUpDown3.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // startFishing
             // 
-            startFishing.Location = new System.Drawing.Point(6, 183);
+            startFishing.Location = new System.Drawing.Point(10, 230);
             startFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             startFishing.Name = "startFishing";
-            startFishing.Size = new System.Drawing.Size(184, 38);
+            startFishing.Size = new System.Drawing.Size(200, 40);
             startFishing.TabIndex = 2;
             startFishing.Text = "Start Fishing";
             startFishing.UseVisualStyleBackColor = true;
@@ -408,14 +444,48 @@
             // 
             fishingLocationscomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             fishingLocationscomboBox.Items.AddRange(new object[] { "TOONTOWN CENTRAL PUNCHLINE PLACE", "DONALD DREAM LAND LULLABY LANE", "BRRRGH POLAR PLACE", "BRRRGH WALRUS WAY", "BRRRGH SLEET STREET", "MINNIE'S MELODYLAND TENOR TERRACE", "DONALD DOCK LIGHTHOUSE LANE", "DAISY'S GARDEN ELM STREET", "FISH ANYWHERE", "CUSTOM FISHING ACTION" });
-            fishingLocationscomboBox.Location = new System.Drawing.Point(7, 24);
+            fishingLocationscomboBox.Location = new System.Drawing.Point(10, 28);
             fishingLocationscomboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             fishingLocationscomboBox.Name = "fishingLocationscomboBox";
-            fishingLocationscomboBox.Size = new System.Drawing.Size(370, 24);
+            fishingLocationscomboBox.Size = new System.Drawing.Size(420, 24);
             fishingLocationscomboBox.TabIndex = 1;
             toolTip1.SetToolTip(fishingLocationscomboBox, "Select the location you wish to fish at");
             fishingLocationscomboBox.SelectedIndexChanged += fishingLocationscomboBox_SelectedIndexChanged;
             // 
+            // debugCustomActionsCheckBox
+            // 
+            debugCustomActionsCheckBox.AutoSize = true;
+            debugCustomActionsCheckBox.Enabled = false;
+            debugCustomActionsCheckBox.Location = new System.Drawing.Point(438, 293);
+            debugCustomActionsCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            debugCustomActionsCheckBox.Name = "debugCustomActionsCheckBox";
+            debugCustomActionsCheckBox.Size = new System.Drawing.Size(162, 20);
+            debugCustomActionsCheckBox.TabIndex = 13;
+            debugCustomActionsCheckBox.Text = "Debug Custom Actions";
+            toolTip1.SetToolTip(debugCustomActionsCheckBox, "This will allow you to debug the custom action\r\nwalk from the dock to the fisherman");
+            debugCustomActionsCheckBox.UseVisualStyleBackColor = true;
+            debugCustomActionsCheckBox.Visible = false;
+            // 
+            // customFishingFilesComboBox
+            // 
+            customFishingFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            customFishingFilesComboBox.FormattingEnabled = true;
+            customFishingFilesComboBox.Location = new System.Drawing.Point(7, 344);
+            customFishingFilesComboBox.Name = "customFishingFilesComboBox";
+            customFishingFilesComboBox.Size = new System.Drawing.Size(373, 24);
+            customFishingFilesComboBox.TabIndex = 11;
+            customFishingFilesComboBox.Visible = false;
+            //
+            // fishingShortcutsLabel
+            //
+            fishingShortcutsLabel.AutoSize = true;
+            fishingShortcutsLabel.ForeColor = System.Drawing.Color.Gray;
+            fishingShortcutsLabel.Location = new System.Drawing.Point(460, 70);
+            fishingShortcutsLabel.Name = "fishingShortcutsLabel";
+            fishingShortcutsLabel.Size = new System.Drawing.Size(140, 64);
+            fishingShortcutsLabel.TabIndex = 18;
+            fishingShortcutsLabel.Text = "Keyboard Shortcuts:\nF11 - Pause/Resume\nEsc/F12 - Stop";
+            //
             // Racing
             // 
             Racing.Controls.Add(label6);
@@ -424,7 +494,7 @@
             Racing.Location = new System.Drawing.Point(4, 25);
             Racing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Racing.Name = "Racing";
-            Racing.Size = new System.Drawing.Size(546, 328);
+            Racing.Size = new System.Drawing.Size(612, 391);
             Racing.TabIndex = 2;
             Racing.Text = "Racing";
             Racing.UseVisualStyleBackColor = true;
@@ -470,7 +540,7 @@
             Gardening.Location = new System.Drawing.Point(4, 25);
             Gardening.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Gardening.Name = "Gardening";
-            Gardening.Size = new System.Drawing.Size(546, 328);
+            Gardening.Size = new System.Drawing.Size(612, 391);
             Gardening.TabIndex = 3;
             Gardening.Text = "Gardening";
             Gardening.UseVisualStyleBackColor = true;
@@ -568,18 +638,23 @@
             // Golf
             // 
             Golf.Controls.Add(groupBox10);
-            Golf.Controls.Add(createCustomGolfActionsBtn);
+            Golf.Controls.Add(golfHelpGroupBox);
             Golf.Location = new System.Drawing.Point(4, 25);
             Golf.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Golf.Name = "Golf";
             Golf.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            Golf.Size = new System.Drawing.Size(546, 328);
+            Golf.Size = new System.Drawing.Size(612, 391);
             Golf.TabIndex = 6;
             Golf.Text = "Golf";
             Golf.UseVisualStyleBackColor = true;
             // 
             // groupBox10
             // 
+            groupBox10.Controls.Add(autoGolfStatusLabel);
+            groupBox10.Controls.Add(startAutoGolfBtn);
+            groupBox10.Controls.Add(showGolfOverlayCheckBox);
+            groupBox10.Controls.Add(golfActionsPreviewLabel);
+            groupBox10.Controls.Add(golfCourseSelectLabel);
             groupBox10.Controls.Add(golfActionsListBox);
             groupBox10.Controls.Add(customGolfFilesComboBox);
             groupBox10.Controls.Add(button1);
@@ -588,22 +663,69 @@
             groupBox10.Size = new System.Drawing.Size(354, 314);
             groupBox10.TabIndex = 21;
             groupBox10.TabStop = false;
-            groupBox10.Text = "Golf Actions";
+            groupBox10.Text = "Run Golf Actions";
+            // 
+            // autoGolfStatusLabel
+            // 
+            autoGolfStatusLabel.AutoSize = true;
+            autoGolfStatusLabel.Location = new System.Drawing.Point(6, 295);
+            autoGolfStatusLabel.Name = "autoGolfStatusLabel";
+            autoGolfStatusLabel.Size = new System.Drawing.Size(0, 16);
+            autoGolfStatusLabel.TabIndex = 26;
+            // 
+            // startAutoGolfBtn
+            // 
+            startAutoGolfBtn.Location = new System.Drawing.Point(248, 255);
+            startAutoGolfBtn.Name = "startAutoGolfBtn";
+            startAutoGolfBtn.Size = new System.Drawing.Size(100, 28);
+            startAutoGolfBtn.TabIndex = 25;
+            startAutoGolfBtn.Text = "Auto Golf";
+            startAutoGolfBtn.UseVisualStyleBackColor = true;
+            startAutoGolfBtn.Click += startAutoGolfBtn_Click;
+            // 
+            // showGolfOverlayCheckBox
+            // 
+            showGolfOverlayCheckBox.AutoSize = true;
+            showGolfOverlayCheckBox.Checked = true;
+            showGolfOverlayCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            showGolfOverlayCheckBox.Location = new System.Drawing.Point(6, 232);
+            showGolfOverlayCheckBox.Name = "showGolfOverlayCheckBox";
+            showGolfOverlayCheckBox.Size = new System.Drawing.Size(109, 20);
+            showGolfOverlayCheckBox.TabIndex = 24;
+            showGolfOverlayCheckBox.Text = "Show Overlay";
+            showGolfOverlayCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // golfActionsPreviewLabel
+            // 
+            golfActionsPreviewLabel.AutoSize = true;
+            golfActionsPreviewLabel.Location = new System.Drawing.Point(6, 72);
+            golfActionsPreviewLabel.Name = "golfActionsPreviewLabel";
+            golfActionsPreviewLabel.Size = new System.Drawing.Size(105, 16);
+            golfActionsPreviewLabel.TabIndex = 23;
+            golfActionsPreviewLabel.Text = "Actions Preview:";
+            // 
+            // golfCourseSelectLabel
+            // 
+            golfCourseSelectLabel.AutoSize = true;
+            golfCourseSelectLabel.Location = new System.Drawing.Point(6, 20);
+            golfCourseSelectLabel.Name = "golfCourseSelectLabel";
+            golfCourseSelectLabel.Size = new System.Drawing.Size(132, 16);
+            golfCourseSelectLabel.TabIndex = 22;
+            golfCourseSelectLabel.Text = "Select a Golf Course:";
             // 
             // golfActionsListBox
             // 
             golfActionsListBox.FormattingEnabled = true;
-            golfActionsListBox.ItemHeight = 16;
-            golfActionsListBox.Location = new System.Drawing.Point(6, 59);
+            golfActionsListBox.Location = new System.Drawing.Point(6, 91);
             golfActionsListBox.Name = "golfActionsListBox";
-            golfActionsListBox.Size = new System.Drawing.Size(342, 196);
+            golfActionsListBox.Size = new System.Drawing.Size(342, 132);
             golfActionsListBox.TabIndex = 21;
             // 
             // customGolfFilesComboBox
             // 
             customGolfFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             customGolfFilesComboBox.FormattingEnabled = true;
-            customGolfFilesComboBox.Location = new System.Drawing.Point(6, 21);
+            customGolfFilesComboBox.Location = new System.Drawing.Point(6, 39);
             customGolfFilesComboBox.Name = "customGolfFilesComboBox";
             customGolfFilesComboBox.Size = new System.Drawing.Size(342, 24);
             customGolfFilesComboBox.Sorted = true;
@@ -612,22 +734,40 @@
             // 
             // button1
             // 
-            button1.Location = new System.Drawing.Point(117, 269);
+            button1.Location = new System.Drawing.Point(138, 255);
             button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(126, 39);
+            button1.Size = new System.Drawing.Size(100, 28);
             button1.TabIndex = 20;
             button1.Text = "Start Golf";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
+            // golfHelpGroupBox
+            // 
+            golfHelpGroupBox.Controls.Add(golfInstructionsLabel);
+            golfHelpGroupBox.Controls.Add(createCustomGolfActionsBtn);
+            golfHelpGroupBox.Location = new System.Drawing.Point(367, 6);
+            golfHelpGroupBox.Name = "golfHelpGroupBox";
+            golfHelpGroupBox.Size = new System.Drawing.Size(172, 314);
+            golfHelpGroupBox.TabIndex = 24;
+            golfHelpGroupBox.TabStop = false;
+            golfHelpGroupBox.Text = "How to Use";
+            // 
+            // golfInstructionsLabel
+            // 
+            golfInstructionsLabel.Location = new System.Drawing.Point(6, 20);
+            golfInstructionsLabel.Name = "golfInstructionsLabel";
+            golfInstructionsLabel.Size = new System.Drawing.Size(160, 230);
+            golfInstructionsLabel.TabIndex = 0;
+            golfInstructionsLabel.Text = resources.GetString("golfInstructionsLabel.Text");
+            // 
             // createCustomGolfActionsBtn
             // 
-            createCustomGolfActionsBtn.Location = new System.Drawing.Point(392, 10);
+            createCustomGolfActionsBtn.Location = new System.Drawing.Point(6, 260);
             createCustomGolfActionsBtn.Name = "createCustomGolfActionsBtn";
-            createCustomGolfActionsBtn.Size = new System.Drawing.Size(126, 41);
+            createCustomGolfActionsBtn.Size = new System.Drawing.Size(160, 45);
             createCustomGolfActionsBtn.TabIndex = 18;
-            createCustomGolfActionsBtn.Text = "Create Custom Golf Actions";
-            toolTip1.SetToolTip(createCustomGolfActionsBtn, "This will allow you to build custom golf actions\r\nfor golfing any course");
+            createCustomGolfActionsBtn.Text = "Create/Edit Custom Actions";
             createCustomGolfActionsBtn.UseVisualStyleBackColor = true;
             createCustomGolfActionsBtn.Click += createCustomGolfActionsBtn_Click;
             // 
@@ -638,7 +778,7 @@
             Doodles.Location = new System.Drawing.Point(4, 25);
             Doodles.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Doodles.Name = "Doodles";
-            Doodles.Size = new System.Drawing.Size(546, 328);
+            Doodles.Size = new System.Drawing.Size(612, 391);
             Doodles.TabIndex = 7;
             Doodles.Text = "Doodles";
             Doodles.UseVisualStyleBackColor = true;
@@ -811,7 +951,7 @@
             Misc.Location = new System.Drawing.Point(4, 25);
             Misc.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Misc.Name = "Misc";
-            Misc.Size = new System.Drawing.Size(546, 328);
+            Misc.Size = new System.Drawing.Size(612, 391);
             Misc.TabIndex = 4;
             Misc.Text = "Misc";
             Misc.UseVisualStyleBackColor = true;
@@ -952,75 +1092,192 @@
             // 
             // Dev
             // 
+            Dev.Controls.Add(groupBoxTemplates);
             Dev.Controls.Add(groupBox9);
             Dev.Controls.Add(label5);
             Dev.Controls.Add(groupBox7);
             Dev.Location = new System.Drawing.Point(4, 25);
             Dev.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Dev.Name = "Dev";
-            Dev.Size = new System.Drawing.Size(546, 328);
+            Dev.Size = new System.Drawing.Size(612, 391);
             Dev.TabIndex = 5;
             Dev.Text = "Dev";
             Dev.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxTemplates
+            // 
+            groupBoxTemplates.Controls.Add(btnOpenTemplateDefinitions);
+            groupBoxTemplates.Controls.Add(btnAddTemplateItem);
+            groupBoxTemplates.Controls.Add(btnEditTemplate);
+            groupBoxTemplates.Controls.Add(btnDeleteTemplate);
+            groupBoxTemplates.Controls.Add(labelTemplateStatus);
+            groupBoxTemplates.Controls.Add(btnCaptureTemplate);
+            groupBoxTemplates.Controls.Add(btnViewTemplate);
+            groupBoxTemplates.Controls.Add(comboBoxTemplateItems);
+            groupBoxTemplates.Location = new System.Drawing.Point(10, 180);
+            groupBoxTemplates.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxTemplates.Name = "groupBoxTemplates";
+            groupBoxTemplates.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxTemplates.Size = new System.Drawing.Size(590, 120);
+            groupBoxTemplates.TabIndex = 9;
+            groupBoxTemplates.TabStop = false;
+            groupBoxTemplates.Text = "UI Element Templates";
+            // 
+            // btnOpenTemplateDefinitions
+            // 
+            btnOpenTemplateDefinitions.Location = new System.Drawing.Point(10, 82);
+            btnOpenTemplateDefinitions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnOpenTemplateDefinitions.Name = "btnOpenTemplateDefinitions";
+            btnOpenTemplateDefinitions.Size = new System.Drawing.Size(130, 30);
+            btnOpenTemplateDefinitions.TabIndex = 5;
+            btnOpenTemplateDefinitions.Text = "Edit JSON File";
+            toolTip1.SetToolTip(btnOpenTemplateDefinitions, "Open the TemplateDefinitions.json file to manually edit");
+            btnOpenTemplateDefinitions.UseVisualStyleBackColor = true;
+            btnOpenTemplateDefinitions.Click += btnOpenTemplateDefinitions_Click;
+            // 
+            // btnAddTemplateItem
+            // 
+            btnAddTemplateItem.Location = new System.Drawing.Point(500, 22);
+            btnAddTemplateItem.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnAddTemplateItem.Name = "btnAddTemplateItem";
+            btnAddTemplateItem.Size = new System.Drawing.Size(80, 28);
+            btnAddTemplateItem.TabIndex = 4;
+            btnAddTemplateItem.Text = "Add New";
+            toolTip1.SetToolTip(btnAddTemplateItem, "Add a new template item definition");
+            btnAddTemplateItem.UseVisualStyleBackColor = true;
+            btnAddTemplateItem.Click += btnAddTemplateItem_Click;
+            // 
+            // btnEditTemplate
+            // 
+            btnEditTemplate.Location = new System.Drawing.Point(150, 82);
+            btnEditTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnEditTemplate.Name = "btnEditTemplate";
+            btnEditTemplate.Size = new System.Drawing.Size(70, 30);
+            btnEditTemplate.TabIndex = 6;
+            btnEditTemplate.Text = "Edit";
+            toolTip1.SetToolTip(btnEditTemplate, "Edit the selected template definition");
+            btnEditTemplate.UseVisualStyleBackColor = true;
+            btnEditTemplate.Click += btnEditTemplate_Click;
+            // 
+            // btnDeleteTemplate
+            // 
+            btnDeleteTemplate.ForeColor = System.Drawing.Color.Red;
+            btnDeleteTemplate.Location = new System.Drawing.Point(230, 82);
+            btnDeleteTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnDeleteTemplate.Name = "btnDeleteTemplate";
+            btnDeleteTemplate.Size = new System.Drawing.Size(70, 30);
+            btnDeleteTemplate.TabIndex = 7;
+            btnDeleteTemplate.Text = "Delete";
+            toolTip1.SetToolTip(btnDeleteTemplate, "Delete the selected template definition");
+            btnDeleteTemplate.UseVisualStyleBackColor = true;
+            btnDeleteTemplate.Click += btnDeleteTemplate_Click;
+            // 
+            // labelTemplateStatus
+            // 
+            labelTemplateStatus.AutoSize = true;
+            labelTemplateStatus.ForeColor = System.Drawing.Color.Gray;
+            labelTemplateStatus.Location = new System.Drawing.Point(10, 55);
+            labelTemplateStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelTemplateStatus.Name = "labelTemplateStatus";
+            labelTemplateStatus.Size = new System.Drawing.Size(228, 16);
+            labelTemplateStatus.TabIndex = 3;
+            labelTemplateStatus.Text = "Select an item to view template status";
+            // 
+            // btnCaptureTemplate
+            // 
+            btnCaptureTemplate.Location = new System.Drawing.Point(330, 22);
+            btnCaptureTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnCaptureTemplate.Name = "btnCaptureTemplate";
+            btnCaptureTemplate.Size = new System.Drawing.Size(80, 28);
+            btnCaptureTemplate.TabIndex = 1;
+            btnCaptureTemplate.Text = "Capture";
+            toolTip1.SetToolTip(btnCaptureTemplate, "Capture a new template image for the selected item");
+            btnCaptureTemplate.UseVisualStyleBackColor = true;
+            btnCaptureTemplate.Click += btnCaptureTemplate_Click;
+            // 
+            // btnViewTemplate
+            // 
+            btnViewTemplate.Location = new System.Drawing.Point(415, 22);
+            btnViewTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnViewTemplate.Name = "btnViewTemplate";
+            btnViewTemplate.Size = new System.Drawing.Size(80, 28);
+            btnViewTemplate.TabIndex = 2;
+            btnViewTemplate.Text = "View";
+            toolTip1.SetToolTip(btnViewTemplate, "View the existing template image");
+            btnViewTemplate.UseVisualStyleBackColor = true;
+            btnViewTemplate.Click += btnViewTemplate_Click;
+            // 
+            // comboBoxTemplateItems
+            // 
+            comboBoxTemplateItems.DropDownHeight = 300;
+            comboBoxTemplateItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBoxTemplateItems.IntegralHeight = false;
+            comboBoxTemplateItems.Location = new System.Drawing.Point(10, 24);
+            comboBoxTemplateItems.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBoxTemplateItems.Name = "comboBoxTemplateItems";
+            comboBoxTemplateItems.Size = new System.Drawing.Size(310, 24);
+            comboBoxTemplateItems.TabIndex = 0;
+            toolTip1.SetToolTip(comboBoxTemplateItems, "Select a UI element to capture or update its template");
+            comboBoxTemplateItems.SelectedIndexChanged += comboBoxTemplateItems_SelectedIndexChanged;
             // 
             // groupBox9
             // 
             groupBox9.Controls.Add(label11);
             groupBox9.Controls.Add(updateImagesBtn);
             groupBox9.Controls.Add(resetImagesBtn);
-            groupBox9.Location = new System.Drawing.Point(290, 3);
+            groupBox9.Location = new System.Drawing.Point(10, 10);
             groupBox9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox9.Name = "groupBox9";
             groupBox9.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox9.Size = new System.Drawing.Size(245, 156);
+            groupBox9.Size = new System.Drawing.Size(290, 160);
             groupBox9.TabIndex = 8;
             groupBox9.TabStop = false;
-            groupBox9.Text = "Image Rec";
-            groupBox9.Visible = false;
+            groupBox9.Text = "Debug & Testing";
             // 
             // label11
             // 
             label11.AutoSize = true;
             label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            label11.Location = new System.Drawing.Point(36, 21);
+            label11.Location = new System.Drawing.Point(10, 22);
             label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label11.Name = "label11";
-            label11.Size = new System.Drawing.Size(154, 30);
+            label11.Size = new System.Drawing.Size(232, 30);
             label11.TabIndex = 3;
-            label11.Text = "Update the images the bot \r\nuses for image recognition";
+            label11.Text = "Test image recognition, fish detection,\nOCR text reading, and template matching";
             // 
             // updateImagesBtn
             // 
-            updateImagesBtn.Location = new System.Drawing.Point(40, 59);
+            updateImagesBtn.Location = new System.Drawing.Point(10, 60);
             updateImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             updateImagesBtn.Name = "updateImagesBtn";
-            updateImagesBtn.Size = new System.Drawing.Size(163, 38);
+            updateImagesBtn.Size = new System.Drawing.Size(270, 40);
             updateImagesBtn.TabIndex = 2;
-            updateImagesBtn.Text = "Update Images";
+            updateImagesBtn.Text = "Open Debug Window";
             updateImagesBtn.UseVisualStyleBackColor = true;
-            updateImagesBtn.Click += updateImagesBtn_Click;
+            updateImagesBtn.Click += openImageRecDebugBtn_Click;
             // 
             // resetImagesBtn
             // 
-            resetImagesBtn.Location = new System.Drawing.Point(40, 104);
+            resetImagesBtn.Location = new System.Drawing.Point(10, 108);
             resetImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             resetImagesBtn.Name = "resetImagesBtn";
-            resetImagesBtn.Size = new System.Drawing.Size(163, 38);
+            resetImagesBtn.Size = new System.Drawing.Size(270, 40);
             resetImagesBtn.TabIndex = 0;
-            resetImagesBtn.Text = "Reset All Images";
-            toolTip1.SetToolTip(resetImagesBtn, "This will reset all of your images!");
+            resetImagesBtn.Text = "Download OCR Data";
+            toolTip1.SetToolTip(resetImagesBtn, "Download OCR language data for text recognition (runs automatically if needed)");
             resetImagesBtn.UseVisualStyleBackColor = true;
-            resetImagesBtn.Click += resetImagesBtn_Click;
+            resetImagesBtn.Click += downloadOcrDataBtn_Click;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(9, 162);
+            label5.ForeColor = System.Drawing.Color.Gray;
+            label5.Location = new System.Drawing.Point(10, 310);
             label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(282, 32);
+            label5.Size = new System.Drawing.Size(332, 32);
             label5.TabIndex = 8;
-            label5.Text = "Only use this if the bot is not working \r\nproperly or the coordinates need reconfigured!";
+            label5.Text = "Note: Manual coordinates are for advanced users only.\nUse the Debug Window for testing and troubleshooting.";
             // 
             // groupBox7
             // 
@@ -1028,57 +1285,57 @@
             groupBox7.Controls.Add(button6);
             groupBox7.Controls.Add(comboBox1);
             groupBox7.Controls.Add(button7);
-            groupBox7.Location = new System.Drawing.Point(9, 3);
+            groupBox7.Location = new System.Drawing.Point(310, 10);
             groupBox7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBox7.Name = "groupBox7";
             groupBox7.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox7.Size = new System.Drawing.Size(274, 156);
+            groupBox7.Size = new System.Drawing.Size(290, 160);
             groupBox7.TabIndex = 7;
             groupBox7.TabStop = false;
-            groupBox7.Text = "Coordinates";
+            groupBox7.Text = "Manual Coordinates (Advanced)";
             // 
             // button2
             // 
-            button2.Location = new System.Drawing.Point(143, 104);
+            button2.Location = new System.Drawing.Point(150, 108);
             button2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(123, 38);
+            button2.Size = new System.Drawing.Size(130, 40);
             button2.TabIndex = 3;
-            button2.Text = "Open File";
-            toolTip1.SetToolTip(button2, "This will reset all of your coordinates!");
+            button2.Text = "Open Config File";
+            toolTip1.SetToolTip(button2, "Open the coordinates configuration file");
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
             // button6
             // 
-            button6.Location = new System.Drawing.Point(56, 59);
+            button6.Location = new System.Drawing.Point(10, 60);
             button6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button6.Name = "button6";
-            button6.Size = new System.Drawing.Size(163, 38);
+            button6.Size = new System.Drawing.Size(270, 38);
             button6.TabIndex = 2;
-            button6.Text = "Update Coordinate";
+            button6.Text = "Update Selected Coordinate";
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
             // 
             // comboBox1
             // 
             comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            comboBox1.Location = new System.Drawing.Point(7, 24);
+            comboBox1.Location = new System.Drawing.Point(10, 26);
             comboBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new System.Drawing.Size(259, 24);
+            comboBox1.Size = new System.Drawing.Size(270, 24);
             comboBox1.TabIndex = 1;
-            toolTip1.SetToolTip(comboBox1, "Select the one you wish to reset the coordiates of...");
+            toolTip1.SetToolTip(comboBox1, "Select a coordinate to update");
             // 
             // button7
             // 
-            button7.Location = new System.Drawing.Point(12, 104);
+            button7.Location = new System.Drawing.Point(10, 108);
             button7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button7.Name = "button7";
-            button7.Size = new System.Drawing.Size(123, 38);
+            button7.Size = new System.Drawing.Size(130, 40);
             button7.TabIndex = 0;
             button7.Text = "Reset All";
-            toolTip1.SetToolTip(button7, "This will reset all of your coordinates!");
+            toolTip1.SetToolTip(button7, "Reset all coordinates to default values");
             button7.UseVisualStyleBackColor = true;
             button7.Click += button7_Click;
             // 
@@ -1096,10 +1353,11 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(554, 357);
+            ClientSize = new System.Drawing.Size(620, 420);
             Controls.Add(tabControl1);
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MinimumSize = new System.Drawing.Size(636, 459);
             Name = "MainForm";
             Text = "Toontown Rewritten Bot by primetime43";
             tabControl1.ResumeLayout(false);
@@ -1121,6 +1379,8 @@
             groupBox3.ResumeLayout(false);
             Golf.ResumeLayout(false);
             groupBox10.ResumeLayout(false);
+            groupBox10.PerformLayout();
+            golfHelpGroupBox.ResumeLayout(false);
             Doodles.ResumeLayout(false);
             groupBox8.ResumeLayout(false);
             groupBox8.PerformLayout();
@@ -1137,6 +1397,8 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).EndInit();
             Dev.ResumeLayout(false);
             Dev.PerformLayout();
+            groupBoxTemplates.ResumeLayout(false);
+            groupBoxTemplates.PerformLayout();
             groupBox9.ResumeLayout(false);
             groupBox9.PerformLayout();
             groupBox7.ResumeLayout(false);
@@ -1211,8 +1473,21 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button updateImagesBtn;
         private System.Windows.Forms.Button resetImagesBtn;
-        public System.Windows.Forms.CheckBox smartFishing;
+        private System.Windows.Forms.GroupBox groupBoxTemplates;
+        private System.Windows.Forms.ComboBox comboBoxTemplateItems;
+        private System.Windows.Forms.Button btnCaptureTemplate;
+        private System.Windows.Forms.Button btnViewTemplate;
+        private System.Windows.Forms.Label labelTemplateStatus;
+        private System.Windows.Forms.Button btnAddTemplateItem;
+        private System.Windows.Forms.Button btnOpenTemplateDefinitions;
+        private System.Windows.Forms.Button btnEditTemplate;
+        private System.Windows.Forms.Button btnDeleteTemplate;
+        private System.Windows.Forms.CheckBox autoDetectFishCheckBox;
+        private System.Windows.Forms.CheckBox showOverlayCheckBox;
+        private System.Windows.Forms.Button editScanAreaBtn;
+        private System.Windows.Forms.Button calibrateColorsBtn;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label fishingShortcutsLabel;
         private System.Windows.Forms.Button createCustomFishingActionsBtn;
         private System.Windows.Forms.ComboBox customFishingFilesComboBox;
         private System.Windows.Forms.CheckBox debugCustomActionsCheckBox;
@@ -1220,10 +1495,17 @@
         public System.Windows.Forms.Button stopKeepToonAwakeButton;
         private System.Windows.Forms.Button createCustomGolfActionsBtn;
         private System.Windows.Forms.ComboBox customGolfFilesComboBox;
+        private System.Windows.Forms.Label golfCourseSelectLabel;
+        private System.Windows.Forms.Label golfActionsPreviewLabel;
+        private System.Windows.Forms.GroupBox golfHelpGroupBox;
+        private System.Windows.Forms.Label golfInstructionsLabel;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.ListBox golfActionsListBox;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.CheckBox showGolfOverlayCheckBox;
+        private System.Windows.Forms.Button startAutoGolfBtn;
+        private System.Windows.Forms.Label autoGolfStatusLabel;
     }
 }
 

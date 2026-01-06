@@ -1,0 +1,17 @@
+{
+  "TOONTOWN CENTRAL PUNCHLINE PLACE": {
+    "LocationName": "TOONTOWN CENTRAL PUNCHLINE PLACE",
+    "BubbleColorR": 25,
+    "BubbleColorG": 136,
+    "BubbleColorB": 124,
+    "ToleranceR": 77,
+    "ToleranceG": 57,
+    "ToleranceB": 64,
+    "ScanAreaX": 200,
+    "ScanAreaY": 150,
+    "ScanAreaWidth": 1200,
+    "ScanAreaHeight": 500,
+    "YAdjustment": 15,
+    "CapturedAt": "2025-12-30T14:05:30.7492605-05:00"
+  }
+}
