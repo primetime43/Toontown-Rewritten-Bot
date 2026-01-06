@@ -355,88 +355,6 @@ namespace ToonTown_Rewritten_Bot
             MessageBox.Show("Fishing stopped!");
         }
 
-        private async void CalibrateFishBtn_Click(object sender, EventArgs e)
-        {
-            string selectedLocation = fishingLocationscomboBox.SelectedItem?.ToString() ?? "Fish Anywhere";
-            calibrateFishBtn.Enabled = false;
-            fishCalibrationLabel.Text = "Scanning...";
-            fishCalibrationLabel.ForeColor = Color.Orange;
-
-            try
-            {
-                // Take a screenshot
-                var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot();
-                if (screenshot == null)
-                {
-                    MessageBox.Show("Could not capture screenshot. Make sure Toontown is running.", "Calibration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // Run fish detection
-                var detector = new FishBubbleDetector(selectedLocation);
-                var result = await Task.Run(() => detector.DetectFromScreenshot(screenshot));
-
-                if (result.BestShadowPosition.HasValue)
-                {
-                    var shadowPos = result.BestShadowPosition.Value;
-                    var shadowColor = result.BestShadowColor;
-
-                    var response = MessageBox.Show(
-                        $"Found a shadow at ({shadowPos.X}, {shadowPos.Y})\n" +
-                        $"Color: RGB({shadowColor.R}, {shadowColor.G}, {shadowColor.B})\n\n" +
-                        "Is this a FISH shadow?\n\n" +
-                        "Click YES to use this color for detection.\n" +
-                        "Click NO if it's not a fish (dock, seaweed, etc.)",
-                        "Confirm Fish Shadow",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question);
-
-                    if (response == DialogResult.Yes)
-                    {
-                        detector.ConfirmFishShadow(screenshot, shadowPos);
-                        var learned = detector.GetLearnedShadowColor();
-                        if (learned.HasValue)
-                        {
-                            fishCalibrationLabel.Text = $"RGB({learned.Value.R},{learned.Value.G},{learned.Value.B})";
-                            fishCalibrationLabel.ForeColor = Color.LimeGreen;
-                            MessageBox.Show("Calibrated! Fish detection will now use this color.", "Calibration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                    }
-                    else
-                    {
-                        fishCalibrationLabel.Text = "Not calibrated";
-                        fishCalibrationLabel.ForeColor = Color.Gray;
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(
-                        "No fish shadow detected.\n\n" +
-                        "Make sure:\n" +
-                        "- You're at the fishing dock\n" +
-                        "- There's a fish visible in the water\n" +
-                        "- Try again when fish is stationary",
-                        "No Fish Found",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-                    fishCalibrationLabel.Text = "Not calibrated";
-                    fishCalibrationLabel.ForeColor = Color.Gray;
-                }
-
-                screenshot.Dispose();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Calibration error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                fishCalibrationLabel.Text = "Error";
-                fishCalibrationLabel.ForeColor = Color.Red;
-            }
-            finally
-            {
-                calibrateFishBtn.Enabled = true;
-            }
-        }
-
         private void ShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (showOverlayCheckBox.Checked)
@@ -1184,29 +1102,14 @@ namespace ToonTown_Rewritten_Bot
                     customFishingFilesComboBox.Visible = false;
                 }
 
-                // Update calibration status for this location
-                UpdateFishCalibrationStatus(selectedLocation);
+                // Hide "Number of Sells" controls when Fish Anywhere is selected
+                // (no sell cycle in fish anywhere mode)
+                bool showSellsControls = selectedLocation != FishingLocationNames.FishAnywhere;
+                label4.Visible = showSellsControls;
+                numericUpDown4.Visible = showSellsControls;
             }
             else
                 label12.Visible = false;
-        }
-
-        private void UpdateFishCalibrationStatus(string locationName)
-        {
-            var detector = new FishBubbleDetector(locationName);
-            var learnedColor = detector.GetLearnedShadowColor();
-
-            if (learnedColor.HasValue)
-            {
-                var lc = learnedColor.Value;
-                fishCalibrationLabel.Text = $"RGB({lc.R},{lc.G},{lc.B})";
-                fishCalibrationLabel.ForeColor = Color.LimeGreen;
-            }
-            else
-            {
-                fishCalibrationLabel.Text = "Not calibrated";
-                fishCalibrationLabel.ForeColor = Color.Gray;
-            }
         }
 
         private void createCustomFishingActionsBtn_Click(object sender, EventArgs e)
