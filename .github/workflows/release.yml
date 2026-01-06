@@ -127,26 +127,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ steps.get_version.outputs.VERSION }}
-        name: Release ${{ steps.get_version.outputs.VERSION }}
-        body: |
-          ## Toontown Rewritten Bot ${{ steps.get_version.outputs.VERSION }}
-
-          ### Installation
-          1. Download the ZIP file below
-          2. Extract to a folder of your choice
-          3. Run `ToonTown Rewritten Bot.exe`
-
-          ### Requirements
-          - Windows 10/11 (64-bit)
-          - No additional .NET runtime needed (self-contained)
-
-          ### Included Files
-          - Single-file executable
-          - Tesseract OCR data (tessdata folder)
-          - Native Tesseract DLLs (x64 folder)
-          - Templates folder
-          - Custom Golf Actions
-          - Custom Fishing Actions
         files: |
           ${{ steps.create_zip.outputs.ZIP_NAME }}
         draft: false
