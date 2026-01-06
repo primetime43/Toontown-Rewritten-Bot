@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
 using ToonTown_Rewritten_Bot.Services;
+using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
 using ToonTown_Rewritten_Bot.Utilities;
 using ToonTown_Rewritten_Bot.Views;
 
@@ -21,6 +22,7 @@ namespace ToonTown_Rewritten_Bot
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private FishingService _fishingService = new FishingService();
         private FishingOverlayForm _fishingOverlay;
+        private GlobalKeyboardHook _globalKeyboardHook;
 
         /// <summary>
         /// Gets the fishing overlay form if it's active.
@@ -30,9 +32,17 @@ namespace ToonTown_Rewritten_Bot
         {
             InitializeComponent();
 
-            // Enable keyboard shortcuts
+            // Enable keyboard shortcuts (local - when bot has focus)
             this.KeyPreview = true;
             this.KeyDown += MainForm_KeyDown;
+
+            // Enable global keyboard hook (works even when game has focus)
+            _globalKeyboardHook = new GlobalKeyboardHook();
+            _globalKeyboardHook.KeyPressed += GlobalKeyboardHook_KeyPressed;
+            _globalKeyboardHook.Start();
+
+            // Clean up hook when form closes
+            this.FormClosing += MainForm_FormClosing;
 
             // Check if a new version of the program is available
             GithubReleaseChecker.CheckForNewVersion().ContinueWith(t =>
@@ -78,6 +88,38 @@ namespace ToonTown_Rewritten_Bot
                 _cancellationTokenSource.Cancel();
                 System.Diagnostics.Debug.WriteLine("[MainForm] Tasks stopped via keyboard shortcut");
             }
+        }
+
+        /// <summary>
+        /// Global keyboard hook handler - works even when game has focus.
+        /// </summary>
+        private void GlobalKeyboardHook_KeyPressed(object sender, Keys key)
+        {
+            if (key == Keys.Escape || key == Keys.F12)
+            {
+                // Stop all active tasks
+                if (this.InvokeRequired)
+                {
+                    this.BeginInvoke(new Action(StopAllActiveTasks));
+                }
+                else
+                {
+                    StopAllActiveTasks();
+                }
+            }
+            else if (key == Keys.F11)
+            {
+                // Toggle pause for fishing
+                FishingStrategyBase.TogglePause();
+            }
+        }
+
+        /// <summary>
+        /// Clean up global keyboard hook when form closes.
+        /// </summary>
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _globalKeyboardHook?.Dispose();
         }
 
         //important functions for bot

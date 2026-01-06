@@ -55,6 +55,7 @@
             fishingLocationscomboBox = new System.Windows.Forms.ComboBox();
             debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
             customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
+            fishingShortcutsLabel = new System.Windows.Forms.Label();
             Racing = new System.Windows.Forms.TabPage();
             label6 = new System.Windows.Forms.Label();
             richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -257,6 +258,7 @@
             Fishing.Controls.Add(groupBox6);
             Fishing.Controls.Add(debugCustomActionsCheckBox);
             Fishing.Controls.Add(customFishingFilesComboBox);
+            Fishing.Controls.Add(fishingShortcutsLabel);
             Fishing.Location = new System.Drawing.Point(4, 25);
             Fishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Fishing.Name = "Fishing";
@@ -473,7 +475,17 @@
             customFishingFilesComboBox.Size = new System.Drawing.Size(373, 24);
             customFishingFilesComboBox.TabIndex = 11;
             customFishingFilesComboBox.Visible = false;
-            // 
+            //
+            // fishingShortcutsLabel
+            //
+            fishingShortcutsLabel.AutoSize = true;
+            fishingShortcutsLabel.ForeColor = System.Drawing.Color.Gray;
+            fishingShortcutsLabel.Location = new System.Drawing.Point(460, 70);
+            fishingShortcutsLabel.Name = "fishingShortcutsLabel";
+            fishingShortcutsLabel.Size = new System.Drawing.Size(140, 64);
+            fishingShortcutsLabel.TabIndex = 18;
+            fishingShortcutsLabel.Text = "Keyboard Shortcuts:\nF11 - Pause/Resume\nEsc/F12 - Stop";
+            //
             // Racing
             // 
             Racing.Controls.Add(label6);
@@ -1475,6 +1487,7 @@
         private System.Windows.Forms.Button editScanAreaBtn;
         private System.Windows.Forms.Button calibrateColorsBtn;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label fishingShortcutsLabel;
         private System.Windows.Forms.Button createCustomFishingActionsBtn;
         private System.Windows.Forms.ComboBox customFishingFilesComboBox;
         private System.Windows.Forms.CheckBox debugCustomActionsCheckBox;
