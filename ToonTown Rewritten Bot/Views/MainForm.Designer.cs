@@ -45,8 +45,6 @@
             editScanAreaBtn = new System.Windows.Forms.Button();
             showOverlayCheckBox = new System.Windows.Forms.CheckBox();
             autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
-            calibrateFishBtn = new System.Windows.Forms.Button();
-            fishCalibrationLabel = new System.Windows.Forms.Label();
             debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
             button4 = new System.Windows.Forms.Button();
             customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
@@ -257,6 +255,8 @@
             Fishing.Controls.Add(createCustomFishingActionsBtn);
             Fishing.Controls.Add(label12);
             Fishing.Controls.Add(groupBox6);
+            Fishing.Controls.Add(debugCustomActionsCheckBox);
+            Fishing.Controls.Add(customFishingFilesComboBox);
             Fishing.Location = new System.Drawing.Point(4, 25);
             Fishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Fishing.Name = "Fishing";
@@ -293,11 +293,7 @@
             groupBox6.Controls.Add(editScanAreaBtn);
             groupBox6.Controls.Add(showOverlayCheckBox);
             groupBox6.Controls.Add(autoDetectFishCheckBox);
-            groupBox6.Controls.Add(calibrateFishBtn);
-            groupBox6.Controls.Add(fishCalibrationLabel);
-            groupBox6.Controls.Add(debugCustomActionsCheckBox);
             groupBox6.Controls.Add(button4);
-            groupBox6.Controls.Add(customFishingFilesComboBox);
             groupBox6.Controls.Add(randomFishingCheckBox);
             groupBox6.Controls.Add(label4);
             groupBox6.Controls.Add(numericUpDown4);
@@ -362,34 +358,12 @@
             autoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
             toolTip1.SetToolTip(autoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them.\nClick 'Calibrate' to teach it the fish shadow color for better accuracy.");
             autoDetectFishCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // calibrateFishBtn
-            // 
-            calibrateFishBtn.Location = new System.Drawing.Point(200, 136);
-            calibrateFishBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            calibrateFishBtn.Name = "calibrateFishBtn";
-            calibrateFishBtn.Size = new System.Drawing.Size(85, 28);
-            calibrateFishBtn.TabIndex = 15;
-            calibrateFishBtn.Text = "Calibrate";
-            toolTip1.SetToolTip(calibrateFishBtn, "Click when fish is on screen. The first detected shadow will be shown - confirm if it's a fish to improve detection accuracy.");
-            calibrateFishBtn.UseVisualStyleBackColor = true;
-            calibrateFishBtn.Click += CalibrateFishBtn_Click;
-            // 
-            // fishCalibrationLabel
-            // 
-            fishCalibrationLabel.AutoSize = true;
-            fishCalibrationLabel.ForeColor = System.Drawing.Color.Gray;
-            fishCalibrationLabel.Location = new System.Drawing.Point(295, 142);
-            fishCalibrationLabel.Name = "fishCalibrationLabel";
-            fishCalibrationLabel.Size = new System.Drawing.Size(91, 16);
-            fishCalibrationLabel.TabIndex = 16;
-            fishCalibrationLabel.Text = "Not calibrated";
-            // 
+            //
             // debugCustomActionsCheckBox
             // 
             debugCustomActionsCheckBox.AutoSize = true;
             debugCustomActionsCheckBox.Enabled = false;
-            debugCustomActionsCheckBox.Location = new System.Drawing.Point(194, 122);
+            debugCustomActionsCheckBox.Location = new System.Drawing.Point(351, 318);
             debugCustomActionsCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             debugCustomActionsCheckBox.Name = "debugCustomActionsCheckBox";
             debugCustomActionsCheckBox.Size = new System.Drawing.Size(162, 20);
@@ -414,7 +388,7 @@
             // 
             customFishingFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             customFishingFilesComboBox.FormattingEnabled = true;
-            customFishingFilesComboBox.Location = new System.Drawing.Point(4, 153);
+            customFishingFilesComboBox.Location = new System.Drawing.Point(7, 344);
             customFishingFilesComboBox.Name = "customFishingFilesComboBox";
             customFishingFilesComboBox.Size = new System.Drawing.Size(373, 24);
             customFishingFilesComboBox.TabIndex = 11;
@@ -648,9 +622,9 @@
             selectFlowerBeanAmountBtn.Text = "Select";
             selectFlowerBeanAmountBtn.UseVisualStyleBackColor = true;
             selectFlowerBeanAmountBtn.Click += selectFlowerBeanAmountBtn_Click;
-            //
+            // 
             // Golf
-            //
+            // 
             Golf.Controls.Add(groupBox10);
             Golf.Controls.Add(golfHelpGroupBox);
             Golf.Location = new System.Drawing.Point(4, 25);
@@ -661,7 +635,7 @@
             Golf.TabIndex = 6;
             Golf.Text = "Golf";
             Golf.UseVisualStyleBackColor = true;
-            //
+            // 
             // groupBox10
             // 
             groupBox10.Controls.Add(autoGolfStatusLabel);
@@ -1392,7 +1366,6 @@
             ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).EndInit();
             groupBox3.ResumeLayout(false);
             Golf.ResumeLayout(false);
-            Golf.PerformLayout();
             groupBox10.ResumeLayout(false);
             groupBox10.PerformLayout();
             golfHelpGroupBox.ResumeLayout(false);
@@ -1498,8 +1471,6 @@
         private System.Windows.Forms.Button btnEditTemplate;
         private System.Windows.Forms.Button btnDeleteTemplate;
         private System.Windows.Forms.CheckBox autoDetectFishCheckBox;
-        private System.Windows.Forms.Button calibrateFishBtn;
-        private System.Windows.Forms.Label fishCalibrationLabel;
         private System.Windows.Forms.CheckBox showOverlayCheckBox;
         private System.Windows.Forms.Button editScanAreaBtn;
         private System.Windows.Forms.Button calibrateColorsBtn;
