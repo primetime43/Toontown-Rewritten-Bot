@@ -1,0 +1,79 @@
+{
+  "Red Fishing Button": {
+    "Name": "Red Fishing Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Red_Fishing_Button.png",
+    "ManualCoordinates": "960, 765",
+    "CachedCenter": "963, 787",
+    "LastFoundTime": "2026-01-05T22:54:28.5744146-05:00"
+  },
+  "Exit Fishing Button": {
+    "Name": "Exit Fishing Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Exit_Fishing_Button.png",
+    "ManualCoordinates": "468, 38",
+    "CachedCenter": "1562, 984",
+    "LastFoundTime": "2026-01-05T23:14:16.8682938-05:00"
+  },
+  "Blue Sell All Button": {
+    "Name": "Blue Sell All Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Blue_Sell_All_Button.png",
+    "ManualCoordinates": "504, 60",
+    "CachedCenter": "1270, 845",
+    "LastFoundTime": "2025-12-30T03:31:13.9479684-05:00"
+  },
+  "Watering Can Button": {
+    "Name": "Watering Can Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Watering_Can_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "80, 365",
+    "LastFoundTime": "2025-12-30T03:40:15.1031089-05:00"
+  },
+  "Feed Doodle Button": {
+    "Name": "Feed Doodle Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Feed_Doodle_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "1802, 203",
+    "LastFoundTime": "2025-12-30T03:56:18.9860478-05:00"
+  },
+  "Scratch Doodle Button": {
+    "Name": "Scratch Doodle Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Scratch_Doodle_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "1805, 255",
+    "LastFoundTime": "2025-12-30T03:56:41.0135037-05:00"
+  },
+  "Plant Flower/Remove Button": {
+    "Name": "Plant Flower/Remove Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Plant_Flower_Remove_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "80, 259",
+    "LastFoundTime": "2025-12-30T04:04:26.8506834-05:00"
+  },
+  "Sticker Book": {
+    "Name": "Sticker Book",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Sticker_Book.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Golf Pencil Button": {
+    "Name": "Golf Pencil Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Golf_Pencil_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Golf_Close_Button": {
+    "Name": "Golf_Close_Button",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Golf_Close_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Golf_Turn_Timer": {
+    "Name": "Golf_Turn_Timer",
+    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Golf_Turn_Timer.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  }
+}

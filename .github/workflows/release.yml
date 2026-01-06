@@ -1,0 +1,162 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  PROJECT_PATH: 'ToonTown Rewritten Bot/ToonTown Rewritten Bot.csproj'
+  OUTPUT_NAME: 'ToonTown-Rewritten-Bot'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore "${{ env.PROJECT_PATH }}"
+
+    - name: Publish single-file executable
+      run: |
+        dotnet publish "${{ env.PROJECT_PATH }}" `
+          --configuration Release `
+          --runtime win-x64 `
+          --self-contained true `
+          --output ./publish `
+          -p:PublishSingleFile=true `
+          -p:IncludeNativeLibrariesForSelfExtract=true `
+          -p:EnableCompressionInSingleFile=true
+
+    - name: Download Tesseract language data
+      run: |
+        # Create tessdata folder in publish directory
+        New-Item -ItemType Directory -Force -Path "./publish/tessdata"
+
+        # Download eng.traineddata from tessdata_fast
+        $url = "https://github.com/tesseract-ocr/tessdata_fast/raw/main/eng.traineddata"
+        $output = "./publish/tessdata/eng.traineddata"
+
+        Write-Host "Downloading Tesseract language data..."
+        Invoke-WebRequest -Uri $url -OutFile $output
+
+        # Verify download
+        if (Test-Path $output) {
+          $size = (Get-Item $output).Length
+          Write-Host "Downloaded eng.traineddata ($size bytes)"
+        } else {
+          Write-Error "Failed to download tessdata"
+          exit 1
+        }
+
+    - name: Copy required folders
+      run: |
+        # Build folder path (where intermediate files are)
+        $buildFolder = "ToonTown Rewritten Bot/bin/Release/net10.0-windows/win-x64"
+
+        # Create the release folder structure
+        New-Item -ItemType Directory -Force -Path "./release"
+
+        # Copy the single-file executable
+        Copy-Item "./publish/*.exe" -Destination "./release/" -Force
+
+        # Copy tessdata folder (already created and populated above)
+        if (Test-Path "./publish/tessdata") {
+          Copy-Item -Path "./publish/tessdata" -Destination "./release/tessdata" -Recurse -Force
+        }
+
+        # Copy x64 native DLLs (Tesseract) from build folder
+        if (Test-Path "$buildFolder/x64") {
+          Copy-Item -Path "$buildFolder/x64" -Destination "./release/x64" -Recurse -Force
+        }
+
+        # Copy Templates folder from build folder
+        if (Test-Path "$buildFolder/Templates") {
+          Copy-Item -Path "$buildFolder/Templates" -Destination "./release/Templates" -Recurse -Force
+        }
+
+        # Copy Custom Golf Actions folder from build folder
+        if (Test-Path "$buildFolder/Custom Golf Actions") {
+          Copy-Item -Path "$buildFolder/Custom Golf Actions" -Destination "./release/Custom Golf Actions" -Recurse -Force
+        }
+
+        # Copy Custom Fishing Actions folder from build folder
+        if (Test-Path "$buildFolder/Custom Fishing Actions") {
+          Copy-Item -Path "$buildFolder/Custom Fishing Actions" -Destination "./release/Custom Fishing Actions" -Recurse -Force
+        }
+
+        # List contents for verification
+        Write-Host "Release folder contents:"
+        Get-ChildItem -Path "./release" -Recurse | Select-Object FullName
+
+    - name: Get version
+      id: get_version
+      run: |
+        if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+          $version = "${{ github.event.inputs.version }}"
+        } else {
+          $version = "${{ github.ref_name }}"
+        }
+        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+        echo "Version: $version"
+
+    - name: Create ZIP archive
+      run: |
+        $version = "${{ steps.get_version.outputs.VERSION }}"
+        $zipName = "${{ env.OUTPUT_NAME }}-$version-win-x64.zip"
+        Compress-Archive -Path "./release/*" -DestinationPath "./$zipName" -Force
+        echo "ZIP_NAME=$zipName" >> $env:GITHUB_OUTPUT
+      id: create_zip
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.get_version.outputs.VERSION }}
+        name: Release ${{ steps.get_version.outputs.VERSION }}
+        body: |
+          ## Toontown Rewritten Bot ${{ steps.get_version.outputs.VERSION }}
+
+          ### Installation
+          1. Download the ZIP file below
+          2. Extract to a folder of your choice
+          3. Run `ToonTown Rewritten Bot.exe`
+
+          ### Requirements
+          - Windows 10/11 (64-bit)
+          - No additional .NET runtime needed (self-contained)
+
+          ### Included Files
+          - Single-file executable
+          - Tesseract OCR data (tessdata folder)
+          - Native Tesseract DLLs (x64 folder)
+          - Templates folder
+          - Custom Golf Actions
+          - Custom Fishing Actions
+        files: |
+          ${{ steps.create_zip.outputs.ZIP_NAME }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.OUTPUT_NAME }}-${{ steps.get_version.outputs.VERSION }}
+        path: ./release/
+        retention-days: 30

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
 using ToonTown_Rewritten_Bot.Services;
+using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
 using ToonTown_Rewritten_Bot.Utilities;
 using ToonTown_Rewritten_Bot.Views;
 
@@ -20,9 +21,28 @@ namespace ToonTown_Rewritten_Bot
         private CoordinatesManager _coordinatesManagerService = new CoordinatesManager();
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private FishingService _fishingService = new FishingService();
+        private FishingOverlayForm _fishingOverlay;
+        private GlobalKeyboardHook _globalKeyboardHook;
+
+        /// <summary>
+        /// Gets the fishing overlay form if it's active.
+        /// </summary>
+        public FishingOverlayForm FishingOverlay => _fishingOverlay;
         public MainForm()
         {
             InitializeComponent();
+
+            // Enable keyboard shortcuts (local - when bot has focus)
+            this.KeyPreview = true;
+            this.KeyDown += MainForm_KeyDown;
+
+            // Enable global keyboard hook (works even when game has focus)
+            _globalKeyboardHook = new GlobalKeyboardHook();
+            _globalKeyboardHook.KeyPressed += GlobalKeyboardHook_KeyPressed;
+            _globalKeyboardHook.Start();
+
+            // Clean up hook when form closes
+            this.FormClosing += MainForm_FormClosing;
 
             // Check if a new version of the program is available
             GithubReleaseChecker.CheckForNewVersion().ContinueWith(t =>
@@ -39,9 +59,67 @@ namespace ToonTown_Rewritten_Bot
             LoadCustomActions("Golf", customGolfFilesComboBox);
 
             CoordinatesManager.ReadCoordinates();
-            BotFunctions.CreateItemsDataFileMap();
             LoadCoordinatesIntoResetBox();
             doodleTrickComboBox.SelectedIndex = 0; // clean this up/move this eventually
+            LoadTemplateItemsComboBox();
+        }
+
+        /// <summary>
+        /// Global keyboard shortcut handler.
+        /// Press Escape or F12 to stop fishing/other active tasks.
+        /// </summary>
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Escape or F12 stops fishing and other active tasks
+            if (e.KeyCode == Keys.Escape || e.KeyCode == Keys.F12)
+            {
+                StopAllActiveTasks();
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Stops all active tasks (fishing, training, etc.) by cancelling the token.
+        /// </summary>
+        private void StopAllActiveTasks()
+        {
+            if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
+            {
+                _cancellationTokenSource.Cancel();
+                System.Diagnostics.Debug.WriteLine("[MainForm] Tasks stopped via keyboard shortcut");
+            }
+        }
+
+        /// <summary>
+        /// Global keyboard hook handler - works even when game has focus.
+        /// </summary>
+        private void GlobalKeyboardHook_KeyPressed(object sender, Keys key)
+        {
+            if (key == Keys.Escape || key == Keys.F12)
+            {
+                // Stop all active tasks
+                if (this.InvokeRequired)
+                {
+                    this.BeginInvoke(new Action(StopAllActiveTasks));
+                }
+                else
+                {
+                    StopAllActiveTasks();
+                }
+            }
+            else if (key == Keys.F11)
+            {
+                // Toggle pause for fishing
+                FishingStrategyBase.TogglePause();
+            }
+        }
+
+        /// <summary>
+        /// Clean up global keyboard hook when form closes.
+        /// </summary>
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _globalKeyboardHook?.Dispose();
         }
 
         //important functions for bot
@@ -121,12 +199,6 @@ namespace ToonTown_Rewritten_Bot
                 TopMost = false;
         }
 
-        /*private void loadActonItemBtn_Click(object sender, EventArgs e)
-        {
-            //Thread.Sleep(4000);
-            //textBox1.Text = BotFunctions.HexConverter(BotFunctions.GetColorAt(BotFunctions.getCursorLocation().X, BotFunctions.getCursorLocation().Y));
-        }*/
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             label1.Visible = true;
@@ -146,6 +218,13 @@ namespace ToonTown_Rewritten_Bot
         {
             try
             {
+                // Ensure cancellation token source exists
+                if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+                {
+                    _cancellationTokenSource?.Dispose();
+                    _cancellationTokenSource = new CancellationTokenSource();
+                }
+
                 await Services.Gardening.WaterPlantAsync((int)waterPlantNumericUpDown.Value, _cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
@@ -163,7 +242,13 @@ namespace ToonTown_Rewritten_Bot
         {
             try
             {
-                // Assuming RemovePlantAsync is an instance method requiring a CancellationToken.
+                // Ensure cancellation token source exists
+                if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+                {
+                    _cancellationTokenSource?.Dispose();
+                    _cancellationTokenSource = new CancellationTokenSource();
+                }
+
                 await Services.Gardening.RemovePlantAsync(_cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
@@ -234,6 +319,13 @@ namespace ToonTown_Rewritten_Bot
         /// </remarks>
         private async void startFishing_Click(object sender, EventArgs e)
         {
+            // Reset the CancellationTokenSource if it's null or was previously cancelled
+            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+            {
+                _cancellationTokenSource?.Dispose();
+                _cancellationTokenSource = new CancellationTokenSource();
+            }
+
             var token = _cancellationTokenSource.Token; // Token to handle task cancellation
 
             try
@@ -263,14 +355,14 @@ namespace ToonTown_Rewritten_Bot
                     }
                     else
                     {
-                        await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, filePath + ".json"); // Perform custom fishing actions
+                        await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, filePath + ".json", autoDetectFishCheckBox.Checked); // Perform custom fishing actions
                     }
                 }
                 else
                 {
                     FishingLocationMessages.TellFishingLocation(selectedLocation); // Provide location-specific messages
                     MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
-                    await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token); // Start standard fishing
+                    await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, "", autoDetectFishCheckBox.Checked); // Start standard fishing
                 }
             }
             catch (TaskCanceledException)
@@ -305,63 +397,141 @@ namespace ToonTown_Rewritten_Bot
             MessageBox.Show("Fishing stopped!");
         }
 
-        private void smartFishing_CheckedChanged(object sender, EventArgs e)
+        private void ShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (smartFishing.Checked)
-                CoreFunctionality.isAutoDetectFishingBtnActive = true;
+            if (showOverlayCheckBox.Checked)
+            {
+                // Create and show the overlay
+                if (_fishingOverlay == null || _fishingOverlay.IsDisposed)
+                {
+                    _fishingOverlay = new FishingOverlayForm();
+                }
+                _fishingOverlay.Show();
+                _fishingOverlay.SetStatus("Overlay active - waiting for fishing...");
+
+                // Connect overlay to fishing strategy
+                Services.FishingLocationsWalking.FishingStrategyBase.Overlay = _fishingOverlay;
+
+                // Set callback to auto-uncheck when fishing ends
+                Services.FishingLocationsWalking.FishingStrategyBase.OnFishingEnded = OnFishingEndedCallback;
+            }
             else
-                CoreFunctionality.isAutoDetectFishingBtnActive = false;
+            {
+                // Clear the callback
+                Services.FishingLocationsWalking.FishingStrategyBase.OnFishingEnded = null;
+
+                // Disconnect from fishing strategy
+                Services.FishingLocationsWalking.FishingStrategyBase.Overlay = null;
+
+                // Hide and dispose the overlay
+                if (_fishingOverlay != null && !_fishingOverlay.IsDisposed)
+                {
+                    _fishingOverlay.Close();
+                    _fishingOverlay.Dispose();
+                    _fishingOverlay = null;
+                }
+            }
         }
 
-        private async void button5_Click(object sender, EventArgs e)//racing test
+        private void EditScanAreaBtn_Click(object sender, EventArgs e)
+        {
+            string selectedLocation = fishingLocationscomboBox.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selectedLocation))
+            {
+                MessageBox.Show("Please select a fishing location first.", "No Location Selected",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (selectedLocation == "CUSTOM FISHING ACTION")
+            {
+                MessageBox.Show("Scan area editing is not available for custom fishing actions.",
+                    "Not Available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // Get the default scan area for this location
+            var detector = new Utilities.FishBubbleDetector(selectedLocation);
+            var defaultScanArea = detector.GetDefaultScanArea();
+
+            if (defaultScanArea.IsEmpty)
+            {
+                MessageBox.Show($"No scan area defined for location: {selectedLocation}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Open the calibration form
+            using (var calibrationForm = new ScanAreaCalibrationForm(selectedLocation, defaultScanArea))
+            {
+                calibrationForm.ShowDialog();
+
+                if (calibrationForm.WasSaved)
+                {
+                    MessageBox.Show($"Custom scan area saved for '{selectedLocation}'.\n\n" +
+                        $"New dimensions: {calibrationForm.ResultScanArea.Width} x {calibrationForm.ResultScanArea.Height}",
+                        "Scan Area Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void CalibrateColorsBtn_Click(object sender, EventArgs e)
+        {
+            string selectedLocation = fishingLocationscomboBox.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selectedLocation))
+            {
+                MessageBox.Show("Please select a fishing location first.", "No Location Selected",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (selectedLocation == "CUSTOM FISHING ACTION")
+            {
+                MessageBox.Show("Color calibration is not available for custom fishing actions.",
+                    "Not Available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // Open the color calibration form
+            using (var colorForm = new PondColorCalibrationForm(selectedLocation))
+            {
+                colorForm.ShowDialog();
+            }
+        }
+
+        /// <summary>
+        /// Called when fishing ends to auto-uncheck the overlay checkbox.
+        /// </summary>
+        private void OnFishingEndedCallback()
+        {
+            // Must invoke on UI thread since this is called from fishing task
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new Action(() => OnFishingEndedCallback()));
+                return;
+            }
+
+            // Uncheck the overlay checkbox (this will trigger the CheckedChanged event to close the overlay)
+            if (showOverlayCheckBox.Checked)
+            {
+                showOverlayCheckBox.Checked = false;
+            }
+        }
+
+        private async void button5_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Press OK when ready to begin!");
             Thread.Sleep(5000);
             Point test = CoreFunctionality.getCursorLocation();
             CoreFunctionality.GetColorAt(test.X, test.Y);
-            string hexColor = CoreFunctionality.HexConverter(CoreFunctionality.GetColorAt(test.X, test.Y));
-            //Debug.WriteLine("HEX: " + BotFunctions.HexConverter(BotFunctions.GetColorAt(test.X, test.Y)) + " RGB: " + BotFunctions.GetColorAt(test.X, test.Y));
             Debug.WriteLine("HEX: " + CoreFunctionality.HexConverter(CoreFunctionality.GetColorAt(test.X, test.Y)) + " RGB: " + CoreFunctionality.GetColorAt(test.X, test.Y));
             MessageBox.Show("Done");
 
-            CoreFunctionality.MaximizeAndFocusTTRWindow();
+            CoreFunctionality.FocusTTRWindow();
 
             Image screenshot = ImageRecognition.GetWindowScreenshot();
-            /*PictureBox pictureBox = new PictureBox();
-            pictureBox.Image = screenshot;
-            pictureBox.SizeMode = PictureBoxSizeMode.AutoSize;*/
-
             string redFishingButton = "#FD0000";
-            string fishingExitButton = "#E6A951";
-
             await ImageRecognition.locateColorInImage(screenshot, redFishingButton, 10);
-
-            // Set the size of the form to the size of the image
-            /*Form form = new Form();
-            form.ClientSize = screenshot.Size;
-            form.Controls.Add(pictureBox);
-            form.ShowDialog();*/
-
-
-            /*BotFunctions.DoMouseClick();
-            ToonTown_Rewritten_Bot.Racing.startRacing();
-
-            Rectangle bounds = Screen.GetWorkingArea(Point.Empty);
-            using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
-            {
-                using (Graphics g = Graphics.FromImage(bitmap))
-                {
-                    g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
-                }
-                int x = 950;
-                int y = 755;
-                while (y <= 780 && x <= 970)
-                {
-                    richTextBox1.AppendText(BotFunctions.HexConverter(bitmap.GetPixel(x, y)) + "\n");
-                    x++;
-                    y++;
-                }
-            }*/
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -525,7 +695,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        //Settings page, button to reset all images
+        //Settings page, button to reset all images (legacy - kept for compatibility)
         private void resetImagesBtn_Click(object sender, EventArgs e)
         {
             foreach (SettingsProperty currentProperty in Properties.Settings.Default.Properties)
@@ -533,6 +703,422 @@ namespace ToonTown_Rewritten_Bot
                 Properties.Settings.Default[currentProperty.Name] = "";
             }
             Properties.Settings.Default.Save();
+        }
+
+        // Open Image Recognition Debug Window
+        private void openImageRecDebugBtn_Click(object sender, EventArgs e)
+        {
+            var debugForm = new ImageRecognitionDebugForm();
+            debugForm.Show();
+        }
+
+        // Download OCR data automatically
+        private async void downloadOcrDataBtn_Click(object sender, EventArgs e)
+        {
+            // Check if already exists
+            if (TessdataDownloader.LanguageDataExists())
+            {
+                MessageBox.Show(
+                    "OCR data is already downloaded and ready to use!\n\n" +
+                    "Click 'Open Debug Window' to test the OCR functionality.",
+                    "OCR Data Ready",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            // Download
+            var button = sender as Button;
+            if (button != null)
+            {
+                button.Enabled = false;
+                button.Text = "Downloading...";
+            }
+
+            try
+            {
+                bool success = await TessdataDownloader.EnsureLanguageDataExistsAsync();
+
+                if (success)
+                {
+                    MessageBox.Show(
+                        "OCR data downloaded successfully!\n\n" +
+                        "Click 'Open Debug Window' to test the OCR functionality.",
+                        "Download Complete",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "Failed to download OCR data.\n\n" +
+                        "Please check your internet connection and try again.",
+                        "Download Failed",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Download error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (button != null)
+                {
+                    button.Enabled = true;
+                    button.Text = "Download OCR Data";
+                }
+            }
+        }
+
+        // Template management methods
+        private void LoadTemplateItemsComboBox()
+        {
+            comboBoxTemplateItems.Items.Clear();
+
+            // Load from file-based TemplateDefinitionManager
+            var definitions = TemplateDefinitionManager.Instance.GetAllDefinitions();
+            foreach (var def in definitions)
+            {
+                comboBoxTemplateItems.Items.Add($"[{def.Category}] {def.Name}");
+            }
+
+            if (comboBoxTemplateItems.Items.Count > 0)
+            {
+                comboBoxTemplateItems.SelectedIndex = 0;
+            }
+        }
+
+        private string GetSelectedTemplateName()
+        {
+            if (comboBoxTemplateItems.SelectedItem == null)
+                return null;
+
+            string selected = comboBoxTemplateItems.SelectedItem.ToString();
+            // Extract name from "[Category] Name" format
+            int bracketEnd = selected.IndexOf("] ");
+            if (bracketEnd >= 0)
+                return selected.Substring(bracketEnd + 2);
+            return selected;
+        }
+
+        private void comboBoxTemplateItems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedItem = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(selectedItem))
+                return;
+
+            // Check if template exists
+            bool hasTemplate = UIElementManager.Instance.HasTemplate(selectedItem);
+
+            if (hasTemplate)
+            {
+                labelTemplateStatus.Text = $"Template exists";
+                labelTemplateStatus.ForeColor = Color.Green;
+                btnViewTemplate.Enabled = true;
+            }
+            else
+            {
+                labelTemplateStatus.Text = $"No template - click 'Capture' to create";
+                labelTemplateStatus.ForeColor = Color.Orange;
+                btnViewTemplate.Enabled = false;
+            }
+        }
+
+        private void btnCaptureTemplate_Click(object sender, EventArgs e)
+        {
+            string selectedItem = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(selectedItem))
+            {
+                MessageBox.Show("Please select an item first.", "No Item Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Use the existing TemplateCaptureForm
+            bool captured = TemplateCaptureForm.CaptureTemplate(selectedItem);
+
+            if (captured)
+            {
+                MessageBox.Show($"Template captured successfully for: {selectedItem}", "Template Captured", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Refresh the status
+                comboBoxTemplateItems_SelectedIndexChanged(sender, e);
+            }
+        }
+
+        private void btnViewTemplate_Click(object sender, EventArgs e)
+        {
+            string selectedItem = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(selectedItem))
+            {
+                MessageBox.Show("Please select an item first.", "No Item Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string templatePath = UIElementManager.Instance.GetTemplatePath(selectedItem);
+
+            if (string.IsNullOrEmpty(templatePath) || !System.IO.File.Exists(templatePath))
+            {
+                MessageBox.Show($"No template found for: {selectedItem}\n\nClick 'Capture Template' to create one.", "Template Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Open the template image in a simple viewer
+            try
+            {
+                using (var viewerForm = new Form())
+                {
+                    viewerForm.Text = $"Template: {selectedItem}";
+                    viewerForm.StartPosition = FormStartPosition.CenterParent;
+
+                    var pictureBox = new PictureBox
+                    {
+                        Dock = DockStyle.Fill,
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        Image = Image.FromFile(templatePath)
+                    };
+                    viewerForm.Controls.Add(pictureBox);
+
+                    // Size the form based on image size
+                    viewerForm.ClientSize = new Size(
+                        Math.Max(200, Math.Min(pictureBox.Image.Width + 20, 600)),
+                        Math.Max(150, Math.Min(pictureBox.Image.Height + 20, 400))
+                    );
+
+                    var openFolderBtn = new Button
+                    {
+                        Text = "Open Folder",
+                        Dock = DockStyle.Bottom,
+                        Height = 30
+                    };
+                    openFolderBtn.Click += (s, args) =>
+                    {
+                        System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{templatePath}\"");
+                    };
+                    viewerForm.Controls.Add(openFolderBtn);
+
+                    viewerForm.ShowDialog(this);
+
+                    // Dispose the image properly
+                    pictureBox.Image?.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error viewing template: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnAddTemplateItem_Click(object sender, EventArgs e)
+        {
+            using (var inputForm = new Form())
+            {
+                inputForm.Text = "Add New Template Item";
+                inputForm.ClientSize = new Size(380, 180);
+                inputForm.StartPosition = FormStartPosition.CenterParent;
+                inputForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                inputForm.MaximizeBox = false;
+                inputForm.MinimizeBox = false;
+
+                var lblName = new Label { Text = "Item Name:", Location = new Point(15, 15), AutoSize = true };
+                var txtName = new TextBox { Location = new Point(15, 35), Size = new Size(350, 25) };
+
+                var lblCategory = new Label { Text = "Category (select existing or type new):", Location = new Point(15, 70), AutoSize = true };
+                var cmbCategory = new ComboBox
+                {
+                    Location = new Point(15, 90),
+                    Size = new Size(350, 25),
+                    DropDownStyle = ComboBoxStyle.DropDown
+                };
+
+                // Add existing categories as suggestions
+                var categories = TemplateDefinitionManager.Instance.GetCategories();
+                cmbCategory.Items.AddRange(categories.ToArray());
+                cmbCategory.Text = categories.Count > 0 ? categories[0] : "Custom";
+
+                var btnOk = new Button { Text = "Add", Location = new Point(205, 135), Size = new Size(75, 30), DialogResult = DialogResult.OK };
+                var btnCancel = new Button { Text = "Cancel", Location = new Point(290, 135), Size = new Size(75, 30), DialogResult = DialogResult.Cancel };
+
+                inputForm.Controls.AddRange(new Control[] { lblName, txtName, lblCategory, cmbCategory, btnOk, btnCancel });
+                inputForm.AcceptButton = btnOk;
+                inputForm.CancelButton = btnCancel;
+
+                if (inputForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    string name = txtName.Text.Trim();
+                    string category = string.IsNullOrWhiteSpace(cmbCategory.Text) ? "Custom" : cmbCategory.Text.Trim();
+
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        MessageBox.Show("Please enter a name for the template item.", "Invalid Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    if (TemplateDefinitionManager.Instance.AddDefinition(name, category))
+                    {
+                        MessageBox.Show($"Added new template item: {name}\n\nYou can now capture a template for it.", "Item Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadTemplateItemsComboBox();
+
+                        // Select the newly added item
+                        for (int i = 0; i < comboBoxTemplateItems.Items.Count; i++)
+                        {
+                            if (comboBoxTemplateItems.Items[i].ToString().Contains(name))
+                            {
+                                comboBoxTemplateItems.SelectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show($"An item with that name already exists.", "Duplicate Item", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+        }
+
+        private void btnOpenTemplateDefinitions_Click(object sender, EventArgs e)
+        {
+            string filePath = TemplateDefinitionManager.Instance.GetDefinitionsFilePath();
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                MessageBox.Show("Definitions file not found. It will be created when you add the first item.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                System.Diagnostics.Process.Start("notepad.exe", filePath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnEditTemplate_Click(object sender, EventArgs e)
+        {
+            string currentName = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(currentName))
+            {
+                MessageBox.Show("Please select a template to edit.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var definition = TemplateDefinitionManager.Instance.GetDefinition(currentName);
+            if (definition == null)
+            {
+                MessageBox.Show("Template definition not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (var dialog = new Form())
+            {
+                dialog.Text = "Edit Template";
+                dialog.ClientSize = new Size(380, 180);
+                dialog.FormBorderStyle = FormBorderStyle.FixedDialog;
+                dialog.StartPosition = FormStartPosition.CenterParent;
+                dialog.MaximizeBox = false;
+                dialog.MinimizeBox = false;
+
+                var nameLabel = new Label { Text = "Name:", Location = new Point(15, 20), AutoSize = true };
+                var nameTextBox = new TextBox { Text = definition.Name, Location = new Point(80, 17), Size = new Size(280, 23) };
+
+                var categoryLabel = new Label { Text = "Category:", Location = new Point(15, 55), AutoSize = true };
+                var categoryComboBox = new ComboBox { Text = definition.Category, Location = new Point(80, 52), Size = new Size(280, 23), DropDownStyle = ComboBoxStyle.DropDown };
+
+                // Add existing categories
+                foreach (var cat in TemplateDefinitionManager.Instance.GetCategories())
+                    categoryComboBox.Items.Add(cat);
+
+                var saveBtn = new Button { Text = "Save", DialogResult = DialogResult.OK, Location = new Point(185, 130), Size = new Size(80, 30) };
+                var cancelBtn = new Button { Text = "Cancel", DialogResult = DialogResult.Cancel, Location = new Point(275, 130), Size = new Size(80, 30) };
+
+                dialog.Controls.AddRange(new Control[] { nameLabel, nameTextBox, categoryLabel, categoryComboBox, saveBtn, cancelBtn });
+                dialog.AcceptButton = saveBtn;
+                dialog.CancelButton = cancelBtn;
+
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    string newName = nameTextBox.Text.Trim();
+                    string newCategory = categoryComboBox.Text.Trim();
+
+                    if (string.IsNullOrEmpty(newName))
+                    {
+                        MessageBox.Show("Name cannot be empty.", "Invalid Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // If name changed, rename the template file too
+                    if (!currentName.Equals(newName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        string oldPath = UIElementManager.Instance.GetTemplatePath(currentName);
+                        string newPath = UIElementManager.Instance.GetTemplatePath(newName);
+
+                        if (System.IO.File.Exists(oldPath) && !System.IO.File.Exists(newPath))
+                        {
+                            try
+                            {
+                                System.IO.File.Move(oldPath, newPath);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"Failed to rename template file: {ex.Message}", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                        }
+                    }
+
+                    if (TemplateDefinitionManager.Instance.UpdateDefinition(currentName, newName, newCategory))
+                    {
+                        MessageBox.Show($"Updated template: {newName}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadTemplateItemsComboBox();
+
+                        // Re-select the renamed item (format is "[Category] Name")
+                        for (int i = 0; i < comboBoxTemplateItems.Items.Count; i++)
+                        {
+                            if (comboBoxTemplateItems.Items[i].ToString().EndsWith("] " + newName))
+                            {
+                                comboBoxTemplateItems.SelectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to update template. Name may already exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void btnDeleteTemplate_Click(object sender, EventArgs e)
+        {
+            string templateName = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(templateName))
+            {
+                MessageBox.Show("Please select a template to delete.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete the template definition '{templateName}'?\n\nThis will NOT delete the template image file.",
+                "Confirm Delete",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                if (TemplateDefinitionManager.Instance.RemoveDefinition(templateName))
+                {
+                    MessageBox.Show($"Deleted template definition: {templateName}", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadTemplateItemsComboBox();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to delete template definition.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void fishingLocationscomboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -557,6 +1143,12 @@ namespace ToonTown_Rewritten_Bot
                     debugCustomActionsCheckBox.Enabled = false;
                     customFishingFilesComboBox.Visible = false;
                 }
+
+                // Hide "Number of Sells" controls when Fish Anywhere is selected
+                // (no sell cycle in fish anywhere mode)
+                bool showSellsControls = selectedLocation != FishingLocationNames.FishAnywhere;
+                label4.Visible = showSellsControls;
+                numericUpDown4.Visible = showSellsControls;
             }
             else
                 label12.Visible = false;
@@ -644,18 +1236,93 @@ namespace ToonTown_Rewritten_Bot
 
             try
             {
-                await GolfService.StartCustomGolfAction(filePath, _cancellationTokenSource.Token);
+                bool showOverlay = showGolfOverlayCheckBox.Checked;
+                await GolfService.StartCustomGolfAction(filePath, _cancellationTokenSource.Token, showOverlay);
+                GolfService.HideOverlay();
                 CoreFunctionality.BringBotWindowToFront();
                 MessageBox.Show("Golf actions completed successfully.", "Golf Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (OperationCanceledException)
             {
+                GolfService.HideOverlay();
                 MessageBox.Show("Golf actions were cancelled.");
             }
             catch (Exception ex)
             {
+                GolfService.HideOverlay();
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
+        }
+
+        private bool _isAutoGolfRunning = false;
+
+        private async void startAutoGolfBtn_Click(object sender, EventArgs e)
+        {
+            if (_isAutoGolfRunning)
+            {
+                // Cancel running auto-golf
+                _cancellationTokenSource?.Cancel();
+                startAutoGolfBtn.Text = "Auto Golf";
+                autoGolfStatusLabel.Text = "Cancelled";
+                _isAutoGolfRunning = false;
+                return;
+            }
+
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+            }
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            _isAutoGolfRunning = true;
+            startAutoGolfBtn.Text = "Stop";
+            autoGolfStatusLabel.Text = "Starting...";
+
+            // Subscribe to status updates
+            GolfService.AutoGolfStatusChanged += OnAutoGolfStatusChanged;
+
+            try
+            {
+                bool showOverlay = showGolfOverlayCheckBox.Checked;
+
+                // Run on background thread to avoid blocking UI
+                // Templates will be auto-prompted if missing
+                await Task.Run(() => GolfService.StartContinuousAutoGolfAsync(_cancellationTokenSource.Token, showOverlay));
+            }
+            catch (OperationCanceledException)
+            {
+                autoGolfStatusLabel.Text = "Stopped";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Auto-golf error: {ex.Message}");
+                autoGolfStatusLabel.Text = "Error";
+            }
+            finally
+            {
+                GolfService.AutoGolfStatusChanged -= OnAutoGolfStatusChanged;
+                GolfService.HideOverlay();
+                startAutoGolfBtn.Text = "Auto Golf";
+                _isAutoGolfRunning = false;
+            }
+        }
+
+        private void OnAutoGolfStatusChanged(object sender, AutoGolfStatusEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => OnAutoGolfStatusChanged(sender, e)));
+                return;
+            }
+
+            // Update the status label
+            string statusText = e.Status;
+            if (!string.IsNullOrEmpty(e.DetectedCourse))
+            {
+                statusText = $"{e.DetectedCourse}";
+            }
+            autoGolfStatusLabel.Text = statusText;
         }
 
         private void customGolfFilesComboBox_SelectedIndexChanged(object sender, EventArgs e)
