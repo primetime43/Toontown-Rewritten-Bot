@@ -42,6 +42,34 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public static Action OnFishingEnded { get; set; }
 
         /// <summary>
+        /// Static flag to pause/resume fishing from anywhere (e.g., global keyboard hook).
+        /// </summary>
+        public static bool IsPaused { get; private set; } = false;
+
+        /// <summary>
+        /// Event raised when pause state changes.
+        /// </summary>
+        public static event Action<bool> PauseStateChanged;
+
+        /// <summary>
+        /// Toggles the pause state for fishing.
+        /// </summary>
+        public static void TogglePause()
+        {
+            IsPaused = !IsPaused;
+            Debug.WriteLine($"[FishingStrategy] Pause toggled: {(IsPaused ? "PAUSED" : "RESUMED")}");
+            PauseStateChanged?.Invoke(IsPaused);
+        }
+
+        /// <summary>
+        /// Resets pause state (call when starting new fishing session).
+        /// </summary>
+        public static void ResetPause()
+        {
+            IsPaused = false;
+        }
+
+        /// <summary>
         /// Tracks fishing statistics for overlay display.
         /// </summary>
         protected int _fishCaught = 0;
@@ -57,6 +85,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             shouldStopFishing = false;
             _fishCaught = 0;
             _castCount = 0;
+            ResetPause(); // Ensure not paused when starting new session
 
             _locationName = locationName;
             _bubbleDetector = new FishBubbleDetector(locationName);
@@ -172,6 +201,14 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 Stopwatch stopwatch = new Stopwatch();
                 while (numberOfCasts != 0 && !shouldStopFishing)
                 {
+                    // Check for pause
+                    while (IsPaused && !cancellationToken.IsCancellationRequested)
+                    {
+                        UpdateOverlayAction("PAUSED", "Press F11 to resume", "Paused");
+                        await Task.Delay(250, cancellationToken);
+                    }
+                    if (cancellationToken.IsCancellationRequested) return;
+
                     _castCount++;
                     UpdateOverlayStats();
 
