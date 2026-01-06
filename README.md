@@ -3,27 +3,29 @@
 Table of Contents
 
 - [Toontown-Rewritten-Bot](#toontown-rewritten-bot)
+  - [What's New in v2.0.0](#whats-new-in-v200)
   - [Features](#features)
-  - [Planned Enhancements](#planned-enhancements)
-  - [Images of v1.5.0](#images-of-v150)
-  - [Images of v1.4.0](#images-of-v140)
   - [Requirements](#requirements)
   - [Previous Releases](#previous-releases)
 
+## What's New in v2.0.0
+
+- **Template Matching** - The bot now uses image recognition to find buttons and UI elements instead of hardcoded coordinates. Works regardless of window size or position.
+- **Improved Fishing** - Computer vision fish shadow detection, customizable scan area, per-location color calibration, real-time overlay with stats, and out-of-jellybeans detection.
+- **Auto Golf** - Automatically detects which course you're on via OCR and plays the correct actions for each hole.
+- **Global Hotkeys** - F11 to pause/resume, Esc/F12 to stop. Works even when the game has focus.
+
 ## Features
-- Custom Action Management: Enhance your Toontown experience with the ability to create and manage custom actions for both fishing and golfing directly within the application. This feature empowers users to automate these activities without modifying the source code, offering a flexible and user-friendly interface for action customization.
-- Perform time consuming tasks such as fishing or doodle training
-- Automate golfing to consistently score under par or achieve hole-in-ones with the golfing automation feature
-- Perform gardening actions such as watering, planting, and removing
-- Keep your toon awake when your away from your PC
+- **Fishing** - Auto-cast with fish shadow detection using computer vision, sell cycles, multiple location support, and a real-time overlay showing fish caught and cast count.
+- **Golfing** - Automated golf with automatic course detection and custom action support. Consistently score under par or achieve hole-in-ones.
+- **Gardening** - Watering, planting, and removing plants.
+- **Doodle Training** - Automated trick training for your doodle.
+- **Keep Awake** - Prevents AFK timeout when you're away from your PC.
+- **Custom Action Management** - Create and manage custom actions for fishing and golfing directly within the application without modifying source code.
 
-## Planned Enhancements
-
-- [ ] Allow more UI elements to be auto detectable, allowing the user to do less manual coordinates updating
-- [ ] Improve/enhance custom actions to be more flexible and easier to create (depends on how often custom actions are used by users)
-- [ ] Allow the bot to be more dynamic to capture the game window without being full screen or when its minimized
-- [ ] Get racing to work
-- [ ] General code refactors and improvements for easier maintence, readability, and reusability
+## Requirements
+- Windows 10/11 (64-bit)
+- No .NET installation required - the executable is self-contained
  
 ## Images of v1.5.0:
 
@@ -64,11 +66,6 @@ Table of Contents
   <p>Dev Window</p>
   <img src="https://github.com/primetime43/Toontown-Rewritten-Bot/assets/12754111/4f4b2979-37c5-4cb6-be3d-be0e7142acc7" alt="Dev Window">
 </details>
-
-## Requirements
-- [Microsoft .NET 10.0](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
-
-<br>
 
 ## Previous Releases:
 <details>
