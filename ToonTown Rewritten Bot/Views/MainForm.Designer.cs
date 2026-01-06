@@ -45,9 +45,7 @@
             editScanAreaBtn = new System.Windows.Forms.Button();
             showOverlayCheckBox = new System.Windows.Forms.CheckBox();
             autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
-            debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
             button4 = new System.Windows.Forms.Button();
-            customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
             randomFishingCheckBox = new System.Windows.Forms.CheckBox();
             label4 = new System.Windows.Forms.Label();
             numericUpDown4 = new System.Windows.Forms.NumericUpDown();
@@ -55,6 +53,8 @@
             numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             startFishing = new System.Windows.Forms.Button();
             fishingLocationscomboBox = new System.Windows.Forms.ComboBox();
+            debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
+            customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
             Racing = new System.Windows.Forms.TabPage();
             label6 = new System.Windows.Forms.Label();
             richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -280,7 +280,7 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new System.Drawing.Point(13, 278);
+            label12.Location = new System.Drawing.Point(9, 290);
             label12.Name = "label12";
             label12.Size = new System.Drawing.Size(51, 16);
             label12.TabIndex = 9;
@@ -358,20 +358,6 @@
             autoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
             toolTip1.SetToolTip(autoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them.\nClick 'Calibrate' to teach it the fish shadow color for better accuracy.");
             autoDetectFishCheckBox.UseVisualStyleBackColor = true;
-            //
-            // debugCustomActionsCheckBox
-            // 
-            debugCustomActionsCheckBox.AutoSize = true;
-            debugCustomActionsCheckBox.Enabled = false;
-            debugCustomActionsCheckBox.Location = new System.Drawing.Point(351, 318);
-            debugCustomActionsCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            debugCustomActionsCheckBox.Name = "debugCustomActionsCheckBox";
-            debugCustomActionsCheckBox.Size = new System.Drawing.Size(162, 20);
-            debugCustomActionsCheckBox.TabIndex = 13;
-            debugCustomActionsCheckBox.Text = "Debug Custom Actions";
-            toolTip1.SetToolTip(debugCustomActionsCheckBox, "This will allow you to debug the custom action\r\nwalk from the dock to the fisherman");
-            debugCustomActionsCheckBox.UseVisualStyleBackColor = true;
-            debugCustomActionsCheckBox.Visible = false;
             // 
             // button4
             // 
@@ -383,16 +369,6 @@
             button4.Text = "Stop Fishing";
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
-            // 
-            // customFishingFilesComboBox
-            // 
-            customFishingFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            customFishingFilesComboBox.FormattingEnabled = true;
-            customFishingFilesComboBox.Location = new System.Drawing.Point(7, 344);
-            customFishingFilesComboBox.Name = "customFishingFilesComboBox";
-            customFishingFilesComboBox.Size = new System.Drawing.Size(373, 24);
-            customFishingFilesComboBox.TabIndex = 11;
-            customFishingFilesComboBox.Visible = false;
             // 
             // randomFishingCheckBox
             // 
@@ -473,6 +449,30 @@
             fishingLocationscomboBox.TabIndex = 1;
             toolTip1.SetToolTip(fishingLocationscomboBox, "Select the location you wish to fish at");
             fishingLocationscomboBox.SelectedIndexChanged += fishingLocationscomboBox_SelectedIndexChanged;
+            // 
+            // debugCustomActionsCheckBox
+            // 
+            debugCustomActionsCheckBox.AutoSize = true;
+            debugCustomActionsCheckBox.Enabled = false;
+            debugCustomActionsCheckBox.Location = new System.Drawing.Point(438, 293);
+            debugCustomActionsCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            debugCustomActionsCheckBox.Name = "debugCustomActionsCheckBox";
+            debugCustomActionsCheckBox.Size = new System.Drawing.Size(162, 20);
+            debugCustomActionsCheckBox.TabIndex = 13;
+            debugCustomActionsCheckBox.Text = "Debug Custom Actions";
+            toolTip1.SetToolTip(debugCustomActionsCheckBox, "This will allow you to debug the custom action\r\nwalk from the dock to the fisherman");
+            debugCustomActionsCheckBox.UseVisualStyleBackColor = true;
+            debugCustomActionsCheckBox.Visible = false;
+            // 
+            // customFishingFilesComboBox
+            // 
+            customFishingFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            customFishingFilesComboBox.FormattingEnabled = true;
+            customFishingFilesComboBox.Location = new System.Drawing.Point(7, 344);
+            customFishingFilesComboBox.Name = "customFishingFilesComboBox";
+            customFishingFilesComboBox.Size = new System.Drawing.Size(373, 24);
+            customFishingFilesComboBox.TabIndex = 11;
+            customFishingFilesComboBox.Visible = false;
             // 
             // Racing
             // 
