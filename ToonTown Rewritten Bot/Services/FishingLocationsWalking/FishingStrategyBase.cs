@@ -42,6 +42,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public static Action OnFishingEnded { get; set; }
 
         /// <summary>
+        /// Tracks fishing statistics for overlay display.
+        /// </summary>
+        protected int _fishCaught = 0;
+        protected int _castCount = 0;
+
+        /// <summary>
         /// Sets the fishing location for proper bubble detection configuration.
         /// Also resets fishing state for a fresh start.
         /// </summary>
@@ -49,11 +55,70 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         {
             // Reset state from any previous fishing session
             shouldStopFishing = false;
+            _fishCaught = 0;
+            _castCount = 0;
 
             _locationName = locationName;
             _bubbleDetector = new FishBubbleDetector(locationName);
 
+            // Update overlay with location
+            UpdateOverlayLocation(locationName);
+
             System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Reset state and set location to {locationName}");
+        }
+
+        /// <summary>
+        /// Updates the overlay with the current action status.
+        /// </summary>
+        protected void UpdateOverlayAction(string currentAction, string nextAction, string status)
+        {
+            if (Overlay != null && !Overlay.IsDisposed)
+            {
+                try
+                {
+                    Overlay.BeginInvoke(new Action(() =>
+                    {
+                        Overlay.UpdateActionStatus(currentAction, nextAction, status);
+                    }));
+                }
+                catch { }
+            }
+        }
+
+        /// <summary>
+        /// Updates the overlay with fishing statistics.
+        /// </summary>
+        protected void UpdateOverlayStats()
+        {
+            if (Overlay != null && !Overlay.IsDisposed)
+            {
+                try
+                {
+                    Overlay.BeginInvoke(new Action(() =>
+                    {
+                        Overlay.UpdateStats(_fishCaught, _castCount);
+                    }));
+                }
+                catch { }
+            }
+        }
+
+        /// <summary>
+        /// Updates the overlay with the fishing location.
+        /// </summary>
+        protected void UpdateOverlayLocation(string location)
+        {
+            if (Overlay != null && !Overlay.IsDisposed)
+            {
+                try
+                {
+                    Overlay.BeginInvoke(new Action(() =>
+                    {
+                        Overlay.SetLocation(location);
+                    }));
+                }
+                catch { }
+            }
         }
 
         /// <summary>
@@ -100,11 +165,19 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 throw new InvalidOperationException("Toontown Rewritten window not found. Please make sure the game is running.");
             }
 
+            int totalCasts = numberOfCasts;
+
             try
             {
                 Stopwatch stopwatch = new Stopwatch();
                 while (numberOfCasts != 0 && !shouldStopFishing)
                 {
+                    _castCount++;
+                    UpdateOverlayStats();
+
+                    // Update overlay - casting
+                    UpdateOverlayAction(autoDetectFish ? "Scanning for fish..." : "Casting line", "Wait for bite", "Casting");
+
                     if (autoDetectFish)
                     {
                         await CastLineAuto(cancellationToken);
@@ -118,11 +191,15 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     await Task.Delay(300, cancellationToken); // Brief delay for popup to appear
                     if (NoJellybeansDetector.IsNoJellybeansPopupVisible())
                     {
+                        UpdateOverlayAction("Out of jellybeans!", "-", "Stopped");
                         System.Diagnostics.Debug.WriteLine("[FishingStrategy] NO JELLYBEANS - Out of bait! Stopping fishing.");
                         await HandleNoJellybeansPopup(cancellationToken);
                         shouldStopFishing = true;
                         return;
                     }
+
+                    // Update overlay - waiting for bite
+                    UpdateOverlayAction("Waiting for bite...", $"Cast {totalCasts - numberOfCasts + 1}/{totalCasts}", "Fishing");
 
                     stopwatch.Start();
                     while (stopwatch.Elapsed.Seconds < 30 && !await CheckIfFishCaught(cancellationToken))
@@ -131,9 +208,17 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     }
                     stopwatch.Stop();
                     stopwatch.Reset();
+
+                    // Fish caught (or timeout)
+                    _fishCaught++;
+                    UpdateOverlayStats();
+                    UpdateOverlayAction("Fish caught!", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
+
                     numberOfCasts--;
                     await Task.Delay(1000, cancellationToken);
                 }
+
+                UpdateOverlayAction("Fishing complete", "-", "Complete");
                 // Note: ExitFishing is now called by FishingService after optionally straightening
             }
             finally

@@ -35,6 +35,14 @@ namespace ToonTown_Rewritten_Bot.Views
         private string _statusText = "";
         private int _darkPixelCount = 0;
 
+        // Action status display
+        private string _currentAction = "";
+        private string _nextAction = "";
+        private string _fishingStatus = "Ready";
+        private int _fishCaught = 0;
+        private int _castCount = 0;
+        private string _location = "";
+
         // Timer for repositioning over game window
         private Timer _repositionTimer;
 
@@ -127,6 +135,12 @@ namespace ToonTown_Rewritten_Bot.Views
             _castDestination = null;
             _statusText = "";
             _darkPixelCount = 0;
+            _currentAction = "";
+            _nextAction = "";
+            _fishingStatus = "Ready";
+            _fishCaught = 0;
+            _castCount = 0;
+            _location = "";
             this.Invalidate();
         }
 
@@ -136,6 +150,54 @@ namespace ToonTown_Rewritten_Bot.Views
         public void SetStatus(string status)
         {
             _statusText = status;
+            this.Invalidate();
+        }
+
+        /// <summary>
+        /// Updates the fishing action status panel.
+        /// </summary>
+        public void UpdateActionStatus(string currentAction, string nextAction, string status)
+        {
+            _currentAction = currentAction ?? "";
+            _nextAction = nextAction ?? "";
+            _fishingStatus = status ?? "Ready";
+            this.Invalidate();
+        }
+
+        /// <summary>
+        /// Updates the fishing statistics.
+        /// </summary>
+        public void UpdateStats(int fishCaught, int castCount)
+        {
+            _fishCaught = fishCaught;
+            _castCount = castCount;
+            this.Invalidate();
+        }
+
+        /// <summary>
+        /// Sets the current fishing location name.
+        /// </summary>
+        public void SetLocation(string location)
+        {
+            _location = location ?? "";
+            this.Invalidate();
+        }
+
+        /// <summary>
+        /// Increments the fish caught counter.
+        /// </summary>
+        public void IncrementFishCaught()
+        {
+            _fishCaught++;
+            this.Invalidate();
+        }
+
+        /// <summary>
+        /// Increments the cast counter.
+        /// </summary>
+        public void IncrementCastCount()
+        {
+            _castCount++;
             this.Invalidate();
         }
 
@@ -288,6 +350,128 @@ namespace ToonTown_Rewritten_Bot.Views
                     }
                 }
             }
+
+            // Draw action status panel at bottom-left (to avoid covering scan area)
+            DrawActionStatusPanel(g);
+        }
+
+        private void DrawActionStatusPanel(Graphics g)
+        {
+            // Panel dimensions and position (bottom-left)
+            int panelWidth = 280;
+            int panelHeight = 140;
+            int panelX = 15;
+            int panelY = this.Height - panelHeight - 15;
+
+            // Draw panel background
+            using (var bgBrush = new SolidBrush(Color.FromArgb(200, 20, 20, 20)))
+            using (var borderPen = new Pen(Color.FromArgb(200, 70, 130, 180), 2))
+            {
+                var panelRect = new Rectangle(panelX, panelY, panelWidth, panelHeight);
+
+                // Rounded rectangle
+                using (var path = CreateRoundedRectangle(panelRect, 10))
+                {
+                    g.FillPath(bgBrush, path);
+                    g.DrawPath(borderPen, path);
+                }
+            }
+
+            int textX = panelX + 12;
+            int textY = panelY + 10;
+
+            // Title
+            using (var titleFont = new Font("Segoe UI", 11, FontStyle.Bold))
+            using (var titleBrush = new SolidBrush(Color.FromArgb(255, 70, 180, 255)))
+            {
+                g.DrawString("Fishing", titleFont, titleBrush, textX, textY);
+            }
+
+            // Status indicator
+            Color statusColor = _fishingStatus switch
+            {
+                "Fishing" => Color.LimeGreen,
+                "Casting" => Color.Yellow,
+                "Waiting" => Color.Orange,
+                "Selling" => Color.Cyan,
+                "Walking" => Color.MediumPurple,
+                "Complete" => Color.Cyan,
+                "Stopped" => Color.Gray,
+                _ => Color.Gray
+            };
+
+            using (var statusFont = new Font("Segoe UI", 9))
+            using (var statusBrush = new SolidBrush(statusColor))
+            {
+                string statusDisplay = $"[{_fishingStatus}]";
+                var statusSize = g.MeasureString(statusDisplay, statusFont);
+                g.DrawString(statusDisplay, statusFont, statusBrush, panelX + panelWidth - statusSize.Width - 12, textY + 2);
+            }
+
+            textY += 24;
+
+            // Location
+            if (!string.IsNullOrEmpty(_location))
+            {
+                using (var labelFont = new Font("Segoe UI", 9))
+                using (var valueFont = new Font("Segoe UI", 9, FontStyle.Bold))
+                using (var labelBrush = new SolidBrush(Color.LightGray))
+                using (var valueBrush = new SolidBrush(Color.FromArgb(255, 100, 255, 150)))
+                {
+                    g.DrawString("Location:", labelFont, labelBrush, textX, textY);
+                    g.DrawString(_location, valueFont, valueBrush, textX + 62, textY);
+                }
+                textY += 18;
+            }
+
+            // Stats (Fish caught / Casts)
+            using (var font = new Font("Segoe UI", 9))
+            using (var labelBrush = new SolidBrush(Color.LightGray))
+            using (var valueBrush = new SolidBrush(Color.White))
+            {
+                string statsText = $"Fish: {_fishCaught}  |  Casts: {_castCount}";
+                g.DrawString(statsText, font, valueBrush, textX, textY);
+            }
+
+            textY += 22;
+
+            // Current action
+            using (var labelFont = new Font("Segoe UI", 9))
+            using (var actionFont = new Font("Segoe UI", 10, FontStyle.Bold))
+            using (var labelBrush = new SolidBrush(Color.LightGray))
+            using (var actionBrush = new SolidBrush(Color.Yellow))
+            {
+                g.DrawString("Current:", labelFont, labelBrush, textX, textY);
+                string actionDisplay = string.IsNullOrEmpty(_currentAction) ? "-" : _currentAction;
+                g.DrawString(actionDisplay, actionFont, actionBrush, textX + 58, textY - 1);
+            }
+
+            textY += 20;
+
+            // Next action
+            using (var labelFont = new Font("Segoe UI", 9))
+            using (var nextFont = new Font("Segoe UI", 9))
+            using (var labelBrush = new SolidBrush(Color.LightGray))
+            using (var nextBrush = new SolidBrush(Color.FromArgb(255, 180, 180, 180)))
+            {
+                g.DrawString("Next:", labelFont, labelBrush, textX, textY);
+                string nextDisplay = string.IsNullOrEmpty(_nextAction) ? "-" : _nextAction;
+                g.DrawString(nextDisplay, nextFont, nextBrush, textX + 58, textY);
+            }
+        }
+
+        private GraphicsPath CreateRoundedRectangle(Rectangle rect, int radius)
+        {
+            var path = new GraphicsPath();
+            int diameter = radius * 2;
+
+            path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
+            path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90);
+            path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90);
+            path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90);
+            path.CloseFigure();
+
+            return path;
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
