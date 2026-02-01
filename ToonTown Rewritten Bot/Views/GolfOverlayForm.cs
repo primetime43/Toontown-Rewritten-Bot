@@ -33,6 +33,7 @@ namespace ToonTown_Rewritten_Bot.Views
         private int _elapsedTime = 0;
         private string _statusText = "Ready";
         private string _courseName = "";
+        private string _requiredPosition = "";
         private bool _isRunning = false;
 
         // Timer for repositioning over game window
@@ -157,6 +158,25 @@ namespace ToonTown_Rewritten_Bot.Views
         }
 
         /// <summary>
+        /// Sets the required tee position.
+        /// </summary>
+        public void SetRequiredPosition(string position)
+        {
+            _requiredPosition = position ?? "";
+            this.Invalidate();
+        }
+
+        /// <summary>
+        /// Sets both course name and required position.
+        /// </summary>
+        public void SetCourseInfo(string courseName, string position)
+        {
+            _courseName = courseName ?? "";
+            _requiredPosition = position ?? "";
+            this.Invalidate();
+        }
+
+        /// <summary>
         /// Clears the overlay display.
         /// </summary>
         public void ClearOverlay()
@@ -169,6 +189,7 @@ namespace ToonTown_Rewritten_Bot.Views
             _elapsedTime = 0;
             _statusText = "Ready";
             _courseName = "";
+            _requiredPosition = "";
             _isRunning = false;
             _progressTimer.Stop();
             this.Invalidate();
@@ -193,7 +214,7 @@ namespace ToonTown_Rewritten_Bot.Views
 
             // Draw panel background (semi-transparent) - positioned on middle left
             int panelWidth = 320;
-            int panelHeight = 165;
+            int panelHeight = 190;
             int panelX = 15;
             int panelY = (this.Height - panelHeight) / 2;
 
@@ -248,6 +269,24 @@ namespace ToonTown_Rewritten_Bot.Views
                 g.DrawString("Course:", labelFont, labelBrush, textX, textY);
                 string courseDisplay = string.IsNullOrEmpty(_courseName) ? "Detecting..." : _courseName;
                 g.DrawString(courseDisplay, courseFont, courseBrush, textX + 55, textY - 1);
+            }
+
+            textY += 20;
+
+            // Required position - show prominently if not Center
+            if (!string.IsNullOrEmpty(_requiredPosition))
+            {
+                bool requiresMove = _requiredPosition != "Center";
+                Color positionColor = requiresMove ? Color.Yellow : Color.LightGray;
+                string positionText = requiresMove
+                    ? $"⚠️ YOU: Move to {_requiredPosition.ToUpper()} tee!"
+                    : "Position: Center (default)";
+
+                using (var posFont = new Font("Segoe UI", requiresMove ? 10 : 9, requiresMove ? FontStyle.Bold : FontStyle.Regular))
+                using (var posBrush = new SolidBrush(positionColor))
+                {
+                    g.DrawString(positionText, posFont, posBrush, textX, textY);
+                }
             }
 
             textY += 22;

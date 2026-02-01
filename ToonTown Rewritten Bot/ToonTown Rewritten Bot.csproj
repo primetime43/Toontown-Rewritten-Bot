@@ -63,17 +63,6 @@
     <None Remove="Services\CustomFishingActions\DDLLullabyLaneFishing Dock Left Of The Small Box.json" />
     <None Remove="Services\CustomFishingActions\MMTenorTerraceFishing Top Left Dock.json" />
     <None Remove="Services\CustomFishingActions\TTCPunchlinePlaceFishing First Dock.json" />
-    <None Remove="Services\CustomGolfActions\EASY - Afternoon Tee.json" />
-    <None Remove="Services\CustomGolfActions\EASY - Down the Hatch.json" />
-    <None Remove="Services\CustomGolfActions\EASY - Hole In Fun.json" />
-    <None Remove="Services\CustomGolfActions\EASY - Hole on the Range.json" />
-    <None Remove="Services\CustomGolfActions\EASY - Holey Mackeral.json" />
-    <None Remove="Services\CustomGolfActions\EASY - Hot Links.json" />
-    <None Remove="Services\CustomGolfActions\EASY - One Little Birdie.json" />
-    <None Remove="Services\CustomGolfActions\EASY - Peanut Putter.json" />
-    <None Remove="Services\CustomGolfActions\EASY - Seeing green.json" />
-    <None Remove="Services\CustomGolfActions\EASY - Swing Time.json" />
-    <None Remove="Services\CustomGolfActions\EASY - Swing-A-Long.json" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="InputSimulator, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -96,39 +85,13 @@
     <EmbeddedResource Include="Services\CustomFishingActions\DDLLullabyLaneFishing Dock Left Of The Small Box.json" />
     <EmbeddedResource Include="Services\CustomFishingActions\MMTenorTerraceFishing Top Left Dock.json" />
     <EmbeddedResource Include="Services\CustomFishingActions\TTCPunchlinePlaceFishing First Dock.json" />
-    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Afternoon Tee.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Down the Hatch.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Hole In Fun.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Hole on the Range.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Holey Mackeral.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Hot Links.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Services\CustomGolfActions\EASY - One Little Birdie.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Peanut Putter.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Seeing green.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Swing Time.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Services\CustomGolfActions\EASY - Swing-A-Long.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
+  </ItemGroup>
+  <!-- Copy Custom Golf Actions to output directory -->
+  <ItemGroup>
+    <Content Include="Services\CustomGolfActions\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Custom Golf Actions\%(Filename)%(Extension)</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

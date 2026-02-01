@@ -5,8 +5,18 @@
     "Duration": 15000
   },
   {
+    "Action": "MOVE TO RIGHT TEE SPOT",
+    "Command": "RIGHT",
+    "Duration": 100
+  },
+  {
+    "Action": "AIM STRAIGHT",
+    "Command": "AIM STRAIGHT",
+    "Duration": 50
+  },
+  {
     "Action": "SWING POWER",
     "Command": "SWING POWER",
-    "Duration": 1800
+    "Duration": 2050
   }
 ]

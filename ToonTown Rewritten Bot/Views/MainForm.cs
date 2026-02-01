@@ -1230,23 +1230,33 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
-            // Remind user about control settings
+            // Get the full path to the selected golf action file.
+            string filePath = GolfService.GetCustomGolfActionFilePath(selectedFileName);
+
+            // Get shot summary to show helpful instructions
+            var summary = GolfService.GetShotSummaryFromFile(filePath);
+
+            // Build instruction message
+            string positionInstruction = summary.RequiresPositionChange
+                ? $"⚠️ YOU must stand on the {summary.Position.ToUpper()} tee spot BEFORE clicking OK!"
+                : "Stand on the CENTER tee spot (default position)";
+
             var result = MessageBox.Show(
-                "Before starting, please verify:\n\n" +
-                "• Your golf swing key in TTR is set to CTRL (the default)\n" +
-                "• You are standing at the tee in the game\n\n" +
-                "If your swing key is set to something else (like Spacebar), " +
-                "the bot will not work correctly.\n\n" +
-                "Continue?",
-                "Golf Control Settings",
+                $"Course: {selectedFileName}\n\n" +
+                $"━━━ YOU DO (before clicking OK) ━━━\n" +
+                $"1. {positionInstruction}\n" +
+                $"2. Make sure your swing key is set to CTRL\n\n" +
+                $"━━━ BOT WILL DO ━━━\n" +
+                $"• Aim: {summary.Aim}\n" +
+                $"• Power: ~{summary.Power}%\n\n" +
+                $"After clicking OK, switch to TTR within {summary.DelaySeconds} seconds.\n\n" +
+                "Ready to start?",
+                "Golf Setup - " + selectedFileName,
                 MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Information);
+                summary.RequiresPositionChange ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
 
             if (result != DialogResult.OK)
                 return;
-
-            // Get the full path to the selected golf action file.
-            string filePath = GolfService.GetCustomGolfActionFilePath(selectedFileName);
 
             if (_cancellationTokenSource != null)
             {
@@ -1290,17 +1300,27 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
-            // Remind user about control settings
+            // Remind user about auto-golf setup
             var result = MessageBox.Show(
-                "Before starting Auto Golf, please verify:\n\n" +
-                "• Your golf swing key in TTR is set to CTRL (the default)\n" +
-                "• You are at the golf course in the game\n\n" +
-                "If your swing key is set to something else (like Spacebar), " +
-                "the bot will not work correctly.\n\n" +
-                "Continue?",
-                "Golf Control Settings",
+                "━━━ AUTO GOLF MODE ━━━\n\n" +
+                "The bot will automatically:\n" +
+                "1. Detect which hole you're playing\n" +
+                "2. Wait for your turn\n" +
+                "3. Aim and swing with the right power\n" +
+                "4. Repeat for all 3 holes\n\n" +
+                "━━━ YOU MUST DO ━━━\n" +
+                "• Set swing key to CTRL (default)\n" +
+                "• Keep TTR visible on screen\n" +
+                "• ⚠️ Move to LEFT or RIGHT tee when instructed!\n" +
+                "  (Watch the overlay for position instructions)\n\n" +
+                "━━━ HOW IT WORKS ━━━\n" +
+                "The bot reads the hole name from the screen.\n" +
+                "Some holes require LEFT or RIGHT positioning -\n" +
+                "YOU must move there before your turn!\n\n" +
+                "Ready to start?",
+                "Auto Golf Setup",
                 MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Information);
+                MessageBoxIcon.Warning);
 
             if (result != DialogResult.OK)
                 return;
@@ -1375,9 +1395,18 @@ namespace ToonTown_Rewritten_Bot
             string filePath = GolfService.GetCustomGolfActionFilePath(selectedFileName);
             var actions = GolfService.GetCustomGolfActions(filePath);
 
+            // Show shot summary at the top
+            var summary = GolfService.GetShotSummary(actions);
+            golfActionsListBox.Items.Add("═══════ SHOT SUMMARY ═══════");
+            golfActionsListBox.Items.Add($"  Position: {summary.Position}" + (summary.RequiresPositionChange ? " ⚠️" : ""));
+            golfActionsListBox.Items.Add($"  Aim: {summary.Aim}");
+            golfActionsListBox.Items.Add($"  Power: ~{summary.Power}%");
+            golfActionsListBox.Items.Add($"  Delay: {summary.DelaySeconds} seconds");
+            golfActionsListBox.Items.Add("═══════════════════════════");
+            golfActionsListBox.Items.Add("");
+
             foreach (var action in actions)
             {
-                //Debug.WriteLine($"Action: {action.Action}, Command: {action.Command}, Duration: {action.Duration}");
                 golfActionsListBox.Items.Add($"{action.Action} - {action.Duration} ms");
             }
         }

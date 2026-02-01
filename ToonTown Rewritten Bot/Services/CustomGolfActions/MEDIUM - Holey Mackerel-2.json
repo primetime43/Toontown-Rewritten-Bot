@@ -7,11 +7,11 @@
   {
     "Action": "TURN RIGHT",
     "Command": "TURN RIGHT",
-    "Duration": 350
+    "Duration": 660
   },
   {
     "Action": "SWING POWER",
     "Command": "SWING POWER",
-    "Duration": 1375
+    "Duration": 1075
   }
 ]
