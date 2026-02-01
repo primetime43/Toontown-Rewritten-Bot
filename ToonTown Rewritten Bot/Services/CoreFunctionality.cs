@@ -463,6 +463,7 @@ namespace ToonTown_Rewritten_Bot.Services
         private const uint MOUSEEVENTF_LEFTUP = 0x0004;
         private const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
         private const uint MOUSEEVENTF_RIGHTUP = 0x0010;
+        private const uint MOUSEEVENTF_VIRTUALDESK = 0x4000;
         private const uint MOUSEEVENTF_ABSOLUTE = 0x8000;
 
         private const int INPUT_MOUSE = 0;
@@ -487,15 +488,21 @@ namespace ToonTown_Rewritten_Bot.Services
 
         /// <summary>
         /// Converts screen coordinates to normalized mouse coordinates (0-65535 range).
+        /// Uses the virtual screen (all monitors combined) for proper multi-monitor support.
         /// </summary>
         private static (int mouseX, int mouseY) GetNormalizedMouseCoordinates(int screenX, int screenY)
         {
-            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
-            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+            // Use virtual screen bounds to support multiple monitors
+            // VirtualScreen represents the bounding rectangle of all monitors combined
+            int virtualScreenLeft = SystemInformation.VirtualScreen.Left;
+            int virtualScreenTop = SystemInformation.VirtualScreen.Top;
+            int virtualScreenWidth = SystemInformation.VirtualScreen.Width;
+            int virtualScreenHeight = SystemInformation.VirtualScreen.Height;
 
-            // Normalize to 0-65535 range as required by SendInput with ABSOLUTE flag
-            int mouseX = (int)((screenX * 65536L) / screenWidth);
-            int mouseY = (int)((screenY * 65536L) / screenHeight);
+            // Normalize to 0-65535 range, accounting for virtual screen offset
+            // This correctly handles monitors to the left of or above the primary monitor
+            int mouseX = (int)(((screenX - virtualScreenLeft) * 65536L) / virtualScreenWidth);
+            int mouseY = (int)(((screenY - virtualScreenTop) * 65536L) / virtualScreenHeight);
 
             return (mouseX, mouseY);
         }
@@ -516,7 +523,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     dx = mouseX,
                     dy = mouseY,
                     mouseData = 0,
-                    dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
+                    dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
                     time = 0,
                     dwExtraInfo = IntPtr.Zero
                 }
@@ -541,7 +548,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     dx = mouseX,
                     dy = mouseY,
                     mouseData = 0,
-                    dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE,
+                    dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
                     time = 0,
                     dwExtraInfo = IntPtr.Zero
                 }
@@ -566,7 +573,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     dx = mouseX,
                     dy = mouseY,
                     mouseData = 0,
-                    dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE,
+                    dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
                     time = 0,
                     dwExtraInfo = IntPtr.Zero
                 }
@@ -594,7 +601,7 @@ namespace ToonTown_Rewritten_Bot.Services
                         dx = mouseX,
                         dy = mouseY,
                         mouseData = 0,
-                        dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE,
+                        dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
                         time = 0,
                         dwExtraInfo = IntPtr.Zero
                     }
@@ -607,7 +614,7 @@ namespace ToonTown_Rewritten_Bot.Services
                         dx = mouseX,
                         dy = mouseY,
                         mouseData = 0,
-                        dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE,
+                        dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
                         time = 0,
                         dwExtraInfo = IntPtr.Zero
                     }
