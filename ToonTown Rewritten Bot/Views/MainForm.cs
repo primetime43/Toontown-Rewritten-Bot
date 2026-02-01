@@ -62,6 +62,99 @@ namespace ToonTown_Rewritten_Bot
             LoadCoordinatesIntoResetBox();
             doodleTrickComboBox.SelectedIndex = 0; // clean this up/move this eventually
             LoadTemplateItemsComboBox();
+
+            // Load saved user preferences
+            LoadUserPreferences();
+        }
+
+        /// <summary>
+        /// Loads user preferences from file and applies them to UI controls.
+        /// </summary>
+        private void LoadUserPreferences()
+        {
+            var prefs = UserPreferences.Instance;
+
+            // Fishing preferences
+            if (!string.IsNullOrEmpty(prefs.FishingLocation))
+            {
+                int index = fishingLocationscomboBox.FindStringExact(prefs.FishingLocation);
+                if (index >= 0) fishingLocationscomboBox.SelectedIndex = index;
+            }
+            numericUpDown3.Value = Math.Max(numericUpDown3.Minimum, Math.Min(numericUpDown3.Maximum, prefs.NumberOfCasts));
+            numericUpDown4.Value = Math.Max(numericUpDown4.Minimum, Math.Min(numericUpDown4.Maximum, prefs.NumberOfSells));
+            numericUpDownBiteTimeout.Value = Math.Max(numericUpDownBiteTimeout.Minimum, Math.Min(numericUpDownBiteTimeout.Maximum, prefs.BiteTimeoutSeconds));
+            randomFishingCheckBox.Checked = prefs.RandomVariance;
+            autoDetectFishCheckBox.Checked = prefs.AutoDetectFish;
+
+            // Golf preferences
+            if (!string.IsNullOrEmpty(prefs.GolfCourse))
+            {
+                int golfIndex = customGolfFilesComboBox.FindStringExact(prefs.GolfCourse);
+                if (golfIndex >= 0) customGolfFilesComboBox.SelectedIndex = golfIndex;
+            }
+            showGolfOverlayCheckBox.Checked = prefs.ShowGolfOverlay;
+
+            // Doodle preferences
+            if (!string.IsNullOrEmpty(prefs.DoodleTrick))
+            {
+                int trickIndex = doodleTrickComboBox.FindStringExact(prefs.DoodleTrick);
+                if (trickIndex >= 0) doodleTrickComboBox.SelectedIndex = trickIndex;
+            }
+            numberOfDoodleFeedsNumericUpDown.Value = Math.Max(numberOfDoodleFeedsNumericUpDown.Minimum, Math.Min(numberOfDoodleFeedsNumericUpDown.Maximum, prefs.NumberOfFeeds));
+            numberOfDoodleScratchesNumericUpDown.Value = Math.Max(numberOfDoodleScratchesNumericUpDown.Minimum, Math.Min(numberOfDoodleScratchesNumericUpDown.Maximum, prefs.NumberOfScratches));
+            unlimitedTrainingCheckBox.Checked = prefs.UnlimitedTraining;
+            justFeedDoodleCheckBox.Checked = prefs.JustFeedDoodle;
+            justScratchDoodleCheckBox.Checked = prefs.JustScratchDoodle;
+
+            // Gardening preferences
+            waterPlantNumericUpDown.Value = Math.Max(waterPlantNumericUpDown.Minimum, Math.Min(waterPlantNumericUpDown.Maximum, prefs.WaterPlantCount));
+            if (!string.IsNullOrEmpty(prefs.FlowerBeanAmount))
+            {
+                int flowerIndex = flowerBeanAmountDropdown.FindStringExact(prefs.FlowerBeanAmount);
+                if (flowerIndex >= 0) flowerBeanAmountDropdown.SelectedIndex = flowerIndex;
+            }
+
+            // Misc preferences
+            checkBox2.Checked = prefs.KeepProgramOnTop;
+            numericUpDown1.Value = Math.Max(numericUpDown1.Minimum, Math.Min(numericUpDown1.Maximum, prefs.KeepToonAwakeMinutes));
+        }
+
+        /// <summary>
+        /// Saves current UI values to user preferences.
+        /// </summary>
+        private void SaveUserPreferences()
+        {
+            var prefs = UserPreferences.Instance;
+
+            // Fishing preferences
+            prefs.FishingLocation = fishingLocationscomboBox.SelectedItem?.ToString() ?? "";
+            prefs.NumberOfCasts = (int)numericUpDown3.Value;
+            prefs.NumberOfSells = (int)numericUpDown4.Value;
+            prefs.BiteTimeoutSeconds = (int)numericUpDownBiteTimeout.Value;
+            prefs.RandomVariance = randomFishingCheckBox.Checked;
+            prefs.AutoDetectFish = autoDetectFishCheckBox.Checked;
+
+            // Golf preferences
+            prefs.GolfCourse = customGolfFilesComboBox.SelectedItem?.ToString() ?? "";
+            prefs.ShowGolfOverlay = showGolfOverlayCheckBox.Checked;
+
+            // Doodle preferences
+            prefs.DoodleTrick = doodleTrickComboBox.SelectedItem?.ToString() ?? "None";
+            prefs.NumberOfFeeds = (int)numberOfDoodleFeedsNumericUpDown.Value;
+            prefs.NumberOfScratches = (int)numberOfDoodleScratchesNumericUpDown.Value;
+            prefs.UnlimitedTraining = unlimitedTrainingCheckBox.Checked;
+            prefs.JustFeedDoodle = justFeedDoodleCheckBox.Checked;
+            prefs.JustScratchDoodle = justScratchDoodleCheckBox.Checked;
+
+            // Gardening preferences
+            prefs.WaterPlantCount = (int)waterPlantNumericUpDown.Value;
+            prefs.FlowerBeanAmount = flowerBeanAmountDropdown.SelectedItem?.ToString() ?? "";
+
+            // Misc preferences
+            prefs.KeepProgramOnTop = checkBox2.Checked;
+            prefs.KeepToonAwakeMinutes = (int)numericUpDown1.Value;
+
+            prefs.Save();
         }
 
         /// <summary>
@@ -127,6 +220,9 @@ namespace ToonTown_Rewritten_Bot
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _globalKeyboardHook?.Dispose();
+
+            // Save user preferences on close
+            SaveUserPreferences();
         }
 
         //important functions for bot
@@ -334,6 +430,9 @@ namespace ToonTown_Rewritten_Bot
             }
 
             var token = _cancellationTokenSource.Token; // Token to handle task cancellation
+
+            // Set the bite timeout from the UI control
+            FishingStrategyBase.BiteTimeoutSeconds = Convert.ToInt32(numericUpDownBiteTimeout.Value);
 
             try
             {

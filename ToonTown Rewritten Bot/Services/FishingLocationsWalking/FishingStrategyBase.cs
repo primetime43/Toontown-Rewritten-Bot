@@ -53,6 +53,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public static bool IsSimulatedKeyPress { get; set; } = false;
 
         /// <summary>
+        /// Maximum time in seconds to wait for a fish bite before timing out.
+        /// Default is 30 seconds. Can be adjusted via UI.
+        /// </summary>
+        public static int BiteTimeoutSeconds { get; set; } = 30;
+
+        /// <summary>
         /// Event raised when pause state changes.
         /// </summary>
         public static event Action<bool> PauseStateChanged;
@@ -245,17 +251,30 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     UpdateOverlayAction("Waiting for bite...", $"Cast {totalCasts - numberOfCasts + 1}/{totalCasts}", "Fishing");
 
                     stopwatch.Start();
-                    while (stopwatch.Elapsed.Seconds < 30 && !await CheckIfFishCaught(cancellationToken))
+                    bool fishCaught = false;
+                    while (stopwatch.Elapsed.Seconds < BiteTimeoutSeconds)
                     {
                         if (cancellationToken.IsCancellationRequested) return;
+                        if (await CheckIfFishCaught(cancellationToken))
+                        {
+                            fishCaught = true;
+                            break;
+                        }
                     }
                     stopwatch.Stop();
                     stopwatch.Reset();
 
-                    // Fish caught (or timeout)
-                    _fishCaught++;
-                    UpdateOverlayStats();
-                    UpdateOverlayAction("Fish caught!", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
+                    // Only count if fish was actually caught (not timeout)
+                    if (fishCaught)
+                    {
+                        _fishCaught++;
+                        UpdateOverlayStats();
+                        UpdateOverlayAction("Fish caught!", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
+                    }
+                    else
+                    {
+                        UpdateOverlayAction("No bite (timeout)", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
+                    }
 
                     numberOfCasts--;
                     await Task.Delay(1000, cancellationToken);
