@@ -10,13 +10,13 @@
     "Duration": 100
   },
   {
-    "Action": "TURN RIGHT",
-    "Command": "TURN RIGHT",
-    "Duration": 700
+    "Action": "TURN LEFT",
+    "Command": "TURN LEFT",
+    "Duration": 100
   },
   {
     "Action": "SWING POWER",
     "Command": "SWING POWER",
-    "Duration": 1925
+    "Duration": 1825
   }
 ]

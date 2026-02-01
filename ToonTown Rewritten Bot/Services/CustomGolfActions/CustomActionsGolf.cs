@@ -37,9 +37,11 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
         public event EventHandler<string> StatusChanged;
 
         /// <summary>
-        /// Gets the total number of actions loaded.
+        /// Gets the total number of executable actions (excludes position actions which are skipped).
         /// </summary>
-        public int TotalActions => actions.Count;
+        public int TotalActions => actions.FindAll(a =>
+            a.Action != "MOVE TO LEFT TEE SPOT" &&
+            a.Action != "MOVE TO RIGHT TEE SPOT").Count;
 
         public CustomActionsGolf(string filePath)
         {
@@ -69,7 +71,7 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
                 CurrentAction = currentAction,
                 NextAction = nextAction,
                 CurrentStep = currentStep,
-                TotalSteps = actions.Count,
+                TotalSteps = TotalActions,
                 DurationMs = durationMs
             });
         }
@@ -90,15 +92,36 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
             {
                 ReportStatus("Running");
 
+                int executedStep = 0;
+                int totalExecutableActions = TotalActions;
+
                 for (int i = 0; i < actions.Count; i++)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
                     var actionCommand = actions[i];
-                    string nextAction = (i + 1 < actions.Count) ? actions[i + 1].Action : "Done";
+
+                    // Skip tee position actions - user positions themselves manually
+                    if (actionCommand.Action == "MOVE TO RIGHT TEE SPOT" || actionCommand.Action == "MOVE TO LEFT TEE SPOT")
+                    {
+                        continue;
+                    }
+
+                    executedStep++;
+
+                    // Find next executable action for display
+                    string nextAction = "Done";
+                    for (int j = i + 1; j < actions.Count; j++)
+                    {
+                        if (actions[j].Action != "MOVE TO RIGHT TEE SPOT" && actions[j].Action != "MOVE TO LEFT TEE SPOT")
+                        {
+                            nextAction = actions[j].Action;
+                            break;
+                        }
+                    }
 
                     // Report progress
-                    ReportProgress(i + 1, actionCommand.Action, nextAction, actionCommand.Duration);
+                    ReportProgress(executedStep, actionCommand.Action, nextAction, actionCommand.Duration);
 
                     // Handle delay time actions separately
                     if (actionCommand.Action == "DELAY TIME")
@@ -110,20 +133,9 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
                     // Process other actions that should correspond to actual key presses
                     if (keys.ActionKeyMap.TryGetValue(actionCommand.Action, out VirtualKeyCode keyCode))
                     {
-                        // Tee movements use the duration to wait after the movement
-                        if (actionCommand.Action == "MOVE TO RIGHT TEE SPOT" || actionCommand.Action == "MOVE TO LEFT TEE SPOT")
-                        {
-                            InputSimulator.SimulateKeyDown(keyCode);
-                            await Task.Delay(actionCommand.Duration, cancellationToken);
-                            InputSimulator.SimulateKeyUp(keyCode);
-                            await PrepareToHitBall();
-                        }
-                        else
-                        {
-                            InputSimulator.SimulateKeyDown(keyCode);
-                            await Task.Delay(actionCommand.Duration, cancellationToken);
-                            InputSimulator.SimulateKeyUp(keyCode);
-                        }
+                        InputSimulator.SimulateKeyDown(keyCode);
+                        await Task.Delay(actionCommand.Duration, cancellationToken);
+                        InputSimulator.SimulateKeyUp(keyCode);
                     }
                     else
                     {

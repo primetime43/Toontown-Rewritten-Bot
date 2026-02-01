@@ -5,13 +5,13 @@
     "Duration": 15000
   },
   {
-    "Action": "TURN RIGHT",
-    "Command": "TURN RIGHT",
-    "Duration": 350
+    "Action": "AIM STRAIGHT",
+    "Command": "AIM STRAIGHT",
+    "Duration": 50
   },
   {
     "Action": "SWING POWER",
     "Command": "SWING POWER",
-    "Duration": 1375
+    "Duration": 1575
   }
 ]

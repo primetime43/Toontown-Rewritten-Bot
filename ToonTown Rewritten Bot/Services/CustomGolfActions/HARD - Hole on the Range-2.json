@@ -5,6 +5,11 @@
     "Duration": 15000
   },
   {
+    "Action": "MOVE TO LEFT TEE SPOT",
+    "Command": "LEFT",
+    "Duration": 100
+  },
+  {
     "Action": "AIM STRAIGHT",
     "Command": "AIM STRAIGHT",
     "Duration": 50
@@ -12,6 +17,6 @@
   {
     "Action": "SWING POWER",
     "Command": "SWING POWER",
-    "Duration": 1400
+    "Duration": 1750
   }
 ]

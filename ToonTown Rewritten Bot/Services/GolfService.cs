@@ -217,9 +217,13 @@ namespace ToonTown_Rewritten_Bot.Services
                         continue;
                     }
 
+                    // Get position from action file for display
+                    string filePath = GetCustomGolfActionFilePath(courseFile);
+                    var summary = GetShotSummaryFromFile(filePath);
+
                     RaiseStatusChanged($"Detected: {courseFile}", courseFile, holesPlayed + 1, holesPerRound);
                     UpdateOverlayStatus($"Hole {holesPlayed + 1}/{holesPerRound}: {courseFile}");
-                    UpdateOverlayCourseName(courseFile);
+                    UpdateOverlayCourseInfo(courseFile, summary.Position);
 
                     // Wait for ready to swing
                     RaiseStatusChanged("Waiting for turn...", courseFile, holesPlayed + 1, holesPerRound);
@@ -232,7 +236,6 @@ namespace ToonTown_Rewritten_Bot.Services
                     await Task.Delay(1500, cancellationToken);
 
                     // Execute golf actions
-                    string filePath = GetCustomGolfActionFilePath(courseFile);
                     holesPlayed++;
                     RaiseStatusChanged($"Playing hole {holesPlayed}/{holesPerRound}: {courseFile}", courseFile, holesPlayed, holesPerRound);
 
@@ -253,7 +256,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     {
                         RaiseStatusChanged("Waiting for next hole...", courseFile, holesPlayed, holesPerRound);
                         UpdateOverlayStatus("Waiting for next hole...");
-                        UpdateOverlayCourseName(""); // Clear for next detection
+                        UpdateOverlayCourseInfo("", ""); // Clear for next detection
                         await Task.Delay(3000, cancellationToken);
                     }
                 }
@@ -284,11 +287,11 @@ namespace ToonTown_Rewritten_Bot.Services
             }
         }
 
-        private static void UpdateOverlayCourseName(string courseName)
+        private static void UpdateOverlayCourseInfo(string courseName, string position)
         {
             if (_overlay != null && !_overlay.IsDisposed)
             {
-                _overlay.BeginInvoke(new Action(() => _overlay.SetCourseName(courseName)));
+                _overlay.BeginInvoke(new Action(() => _overlay.SetCourseInfo(courseName, position)));
             }
         }
 
@@ -366,6 +369,96 @@ namespace ToonTown_Rewritten_Bot.Services
         {
             string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return Path.Combine(exePath, "Custom Golf Actions", fileName + ".json");
+        }
+
+        /// <summary>
+        /// Represents a summary of a golf shot for display to the user.
+        /// </summary>
+        public class GolfShotSummary
+        {
+            public string Position { get; set; } = "Center";
+            public string Aim { get; set; } = "Straight";
+            public int Power { get; set; }
+            public int DelaySeconds { get; set; }
+            public bool RequiresPositionChange => Position != "Center";
+
+            public string GetInstructions()
+            {
+                var instructions = new System.Text.StringBuilder();
+
+                instructions.AppendLine("━━━ YOU DO (before starting) ━━━");
+                if (RequiresPositionChange)
+                {
+                    instructions.AppendLine($"⚠️ Move to the {Position.ToUpper()} tee position!");
+                }
+                else
+                {
+                    instructions.AppendLine("► Stay on the CENTER tee position");
+                }
+
+                instructions.AppendLine();
+                instructions.AppendLine("━━━ BOT WILL DO ━━━");
+                instructions.AppendLine($"► Aim: {Aim}");
+                instructions.AppendLine($"► Power: ~{Power}%");
+                instructions.AppendLine();
+                instructions.AppendLine($"You have {DelaySeconds} seconds after starting to switch to TTR");
+
+                return instructions.ToString();
+            }
+
+            public override string ToString()
+            {
+                return $"Position: {Position} | Aim: {Aim} | Power: ~{Power}%";
+            }
+        }
+
+        /// <summary>
+        /// Analyzes golf actions and returns a human-readable summary.
+        /// </summary>
+        public static GolfShotSummary GetShotSummary(GolfActionCommand[] actions)
+        {
+            var summary = new GolfShotSummary();
+
+            foreach (var action in actions)
+            {
+                switch (action.Action)
+                {
+                    case "MOVE TO LEFT TEE SPOT":
+                        summary.Position = "Left";
+                        break;
+                    case "MOVE TO RIGHT TEE SPOT":
+                        summary.Position = "Right";
+                        break;
+                    case "TURN LEFT":
+                        int leftTaps = action.Duration / 22; // Approximate taps
+                        summary.Aim = $"{leftTaps} left";
+                        break;
+                    case "TURN RIGHT":
+                        int rightTaps = action.Duration / 22; // Approximate taps
+                        summary.Aim = $"{rightTaps} right";
+                        break;
+                    case "AIM STRAIGHT":
+                        summary.Aim = "Straight (up)";
+                        break;
+                    case "SWING POWER":
+                        summary.Power = action.Duration / 25; // Approximate power %
+                        break;
+                    case "DELAY TIME":
+                        summary.DelaySeconds = action.Duration / 1000;
+                        break;
+                }
+            }
+
+            return summary;
+        }
+
+        /// <summary>
+        /// Gets a shot summary from a file path.
+        /// </summary>
+        public static GolfShotSummary GetShotSummaryFromFile(string filePath)
+        {
+            var actions = GetCustomGolfActions(filePath);
+            return GetShotSummary(actions);
         }
     }
 }
