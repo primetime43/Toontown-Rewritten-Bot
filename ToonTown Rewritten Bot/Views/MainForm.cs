@@ -55,8 +55,9 @@ namespace ToonTown_Rewritten_Bot
 
             CoreFunctionality.EnsureAllEmbeddedJsonFilesExist();
 
-            // Move this eventually
+            // Load custom actions for Golf and Custom Fishing tabs
             LoadCustomActions("Golf", customGolfFilesComboBox);
+            LoadCustomActions("Fishing", customFishingFilesComboBox);
 
             CoordinatesManager.ReadCoordinates();
             LoadCoordinatesIntoResetBox();
@@ -90,6 +91,15 @@ namespace ToonTown_Rewritten_Bot
             autoDetectFishCheckBox.Checked = prefs.AutoDetectFish;
             waitForFishCheckBox.Checked = prefs.WaitForFishBeforeCasting;
             numericUpDownWaitAttempts.Value = Math.Max(numericUpDownWaitAttempts.Minimum, Math.Min(numericUpDownWaitAttempts.Maximum, prefs.MaxFishWaitAttempts));
+
+            // Custom Fishing preferences
+            if (!string.IsNullOrEmpty(prefs.CustomFishingFile))
+            {
+                int customFishingIndex = customFishingFilesComboBox.FindStringExact(prefs.CustomFishingFile);
+                if (customFishingIndex >= 0) customFishingFilesComboBox.SelectedIndex = customFishingIndex;
+            }
+            numericUpDownCustomCasts.Value = Math.Max(numericUpDownCustomCasts.Minimum, Math.Min(numericUpDownCustomCasts.Maximum, prefs.CustomFishingCasts));
+            numericUpDownCustomSells.Value = Math.Max(numericUpDownCustomSells.Minimum, Math.Min(numericUpDownCustomSells.Maximum, prefs.CustomFishingSells));
 
             // Golf preferences
             if (!string.IsNullOrEmpty(prefs.GolfCourse))
@@ -140,6 +150,11 @@ namespace ToonTown_Rewritten_Bot
             prefs.AutoDetectFish = autoDetectFishCheckBox.Checked;
             prefs.WaitForFishBeforeCasting = waitForFishCheckBox.Checked;
             prefs.MaxFishWaitAttempts = (int)numericUpDownWaitAttempts.Value;
+
+            // Custom Fishing preferences
+            prefs.CustomFishingFile = customFishingFilesComboBox.SelectedItem?.ToString() ?? "";
+            prefs.CustomFishingCasts = (int)numericUpDownCustomCasts.Value;
+            prefs.CustomFishingSells = (int)numericUpDownCustomSells.Value;
 
             // Golf preferences
             prefs.GolfCourse = customGolfFilesComboBox.SelectedItem?.ToString() ?? "";
@@ -449,44 +464,13 @@ namespace ToonTown_Rewritten_Bot
                 int numberOfCasts = Convert.ToInt32(numericUpDown3.Value); // Number of times to cast the line
                 int numberOfSells = Convert.ToInt32(numericUpDown4.Value); // Number of times to sell the caught fish
 
-                // Check if the selected location is to perform custom fishing actions
-                if (selectedLocation == "CUSTOM FISHING ACTION")
-                {
-                    var result = MessageBox.Show("Make sure you're in the fishing dock before pressing OK!",
-                        "Ready to Fish?", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                    if (result != DialogResult.OK)
-                        return;
+                FishingLocationMessages.TellFishingLocation(selectedLocation); // Provide location-specific messages
+                var result = MessageBox.Show("Make sure you're in the fishing dock before pressing OK!",
+                    "Ready to Fish?", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                if (result != DialogResult.OK)
+                    return;
 
-                    string selectedFileName = customFishingFilesComboBox.SelectedItem?.ToString();
-                    if (string.IsNullOrEmpty(selectedFileName))
-                    {
-                        MessageBox.Show("Please select a custom fishing action.");
-                        return;
-                    }
-
-                    string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                    string filePath = Path.Combine(exePath, "Custom Fishing Actions", selectedFileName);
-
-                    // Decide whether to debug custom actions or perform them normally
-                    if (debugCustomActionsCheckBox.Checked)
-                    {
-                        await _fishingService.StartCustomFishingDebugging(filePath + ".json"); // Debugging custom fishing actions
-                    }
-                    else
-                    {
-                        await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, filePath + ".json", autoDetectFishCheckBox.Checked); // Perform custom fishing actions
-                    }
-                }
-                else
-                {
-                    FishingLocationMessages.TellFishingLocation(selectedLocation); // Provide location-specific messages
-                    var result = MessageBox.Show("Make sure you're in the fishing dock before pressing OK!",
-                        "Ready to Fish?", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                    if (result != DialogResult.OK)
-                        return;
-
-                    await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, "", autoDetectFishCheckBox.Checked); // Start standard fishing
-                }
+                await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, "", autoDetectFishCheckBox.Checked);
             }
             catch (TaskCanceledException)
             {
@@ -1253,20 +1237,6 @@ namespace ToonTown_Rewritten_Bot
                 label12.Text = FishingLocationMessages.GetLocationMessage(selectedLocation);
                 label12.Visible = true;
 
-                if (selectedLocation == "CUSTOM FISHING ACTION")
-                {
-                    debugCustomActionsCheckBox.Visible = true;
-                    debugCustomActionsCheckBox.Enabled = true;
-                    customFishingFilesComboBox.Visible = true;
-                    LoadCustomActions("Fishing", customFishingFilesComboBox);
-                }
-                else
-                {
-                    debugCustomActionsCheckBox.Visible = false;
-                    debugCustomActionsCheckBox.Enabled = false;
-                    customFishingFilesComboBox.Visible = false;
-                }
-
                 // Hide "Number of Sells" controls when Fish Anywhere is selected
                 // (no sell cycle in fish anywhere mode)
                 bool showSellsControls = selectedLocation != FishingLocationNames.FishAnywhere;
@@ -1284,6 +1254,83 @@ namespace ToonTown_Rewritten_Bot
                 form.ShowDialog(); // This will block until the form is closed
             }
             LoadCustomActions("Fishing", customFishingFilesComboBox); // load fishing actions after the form is closed
+        }
+
+        /// <summary>
+        /// Starts custom fishing with the selected action file.
+        /// </summary>
+        private async void startCustomFishingBtn_Click(object sender, EventArgs e)
+        {
+            // Reset the CancellationTokenSource if it's null or was previously cancelled
+            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+            {
+                _cancellationTokenSource?.Dispose();
+                _cancellationTokenSource = new CancellationTokenSource();
+            }
+
+            var token = _cancellationTokenSource.Token;
+
+            // Set the fishing settings from UI controls
+            FishingStrategyBase.BiteTimeoutSeconds = Convert.ToInt32(numericUpDownBiteTimeout.Value);
+            FishingStrategyBase.WaitForFishBeforeCasting = waitForFishCheckBox.Checked && autoDetectFishCheckBox.Checked;
+            FishingStrategyBase.MaxFishWaitAttempts = Convert.ToInt32(numericUpDownWaitAttempts.Value);
+
+            try
+            {
+                string selectedFileName = customFishingFilesComboBox.SelectedItem?.ToString();
+                if (string.IsNullOrEmpty(selectedFileName))
+                {
+                    MessageBox.Show("Please select a custom fishing action file.", "No File Selected",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int numberOfCasts = Convert.ToInt32(numericUpDownCustomCasts.Value);
+                int numberOfSells = Convert.ToInt32(numericUpDownCustomSells.Value);
+
+                var result = MessageBox.Show("Make sure you're at the fishing dock before pressing OK!",
+                    "Ready to Fish?", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                if (result != DialogResult.OK)
+                    return;
+
+                string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string filePath = Path.Combine(exePath, "Custom Fishing Actions", selectedFileName);
+
+                // Decide whether to debug custom actions or perform them normally
+                if (debugCustomActionsCheckBox.Checked)
+                {
+                    await _fishingService.StartCustomFishingDebugging(filePath + ".json");
+                }
+                else
+                {
+                    await _fishingService.StartFishing("CUSTOM FISHING ACTION", numberOfCasts, numberOfSells,
+                        randomFishingCheckBox.Checked, token, filePath + ".json", autoDetectFishCheckBox.Checked);
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                MessageBox.Show("Custom fishing was cancelled.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Stops the current custom fishing operation.
+        /// </summary>
+        private void stopCustomFishingBtn_Click(object sender, EventArgs e)
+        {
+            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+            {
+                MessageBox.Show("Custom fishing is not currently in progress.", "Not Running",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            _cancellationTokenSource.Cancel();
+            MessageBox.Show("Custom fishing stopped!", "Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void LoadCustomActions(string actionType, ComboBox comboBox)
