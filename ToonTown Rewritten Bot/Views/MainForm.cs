@@ -97,6 +97,13 @@ namespace ToonTown_Rewritten_Bot
         {
             if (key == Keys.Escape || key == Keys.F12)
             {
+                // Ignore simulated key presses (e.g., from StraightenToonAsync sending ESC to cancel a cast)
+                if (FishingStrategyBase.IsSimulatedKeyPress)
+                {
+                    System.Diagnostics.Debug.WriteLine("[MainForm] Ignoring simulated ESC key press");
+                    return;
+                }
+
                 // Stop all active tasks
                 if (this.InvokeRequired)
                 {

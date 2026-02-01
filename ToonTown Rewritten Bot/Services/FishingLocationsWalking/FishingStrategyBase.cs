@@ -47,6 +47,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public static bool IsPaused { get; private set; } = false;
 
         /// <summary>
+        /// Static flag indicating a simulated key press (like ESC) is in progress.
+        /// Used to prevent global keyboard hooks from interpreting bot-generated keypresses as user input.
+        /// </summary>
+        public static bool IsSimulatedKeyPress { get; set; } = false;
+
+        /// <summary>
         /// Event raised when pause state changes.
         /// </summary>
         public static event Action<bool> PauseStateChanged;
@@ -541,8 +547,17 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             else
             {
                 // Fallback: press ESC to close the popup
+                // Set flag to prevent global keyboard hook from treating this as a user-initiated cancel
                 System.Diagnostics.Debug.WriteLine("[FishingStrategy] Could not find Exit button, pressing ESC...");
-                SendKeys.SendWait("{ESC}");
+                IsSimulatedKeyPress = true;
+                try
+                {
+                    SendKeys.SendWait("{ESC}");
+                }
+                finally
+                {
+                    IsSimulatedKeyPress = false;
+                }
                 await Task.Delay(500, cancellationToken);
             }
         }
@@ -571,7 +586,16 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             await Task.Delay(300, cancellationToken);
 
             // Press ESC to cancel the cast WHILE still holding the mouse button
-            SendKeys.SendWait("{ESC}");
+            // Set flag to prevent global keyboard hook from treating this as a user-initiated cancel
+            IsSimulatedKeyPress = true;
+            try
+            {
+                SendKeys.SendWait("{ESC}");
+            }
+            finally
+            {
+                IsSimulatedKeyPress = false;
+            }
             await Task.Delay(200, cancellationToken);
 
             // Now release the mouse (cast is already cancelled)
