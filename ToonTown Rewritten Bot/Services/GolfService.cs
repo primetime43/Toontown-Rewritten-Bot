@@ -33,7 +33,7 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static event EventHandler<AutoGolfStatusEventArgs> AutoGolfStatusChanged;
 
-        public static async Task StartCustomGolfAction(string filePath, CancellationToken cancellationToken, bool showOverlay = true)
+        public static async Task StartCustomGolfAction(string filePath, CancellationToken cancellationToken, bool showOverlay = true, string courseName = null)
         {
             CustomActionsGolf customGolfActions = new CustomActionsGolf(filePath);
 
@@ -42,6 +42,13 @@ namespace ToonTown_Rewritten_Bot.Services
             {
                 ShowOverlay();
                 _overlay?.SetTotalSteps(customGolfActions.TotalActions);
+
+                // Set course name and position if provided (manual mode)
+                if (!string.IsNullOrEmpty(courseName))
+                {
+                    var summary = GetShotSummaryFromFile(filePath);
+                    _overlay?.SetCourseInfo(courseName, summary.Position);
+                }
 
                 // Subscribe to progress events
                 customGolfActions.ProgressChanged += (s, e) =>

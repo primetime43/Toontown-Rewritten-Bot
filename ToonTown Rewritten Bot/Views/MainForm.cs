@@ -1269,7 +1269,7 @@ namespace ToonTown_Rewritten_Bot
             try
             {
                 bool showOverlay = showGolfOverlayCheckBox.Checked;
-                await GolfService.StartCustomGolfAction(filePath, _cancellationTokenSource.Token, showOverlay);
+                await GolfService.StartCustomGolfAction(filePath, _cancellationTokenSource.Token, showOverlay, selectedFileName);
                 GolfService.HideOverlay();
                 CoreFunctionality.BringBotWindowToFront();
                 MessageBox.Show("Golf actions completed successfully.", "Golf Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
