@@ -54,6 +54,8 @@
             numericUpDownCustomSells = new System.Windows.Forms.NumericUpDown();
             groupBoxCustomFishingHelp = new System.Windows.Forms.GroupBox();
             labelCustomFishingHelp = new System.Windows.Forms.Label();
+            customScanAreaBtn = new System.Windows.Forms.Button();
+            customPondColorsBtn = new System.Windows.Forms.Button();
             calibrateColorsBtn = new System.Windows.Forms.Button();
             editScanAreaBtn = new System.Windows.Forms.Button();
             showOverlayCheckBox = new System.Windows.Forms.CheckBox();
@@ -573,6 +575,8 @@
             groupBoxCustomFishing.Controls.Add(startCustomFishingBtn);
             groupBoxCustomFishing.Controls.Add(stopCustomFishingBtn);
             groupBoxCustomFishing.Controls.Add(createCustomFishingActionsBtn);
+            groupBoxCustomFishing.Controls.Add(customScanAreaBtn);
+            groupBoxCustomFishing.Controls.Add(customPondColorsBtn);
             groupBoxCustomFishing.Controls.Add(debugCustomActionsCheckBox);
             groupBoxCustomFishing.Location = new System.Drawing.Point(9, 10);
             groupBoxCustomFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -679,6 +683,30 @@
             createCustomFishingActionsBtn.UseVisualStyleBackColor = true;
             createCustomFishingActionsBtn.Click += createCustomFishingActionsBtn_Click;
             //
+            // customScanAreaBtn
+            //
+            customScanAreaBtn.Location = new System.Drawing.Point(195, 200);
+            customScanAreaBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            customScanAreaBtn.Name = "customScanAreaBtn";
+            customScanAreaBtn.Size = new System.Drawing.Size(85, 40);
+            customScanAreaBtn.TabIndex = 10;
+            customScanAreaBtn.Text = "Scan Area";
+            toolTip1.SetToolTip(customScanAreaBtn, "Adjust the scan area for fish detection at your custom location");
+            customScanAreaBtn.UseVisualStyleBackColor = true;
+            customScanAreaBtn.Click += customScanAreaBtn_Click;
+            //
+            // customPondColorsBtn
+            //
+            customPondColorsBtn.Location = new System.Drawing.Point(285, 200);
+            customPondColorsBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            customPondColorsBtn.Name = "customPondColorsBtn";
+            customPondColorsBtn.Size = new System.Drawing.Size(85, 40);
+            customPondColorsBtn.TabIndex = 11;
+            customPondColorsBtn.Text = "Pond Colors";
+            toolTip1.SetToolTip(customPondColorsBtn, "Calibrate pond water and fish shadow colors for your custom location");
+            customPondColorsBtn.UseVisualStyleBackColor = true;
+            customPondColorsBtn.Click += customPondColorsBtn_Click;
+            //
             // debugCustomActionsCheckBox
             //
             debugCustomActionsCheckBox.AutoSize = true;
@@ -687,8 +715,8 @@
             debugCustomActionsCheckBox.Name = "debugCustomActionsCheckBox";
             debugCustomActionsCheckBox.Size = new System.Drawing.Size(162, 20);
             debugCustomActionsCheckBox.TabIndex = 9;
-            debugCustomActionsCheckBox.Text = "Debug Custom Actions";
-            toolTip1.SetToolTip(debugCustomActionsCheckBox, "Enable to debug the walk path without fishing");
+            debugCustomActionsCheckBox.Text = "Test Walk Path Only";
+            toolTip1.SetToolTip(debugCustomActionsCheckBox, "When checked, clicking Start will ONLY test your walk path\n(dock → fisherman → back) without any fishing.\n\nUse this to verify your custom action works correctly\nbefore running a full fishing session.");
             debugCustomActionsCheckBox.UseVisualStyleBackColor = true;
             //
             // groupBoxCustomFishingHelp
@@ -710,7 +738,7 @@
             labelCustomFishingHelp.Name = "labelCustomFishingHelp";
             labelCustomFishingHelp.Size = new System.Drawing.Size(180, 250);
             labelCustomFishingHelp.TabIndex = 0;
-            labelCustomFishingHelp.Text = "Custom fishing lets you create walk paths for any fishing location.\n\n1. Click 'Create/Edit Actions' to record a walk path\n\n2. Select your custom action from the dropdown\n\n3. Set casts and sells\n\n4. Stand at your fishing dock and click Start\n\nThe bot will fish, then walk to sell and return.";
+            labelCustomFishingHelp.Text = "Custom fishing lets you create walk paths for any fishing location.\n\n1. Click 'Create/Edit Actions' to record a walk path\n\n2. Select your custom action\n\n3. Use 'Scan Area' and 'Pond Colors' to calibrate fish detection\n\n4. Set casts and sells\n\n5. Stand at your dock and click Start";
             //
             // Racing
             // 
@@ -1902,6 +1930,8 @@
         private System.Windows.Forms.Button stopCustomFishingBtn;
         private System.Windows.Forms.GroupBox groupBoxCustomFishingHelp;
         private System.Windows.Forms.Label labelCustomFishingHelp;
+        private System.Windows.Forms.Button customScanAreaBtn;
+        private System.Windows.Forms.Button customPondColorsBtn;
     }
 }
 
