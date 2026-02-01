@@ -1230,6 +1230,21 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
+            // Remind user about control settings
+            var result = MessageBox.Show(
+                "Before starting, please verify:\n\n" +
+                "• Your golf swing key in TTR is set to CTRL (the default)\n" +
+                "• You are standing at the tee in the game\n\n" +
+                "If your swing key is set to something else (like Spacebar), " +
+                "the bot will not work correctly.\n\n" +
+                "Continue?",
+                "Golf Control Settings",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Information);
+
+            if (result != DialogResult.OK)
+                return;
+
             // Get the full path to the selected golf action file.
             string filePath = GolfService.GetCustomGolfActionFilePath(selectedFileName);
 
@@ -1274,6 +1289,21 @@ namespace ToonTown_Rewritten_Bot
                 _isAutoGolfRunning = false;
                 return;
             }
+
+            // Remind user about control settings
+            var result = MessageBox.Show(
+                "Before starting Auto Golf, please verify:\n\n" +
+                "• Your golf swing key in TTR is set to CTRL (the default)\n" +
+                "• You are at the golf course in the game\n\n" +
+                "If your swing key is set to something else (like Spacebar), " +
+                "the bot will not work correctly.\n\n" +
+                "Continue?",
+                "Golf Control Settings",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Information);
+
+            if (result != DialogResult.OK)
+                return;
 
             if (_cancellationTokenSource != null)
             {

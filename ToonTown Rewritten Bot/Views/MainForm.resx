@@ -3259,17 +3259,19 @@
     <value>True</value>
   </metadata>
   <data name="golfInstructionsLabel.Text" xml:space="preserve">
-    <value>1. Select a golf course from the dropdown
+    <value>IMPORTANT: Your golf swing key in TTR must be set to CTRL (default).
 
-2. Preview the actions that will run
+1. Select a golf course from the dropdown
 
-3. In TTR, go to the golf course and stand at the tee
+2. Preview the actions
 
-4. Click 'Start Golf' and switch to TTR quickly
+3. In TTR, stand at the tee
+
+4. Click 'Start Golf' and switch to TTR
 
 5. The bot will auto-swing!
 
-Tip: Create custom actions for courses not listed.</value>
+Tip: If golf isn't working, check Options &gt; Controls in TTR.</value>
   </data>
   <data name="richTextBox2.Text" xml:space="preserve">
     <value>Note: Before starting to train, call your doodle and have it's profile box open; meaning the box 
