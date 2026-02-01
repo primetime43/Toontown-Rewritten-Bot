@@ -452,7 +452,11 @@ namespace ToonTown_Rewritten_Bot
                 // Check if the selected location is to perform custom fishing actions
                 if (selectedLocation == "CUSTOM FISHING ACTION")
                 {
-                    MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
+                    var result = MessageBox.Show("Make sure you're in the fishing dock before pressing OK!",
+                        "Ready to Fish?", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                    if (result != DialogResult.OK)
+                        return;
+
                     string selectedFileName = customFishingFilesComboBox.SelectedItem?.ToString();
                     if (string.IsNullOrEmpty(selectedFileName))
                     {
@@ -476,7 +480,11 @@ namespace ToonTown_Rewritten_Bot
                 else
                 {
                     FishingLocationMessages.TellFishingLocation(selectedLocation); // Provide location-specific messages
-                    MessageBox.Show("Make sure you're in the fishing dock before pressing OK!");
+                    var result = MessageBox.Show("Make sure you're in the fishing dock before pressing OK!",
+                        "Ready to Fish?", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                    if (result != DialogResult.OK)
+                        return;
+
                     await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, "", autoDetectFishCheckBox.Checked); // Start standard fishing
                 }
             }
