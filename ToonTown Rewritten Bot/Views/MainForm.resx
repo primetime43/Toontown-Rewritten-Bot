@@ -3263,15 +3263,16 @@
 
 1. Select a golf course from the dropdown
 
-2. Preview the actions
+2. Preview - check if LEFT/RIGHT tee position is needed
 
-3. In TTR, stand at the tee
+3. In TTR, move to the correct tee position if required
 
-4. Click 'Start Golf' and switch to TTR
+4. Click 'Start Golf' and switch to TTR within 15 seconds
 
-5. The bot will auto-swing!
+5. Bot waits 15 sec (for position lock), then aims and swings!
 
-Tip: If golf isn't working, check Options &gt; Controls in TTR.</value>
+Note: Some courses require LEFT or RIGHT tee position.
+The preview tells you where to stand - you must move there yourself.</value>
   </data>
   <data name="richTextBox2.Text" xml:space="preserve">
     <value>Note: Before starting to train, call your doodle and have it's profile box open; meaning the box 
