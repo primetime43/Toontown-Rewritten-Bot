@@ -110,6 +110,17 @@
             checkBox1 = new System.Windows.Forms.CheckBox();
             messageToType = new System.Windows.Forms.TextBox();
             startSpamButton = new System.Windows.Forms.Button();
+            Settings = new System.Windows.Forms.TabPage();
+            groupBoxPreferences = new System.Windows.Forms.GroupBox();
+            preferencesListBox = new System.Windows.Forms.ListBox();
+            btnRefreshPreferences = new System.Windows.Forms.Button();
+            btnResetPreferences = new System.Windows.Forms.Button();
+            btnOpenPreferencesFile = new System.Windows.Forms.Button();
+            btnSavePreferencesNow = new System.Windows.Forms.Button();
+            groupBoxKeyboardShortcuts = new System.Windows.Forms.GroupBox();
+            labelKeyboardShortcuts = new System.Windows.Forms.Label();
+            groupBoxAboutSettings = new System.Windows.Forms.GroupBox();
+            labelSettingsInfo = new System.Windows.Forms.Label();
             Dev = new System.Windows.Forms.TabPage();
             groupBoxTemplates = new System.Windows.Forms.GroupBox();
             btnOpenTemplateDefinitions = new System.Windows.Forms.Button();
@@ -159,6 +170,10 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).BeginInit();
+            Settings.SuspendLayout();
+            groupBoxPreferences.SuspendLayout();
+            groupBoxKeyboardShortcuts.SuspendLayout();
+            groupBoxAboutSettings.SuspendLayout();
             Dev.SuspendLayout();
             groupBoxTemplates.SuspendLayout();
             groupBox9.SuspendLayout();
@@ -174,6 +189,7 @@
             tabControl1.Controls.Add(Golf);
             tabControl1.Controls.Add(Doodles);
             tabControl1.Controls.Add(Misc);
+            tabControl1.Controls.Add(Settings);
             tabControl1.Controls.Add(Dev);
             tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
@@ -1116,7 +1132,138 @@
             toolTip1.SetToolTip(startSpamButton, "Press the ALT key to stop the spamming loop at any time!");
             startSpamButton.UseVisualStyleBackColor = true;
             startSpamButton.Click += startSpamButton_Click;
-            // 
+            //
+            // Settings
+            //
+            Settings.Controls.Add(groupBoxPreferences);
+            Settings.Controls.Add(groupBoxKeyboardShortcuts);
+            Settings.Controls.Add(groupBoxAboutSettings);
+            Settings.Location = new System.Drawing.Point(4, 25);
+            Settings.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Settings.Name = "Settings";
+            Settings.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Settings.Size = new System.Drawing.Size(612, 391);
+            Settings.TabIndex = 8;
+            Settings.Text = "Settings";
+            Settings.UseVisualStyleBackColor = true;
+            //
+            // groupBoxPreferences
+            //
+            groupBoxPreferences.Controls.Add(preferencesListBox);
+            groupBoxPreferences.Controls.Add(btnRefreshPreferences);
+            groupBoxPreferences.Controls.Add(btnResetPreferences);
+            groupBoxPreferences.Controls.Add(btnOpenPreferencesFile);
+            groupBoxPreferences.Controls.Add(btnSavePreferencesNow);
+            groupBoxPreferences.Location = new System.Drawing.Point(9, 10);
+            groupBoxPreferences.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxPreferences.Name = "groupBoxPreferences";
+            groupBoxPreferences.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxPreferences.Size = new System.Drawing.Size(350, 280);
+            groupBoxPreferences.TabIndex = 0;
+            groupBoxPreferences.TabStop = false;
+            groupBoxPreferences.Text = "Saved Preferences";
+            //
+            // preferencesListBox
+            //
+            preferencesListBox.FormattingEnabled = true;
+            preferencesListBox.ItemHeight = 16;
+            preferencesListBox.Location = new System.Drawing.Point(10, 22);
+            preferencesListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            preferencesListBox.Name = "preferencesListBox";
+            preferencesListBox.Size = new System.Drawing.Size(330, 196);
+            preferencesListBox.TabIndex = 0;
+            //
+            // btnRefreshPreferences
+            //
+            btnRefreshPreferences.Location = new System.Drawing.Point(10, 230);
+            btnRefreshPreferences.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnRefreshPreferences.Name = "btnRefreshPreferences";
+            btnRefreshPreferences.Size = new System.Drawing.Size(75, 35);
+            btnRefreshPreferences.TabIndex = 1;
+            btnRefreshPreferences.Text = "Refresh";
+            toolTip1.SetToolTip(btnRefreshPreferences, "Refresh the preferences list from the saved file");
+            btnRefreshPreferences.UseVisualStyleBackColor = true;
+            btnRefreshPreferences.Click += btnRefreshPreferences_Click;
+            //
+            // btnSavePreferencesNow
+            //
+            btnSavePreferencesNow.Location = new System.Drawing.Point(95, 230);
+            btnSavePreferencesNow.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnSavePreferencesNow.Name = "btnSavePreferencesNow";
+            btnSavePreferencesNow.Size = new System.Drawing.Size(85, 35);
+            btnSavePreferencesNow.TabIndex = 2;
+            btnSavePreferencesNow.Text = "Save Now";
+            toolTip1.SetToolTip(btnSavePreferencesNow, "Save current settings to preferences file immediately");
+            btnSavePreferencesNow.UseVisualStyleBackColor = true;
+            btnSavePreferencesNow.Click += btnSavePreferencesNow_Click;
+            //
+            // btnOpenPreferencesFile
+            //
+            btnOpenPreferencesFile.Location = new System.Drawing.Point(190, 230);
+            btnOpenPreferencesFile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnOpenPreferencesFile.Name = "btnOpenPreferencesFile";
+            btnOpenPreferencesFile.Size = new System.Drawing.Size(75, 35);
+            btnOpenPreferencesFile.TabIndex = 3;
+            btnOpenPreferencesFile.Text = "Open File";
+            toolTip1.SetToolTip(btnOpenPreferencesFile, "Open the preferences JSON file in your default editor");
+            btnOpenPreferencesFile.UseVisualStyleBackColor = true;
+            btnOpenPreferencesFile.Click += btnOpenPreferencesFile_Click;
+            //
+            // btnResetPreferences
+            //
+            btnResetPreferences.ForeColor = System.Drawing.Color.Red;
+            btnResetPreferences.Location = new System.Drawing.Point(275, 230);
+            btnResetPreferences.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnResetPreferences.Name = "btnResetPreferences";
+            btnResetPreferences.Size = new System.Drawing.Size(65, 35);
+            btnResetPreferences.TabIndex = 4;
+            btnResetPreferences.Text = "Reset";
+            toolTip1.SetToolTip(btnResetPreferences, "Reset all preferences to default values");
+            btnResetPreferences.UseVisualStyleBackColor = true;
+            btnResetPreferences.Click += btnResetPreferences_Click;
+            //
+            // groupBoxKeyboardShortcuts
+            //
+            groupBoxKeyboardShortcuts.Controls.Add(labelKeyboardShortcuts);
+            groupBoxKeyboardShortcuts.Location = new System.Drawing.Point(370, 10);
+            groupBoxKeyboardShortcuts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxKeyboardShortcuts.Name = "groupBoxKeyboardShortcuts";
+            groupBoxKeyboardShortcuts.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxKeyboardShortcuts.Size = new System.Drawing.Size(230, 140);
+            groupBoxKeyboardShortcuts.TabIndex = 1;
+            groupBoxKeyboardShortcuts.TabStop = false;
+            groupBoxKeyboardShortcuts.Text = "Keyboard Shortcuts";
+            //
+            // labelKeyboardShortcuts
+            //
+            labelKeyboardShortcuts.Location = new System.Drawing.Point(10, 22);
+            labelKeyboardShortcuts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelKeyboardShortcuts.Name = "labelKeyboardShortcuts";
+            labelKeyboardShortcuts.Size = new System.Drawing.Size(210, 110);
+            labelKeyboardShortcuts.TabIndex = 0;
+            labelKeyboardShortcuts.Text = "Global shortcuts (work in-game):\n\nF11 - Pause/Resume fishing\nEsc or F12 - Stop current task\n\nThese work even when TTR\nhas focus.";
+            //
+            // groupBoxAboutSettings
+            //
+            groupBoxAboutSettings.Controls.Add(labelSettingsInfo);
+            groupBoxAboutSettings.Location = new System.Drawing.Point(370, 160);
+            groupBoxAboutSettings.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxAboutSettings.Name = "groupBoxAboutSettings";
+            groupBoxAboutSettings.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxAboutSettings.Size = new System.Drawing.Size(230, 130);
+            groupBoxAboutSettings.TabIndex = 2;
+            groupBoxAboutSettings.TabStop = false;
+            groupBoxAboutSettings.Text = "About Settings";
+            //
+            // labelSettingsInfo
+            //
+            labelSettingsInfo.Location = new System.Drawing.Point(10, 22);
+            labelSettingsInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelSettingsInfo.Name = "labelSettingsInfo";
+            labelSettingsInfo.Size = new System.Drawing.Size(210, 100);
+            labelSettingsInfo.TabIndex = 0;
+            labelSettingsInfo.Text = "Your preferences are automatically saved when you close the app.\n\nSettings include: fishing options, golf courses, doodle training, and more.";
+            //
             // Dev
             // 
             Dev.Controls.Add(groupBoxTemplates);
@@ -1423,6 +1570,10 @@
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown2).EndInit();
+            Settings.ResumeLayout(false);
+            groupBoxPreferences.ResumeLayout(false);
+            groupBoxKeyboardShortcuts.ResumeLayout(false);
+            groupBoxAboutSettings.ResumeLayout(false);
             Dev.ResumeLayout(false);
             Dev.PerformLayout();
             groupBoxTemplates.ResumeLayout(false);
@@ -1536,6 +1687,17 @@
         private System.Windows.Forms.Label autoGolfStatusLabel;
         private System.Windows.Forms.Label labelBiteTimeout;
         private System.Windows.Forms.NumericUpDown numericUpDownBiteTimeout;
+        private System.Windows.Forms.TabPage Settings;
+        private System.Windows.Forms.GroupBox groupBoxPreferences;
+        private System.Windows.Forms.ListBox preferencesListBox;
+        private System.Windows.Forms.Button btnRefreshPreferences;
+        private System.Windows.Forms.Button btnResetPreferences;
+        private System.Windows.Forms.Button btnOpenPreferencesFile;
+        private System.Windows.Forms.Button btnSavePreferencesNow;
+        private System.Windows.Forms.GroupBox groupBoxKeyboardShortcuts;
+        private System.Windows.Forms.Label labelKeyboardShortcuts;
+        private System.Windows.Forms.GroupBox groupBoxAboutSettings;
+        private System.Windows.Forms.Label labelSettingsInfo;
     }
 }
 
