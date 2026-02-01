@@ -50,6 +50,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public bool AutoDetectFish { get; set; } = false;
         public bool ShowFishingOverlay { get; set; } = false;
         public string CustomFishingFile { get; set; } = "";
+        public bool WaitForFishBeforeCasting { get; set; } = false;
+        public int MaxFishWaitAttempts { get; set; } = 10;
 
         // Golf preferences
         public string GolfCourse { get; set; } = "";
@@ -125,6 +127,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
             AutoDetectFish = false;
             ShowFishingOverlay = false;
             CustomFishingFile = "";
+            WaitForFishBeforeCasting = false;
+            MaxFishWaitAttempts = 10;
 
             GolfCourse = "";
             ShowGolfOverlay = true;
