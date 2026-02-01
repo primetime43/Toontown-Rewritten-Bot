@@ -47,6 +47,8 @@
             autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
             button4 = new System.Windows.Forms.Button();
             randomFishingCheckBox = new System.Windows.Forms.CheckBox();
+            labelBiteTimeout = new System.Windows.Forms.Label();
+            numericUpDownBiteTimeout = new System.Windows.Forms.NumericUpDown();
             label4 = new System.Windows.Forms.Label();
             numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             label3 = new System.Windows.Forms.Label();
@@ -135,6 +137,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             Fishing.SuspendLayout();
             groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownBiteTimeout).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown3).BeginInit();
             Racing.SuspendLayout();
@@ -297,6 +300,8 @@
             groupBox6.Controls.Add(autoDetectFishCheckBox);
             groupBox6.Controls.Add(button4);
             groupBox6.Controls.Add(randomFishingCheckBox);
+            groupBox6.Controls.Add(labelBiteTimeout);
+            groupBox6.Controls.Add(numericUpDownBiteTimeout);
             groupBox6.Controls.Add(label4);
             groupBox6.Controls.Add(numericUpDown4);
             groupBox6.Controls.Add(label3);
@@ -384,7 +389,29 @@
             toolTip1.SetToolTip(randomFishingCheckBox, "This add some randomness and will make it so you \r\nwon't cast your line at the same spot every time!");
             randomFishingCheckBox.UseVisualStyleBackColor = true;
             randomFishingCheckBox.CheckedChanged += randomFishing_CheckedChanged;
-            // 
+            //
+            // labelBiteTimeout
+            //
+            labelBiteTimeout.AutoSize = true;
+            labelBiteTimeout.Location = new System.Drawing.Point(220, 100);
+            labelBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelBiteTimeout.Name = "labelBiteTimeout";
+            labelBiteTimeout.Size = new System.Drawing.Size(108, 16);
+            labelBiteTimeout.TabIndex = 20;
+            labelBiteTimeout.Text = "Bite Timeout (s):";
+            //
+            // numericUpDownBiteTimeout
+            //
+            numericUpDownBiteTimeout.Location = new System.Drawing.Point(355, 98);
+            numericUpDownBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDownBiteTimeout.Maximum = new decimal(new int[] { 120, 0, 0, 0 });
+            numericUpDownBiteTimeout.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
+            numericUpDownBiteTimeout.Name = "numericUpDownBiteTimeout";
+            numericUpDownBiteTimeout.Size = new System.Drawing.Size(55, 22);
+            numericUpDownBiteTimeout.TabIndex = 21;
+            toolTip1.SetToolTip(numericUpDownBiteTimeout, "How many seconds to wait for a fish to bite before timing out");
+            numericUpDownBiteTimeout.Value = new decimal(new int[] { 30, 0, 0, 0 });
+            //
             // label4
             // 
             label4.AutoSize = true;
@@ -421,7 +448,7 @@
             // 
             numericUpDown3.Location = new System.Drawing.Point(145, 66);
             numericUpDown3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            numericUpDown3.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
+            numericUpDown3.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
             numericUpDown3.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDown3.Name = "numericUpDown3";
             numericUpDown3.Size = new System.Drawing.Size(55, 22);
@@ -1368,6 +1395,7 @@
             Fishing.PerformLayout();
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownBiteTimeout).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown4).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown3).EndInit();
             Racing.ResumeLayout(false);
@@ -1506,6 +1534,8 @@
         private System.Windows.Forms.CheckBox showGolfOverlayCheckBox;
         private System.Windows.Forms.Button startAutoGolfBtn;
         private System.Windows.Forms.Label autoGolfStatusLabel;
+        private System.Windows.Forms.Label labelBiteTimeout;
+        private System.Windows.Forms.NumericUpDown numericUpDownBiteTimeout;
     }
 }
 
