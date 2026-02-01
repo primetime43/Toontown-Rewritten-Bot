@@ -59,6 +59,24 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public static int BiteTimeoutSeconds { get; set; } = 30;
 
         /// <summary>
+        /// If true, waits for a fish shadow to be detected before casting.
+        /// When no fish is detected, it will wait and rescan instead of casting anyway.
+        /// </summary>
+        public static bool WaitForFishBeforeCasting { get; set; } = false;
+
+        /// <summary>
+        /// Maximum number of scan attempts when waiting for fish before giving up.
+        /// Only used when WaitForFishBeforeCasting is true. Default is 10 attempts.
+        /// </summary>
+        public static int MaxFishWaitAttempts { get; set; } = 10;
+
+        /// <summary>
+        /// Delay in milliseconds between fish detection scans when waiting for fish.
+        /// Default is 2000ms (2 seconds).
+        /// </summary>
+        public static int FishWaitScanDelayMs { get; set; } = 2000;
+
+        /// <summary>
         /// Event raised when pause state changes.
         /// </summary>
         public static event Action<bool> PauseStateChanged;
@@ -270,6 +288,10 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         _fishCaught++;
                         UpdateOverlayStats();
                         UpdateOverlayAction("Fish caught!", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
+
+                        // Close the fish caught popup so we can see the pond for the next cast
+                        await Task.Delay(500, cancellationToken);
+                        await CloseFishCaughtPopup(cancellationToken);
                     }
                     else
                     {
@@ -277,7 +299,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     }
 
                     numberOfCasts--;
-                    await Task.Delay(1000, cancellationToken);
+                    await Task.Delay(500, cancellationToken);
                 }
 
                 UpdateOverlayAction("Fishing complete", "-", "Complete");
@@ -306,6 +328,68 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
+        /// Waits for a fish shadow to be detected before casting.
+        /// Returns true if a fish was found, false if gave up after max attempts.
+        /// </summary>
+        protected async Task<bool> WaitForFishDetectionAsync(CancellationToken cancellationToken)
+        {
+            if (!WaitForFishBeforeCasting)
+                return true; // Feature disabled, proceed with casting
+
+            // Ensure bubble detector is initialized
+            if (_bubbleDetector == null)
+            {
+                _bubbleDetector = new FishBubbleDetector(_locationName);
+            }
+
+            Debug.WriteLine($"[FishingStrategy] Waiting for fish detection (max {MaxFishWaitAttempts} attempts)...");
+            UpdateOverlayAction("Scanning for fish...", "Waiting", "Detecting");
+
+            for (int attempt = 1; attempt <= MaxFishWaitAttempts; attempt++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // Check for pause
+                while (IsPaused)
+                {
+                    UpdateOverlayAction("PAUSED", "Press F11 to resume", "Paused");
+                    await Task.Delay(500, cancellationToken);
+                }
+
+                UpdateOverlayAction($"Scanning for fish... ({attempt}/{MaxFishWaitAttempts})", "Waiting", "Detecting");
+
+                using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
+                {
+                    if (screenshot != null)
+                    {
+                        var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot);
+
+                        bool fishFound = detectionResult.AllCandidates.Count > 0 ||
+                                        detectionResult.BestShadowPosition.HasValue;
+
+                        if (fishFound)
+                        {
+                            Debug.WriteLine($"[FishingStrategy] Fish detected on attempt {attempt}!");
+                            UpdateOverlayAction("Fish found!", "Casting", "Detected");
+                            return true;
+                        }
+                    }
+                }
+
+                Debug.WriteLine($"[FishingStrategy] No fish detected, attempt {attempt}/{MaxFishWaitAttempts}");
+
+                if (attempt < MaxFishWaitAttempts)
+                {
+                    await Task.Delay(FishWaitScanDelayMs, cancellationToken);
+                }
+            }
+
+            Debug.WriteLine($"[FishingStrategy] No fish found after {MaxFishWaitAttempts} attempts, giving up on this cast.");
+            UpdateOverlayAction("No fish found", "Skipping cast", "No fish");
+            return false;
+        }
+
+        /// <summary>
         /// Casts the fishing line by automatically detecting fish shadows and aiming at them.
         /// Moves the mouse to track the fish in real-time while holding the cast button,
         /// then releases when fish position is stable (like MouseClickSimulator approach).
@@ -316,6 +400,18 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             if (_bubbleDetector == null)
             {
                 _bubbleDetector = new FishBubbleDetector(_locationName);
+            }
+
+            // Wait for fish detection if enabled
+            if (WaitForFishBeforeCasting)
+            {
+                bool fishFound = await WaitForFishDetectionAsync(cancellationToken);
+                if (!fishFound)
+                {
+                    // No fish found after waiting, skip this cast
+                    await Task.Delay(500, cancellationToken);
+                    return;
+                }
             }
 
             System.Diagnostics.Debug.WriteLine($"[FishingStrategy] === CastLineAuto === Location: {_locationName}");
@@ -544,6 +640,48 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             return color.G >= 150 && color.G > color.R && color.G > color.B &&
                    color.R >= 50 && color.R <= 150 &&
                    color.B >= 100 && color.B <= 180;
+        }
+
+        /// <summary>
+        /// Closes the fish caught popup by clicking the small red X button in the bottom-right corner.
+        /// Uses image recognition to find the X button. Will prompt for template capture if needed.
+        /// </summary>
+        protected async Task CloseFishCaughtPopup(CancellationToken cancellationToken)
+        {
+            const string elementName = "FishPopupCloseButton";
+            const string description = "Select the small red X button in the bottom-right corner of the fish caught popup";
+
+            Debug.WriteLine($"[FishingStrategy] Looking for fish popup close button...");
+
+            // Use image recognition to find the close button
+            var buttonLocation = await UIElementManager.Instance.GetElementLocationAsync(elementName, description, forceSearch: true);
+
+            if (buttonLocation.HasValue)
+            {
+                Debug.WriteLine($"[FishingStrategy] Found close button at ({buttonLocation.Value.X}, {buttonLocation.Value.Y})");
+
+                MoveCursor(buttonLocation.Value.X, buttonLocation.Value.Y);
+                await Task.Delay(100, cancellationToken);
+                DoMouseClick();
+                await Task.Delay(300, cancellationToken);
+            }
+            else
+            {
+                Debug.WriteLine($"[FishingStrategy] Could not find fish popup close button, trying fallback position...");
+
+                // Fallback to estimated position if image recognition fails
+                var windowRect = GetGameWindowRect();
+                if (!windowRect.IsEmpty)
+                {
+                    int closeButtonX = windowRect.X + (int)(windowRect.Width * 0.65);
+                    int closeButtonY = windowRect.Y + (int)(windowRect.Height * 0.58);
+
+                    MoveCursor(closeButtonX, closeButtonY);
+                    await Task.Delay(100, cancellationToken);
+                    DoMouseClick();
+                    await Task.Delay(300, cancellationToken);
+                }
+            }
         }
 
         /// <summary>

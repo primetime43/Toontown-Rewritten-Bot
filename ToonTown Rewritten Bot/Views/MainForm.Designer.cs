@@ -45,6 +45,9 @@
             editScanAreaBtn = new System.Windows.Forms.Button();
             showOverlayCheckBox = new System.Windows.Forms.CheckBox();
             autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
+            waitForFishCheckBox = new System.Windows.Forms.CheckBox();
+            labelWaitAttempts = new System.Windows.Forms.Label();
+            numericUpDownWaitAttempts = new System.Windows.Forms.NumericUpDown();
             button4 = new System.Windows.Forms.Button();
             randomFishingCheckBox = new System.Windows.Forms.CheckBox();
             labelBiteTimeout = new System.Windows.Forms.Label();
@@ -148,6 +151,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             Fishing.SuspendLayout();
             groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownWaitAttempts).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownBiteTimeout).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown3).BeginInit();
@@ -314,6 +318,9 @@
             groupBox6.Controls.Add(editScanAreaBtn);
             groupBox6.Controls.Add(showOverlayCheckBox);
             groupBox6.Controls.Add(autoDetectFishCheckBox);
+            groupBox6.Controls.Add(waitForFishCheckBox);
+            groupBox6.Controls.Add(labelWaitAttempts);
+            groupBox6.Controls.Add(numericUpDownWaitAttempts);
             groupBox6.Controls.Add(button4);
             groupBox6.Controls.Add(randomFishingCheckBox);
             groupBox6.Controls.Add(labelBiteTimeout);
@@ -381,7 +388,41 @@
             autoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
             toolTip1.SetToolTip(autoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them.\nClick 'Calibrate' to teach it the fish shadow color for better accuracy.");
             autoDetectFishCheckBox.UseVisualStyleBackColor = true;
-            // 
+            //
+            // waitForFishCheckBox
+            //
+            waitForFishCheckBox.AutoSize = true;
+            waitForFishCheckBox.Location = new System.Drawing.Point(200, 140);
+            waitForFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            waitForFishCheckBox.Name = "waitForFishCheckBox";
+            waitForFishCheckBox.Size = new System.Drawing.Size(100, 20);
+            waitForFishCheckBox.TabIndex = 22;
+            waitForFishCheckBox.Text = "Wait for fish";
+            toolTip1.SetToolTip(waitForFishCheckBox, "If enabled, waits for a fish shadow to appear before casting.\nWill scan up to X times before giving up on that cast.\nRequires Auto Detect to be enabled.");
+            waitForFishCheckBox.UseVisualStyleBackColor = true;
+            //
+            // labelWaitAttempts
+            //
+            labelWaitAttempts.AutoSize = true;
+            labelWaitAttempts.Location = new System.Drawing.Point(305, 141);
+            labelWaitAttempts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelWaitAttempts.Name = "labelWaitAttempts";
+            labelWaitAttempts.Size = new System.Drawing.Size(35, 16);
+            labelWaitAttempts.TabIndex = 23;
+            labelWaitAttempts.Text = "tries:";
+            //
+            // numericUpDownWaitAttempts
+            //
+            numericUpDownWaitAttempts.Location = new System.Drawing.Point(345, 138);
+            numericUpDownWaitAttempts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDownWaitAttempts.Maximum = new decimal(new int[] { 30, 0, 0, 0 });
+            numericUpDownWaitAttempts.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownWaitAttempts.Name = "numericUpDownWaitAttempts";
+            numericUpDownWaitAttempts.Size = new System.Drawing.Size(50, 22);
+            numericUpDownWaitAttempts.TabIndex = 24;
+            toolTip1.SetToolTip(numericUpDownWaitAttempts, "Number of scan attempts before giving up when waiting for fish");
+            numericUpDownWaitAttempts.Value = new decimal(new int[] { 10, 0, 0, 0 });
+            //
             // button4
             // 
             button4.Location = new System.Drawing.Point(220, 230);
@@ -1542,6 +1583,7 @@
             Fishing.PerformLayout();
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownWaitAttempts).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownBiteTimeout).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown4).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown3).EndInit();
@@ -1698,6 +1740,9 @@
         private System.Windows.Forms.Label labelKeyboardShortcuts;
         private System.Windows.Forms.GroupBox groupBoxAboutSettings;
         private System.Windows.Forms.Label labelSettingsInfo;
+        private System.Windows.Forms.CheckBox waitForFishCheckBox;
+        private System.Windows.Forms.Label labelWaitAttempts;
+        private System.Windows.Forms.NumericUpDown numericUpDownWaitAttempts;
     }
 }
 

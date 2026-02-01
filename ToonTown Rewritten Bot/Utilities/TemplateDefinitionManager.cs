@@ -73,6 +73,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         needsSave = true;
                     }
 
+                    // Add any missing default definitions
+                    if (EnsureDefaultDefinitionsExist())
+                        needsSave = true;
+
                     if (needsSave)
                         SaveDefinitions();
                 }
@@ -89,10 +93,41 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
         }
 
-        private void CreateDefaultDefinitions()
+        /// <summary>
+        /// Ensures all default definitions exist, adding any that are missing.
+        /// Returns true if any were added.
+        /// </summary>
+        private bool EnsureDefaultDefinitionsExist()
         {
-            // Add default definitions with keys matching the original CoordinateActions
-            _definitions = new List<TemplateDefinition>
+            var defaults = GetDefaultDefinitions();
+            bool added = false;
+
+            foreach (var defaultDef in defaults)
+            {
+                // Check if this definition already exists (by name)
+                if (!_definitions.Any(d => d.Name.Equals(defaultDef.Name, StringComparison.OrdinalIgnoreCase)))
+                {
+                    // Use the default key if available, otherwise assign a new one
+                    if (defaultDef.Key > 0 && !_definitions.Any(d => d.Key == defaultDef.Key))
+                    {
+                        _definitions.Add(defaultDef);
+                    }
+                    else
+                    {
+                        defaultDef.Key = _nextKey++;
+                        _definitions.Add(defaultDef);
+                    }
+                    added = true;
+                    System.Diagnostics.Debug.WriteLine($"[TemplateDefinitionManager] Added missing default: {defaultDef.Name}");
+                }
+            }
+
+            return added;
+        }
+
+        private List<TemplateDefinition> GetDefaultDefinitions()
+        {
+            return new List<TemplateDefinition>
             {
                 // Gardening (keys 1-14)
                 new TemplateDefinition { Key = 1, Name = "Plant Flower/Remove Button", Category = "Gardening" },
@@ -110,10 +145,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 new TemplateDefinition { Key = 13, Name = "Watering Can Button", Category = "Gardening" },
                 new TemplateDefinition { Key = 14, Name = "Blue Yes Button", Category = "Gardening" },
 
-                // Fishing (keys 15-17)
+                // Fishing (keys 15-18)
                 new TemplateDefinition { Key = 15, Name = "Red Fishing Button", Category = "Fishing" },
                 new TemplateDefinition { Key = 16, Name = "Exit Fishing Button", Category = "Fishing" },
                 new TemplateDefinition { Key = 17, Name = "Blue Sell All Button", Category = "Fishing" },
+                new TemplateDefinition { Key = 30, Name = "FishPopupCloseButton", Category = "Fishing" },
 
                 // Doodle Training (keys 18-29)
                 new TemplateDefinition { Key = 18, Name = "Feed Doodle Button", Category = "Doodle Training" },
@@ -129,8 +165,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 new TemplateDefinition { Key = 28, Name = "Dance Trick Option in SpeedChat", Category = "Doodle Training" },
                 new TemplateDefinition { Key = 29, Name = "Speak Trick Option in SpeedChat", Category = "Doodle Training" }
             };
+        }
 
-            _nextKey = 30;
+        private void CreateDefaultDefinitions()
+        {
+            _definitions = GetDefaultDefinitions();
+            _nextKey = 31;
             SaveDefinitions();
         }
 

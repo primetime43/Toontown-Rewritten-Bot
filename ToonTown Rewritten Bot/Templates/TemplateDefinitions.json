@@ -158,5 +158,10 @@
     "Key": 33,
     "Name": "Golf Pencil Button",
     "Category": "Golf"
+  },
+  {
+    "Key": 34,
+    "Name": "FishPopupCloseButton",
+    "Category": "Fishing"
   }
 ]

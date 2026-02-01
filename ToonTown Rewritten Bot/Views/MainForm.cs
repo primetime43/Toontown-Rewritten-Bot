@@ -88,6 +88,8 @@ namespace ToonTown_Rewritten_Bot
             numericUpDownBiteTimeout.Value = Math.Max(numericUpDownBiteTimeout.Minimum, Math.Min(numericUpDownBiteTimeout.Maximum, prefs.BiteTimeoutSeconds));
             randomFishingCheckBox.Checked = prefs.RandomVariance;
             autoDetectFishCheckBox.Checked = prefs.AutoDetectFish;
+            waitForFishCheckBox.Checked = prefs.WaitForFishBeforeCasting;
+            numericUpDownWaitAttempts.Value = Math.Max(numericUpDownWaitAttempts.Minimum, Math.Min(numericUpDownWaitAttempts.Maximum, prefs.MaxFishWaitAttempts));
 
             // Golf preferences
             if (!string.IsNullOrEmpty(prefs.GolfCourse))
@@ -136,6 +138,8 @@ namespace ToonTown_Rewritten_Bot
             prefs.BiteTimeoutSeconds = (int)numericUpDownBiteTimeout.Value;
             prefs.RandomVariance = randomFishingCheckBox.Checked;
             prefs.AutoDetectFish = autoDetectFishCheckBox.Checked;
+            prefs.WaitForFishBeforeCasting = waitForFishCheckBox.Checked;
+            prefs.MaxFishWaitAttempts = (int)numericUpDownWaitAttempts.Value;
 
             // Golf preferences
             prefs.GolfCourse = customGolfFilesComboBox.SelectedItem?.ToString() ?? "";
@@ -434,8 +438,10 @@ namespace ToonTown_Rewritten_Bot
 
             var token = _cancellationTokenSource.Token; // Token to handle task cancellation
 
-            // Set the bite timeout from the UI control
+            // Set the fishing settings from UI controls
             FishingStrategyBase.BiteTimeoutSeconds = Convert.ToInt32(numericUpDownBiteTimeout.Value);
+            FishingStrategyBase.WaitForFishBeforeCasting = waitForFishCheckBox.Checked && autoDetectFishCheckBox.Checked;
+            FishingStrategyBase.MaxFishWaitAttempts = Convert.ToInt32(numericUpDownWaitAttempts.Value);
 
             try
             {
@@ -1615,6 +1621,7 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Add($"  Bite Timeout: {prefs.BiteTimeoutSeconds} seconds");
             preferencesListBox.Items.Add($"  Random Variance: {(prefs.RandomVariance ? "Yes" : "No")}");
             preferencesListBox.Items.Add($"  Auto Detect Fish: {(prefs.AutoDetectFish ? "Yes" : "No")}");
+            preferencesListBox.Items.Add($"  Wait For Fish: {(prefs.WaitForFishBeforeCasting ? $"Yes ({prefs.MaxFishWaitAttempts} tries)" : "No")}");
 
             preferencesListBox.Items.Add("");
             preferencesListBox.Items.Add("═══════ GOLF ═══════");
