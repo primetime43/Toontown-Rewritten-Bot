@@ -50,6 +50,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public bool AutoDetectFish { get; set; } = false;
         public bool ShowFishingOverlay { get; set; } = false;
         public string CustomFishingFile { get; set; } = "";
+        public int CustomFishingCasts { get; set; } = 1;
+        public int CustomFishingSells { get; set; } = 1;
         public bool WaitForFishBeforeCasting { get; set; } = false;
         public int MaxFishWaitAttempts { get; set; } = 10;
 
@@ -127,6 +129,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
             AutoDetectFish = false;
             ShowFishingOverlay = false;
             CustomFishingFile = "";
+            CustomFishingCasts = 1;
+            CustomFishingSells = 1;
             WaitForFishBeforeCasting = false;
             MaxFishWaitAttempts = 10;
 

@@ -38,9 +38,22 @@
             label7 = new System.Windows.Forms.Label();
             pictureBox1 = new System.Windows.Forms.PictureBox();
             Fishing = new System.Windows.Forms.TabPage();
-            createCustomFishingActionsBtn = new System.Windows.Forms.Button();
             label12 = new System.Windows.Forms.Label();
             groupBox6 = new System.Windows.Forms.GroupBox();
+            CustomFishing = new System.Windows.Forms.TabPage();
+            groupBoxCustomFishing = new System.Windows.Forms.GroupBox();
+            labelSelectCustomFile = new System.Windows.Forms.Label();
+            customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
+            startCustomFishingBtn = new System.Windows.Forms.Button();
+            stopCustomFishingBtn = new System.Windows.Forms.Button();
+            createCustomFishingActionsBtn = new System.Windows.Forms.Button();
+            debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
+            labelCustomFishingCasts = new System.Windows.Forms.Label();
+            numericUpDownCustomCasts = new System.Windows.Forms.NumericUpDown();
+            labelCustomFishingSells = new System.Windows.Forms.Label();
+            numericUpDownCustomSells = new System.Windows.Forms.NumericUpDown();
+            groupBoxCustomFishingHelp = new System.Windows.Forms.GroupBox();
+            labelCustomFishingHelp = new System.Windows.Forms.Label();
             calibrateColorsBtn = new System.Windows.Forms.Button();
             editScanAreaBtn = new System.Windows.Forms.Button();
             showOverlayCheckBox = new System.Windows.Forms.CheckBox();
@@ -58,8 +71,6 @@
             numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             startFishing = new System.Windows.Forms.Button();
             fishingLocationscomboBox = new System.Windows.Forms.ComboBox();
-            debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
-            customFishingFilesComboBox = new System.Windows.Forms.ComboBox();
             fishingShortcutsLabel = new System.Windows.Forms.Label();
             Racing = new System.Windows.Forms.TabPage();
             label6 = new System.Windows.Forms.Label();
@@ -151,6 +162,11 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             Fishing.SuspendLayout();
             groupBox6.SuspendLayout();
+            CustomFishing.SuspendLayout();
+            groupBoxCustomFishing.SuspendLayout();
+            groupBoxCustomFishingHelp.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownCustomCasts).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownCustomSells).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownWaitAttempts).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownBiteTimeout).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
@@ -188,6 +204,7 @@
             // 
             tabControl1.Controls.Add(Main);
             tabControl1.Controls.Add(Fishing);
+            tabControl1.Controls.Add(CustomFishing);
             tabControl1.Controls.Add(Racing);
             tabControl1.Controls.Add(Gardening);
             tabControl1.Controls.Add(Golf);
@@ -273,14 +290,11 @@
             pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
-            // 
+            //
             // Fishing
-            // 
-            Fishing.Controls.Add(createCustomFishingActionsBtn);
+            //
             Fishing.Controls.Add(label12);
             Fishing.Controls.Add(groupBox6);
-            Fishing.Controls.Add(debugCustomActionsCheckBox);
-            Fishing.Controls.Add(customFishingFilesComboBox);
             Fishing.Controls.Add(fishingShortcutsLabel);
             Fishing.Location = new System.Drawing.Point(4, 25);
             Fishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -290,18 +304,7 @@
             Fishing.TabIndex = 1;
             Fishing.Text = "Fishing";
             Fishing.UseVisualStyleBackColor = true;
-            // 
-            // createCustomFishingActionsBtn
-            // 
-            createCustomFishingActionsBtn.Location = new System.Drawing.Point(460, 12);
-            createCustomFishingActionsBtn.Name = "createCustomFishingActionsBtn";
-            createCustomFishingActionsBtn.Size = new System.Drawing.Size(140, 50);
-            createCustomFishingActionsBtn.TabIndex = 10;
-            createCustomFishingActionsBtn.Text = "Create Custom Fishing Actions";
-            toolTip1.SetToolTip(createCustomFishingActionsBtn, "This will allow you to build custom fishing actions\r\nfor walking from the fishing dock to the fisherman\r\n to sell and back to the fishing dock");
-            createCustomFishingActionsBtn.UseVisualStyleBackColor = true;
-            createCustomFishingActionsBtn.Click += createCustomFishingActionsBtn_Click;
-            // 
+            //
             // label12
             // 
             label12.AutoSize = true;
@@ -527,7 +530,7 @@
             // fishingLocationscomboBox
             // 
             fishingLocationscomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            fishingLocationscomboBox.Items.AddRange(new object[] { "TOONTOWN CENTRAL PUNCHLINE PLACE", "DONALD DREAM LAND LULLABY LANE", "BRRRGH POLAR PLACE", "BRRRGH WALRUS WAY", "BRRRGH SLEET STREET", "MINNIE'S MELODYLAND TENOR TERRACE", "DONALD DOCK LIGHTHOUSE LANE", "DAISY'S GARDEN ELM STREET", "FISH ANYWHERE", "CUSTOM FISHING ACTION" });
+            fishingLocationscomboBox.Items.AddRange(new object[] { "TOONTOWN CENTRAL PUNCHLINE PLACE", "DONALD DREAM LAND LULLABY LANE", "BRRRGH POLAR PLACE", "BRRRGH WALRUS WAY", "BRRRGH SLEET STREET", "MINNIE'S MELODYLAND TENOR TERRACE", "DONALD DOCK LIGHTHOUSE LANE", "DAISY'S GARDEN ELM STREET", "FISH ANYWHERE" });
             fishingLocationscomboBox.Location = new System.Drawing.Point(10, 28);
             fishingLocationscomboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             fishingLocationscomboBox.Name = "fishingLocationscomboBox";
@@ -535,30 +538,6 @@
             fishingLocationscomboBox.TabIndex = 1;
             toolTip1.SetToolTip(fishingLocationscomboBox, "Select the location you wish to fish at");
             fishingLocationscomboBox.SelectedIndexChanged += fishingLocationscomboBox_SelectedIndexChanged;
-            // 
-            // debugCustomActionsCheckBox
-            // 
-            debugCustomActionsCheckBox.AutoSize = true;
-            debugCustomActionsCheckBox.Enabled = false;
-            debugCustomActionsCheckBox.Location = new System.Drawing.Point(438, 293);
-            debugCustomActionsCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            debugCustomActionsCheckBox.Name = "debugCustomActionsCheckBox";
-            debugCustomActionsCheckBox.Size = new System.Drawing.Size(162, 20);
-            debugCustomActionsCheckBox.TabIndex = 13;
-            debugCustomActionsCheckBox.Text = "Debug Custom Actions";
-            toolTip1.SetToolTip(debugCustomActionsCheckBox, "This will allow you to debug the custom action\r\nwalk from the dock to the fisherman");
-            debugCustomActionsCheckBox.UseVisualStyleBackColor = true;
-            debugCustomActionsCheckBox.Visible = false;
-            // 
-            // customFishingFilesComboBox
-            // 
-            customFishingFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            customFishingFilesComboBox.FormattingEnabled = true;
-            customFishingFilesComboBox.Location = new System.Drawing.Point(7, 344);
-            customFishingFilesComboBox.Name = "customFishingFilesComboBox";
-            customFishingFilesComboBox.Size = new System.Drawing.Size(373, 24);
-            customFishingFilesComboBox.TabIndex = 11;
-            customFishingFilesComboBox.Visible = false;
             //
             // fishingShortcutsLabel
             //
@@ -569,6 +548,169 @@
             fishingShortcutsLabel.Size = new System.Drawing.Size(140, 64);
             fishingShortcutsLabel.TabIndex = 18;
             fishingShortcutsLabel.Text = "Keyboard Shortcuts:\nF11 - Pause/Resume\nEsc/F12 - Stop";
+            //
+            // CustomFishing
+            //
+            CustomFishing.Controls.Add(groupBoxCustomFishing);
+            CustomFishing.Controls.Add(groupBoxCustomFishingHelp);
+            CustomFishing.Location = new System.Drawing.Point(4, 25);
+            CustomFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            CustomFishing.Name = "CustomFishing";
+            CustomFishing.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            CustomFishing.Size = new System.Drawing.Size(612, 391);
+            CustomFishing.TabIndex = 9;
+            CustomFishing.Text = "Custom Fishing";
+            CustomFishing.UseVisualStyleBackColor = true;
+            //
+            // groupBoxCustomFishing
+            //
+            groupBoxCustomFishing.Controls.Add(labelSelectCustomFile);
+            groupBoxCustomFishing.Controls.Add(customFishingFilesComboBox);
+            groupBoxCustomFishing.Controls.Add(labelCustomFishingCasts);
+            groupBoxCustomFishing.Controls.Add(numericUpDownCustomCasts);
+            groupBoxCustomFishing.Controls.Add(labelCustomFishingSells);
+            groupBoxCustomFishing.Controls.Add(numericUpDownCustomSells);
+            groupBoxCustomFishing.Controls.Add(startCustomFishingBtn);
+            groupBoxCustomFishing.Controls.Add(stopCustomFishingBtn);
+            groupBoxCustomFishing.Controls.Add(createCustomFishingActionsBtn);
+            groupBoxCustomFishing.Controls.Add(debugCustomActionsCheckBox);
+            groupBoxCustomFishing.Location = new System.Drawing.Point(9, 10);
+            groupBoxCustomFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxCustomFishing.Name = "groupBoxCustomFishing";
+            groupBoxCustomFishing.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxCustomFishing.Size = new System.Drawing.Size(380, 280);
+            groupBoxCustomFishing.TabIndex = 0;
+            groupBoxCustomFishing.TabStop = false;
+            groupBoxCustomFishing.Text = "Custom Fishing Actions";
+            //
+            // labelSelectCustomFile
+            //
+            labelSelectCustomFile.AutoSize = true;
+            labelSelectCustomFile.Location = new System.Drawing.Point(10, 25);
+            labelSelectCustomFile.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelSelectCustomFile.Name = "labelSelectCustomFile";
+            labelSelectCustomFile.Size = new System.Drawing.Size(139, 16);
+            labelSelectCustomFile.TabIndex = 0;
+            labelSelectCustomFile.Text = "Select Custom Action:";
+            //
+            // customFishingFilesComboBox
+            //
+            customFishingFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            customFishingFilesComboBox.FormattingEnabled = true;
+            customFishingFilesComboBox.Location = new System.Drawing.Point(10, 45);
+            customFishingFilesComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            customFishingFilesComboBox.Name = "customFishingFilesComboBox";
+            customFishingFilesComboBox.Size = new System.Drawing.Size(360, 24);
+            customFishingFilesComboBox.TabIndex = 1;
+            //
+            // labelCustomFishingCasts
+            //
+            labelCustomFishingCasts.AutoSize = true;
+            labelCustomFishingCasts.Location = new System.Drawing.Point(10, 85);
+            labelCustomFishingCasts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelCustomFishingCasts.Name = "labelCustomFishingCasts";
+            labelCustomFishingCasts.Size = new System.Drawing.Size(109, 16);
+            labelCustomFishingCasts.TabIndex = 2;
+            labelCustomFishingCasts.Text = "Number of Casts:";
+            //
+            // numericUpDownCustomCasts
+            //
+            numericUpDownCustomCasts.Location = new System.Drawing.Point(145, 83);
+            numericUpDownCustomCasts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDownCustomCasts.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
+            numericUpDownCustomCasts.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownCustomCasts.Name = "numericUpDownCustomCasts";
+            numericUpDownCustomCasts.Size = new System.Drawing.Size(55, 22);
+            numericUpDownCustomCasts.TabIndex = 3;
+            numericUpDownCustomCasts.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            //
+            // labelCustomFishingSells
+            //
+            labelCustomFishingSells.AutoSize = true;
+            labelCustomFishingSells.Location = new System.Drawing.Point(10, 115);
+            labelCustomFishingSells.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelCustomFishingSells.Name = "labelCustomFishingSells";
+            labelCustomFishingSells.Size = new System.Drawing.Size(105, 16);
+            labelCustomFishingSells.TabIndex = 4;
+            labelCustomFishingSells.Text = "Number of Sells:";
+            //
+            // numericUpDownCustomSells
+            //
+            numericUpDownCustomSells.Location = new System.Drawing.Point(145, 113);
+            numericUpDownCustomSells.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDownCustomSells.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
+            numericUpDownCustomSells.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownCustomSells.Name = "numericUpDownCustomSells";
+            numericUpDownCustomSells.Size = new System.Drawing.Size(55, 22);
+            numericUpDownCustomSells.TabIndex = 5;
+            numericUpDownCustomSells.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            //
+            // startCustomFishingBtn
+            //
+            startCustomFishingBtn.Location = new System.Drawing.Point(10, 150);
+            startCustomFishingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            startCustomFishingBtn.Name = "startCustomFishingBtn";
+            startCustomFishingBtn.Size = new System.Drawing.Size(175, 40);
+            startCustomFishingBtn.TabIndex = 6;
+            startCustomFishingBtn.Text = "Start Custom Fishing";
+            startCustomFishingBtn.UseVisualStyleBackColor = true;
+            startCustomFishingBtn.Click += startCustomFishingBtn_Click;
+            //
+            // stopCustomFishingBtn
+            //
+            stopCustomFishingBtn.Location = new System.Drawing.Point(195, 150);
+            stopCustomFishingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            stopCustomFishingBtn.Name = "stopCustomFishingBtn";
+            stopCustomFishingBtn.Size = new System.Drawing.Size(175, 40);
+            stopCustomFishingBtn.TabIndex = 7;
+            stopCustomFishingBtn.Text = "Stop";
+            stopCustomFishingBtn.UseVisualStyleBackColor = true;
+            stopCustomFishingBtn.Click += stopCustomFishingBtn_Click;
+            //
+            // createCustomFishingActionsBtn
+            //
+            createCustomFishingActionsBtn.Location = new System.Drawing.Point(10, 200);
+            createCustomFishingActionsBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            createCustomFishingActionsBtn.Name = "createCustomFishingActionsBtn";
+            createCustomFishingActionsBtn.Size = new System.Drawing.Size(175, 40);
+            createCustomFishingActionsBtn.TabIndex = 8;
+            createCustomFishingActionsBtn.Text = "Create/Edit Actions";
+            toolTip1.SetToolTip(createCustomFishingActionsBtn, "Create or edit custom fishing actions for walking\nfrom the dock to the fisherman and back");
+            createCustomFishingActionsBtn.UseVisualStyleBackColor = true;
+            createCustomFishingActionsBtn.Click += createCustomFishingActionsBtn_Click;
+            //
+            // debugCustomActionsCheckBox
+            //
+            debugCustomActionsCheckBox.AutoSize = true;
+            debugCustomActionsCheckBox.Location = new System.Drawing.Point(10, 250);
+            debugCustomActionsCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            debugCustomActionsCheckBox.Name = "debugCustomActionsCheckBox";
+            debugCustomActionsCheckBox.Size = new System.Drawing.Size(162, 20);
+            debugCustomActionsCheckBox.TabIndex = 9;
+            debugCustomActionsCheckBox.Text = "Debug Custom Actions";
+            toolTip1.SetToolTip(debugCustomActionsCheckBox, "Enable to debug the walk path without fishing");
+            debugCustomActionsCheckBox.UseVisualStyleBackColor = true;
+            //
+            // groupBoxCustomFishingHelp
+            //
+            groupBoxCustomFishingHelp.Controls.Add(labelCustomFishingHelp);
+            groupBoxCustomFishingHelp.Location = new System.Drawing.Point(400, 10);
+            groupBoxCustomFishingHelp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxCustomFishingHelp.Name = "groupBoxCustomFishingHelp";
+            groupBoxCustomFishingHelp.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxCustomFishingHelp.Size = new System.Drawing.Size(200, 280);
+            groupBoxCustomFishingHelp.TabIndex = 1;
+            groupBoxCustomFishingHelp.TabStop = false;
+            groupBoxCustomFishingHelp.Text = "How to Use";
+            //
+            // labelCustomFishingHelp
+            //
+            labelCustomFishingHelp.Location = new System.Drawing.Point(10, 22);
+            labelCustomFishingHelp.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelCustomFishingHelp.Name = "labelCustomFishingHelp";
+            labelCustomFishingHelp.Size = new System.Drawing.Size(180, 250);
+            labelCustomFishingHelp.TabIndex = 0;
+            labelCustomFishingHelp.Text = "Custom fishing lets you create walk paths for any fishing location.\n\n1. Click 'Create/Edit Actions' to record a walk path\n\n2. Select your custom action from the dropdown\n\n3. Set casts and sells\n\n4. Stand at your fishing dock and click Start\n\nThe bot will fish, then walk to sell and return.";
             //
             // Racing
             // 
@@ -1587,6 +1729,12 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDownBiteTimeout).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown4).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown3).EndInit();
+            CustomFishing.ResumeLayout(false);
+            groupBoxCustomFishing.ResumeLayout(false);
+            groupBoxCustomFishing.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownCustomCasts).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownCustomSells).EndInit();
+            groupBoxCustomFishingHelp.ResumeLayout(false);
             Racing.ResumeLayout(false);
             Racing.PerformLayout();
             Gardening.ResumeLayout(false);
@@ -1743,6 +1891,17 @@
         private System.Windows.Forms.CheckBox waitForFishCheckBox;
         private System.Windows.Forms.Label labelWaitAttempts;
         private System.Windows.Forms.NumericUpDown numericUpDownWaitAttempts;
+        private System.Windows.Forms.TabPage CustomFishing;
+        private System.Windows.Forms.GroupBox groupBoxCustomFishing;
+        private System.Windows.Forms.Label labelSelectCustomFile;
+        private System.Windows.Forms.Label labelCustomFishingCasts;
+        private System.Windows.Forms.NumericUpDown numericUpDownCustomCasts;
+        private System.Windows.Forms.Label labelCustomFishingSells;
+        private System.Windows.Forms.NumericUpDown numericUpDownCustomSells;
+        private System.Windows.Forms.Button startCustomFishingBtn;
+        private System.Windows.Forms.Button stopCustomFishingBtn;
+        private System.Windows.Forms.GroupBox groupBoxCustomFishingHelp;
+        private System.Windows.Forms.Label labelCustomFishingHelp;
     }
 }
 
