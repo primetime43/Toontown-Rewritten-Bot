@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using WindowsInput;
@@ -13,6 +14,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
     public class CustomActionsFishing : FishingStrategyBase
     {
         private List<FishingActionCommand> actions = new List<FishingActionCommand>();
+        private FishingActionKeys _actionKeys = new FishingActionKeys();
 
         public CustomActionsFishing(string filePath)
         {
@@ -32,41 +34,61 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         {
             foreach (var actionCommand in actions)
             {
+                // Check for cancellation at the start of each action
+                cancellationToken.ThrowIfCancellationRequested();
+
                 Debug.WriteLine($"Executing action: {actionCommand.Action}");
 
                 if (!actionCommand.Command.StartsWith("TIME"))
                 {
                     if (actionCommand.Command == "SELL")
                     {
-                        await SellFishAsync(cancellationToken); // Handle selling fish
-                        await Task.Delay(3000, cancellationToken); // Delay to ensure the selling action is complete
+                        await SellFishAsync(cancellationToken).ConfigureAwait(false); // Handle selling fish
+                        await Task.Delay(3000, cancellationToken).ConfigureAwait(false); // Delay to ensure the selling action is complete
                     }
-                    else if (Enum.TryParse<VirtualKeyCode>(actionCommand.Command, out var keyCode))
+                    else
                     {
-                        InputSimulator.SimulateKeyDown(keyCode);
-                        // Find the next action
-                        int currentIndex = actions.IndexOf(actionCommand);
-                        if (currentIndex + 1 < actions.Count && actions[currentIndex + 1].Action == "TIME")
+                        // Look up the VirtualKeyCode from our mapping
+                        var keyCode = _actionKeys.GetKeyCodeFromString(actionCommand.Command);
+                        if (keyCode.HasValue)
                         {
-                            var nextAction = actions[currentIndex + 1];
-                            if (int.TryParse(nextAction.Command.Split(' ')[0], out int milliseconds))
+                            InputSimulator.SimulateKeyDown(keyCode.Value);
+                            Debug.WriteLine($"Key down: {keyCode.Value} (from command '{actionCommand.Command}')");
+
+                            // Find the next action to determine hold duration
+                            int currentIndex = actions.IndexOf(actionCommand);
+                            int delayMs = 500; // Default press duration
+
+                            if (currentIndex + 1 < actions.Count && actions[currentIndex + 1].Action == "TIME")
                             {
-                                await Task.Delay(milliseconds, cancellationToken);
-                                InputSimulator.SimulateKeyUp(keyCode);
+                                var nextAction = actions[currentIndex + 1];
+                                // Extract just digits from the command to handle malformed values like "847)"
+                                string timeDigits = new string(nextAction.Command.Where(char.IsDigit).ToArray());
+                                if (int.TryParse(timeDigits, out int milliseconds))
+                                {
+                                    delayMs = milliseconds;
+                                }
+                                Debug.WriteLine($"TIME action found, delay: {delayMs}ms");
                             }
+
+                            await Task.Delay(delayMs, cancellationToken).ConfigureAwait(false);
+                            InputSimulator.SimulateKeyUp(keyCode.Value);
+                            Debug.WriteLine($"Key up: {keyCode.Value}");
                         }
                         else
                         {
-                            await Task.Delay(500, cancellationToken); // Default press duration for keys without a specified time
-                            InputSimulator.SimulateKeyUp(keyCode);
+                            Debug.WriteLine($"WARNING: Unknown command '{actionCommand.Command}' - not a recognized key");
                         }
                     }
                 }
                 else
                 {
-                    if (int.TryParse(actionCommand.Command.Split(' ')[0], out int milliseconds))
+                    // TIME action - extract just digits to handle malformed values
+                    string timeDigits = new string(actionCommand.Command.Where(char.IsDigit).ToArray());
+                    if (int.TryParse(timeDigits, out int milliseconds))
                     {
-                        await Task.Delay(milliseconds, cancellationToken); // Wait for the specified time in milliseconds
+                        Debug.WriteLine($"Standalone TIME delay: {milliseconds}ms");
+                        await Task.Delay(milliseconds, cancellationToken).ConfigureAwait(false);
                     }
                 }
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,14 +11,46 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
 using ToonTown_Rewritten_Bot.Services;
+using ToonTown_Rewritten_Bot.Utilities;
 
 namespace ToonTown_Rewritten_Bot.Views
 {
     public partial class CustomFishingActions : Form
     {
+        // Recording fields
+        private GlobalKeyboardHook _keyboardHook;
+        private bool _isRecording = false;
+        private List<RecordedKeyPress> _recordedKeys = new List<RecordedKeyPress>();
+        private Stopwatch _recordingStopwatch = new Stopwatch();
+        private Keys? _currentKeyHeld = null;
+        private long _keyDownTime = 0;
+
+        // Helper class to store recorded key presses with timing
+        private class RecordedKeyPress
+        {
+            public string Action { get; set; }
+            public long DurationMs { get; set; }
+            public bool IsSellFish { get; set; }
+        }
+
         public CustomFishingActions()
         {
             InitializeComponent();
+            _keyboardHook = new GlobalKeyboardHook();
+            _keyboardHook.KeyPressed += OnGlobalKeyPressed;
+            _keyboardHook.KeyReleased += OnGlobalKeyReleased;
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            StopRecordingCleanup();
+            if (_keyboardHook != null)
+            {
+                _keyboardHook.KeyPressed -= OnGlobalKeyPressed;
+                _keyboardHook.KeyReleased -= OnGlobalKeyReleased;
+                _keyboardHook.Dispose();
+            }
         }
 
         private void addItemBtn_Click(object sender, EventArgs e)
@@ -84,7 +117,8 @@ namespace ToonTown_Rewritten_Bot.Views
                 if (actionText.StartsWith("TIME"))
                 {
                     action = "TIME";
-                    command = actionText.Split('(')[1].Split(' ')[0]; // Extracts "XXXX milliseconds" from "TIME (XXXX milliseconds)"
+                    // Extract just the digits from the time value (handles various formats)
+                    command = new string(actionText.Where(char.IsDigit).ToArray());
                 }
                 else
                 {
@@ -138,9 +172,17 @@ namespace ToonTown_Rewritten_Bot.Views
                 actionItemsListBox.Items.Clear();
                 foreach (var actionCommand in actionsList)
                 {
-                    string displayText = actionCommand.Action == "TIME"
-                        ? $"TIME ({actionCommand.Command})"
-                        : actionCommand.Action;
+                    string displayText;
+                    if (actionCommand.Action == "TIME")
+                    {
+                        // Extract just the number from the command (handles "500", "500 milliseconds", "500)", etc.)
+                        string timeValue = new string(actionCommand.Command.Where(char.IsDigit).ToArray());
+                        displayText = $"TIME ({timeValue} milliseconds)";
+                    }
+                    else
+                    {
+                        displayText = actionCommand.Action;
+                    }
                     actionItemsListBox.Items.Add(displayText);
                 }
             }
@@ -213,5 +255,209 @@ namespace ToonTown_Rewritten_Bot.Views
                 return;
             }
         }
+
+        #region Walk Path Recorder
+
+        private void btnStartRecording_Click(object sender, EventArgs e)
+        {
+            // Clear previous recording
+            _recordedKeys.Clear();
+            _currentKeyHeld = null;
+            _keyDownTime = 0;
+
+            // Update UI
+            btnStartRecording.Enabled = false;
+            btnStopRecording.Enabled = true;
+            btnAddSellFish.Enabled = true;
+            lblRecordingStatus.Text = "Status: Recording... Press arrow keys in TTR";
+            lblRecordingStatus.ForeColor = Color.Green;
+
+            // Start recording
+            _isRecording = true;
+            _recordingStopwatch.Restart();
+            _keyboardHook.Start();
+
+            // Minimize this window so user can switch to TTR
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void btnStopRecording_Click(object sender, EventArgs e)
+        {
+            // Finalize any key still being held
+            FinalizeCurrentKey();
+
+            StopRecordingCleanup();
+
+            // Convert recorded keys to action items
+            ConvertRecordedKeysToActionItems();
+
+            // Update UI
+            lblRecordingStatus.Text = $"Status: Stopped - {_recordedKeys.Count} actions recorded";
+            lblRecordingStatus.ForeColor = Color.Blue;
+
+            // Restore window
+            this.WindowState = FormWindowState.Normal;
+            this.BringToFront();
+        }
+
+        private void btnAddSellFish_Click(object sender, EventArgs e)
+        {
+            if (!_isRecording)
+                return;
+
+            // Finalize any key currently being held before adding sell fish
+            FinalizeCurrentKey();
+
+            // Add a sell fish marker
+            _recordedKeys.Add(new RecordedKeyPress
+            {
+                Action = "SELL FISH",
+                DurationMs = 0,
+                IsSellFish = true
+            });
+
+            // Provide feedback
+            lblRecordingStatus.Text = "Status: Recording... SELL FISH added!";
+        }
+
+        private void OnGlobalKeyPressed(object sender, Keys key)
+        {
+            if (!_isRecording)
+                return;
+
+            // Only track arrow keys (movement keys in TTR)
+            string action = GetActionFromKey(key);
+            if (action == null)
+                return;
+
+            long currentTime = _recordingStopwatch.ElapsedMilliseconds;
+
+            // If a different key is pressed, finalize the previous key
+            if (_currentKeyHeld.HasValue && _currentKeyHeld.Value != key)
+            {
+                FinalizeCurrentKey();
+            }
+
+            // If this is a new key press (not a repeat of the held key)
+            if (!_currentKeyHeld.HasValue)
+            {
+                _currentKeyHeld = key;
+                _keyDownTime = currentTime;
+
+                // Update status to show which key is being held
+                this.BeginInvoke(new Action(() =>
+                {
+                    lblRecordingStatus.Text = $"Status: Recording... Holding {action}";
+                }));
+            }
+            // If same key, this is a key repeat - ignore it
+        }
+
+        private void OnGlobalKeyReleased(object sender, Keys key)
+        {
+            if (!_isRecording)
+                return;
+
+            // Only process if this is the key we're currently tracking
+            if (_currentKeyHeld.HasValue && _currentKeyHeld.Value == key)
+            {
+                FinalizeCurrentKey();
+
+                // Update status
+                this.BeginInvoke(new Action(() =>
+                {
+                    lblRecordingStatus.Text = $"Status: Recording... {_recordedKeys.Count} actions";
+                }));
+            }
+        }
+
+        private void FinalizeCurrentKey()
+        {
+            if (!_currentKeyHeld.HasValue)
+                return;
+
+            long currentTime = _recordingStopwatch.ElapsedMilliseconds;
+            long duration = currentTime - _keyDownTime;
+
+            // Only add if there was meaningful duration (at least 50ms to filter accidental presses)
+            if (duration >= 50)
+            {
+                string action = GetActionFromKey(_currentKeyHeld.Value);
+                if (action != null)
+                {
+                    _recordedKeys.Add(new RecordedKeyPress
+                    {
+                        Action = action,
+                        DurationMs = duration,
+                        IsSellFish = false
+                    });
+                }
+            }
+
+            _currentKeyHeld = null;
+            _keyDownTime = 0;
+        }
+
+        private string GetActionFromKey(Keys key)
+        {
+            return key switch
+            {
+                Keys.Up => "WALK FORWARDS",
+                Keys.Down => "WALK BACKWARDS",
+                Keys.Left => "TURN LEFT",
+                Keys.Right => "TURN RIGHT",
+                _ => null
+            };
+        }
+
+        private void StopRecordingCleanup()
+        {
+            _isRecording = false;
+            _keyboardHook.Stop();
+            _recordingStopwatch.Stop();
+
+            // Update UI
+            btnStartRecording.Enabled = true;
+            btnStopRecording.Enabled = false;
+            btnAddSellFish.Enabled = false;
+        }
+
+        private void ConvertRecordedKeysToActionItems()
+        {
+            // Ask user if they want to append or replace
+            DialogResult result = DialogResult.Yes;
+            if (actionItemsListBox.Items.Count > 0)
+            {
+                result = MessageBox.Show(
+                    "Do you want to REPLACE existing actions?\n\nYes = Replace all\nNo = Append to existing\nCancel = Discard recording",
+                    "Add Recorded Actions",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+            }
+
+            if (result == DialogResult.Cancel)
+                return;
+
+            if (result == DialogResult.Yes)
+                actionItemsListBox.Items.Clear();
+
+            // Add each recorded action to the list
+            foreach (var recorded in _recordedKeys)
+            {
+                if (recorded.IsSellFish)
+                {
+                    actionItemsListBox.Items.Add("SELL FISH");
+                }
+                else
+                {
+                    // Add the movement action
+                    actionItemsListBox.Items.Add(recorded.Action);
+                    // Add the duration as a TIME action
+                    actionItemsListBox.Items.Add($"TIME ({recorded.DurationMs} milliseconds)");
+                }
+            }
+        }
+
+        #endregion
     }
 }

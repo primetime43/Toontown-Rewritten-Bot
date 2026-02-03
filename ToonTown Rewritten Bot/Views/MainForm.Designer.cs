@@ -56,6 +56,11 @@
             labelCustomFishingHelp = new System.Windows.Forms.Label();
             customScanAreaBtn = new System.Windows.Forms.Button();
             customPondColorsBtn = new System.Windows.Forms.Button();
+            customAutoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
+            customWaitForFishCheckBox = new System.Windows.Forms.CheckBox();
+            customShowOverlayCheckBox = new System.Windows.Forms.CheckBox();
+            customLabelBiteTimeout = new System.Windows.Forms.Label();
+            customNumericUpDownBiteTimeout = new System.Windows.Forms.NumericUpDown();
             calibrateColorsBtn = new System.Windows.Forms.Button();
             editScanAreaBtn = new System.Windows.Forms.Button();
             showOverlayCheckBox = new System.Windows.Forms.CheckBox();
@@ -169,6 +174,7 @@
             groupBoxCustomFishingHelp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDownCustomCasts).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownCustomSells).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)customNumericUpDownBiteTimeout).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownWaitAttempts).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownBiteTimeout).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
@@ -532,7 +538,7 @@
             // fishingLocationscomboBox
             // 
             fishingLocationscomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            fishingLocationscomboBox.Items.AddRange(new object[] { "TOONTOWN CENTRAL PUNCHLINE PLACE", "DONALD DREAM LAND LULLABY LANE", "BRRRGH POLAR PLACE", "BRRRGH WALRUS WAY", "BRRRGH SLEET STREET", "MINNIE'S MELODYLAND TENOR TERRACE", "DONALD DOCK LIGHTHOUSE LANE", "DAISY'S GARDEN ELM STREET", "FISH ANYWHERE" });
+            fishingLocationscomboBox.Items.AddRange(new object[] { "TOONTOWN CENTRAL PUNCHLINE PLACE", "DONALD DREAM LAND LULLABY LANE", "BRRRGH POLAR PLACE", "BRRRGH WALRUS WAY", "BRRRGH SLEET STREET", "MINNIE'S MELODYLAND TENOR TERRACE", "DONALD DOCK LIGHTHOUSE LANE", "DAISY'S GARDEN ELM STREET", "ESTATE (FAR LEFT DOCK)", "FISH ANYWHERE" });
             fishingLocationscomboBox.Location = new System.Drawing.Point(10, 28);
             fishingLocationscomboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             fishingLocationscomboBox.Name = "fishingLocationscomboBox";
@@ -577,12 +583,17 @@
             groupBoxCustomFishing.Controls.Add(createCustomFishingActionsBtn);
             groupBoxCustomFishing.Controls.Add(customScanAreaBtn);
             groupBoxCustomFishing.Controls.Add(customPondColorsBtn);
+            groupBoxCustomFishing.Controls.Add(customAutoDetectFishCheckBox);
+            groupBoxCustomFishing.Controls.Add(customWaitForFishCheckBox);
+            groupBoxCustomFishing.Controls.Add(customShowOverlayCheckBox);
+            groupBoxCustomFishing.Controls.Add(customLabelBiteTimeout);
+            groupBoxCustomFishing.Controls.Add(customNumericUpDownBiteTimeout);
             groupBoxCustomFishing.Controls.Add(debugCustomActionsCheckBox);
             groupBoxCustomFishing.Location = new System.Drawing.Point(9, 10);
             groupBoxCustomFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBoxCustomFishing.Name = "groupBoxCustomFishing";
             groupBoxCustomFishing.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBoxCustomFishing.Size = new System.Drawing.Size(380, 280);
+            groupBoxCustomFishing.Size = new System.Drawing.Size(380, 340);
             groupBoxCustomFishing.TabIndex = 0;
             groupBoxCustomFishing.TabStop = false;
             groupBoxCustomFishing.Text = "Custom Fishing Actions";
@@ -707,10 +718,69 @@
             customPondColorsBtn.UseVisualStyleBackColor = true;
             customPondColorsBtn.Click += customPondColorsBtn_Click;
             //
+            // customAutoDetectFishCheckBox
+            //
+            customAutoDetectFishCheckBox.AutoSize = true;
+            customAutoDetectFishCheckBox.Location = new System.Drawing.Point(10, 250);
+            customAutoDetectFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            customAutoDetectFishCheckBox.Name = "customAutoDetectFishCheckBox";
+            customAutoDetectFishCheckBox.Size = new System.Drawing.Size(182, 20);
+            customAutoDetectFishCheckBox.TabIndex = 12;
+            customAutoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
+            toolTip1.SetToolTip(customAutoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them.\nUse 'Scan Area' and 'Pond Colors' to calibrate for your custom location.");
+            customAutoDetectFishCheckBox.UseVisualStyleBackColor = true;
+            //
+            // customWaitForFishCheckBox
+            //
+            customWaitForFishCheckBox.AutoSize = true;
+            customWaitForFishCheckBox.Location = new System.Drawing.Point(200, 250);
+            customWaitForFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            customWaitForFishCheckBox.Name = "customWaitForFishCheckBox";
+            customWaitForFishCheckBox.Size = new System.Drawing.Size(100, 20);
+            customWaitForFishCheckBox.TabIndex = 13;
+            customWaitForFishCheckBox.Text = "Wait for fish";
+            toolTip1.SetToolTip(customWaitForFishCheckBox, "If enabled, waits for a fish shadow to appear before casting.\nRequires Auto Detect to be enabled.");
+            customWaitForFishCheckBox.UseVisualStyleBackColor = true;
+            //
+            // customShowOverlayCheckBox
+            //
+            customShowOverlayCheckBox.AutoSize = true;
+            customShowOverlayCheckBox.Location = new System.Drawing.Point(10, 280);
+            customShowOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            customShowOverlayCheckBox.Name = "customShowOverlayCheckBox";
+            customShowOverlayCheckBox.Size = new System.Drawing.Size(169, 20);
+            customShowOverlayCheckBox.TabIndex = 14;
+            customShowOverlayCheckBox.Text = "Show Detection Overlay";
+            toolTip1.SetToolTip(customShowOverlayCheckBox, "Shows a transparent overlay on the game window displaying detected fish shadows and targeting info.");
+            customShowOverlayCheckBox.UseVisualStyleBackColor = true;
+            customShowOverlayCheckBox.CheckedChanged += customShowOverlayCheckBox_CheckedChanged;
+            //
+            // customLabelBiteTimeout
+            //
+            customLabelBiteTimeout.AutoSize = true;
+            customLabelBiteTimeout.Location = new System.Drawing.Point(200, 281);
+            customLabelBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            customLabelBiteTimeout.Name = "customLabelBiteTimeout";
+            customLabelBiteTimeout.Size = new System.Drawing.Size(108, 16);
+            customLabelBiteTimeout.TabIndex = 15;
+            customLabelBiteTimeout.Text = "Bite Timeout (s):";
+            //
+            // customNumericUpDownBiteTimeout
+            //
+            customNumericUpDownBiteTimeout.Location = new System.Drawing.Point(315, 279);
+            customNumericUpDownBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            customNumericUpDownBiteTimeout.Maximum = new decimal(new int[] { 120, 0, 0, 0 });
+            customNumericUpDownBiteTimeout.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
+            customNumericUpDownBiteTimeout.Name = "customNumericUpDownBiteTimeout";
+            customNumericUpDownBiteTimeout.Size = new System.Drawing.Size(55, 22);
+            customNumericUpDownBiteTimeout.TabIndex = 16;
+            toolTip1.SetToolTip(customNumericUpDownBiteTimeout, "How many seconds to wait for a fish to bite before timing out");
+            customNumericUpDownBiteTimeout.Value = new decimal(new int[] { 30, 0, 0, 0 });
+            //
             // debugCustomActionsCheckBox
             //
             debugCustomActionsCheckBox.AutoSize = true;
-            debugCustomActionsCheckBox.Location = new System.Drawing.Point(10, 250);
+            debugCustomActionsCheckBox.Location = new System.Drawing.Point(10, 310);
             debugCustomActionsCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             debugCustomActionsCheckBox.Name = "debugCustomActionsCheckBox";
             debugCustomActionsCheckBox.Size = new System.Drawing.Size(162, 20);
@@ -726,7 +796,7 @@
             groupBoxCustomFishingHelp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBoxCustomFishingHelp.Name = "groupBoxCustomFishingHelp";
             groupBoxCustomFishingHelp.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBoxCustomFishingHelp.Size = new System.Drawing.Size(200, 280);
+            groupBoxCustomFishingHelp.Size = new System.Drawing.Size(200, 340);
             groupBoxCustomFishingHelp.TabIndex = 1;
             groupBoxCustomFishingHelp.TabStop = false;
             groupBoxCustomFishingHelp.Text = "How to Use";
@@ -1762,6 +1832,7 @@
             groupBoxCustomFishing.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDownCustomCasts).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownCustomSells).EndInit();
+            ((System.ComponentModel.ISupportInitialize)customNumericUpDownBiteTimeout).EndInit();
             groupBoxCustomFishingHelp.ResumeLayout(false);
             Racing.ResumeLayout(false);
             Racing.PerformLayout();
@@ -1932,6 +2003,11 @@
         private System.Windows.Forms.Label labelCustomFishingHelp;
         private System.Windows.Forms.Button customScanAreaBtn;
         private System.Windows.Forms.Button customPondColorsBtn;
+        private System.Windows.Forms.CheckBox customAutoDetectFishCheckBox;
+        private System.Windows.Forms.CheckBox customWaitForFishCheckBox;
+        private System.Windows.Forms.CheckBox customShowOverlayCheckBox;
+        private System.Windows.Forms.Label customLabelBiteTimeout;
+        private System.Windows.Forms.NumericUpDown customNumericUpDownBiteTimeout;
     }
 }
 

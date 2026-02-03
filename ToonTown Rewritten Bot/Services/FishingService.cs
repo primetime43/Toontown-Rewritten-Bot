@@ -34,38 +34,38 @@ namespace ToonTown_Rewritten_Bot.Services
 
             while (sells > 0 && !cancellationToken.IsCancellationRequested)
             {
-                await PrepareForFishing(cancellationToken);
-                await StartFishingActionsAsync(casts, variance, autoDetectFish, cancellationToken);
+                await PrepareForFishing(cancellationToken).ConfigureAwait(false);
+                await StartFishingActionsAsync(casts, variance, autoDetectFish, cancellationToken).ConfigureAwait(false);
 
-                if (locationName != FishingLocationNames.FishAnywhere && locationName != FishingLocationNames.CustomFishingAction)
+                if (locationName != FishingLocationNames.FishAnywhere && locationName != FishingLocationNames.CustomFishingAction && locationName != FishingLocationNames.EstateLeftDock)
                 {
                     // Straighten the toon before exiting so they face forward for walking to sell
-                    await StraightenToonAsync(cancellationToken);
-                    await ExitFishing(cancellationToken);
-                    await Task.Delay(3000, cancellationToken);
+                    await StraightenToonAsync(cancellationToken).ConfigureAwait(false);
+                    await ExitFishing(cancellationToken).ConfigureAwait(false);
+                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
                     // Hardcoded Fishing Locations' if
                     FishingStrategyBase fishingStrategy = DetermineFishingStrategy(locationName);
-                    await fishingStrategy.LeaveDockAndSellAsync(cancellationToken);
+                    await fishingStrategy.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
                     sells--;
                 }
                 else if(locationName == FishingLocationNames.CustomFishingAction && customFishingFilePath != "")
                 {
                     // Straighten the toon before exiting so they face forward for walking to sell
-                    await StraightenToonAsync(cancellationToken);
-                    await ExitFishing(cancellationToken);
-                    await Task.Delay(3000, cancellationToken);
+                    await StraightenToonAsync(cancellationToken).ConfigureAwait(false);
+                    await ExitFishing(cancellationToken).ConfigureAwait(false);
+                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
                     // Custom Fishing's if
                     CustomActionsFishing customFishing = new CustomActionsFishing(customFishingFilePath);
-                    await customFishing.LeaveDockAndSellAsync(cancellationToken); // Start the action sequence
+                    await customFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false); // Start the action sequence
                     sells--;
                 }
                 else
                 {
                     // If "FISH ANYWHERE" is selected, just exit fishing without straightening
-                    await ExitFishing(cancellationToken);
-                    await Task.Delay(3000, cancellationToken);
+                    await ExitFishing(cancellationToken).ConfigureAwait(false);
+                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
                     sells = 0;
                 }
             }
@@ -85,19 +85,22 @@ namespace ToonTown_Rewritten_Bot.Services
         /// Starts a custom fishing debugging session using a specified JSON file.
         /// </summary>
         /// <param name="jsonPath">The path to the JSON file containing the custom actions to be executed.</param>
+        /// <param name="cancellationToken">Token to signal the cancellation of the debugging operation.</param>
         /// <remarks>
         /// This method is intended for debugging custom fishing actions. It simulates the fishing actions
         /// without actual fishing, focusing on the movement and actions defined in the JSON file.
         /// It ensures the game window is maximized and focused before starting the actions
         /// </remarks>
-        public async Task StartCustomFishingDebugging(string jsonPath)
+        public async Task StartCustomFishingDebugging(string jsonPath, CancellationToken cancellationToken)
         {
             CustomActionsFishing customFishing = new CustomActionsFishing(jsonPath);
 
             // Prepare
             FocusTTRWindow();
-            await Task.Delay(1000, CancellationToken.None); // Initial delay before starting.
-            await customFishing.LeaveDockAndSellAsync(CancellationToken.None); // Start the action sequence
+            await Task.Delay(1000, cancellationToken).ConfigureAwait(false); // Initial delay before starting.
+            await customFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false); // Start the action sequence
+
+            BringBotWindowToFront();
             MessageBox.Show("Done Debugging Custom Action");
         }
 
@@ -115,7 +118,7 @@ namespace ToonTown_Rewritten_Bot.Services
         {
             // Focus the game window without maximizing
             FocusTTRWindow();
-            await Task.Delay(1000, cancellationToken);
+            await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
         }
 
         private FishingStrategyBase DetermineFishingStrategy(string locationName)
