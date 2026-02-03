@@ -47,8 +47,13 @@
             lblLivePreview = new System.Windows.Forms.Label();
             groupBoxPathPreview = new System.Windows.Forms.GroupBox();
             lblPathPreview = new System.Windows.Forms.Label();
+            groupBoxCalibration = new System.Windows.Forms.GroupBox();
+            btnCalibrateScanArea = new System.Windows.Forms.Button();
+            btnCalibratePondColors = new System.Windows.Forms.Button();
+            lblCalibrationStatus = new System.Windows.Forms.Label();
             groupBoxRecorder.SuspendLayout();
             groupBoxPathPreview.SuspendLayout();
+            groupBoxCalibration.SuspendLayout();
             SuspendLayout();
             // 
             // addItemBtn
@@ -238,11 +243,53 @@
             lblPathPreview.Text = "(No actions)";
             lblPathPreview.AutoEllipsis = true;
             //
+            // groupBoxCalibration
+            //
+            groupBoxCalibration.Controls.Add(btnCalibrateScanArea);
+            groupBoxCalibration.Controls.Add(btnCalibratePondColors);
+            groupBoxCalibration.Controls.Add(lblCalibrationStatus);
+            groupBoxCalibration.Location = new System.Drawing.Point(14, 540);
+            groupBoxCalibration.Name = "groupBoxCalibration";
+            groupBoxCalibration.Size = new System.Drawing.Size(424, 85);
+            groupBoxCalibration.TabIndex = 12;
+            groupBoxCalibration.TabStop = false;
+            groupBoxCalibration.Text = "Calibration (Embedded in Action File)";
+            //
+            // btnCalibrateScanArea
+            //
+            btnCalibrateScanArea.Location = new System.Drawing.Point(10, 50);
+            btnCalibrateScanArea.Name = "btnCalibrateScanArea";
+            btnCalibrateScanArea.Size = new System.Drawing.Size(140, 28);
+            btnCalibrateScanArea.TabIndex = 0;
+            btnCalibrateScanArea.Text = "Calibrate Scan Area";
+            btnCalibrateScanArea.UseVisualStyleBackColor = true;
+            btnCalibrateScanArea.Click += btnCalibrateScanArea_Click;
+            //
+            // btnCalibratePondColors
+            //
+            btnCalibratePondColors.Location = new System.Drawing.Point(160, 50);
+            btnCalibratePondColors.Name = "btnCalibratePondColors";
+            btnCalibratePondColors.Size = new System.Drawing.Size(140, 28);
+            btnCalibratePondColors.TabIndex = 1;
+            btnCalibratePondColors.Text = "Calibrate Pond Colors";
+            btnCalibratePondColors.UseVisualStyleBackColor = true;
+            btnCalibratePondColors.Click += btnCalibratePondColors_Click;
+            //
+            // lblCalibrationStatus
+            //
+            lblCalibrationStatus.ForeColor = System.Drawing.Color.Gray;
+            lblCalibrationStatus.Location = new System.Drawing.Point(10, 22);
+            lblCalibrationStatus.Name = "lblCalibrationStatus";
+            lblCalibrationStatus.Size = new System.Drawing.Size(400, 20);
+            lblCalibrationStatus.TabIndex = 2;
+            lblCalibrationStatus.Text = "No calibration data (will use global settings)";
+            //
             // CustomFishingActions
             //
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(453, 545);
+            ClientSize = new System.Drawing.Size(453, 640);
+            Controls.Add(groupBoxCalibration);
             Controls.Add(groupBoxPathPreview);
             Controls.Add(groupBoxRecorder);
             Controls.Add(updateSelectedActionItemBtn);
@@ -258,6 +305,7 @@
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             Name = "CustomFishingActions";
             Text = "Custom Fishing Actions Manager";
+            groupBoxCalibration.ResumeLayout(false);
             groupBoxPathPreview.ResumeLayout(false);
             groupBoxRecorder.ResumeLayout(false);
             ResumeLayout(false);
@@ -283,5 +331,9 @@
         private System.Windows.Forms.Label lblLivePreview;
         private System.Windows.Forms.GroupBox groupBoxPathPreview;
         private System.Windows.Forms.Label lblPathPreview;
+        private System.Windows.Forms.GroupBox groupBoxCalibration;
+        private System.Windows.Forms.Button btnCalibrateScanArea;
+        private System.Windows.Forms.Button btnCalibratePondColors;
+        private System.Windows.Forms.Label lblCalibrationStatus;
     }
 }

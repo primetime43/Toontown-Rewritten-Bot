@@ -47,15 +47,12 @@
             startCustomFishingBtn = new System.Windows.Forms.Button();
             stopCustomFishingBtn = new System.Windows.Forms.Button();
             createCustomFishingActionsBtn = new System.Windows.Forms.Button();
-            debugCustomActionsCheckBox = new System.Windows.Forms.CheckBox();
             labelCustomFishingCasts = new System.Windows.Forms.Label();
             numericUpDownCustomCasts = new System.Windows.Forms.NumericUpDown();
             labelCustomFishingSells = new System.Windows.Forms.Label();
             numericUpDownCustomSells = new System.Windows.Forms.NumericUpDown();
             groupBoxCustomFishingHelp = new System.Windows.Forms.GroupBox();
             labelCustomFishingHelp = new System.Windows.Forms.Label();
-            customScanAreaBtn = new System.Windows.Forms.Button();
-            customPondColorsBtn = new System.Windows.Forms.Button();
             customAutoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
             customWaitForFishCheckBox = new System.Windows.Forms.CheckBox();
             customShowOverlayCheckBox = new System.Windows.Forms.CheckBox();
@@ -583,19 +580,16 @@
             groupBoxCustomFishing.Controls.Add(stopCustomFishingBtn);
             groupBoxCustomFishing.Controls.Add(wizardCustomFishingBtn);
             groupBoxCustomFishing.Controls.Add(createCustomFishingActionsBtn);
-            groupBoxCustomFishing.Controls.Add(customScanAreaBtn);
-            groupBoxCustomFishing.Controls.Add(customPondColorsBtn);
             groupBoxCustomFishing.Controls.Add(customAutoDetectFishCheckBox);
             groupBoxCustomFishing.Controls.Add(customWaitForFishCheckBox);
             groupBoxCustomFishing.Controls.Add(customShowOverlayCheckBox);
             groupBoxCustomFishing.Controls.Add(customLabelBiteTimeout);
             groupBoxCustomFishing.Controls.Add(customNumericUpDownBiteTimeout);
-            groupBoxCustomFishing.Controls.Add(debugCustomActionsCheckBox);
             groupBoxCustomFishing.Location = new System.Drawing.Point(9, 10);
             groupBoxCustomFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBoxCustomFishing.Name = "groupBoxCustomFishing";
             groupBoxCustomFishing.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBoxCustomFishing.Size = new System.Drawing.Size(380, 375);
+            groupBoxCustomFishing.Size = new System.Drawing.Size(380, 310);
             groupBoxCustomFishing.TabIndex = 0;
             groupBoxCustomFishing.TabStop = false;
             groupBoxCustomFishing.Text = "Custom Fishing Actions";
@@ -689,53 +683,29 @@
             createCustomFishingActionsBtn.Location = new System.Drawing.Point(10, 200);
             createCustomFishingActionsBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             createCustomFishingActionsBtn.Name = "createCustomFishingActionsBtn";
-            createCustomFishingActionsBtn.Size = new System.Drawing.Size(175, 40);
+            createCustomFishingActionsBtn.Size = new System.Drawing.Size(175, 35);
             createCustomFishingActionsBtn.TabIndex = 8;
-            createCustomFishingActionsBtn.Text = "Create/Edit Actions";
-            toolTip1.SetToolTip(createCustomFishingActionsBtn, "Create or edit custom fishing actions for walking\nfrom the dock to the fisherman and back");
+            createCustomFishingActionsBtn.Text = "Edit Selected";
+            toolTip1.SetToolTip(createCustomFishingActionsBtn, "Open the manual editor to view or edit the selected action file");
             createCustomFishingActionsBtn.UseVisualStyleBackColor = true;
             createCustomFishingActionsBtn.Click += createCustomFishingActionsBtn_Click;
-            //
-            // customScanAreaBtn
-            //
-            customScanAreaBtn.Location = new System.Drawing.Point(195, 200);
-            customScanAreaBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            customScanAreaBtn.Name = "customScanAreaBtn";
-            customScanAreaBtn.Size = new System.Drawing.Size(85, 40);
-            customScanAreaBtn.TabIndex = 10;
-            customScanAreaBtn.Text = "Scan Area";
-            toolTip1.SetToolTip(customScanAreaBtn, "Adjust the scan area for fish detection at your custom location");
-            customScanAreaBtn.UseVisualStyleBackColor = true;
-            customScanAreaBtn.Click += customScanAreaBtn_Click;
-            //
-            // customPondColorsBtn
-            //
-            customPondColorsBtn.Location = new System.Drawing.Point(285, 200);
-            customPondColorsBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            customPondColorsBtn.Name = "customPondColorsBtn";
-            customPondColorsBtn.Size = new System.Drawing.Size(85, 40);
-            customPondColorsBtn.TabIndex = 11;
-            customPondColorsBtn.Text = "Pond Colors";
-            toolTip1.SetToolTip(customPondColorsBtn, "Calibrate pond water and fish shadow colors for your custom location");
-            customPondColorsBtn.UseVisualStyleBackColor = true;
-            customPondColorsBtn.Click += customPondColorsBtn_Click;
             //
             // customAutoDetectFishCheckBox
             //
             customAutoDetectFishCheckBox.AutoSize = true;
-            customAutoDetectFishCheckBox.Location = new System.Drawing.Point(10, 250);
+            customAutoDetectFishCheckBox.Location = new System.Drawing.Point(10, 245);
             customAutoDetectFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             customAutoDetectFishCheckBox.Name = "customAutoDetectFishCheckBox";
             customAutoDetectFishCheckBox.Size = new System.Drawing.Size(182, 20);
             customAutoDetectFishCheckBox.TabIndex = 12;
             customAutoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
-            toolTip1.SetToolTip(customAutoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them.\nUse 'Scan Area' and 'Pond Colors' to calibrate for your custom location.");
+            toolTip1.SetToolTip(customAutoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them.");
             customAutoDetectFishCheckBox.UseVisualStyleBackColor = true;
             //
             // customWaitForFishCheckBox
             //
             customWaitForFishCheckBox.AutoSize = true;
-            customWaitForFishCheckBox.Location = new System.Drawing.Point(200, 250);
+            customWaitForFishCheckBox.Location = new System.Drawing.Point(200, 245);
             customWaitForFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             customWaitForFishCheckBox.Name = "customWaitForFishCheckBox";
             customWaitForFishCheckBox.Size = new System.Drawing.Size(100, 20);
@@ -747,7 +717,7 @@
             // customShowOverlayCheckBox
             //
             customShowOverlayCheckBox.AutoSize = true;
-            customShowOverlayCheckBox.Location = new System.Drawing.Point(10, 280);
+            customShowOverlayCheckBox.Location = new System.Drawing.Point(10, 275);
             customShowOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             customShowOverlayCheckBox.Name = "customShowOverlayCheckBox";
             customShowOverlayCheckBox.Size = new System.Drawing.Size(169, 20);
@@ -760,7 +730,7 @@
             // customLabelBiteTimeout
             //
             customLabelBiteTimeout.AutoSize = true;
-            customLabelBiteTimeout.Location = new System.Drawing.Point(200, 281);
+            customLabelBiteTimeout.Location = new System.Drawing.Point(200, 276);
             customLabelBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             customLabelBiteTimeout.Name = "customLabelBiteTimeout";
             customLabelBiteTimeout.Size = new System.Drawing.Size(108, 16);
@@ -769,7 +739,7 @@
             //
             // customNumericUpDownBiteTimeout
             //
-            customNumericUpDownBiteTimeout.Location = new System.Drawing.Point(315, 279);
+            customNumericUpDownBiteTimeout.Location = new System.Drawing.Point(315, 274);
             customNumericUpDownBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             customNumericUpDownBiteTimeout.Maximum = new decimal(new int[] { 120, 0, 0, 0 });
             customNumericUpDownBiteTimeout.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
@@ -779,25 +749,13 @@
             toolTip1.SetToolTip(customNumericUpDownBiteTimeout, "How many seconds to wait for a fish to bite before timing out");
             customNumericUpDownBiteTimeout.Value = new decimal(new int[] { 30, 0, 0, 0 });
             //
-            // debugCustomActionsCheckBox
-            //
-            debugCustomActionsCheckBox.AutoSize = true;
-            debugCustomActionsCheckBox.Location = new System.Drawing.Point(10, 310);
-            debugCustomActionsCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            debugCustomActionsCheckBox.Name = "debugCustomActionsCheckBox";
-            debugCustomActionsCheckBox.Size = new System.Drawing.Size(162, 20);
-            debugCustomActionsCheckBox.TabIndex = 9;
-            debugCustomActionsCheckBox.Text = "Test Walk Path Only";
-            toolTip1.SetToolTip(debugCustomActionsCheckBox, "When checked, clicking Start will ONLY test your walk path\n(dock → fisherman → back) without any fishing.\n\nUse this to verify your custom action works correctly\nbefore running a full fishing session.");
-            debugCustomActionsCheckBox.UseVisualStyleBackColor = true;
-            //
             // wizardCustomFishingBtn
             //
-            wizardCustomFishingBtn.BackColor = System.Drawing.Color.LightBlue;
-            wizardCustomFishingBtn.Location = new System.Drawing.Point(195, 335);
+            wizardCustomFishingBtn.BackColor = System.Drawing.Color.LightGreen;
+            wizardCustomFishingBtn.Location = new System.Drawing.Point(195, 200);
             wizardCustomFishingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             wizardCustomFishingBtn.Name = "wizardCustomFishingBtn";
-            wizardCustomFishingBtn.Size = new System.Drawing.Size(175, 30);
+            wizardCustomFishingBtn.Size = new System.Drawing.Size(175, 35);
             wizardCustomFishingBtn.TabIndex = 17;
             wizardCustomFishingBtn.Text = "Create New (Wizard)";
             toolTip1.SetToolTip(wizardCustomFishingBtn, "Launch a step-by-step wizard to create a new custom fishing action file.\nGuides you through recording paths and calibrating fish detection.");
@@ -811,7 +769,7 @@
             groupBoxCustomFishingHelp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBoxCustomFishingHelp.Name = "groupBoxCustomFishingHelp";
             groupBoxCustomFishingHelp.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBoxCustomFishingHelp.Size = new System.Drawing.Size(200, 375);
+            groupBoxCustomFishingHelp.Size = new System.Drawing.Size(200, 310);
             groupBoxCustomFishingHelp.TabIndex = 1;
             groupBoxCustomFishingHelp.TabStop = false;
             groupBoxCustomFishingHelp.Text = "How to Use";
@@ -821,9 +779,9 @@
             labelCustomFishingHelp.Location = new System.Drawing.Point(10, 22);
             labelCustomFishingHelp.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             labelCustomFishingHelp.Name = "labelCustomFishingHelp";
-            labelCustomFishingHelp.Size = new System.Drawing.Size(180, 250);
+            labelCustomFishingHelp.Size = new System.Drawing.Size(180, 280);
             labelCustomFishingHelp.TabIndex = 0;
-            labelCustomFishingHelp.Text = "Custom fishing lets you create walk paths for any fishing location.\n\n1. Click 'Create New (Wizard)' for guided setup, or 'Create/Edit' for manual editing\n\n2. Select your custom action\n\n3. Set casts and sells\n\n4. Stand at your dock and click Start\n\nThe wizard guides you through recording paths and calibrating fish detection.";
+            labelCustomFishingHelp.Text = "Custom fishing lets you fish at any location.\n\n1. Click 'Create New' to use the guided wizard\n\n2. Select your action file\n\n3. Set casts and sells\n\n4. Stand at your dock and click Start\n\nUse 'Edit Selected' to manually modify existing files.";
             //
             // Racing
             // 
@@ -1973,7 +1931,6 @@
         private System.Windows.Forms.Label fishingShortcutsLabel;
         private System.Windows.Forms.Button createCustomFishingActionsBtn;
         private System.Windows.Forms.ComboBox customFishingFilesComboBox;
-        private System.Windows.Forms.CheckBox debugCustomActionsCheckBox;
         private System.Windows.Forms.NumericUpDown waterPlantNumericUpDown;
         public System.Windows.Forms.Button stopKeepToonAwakeButton;
         private System.Windows.Forms.Button createCustomGolfActionsBtn;
@@ -2016,8 +1973,6 @@
         private System.Windows.Forms.Button stopCustomFishingBtn;
         private System.Windows.Forms.GroupBox groupBoxCustomFishingHelp;
         private System.Windows.Forms.Label labelCustomFishingHelp;
-        private System.Windows.Forms.Button customScanAreaBtn;
-        private System.Windows.Forms.Button customPondColorsBtn;
         private System.Windows.Forms.CheckBox customAutoDetectFishCheckBox;
         private System.Windows.Forms.CheckBox customWaitForFishCheckBox;
         private System.Windows.Forms.CheckBox customShowOverlayCheckBox;
