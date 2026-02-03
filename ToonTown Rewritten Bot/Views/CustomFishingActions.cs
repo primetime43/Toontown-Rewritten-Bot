@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -39,6 +39,7 @@ namespace ToonTown_Rewritten_Bot.Views
             _keyboardHook = new GlobalKeyboardHook();
             _keyboardHook.KeyPressed += OnGlobalKeyPressed;
             _keyboardHook.KeyReleased += OnGlobalKeyReleased;
+            UpdatePathPreview();
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -61,8 +62,8 @@ namespace ToonTown_Rewritten_Bot.Views
                 // Now parse the time input as milliseconds
                 if (int.TryParse(actionTimeTxtBox.Text, out int timeInMilliseconds))
                 {
-                    // Add the time in milliseconds to the ListBox
-                    actionItemsListBox.Items.Add($"{selectedItem} ({timeInMilliseconds} milliseconds)");
+                    // Add the time in formatted display to the ListBox
+                    actionItemsListBox.Items.Add(FormatTimeDisplayItem(timeInMilliseconds));
                     actionTimeTxtBox.Clear(); // Optionally clear the TextBox after adding
                 }
                 else
@@ -79,11 +80,46 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 MessageBox.Show("Please select an item from the ComboBox.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            UpdatePathPreview();
+        }
+
+        /// <summary>
+        /// Formats a time value for display in the list (e.g., "TIME (0.8s)" instead of "TIME (847 milliseconds)")
+        /// </summary>
+        private string FormatTimeDisplayItem(long milliseconds)
+        {
+            return $"TIME ({DurationFormatter.FormatSeconds(milliseconds)})";
+        }
+
+        /// <summary>
+        /// Extracts milliseconds from a display string like "TIME (0.8s)" or "TIME (800 milliseconds)"
+        /// </summary>
+        private int ExtractMillisecondsFromDisplay(string displayText)
+        {
+            if (string.IsNullOrEmpty(displayText) || !displayText.StartsWith("TIME"))
+                return 0;
+
+            // Extract the part in parentheses
+            int start = displayText.IndexOf('(');
+            int end = displayText.IndexOf(')');
+            if (start >= 0 && end > start)
+            {
+                string timeStr = displayText.Substring(start + 1, end - start - 1);
+                return DurationFormatter.ParseToMilliseconds(timeStr);
+            }
+
+            // Fallback: extract digits only
+            string digits = new string(displayText.Where(char.IsDigit).ToArray());
+            if (int.TryParse(digits, out int ms))
+                return ms;
+
+            return 0;
         }
 
         private void removeItemBtn_Click(object sender, EventArgs e)
         {
             actionItemsListBox.Items.Remove(actionItemsListBox.SelectedItem);
+            UpdatePathPreview();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -117,8 +153,9 @@ namespace ToonTown_Rewritten_Bot.Views
                 if (actionText.StartsWith("TIME"))
                 {
                     action = "TIME";
-                    // Extract just the digits from the time value (handles various formats)
-                    command = new string(actionText.Where(char.IsDigit).ToArray());
+                    // Extract milliseconds from the new display format (e.g., "TIME (0.8s)")
+                    int ms = ExtractMillisecondsFromDisplay(actionText);
+                    command = ms.ToString();
                 }
                 else
                 {
@@ -166,26 +203,40 @@ namespace ToonTown_Rewritten_Bot.Views
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string json = File.ReadAllText(openFileDialog.FileName);
-                var actionsList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FishingActionCommand>>(json);
-
-                actionItemsListBox.Items.Clear();
-                foreach (var actionCommand in actionsList)
-                {
-                    string displayText;
-                    if (actionCommand.Action == "TIME")
-                    {
-                        // Extract just the number from the command (handles "500", "500 milliseconds", "500)", etc.)
-                        string timeValue = new string(actionCommand.Command.Where(char.IsDigit).ToArray());
-                        displayText = $"TIME ({timeValue} milliseconds)";
-                    }
-                    else
-                    {
-                        displayText = actionCommand.Action;
-                    }
-                    actionItemsListBox.Items.Add(displayText);
-                }
+                LoadActionsFromFile(openFileDialog.FileName);
             }
+        }
+
+        /// <summary>
+        /// Loads actions from a file path, supporting both v1 and v2 formats.
+        /// </summary>
+        private void LoadActionsFromFile(string filePath)
+        {
+            var result = CustomFishingActionFileManager.Load(filePath);
+            if (!result.Success)
+            {
+                MessageBox.Show($"Failed to load file: {result.ErrorMessage}", "Load Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            actionItemsListBox.Items.Clear();
+            foreach (var actionCommand in result.File.Actions)
+            {
+                string displayText;
+                if (actionCommand.Action == "TIME")
+                {
+                    // Convert to new display format (e.g., "TIME (0.8s)")
+                    int ms = DurationFormatter.ParseToMilliseconds(actionCommand.Command);
+                    displayText = FormatTimeDisplayItem(ms);
+                }
+                else
+                {
+                    displayText = actionCommand.Action;
+                }
+                actionItemsListBox.Items.Add(displayText);
+            }
+            UpdatePathPreview();
         }
 
         private void actionItemsListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -235,8 +286,8 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 if (int.TryParse(actionTimeTxtBox.Text, out int timeInMilliseconds))
                 {
-                    // Update the item in the ListBox with the new time in milliseconds
-                    actionItemsListBox.Items[selectedIndex] = $"{selectedItem} ({timeInMilliseconds} milliseconds)";
+                    // Update the item in the ListBox with the new formatted time
+                    actionItemsListBox.Items[selectedIndex] = FormatTimeDisplayItem(timeInMilliseconds);
                 }
                 else
                 {
@@ -254,12 +305,32 @@ namespace ToonTown_Rewritten_Bot.Views
                 MessageBox.Show("Please select a valid action.", "No Action Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            UpdatePathPreview();
         }
 
         #region Walk Path Recorder
 
         private void btnStartRecording_Click(object sender, EventArgs e)
         {
+            // Show countdown overlay to give user time to switch to TTR
+            lblRecordingStatus.Text = "Status: Starting countdown...";
+            lblRecordingStatus.ForeColor = Color.Orange;
+
+            // Minimize this window first
+            this.WindowState = FormWindowState.Minimized;
+
+            // Show countdown overlay
+            bool completed = CountdownOverlayForm.ShowCountdown(5);
+
+            if (!completed)
+            {
+                // User cancelled
+                this.WindowState = FormWindowState.Normal;
+                lblRecordingStatus.Text = "Status: Recording cancelled";
+                lblRecordingStatus.ForeColor = Color.Gray;
+                return;
+            }
+
             // Clear previous recording
             _recordedKeys.Clear();
             _currentKeyHeld = null;
@@ -271,14 +342,12 @@ namespace ToonTown_Rewritten_Bot.Views
             btnAddSellFish.Enabled = true;
             lblRecordingStatus.Text = "Status: Recording... Press arrow keys in TTR";
             lblRecordingStatus.ForeColor = Color.Green;
+            lblLivePreview.Text = "";
 
             // Start recording
             _isRecording = true;
             _recordingStopwatch.Restart();
             _keyboardHook.Start();
-
-            // Minimize this window so user can switch to TTR
-            this.WindowState = FormWindowState.Minimized;
         }
 
         private void btnStopRecording_Click(object sender, EventArgs e)
@@ -316,8 +385,9 @@ namespace ToonTown_Rewritten_Bot.Views
                 IsSellFish = true
             });
 
-            // Provide feedback
+            // Provide feedback and update live preview
             lblRecordingStatus.Text = "Status: Recording... SELL FISH added!";
+            UpdateLivePreview();
         }
 
         private void OnGlobalKeyPressed(object sender, Keys key)
@@ -363,10 +433,11 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 FinalizeCurrentKey();
 
-                // Update status
+                // Update status and live preview
                 this.BeginInvoke(new Action(() =>
                 {
                     lblRecordingStatus.Text = $"Status: Recording... {_recordedKeys.Count} actions";
+                    UpdateLivePreview();
                 }));
             }
         }
@@ -452,10 +523,118 @@ namespace ToonTown_Rewritten_Bot.Views
                 {
                     // Add the movement action
                     actionItemsListBox.Items.Add(recorded.Action);
-                    // Add the duration as a TIME action
-                    actionItemsListBox.Items.Add($"TIME ({recorded.DurationMs} milliseconds)");
+                    // Add the duration as a TIME action with new formatting
+                    actionItemsListBox.Items.Add(FormatTimeDisplayItem(recorded.DurationMs));
                 }
             }
+            UpdatePathPreview();
+        }
+
+        /// <summary>
+        /// Updates the live preview label during recording to show the path as it's recorded.
+        /// </summary>
+        private void UpdateLivePreview()
+        {
+            if (!_isRecording || _recordedKeys.Count == 0)
+            {
+                lblLivePreview.Text = "";
+                return;
+            }
+
+            var preview = new StringBuilder("Recording: ");
+            int maxItems = 10; // Limit how many items to show
+            int startIndex = Math.Max(0, _recordedKeys.Count - maxItems);
+
+            if (startIndex > 0)
+            {
+                preview.Append("... ");
+            }
+
+            for (int i = startIndex; i < _recordedKeys.Count; i++)
+            {
+                var recorded = _recordedKeys[i];
+                if (recorded.IsSellFish)
+                {
+                    preview.Append("[SELL] ");
+                }
+                else
+                {
+                    string arrow = DurationFormatter.GetDirectionArrow(recorded.Action);
+                    string time = DurationFormatter.FormatSeconds(recorded.DurationMs);
+                    preview.Append($"{arrow} {time} ");
+                }
+            }
+
+            lblLivePreview.Text = preview.ToString().TrimEnd();
+        }
+
+        /// <summary>
+        /// Updates the path preview group box with a visual representation of the current actions.
+        /// Format: ↓ 0.8s → ← 1.0s → ↑ 0.7s [SELL] ↓ 0.8s
+        /// </summary>
+        private void UpdatePathPreview()
+        {
+            if (actionItemsListBox.Items.Count == 0)
+            {
+                lblPathPreview.Text = "(No actions)";
+                return;
+            }
+
+            var preview = new StringBuilder();
+            string lastAction = null;
+            int lastTimeMs = 0;
+
+            for (int i = 0; i < actionItemsListBox.Items.Count; i++)
+            {
+                string item = actionItemsListBox.Items[i].ToString();
+
+                if (item.StartsWith("TIME"))
+                {
+                    // This is a duration for the previous action
+                    lastTimeMs = ExtractMillisecondsFromDisplay(item);
+
+                    // Add the previous action with its time
+                    if (!string.IsNullOrEmpty(lastAction))
+                    {
+                        string arrow = DurationFormatter.GetDirectionArrow(lastAction);
+                        string time = DurationFormatter.FormatSeconds(lastTimeMs);
+                        preview.Append($"{arrow} {time} ");
+                    }
+                    lastAction = null;
+                }
+                else if (item == "SELL FISH")
+                {
+                    // First add any pending action
+                    if (!string.IsNullOrEmpty(lastAction))
+                    {
+                        string arrow = DurationFormatter.GetDirectionArrow(lastAction);
+                        preview.Append($"{arrow} ");
+                    }
+                    preview.Append("[SELL] ");
+                    lastAction = null;
+                }
+                else
+                {
+                    // This is a movement action - save for when we get its TIME
+                    // First add any pending action without time
+                    if (!string.IsNullOrEmpty(lastAction))
+                    {
+                        string arrow = DurationFormatter.GetDirectionArrow(lastAction);
+                        preview.Append($"{arrow} ");
+                    }
+                    lastAction = item;
+                }
+            }
+
+            // Add any trailing action without time
+            if (!string.IsNullOrEmpty(lastAction))
+            {
+                string arrow = DurationFormatter.GetDirectionArrow(lastAction);
+                preview.Append($"{arrow} ");
+            }
+
+            string result = preview.ToString().TrimEnd();
+            lblPathPreview.Text = string.IsNullOrEmpty(result) ? "(No actions)" : result;
         }
 
         #endregion

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +8,7 @@ using System.Threading;
 using WindowsInput;
 using System.Diagnostics;
 using ToonTown_Rewritten_Bot.Models;
+using ToonTown_Rewritten_Bot.Utilities;
 
 namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 {
@@ -16,6 +17,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         private List<FishingActionCommand> actions = new List<FishingActionCommand>();
         private FishingActionKeys _actionKeys = new FishingActionKeys();
 
+        /// <summary>
+        /// Embedded calibration data from v2 format files.
+        /// Null if file was v1 format or had no calibration data.
+        /// </summary>
+        public CalibrationData EmbeddedCalibration { get; private set; }
+
         public CustomActionsFishing(string filePath)
         {
             LoadActionsFromJson(filePath);
@@ -23,10 +30,31 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         private void LoadActionsFromJson(string filePath)
         {
-            if (File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
-                string json = File.ReadAllText(filePath);
-                actions = JsonConvert.DeserializeObject<List<FishingActionCommand>>(json);
+                Debug.WriteLine($"[CustomActionsFishing] File not found: {filePath}");
+                return;
+            }
+
+            var result = CustomFishingActionFileManager.Load(filePath);
+            if (result.Success)
+            {
+                actions = result.File.Actions ?? new List<FishingActionCommand>();
+                EmbeddedCalibration = result.File.Calibration;
+
+                if (result.WasV1Format)
+                {
+                    Debug.WriteLine($"[CustomActionsFishing] Loaded v1 format: {actions.Count} actions");
+                }
+                else
+                {
+                    Debug.WriteLine($"[CustomActionsFishing] Loaded v2 format: {actions.Count} actions, " +
+                        $"Calibration: {(EmbeddedCalibration != null ? "Yes" : "No")}");
+                }
+            }
+            else
+            {
+                Debug.WriteLine($"[CustomActionsFishing] Failed to load: {result.ErrorMessage}");
             }
         }
 

@@ -1328,6 +1328,29 @@ namespace ToonTown_Rewritten_Bot
         }
 
         /// <summary>
+        /// Opens the guided wizard for creating custom fishing action files.
+        /// </summary>
+        private void wizardCustomFishingBtn_Click(object sender, EventArgs e)
+        {
+            using (var wizard = new CustomFishingWizardForm())
+            {
+                var result = wizard.ShowDialog();
+                if (result == DialogResult.OK && !string.IsNullOrEmpty(wizard.SavedFileName))
+                {
+                    // Reload the combo box and select the new file
+                    LoadCustomActions("Fishing", customFishingFilesComboBox);
+
+                    // Try to select the newly created file
+                    int index = customFishingFilesComboBox.FindStringExact(wizard.SavedFileName);
+                    if (index >= 0)
+                    {
+                        customFishingFilesComboBox.SelectedIndex = index;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Starts custom fishing with the selected action file.
         /// </summary>
         private async void startCustomFishingBtn_Click(object sender, EventArgs e)
@@ -1370,7 +1393,7 @@ namespace ToonTown_Rewritten_Bot
                 // Decide whether to debug custom actions or perform them normally
                 if (debugCustomActionsCheckBox.Checked)
                 {
-                    await _fishingService.StartCustomFishingDebugging(filePath + ".json", token);
+                    await FishingService.StartCustomFishingDebugging(filePath + ".json", token);
                 }
                 else
                 {

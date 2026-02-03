@@ -86,22 +86,26 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         /// <param name="jsonPath">The path to the JSON file containing the custom actions to be executed.</param>
         /// <param name="cancellationToken">Token to signal the cancellation of the debugging operation.</param>
+        /// <param name="showCompletionMessage">If true, shows a message box when debugging completes.</param>
         /// <remarks>
         /// This method is intended for debugging custom fishing actions. It simulates the fishing actions
         /// without actual fishing, focusing on the movement and actions defined in the JSON file.
-        /// It ensures the game window is maximized and focused before starting the actions
+        /// It ensures the game window is maximized and focused before starting the actions.
         /// </remarks>
-        public async Task StartCustomFishingDebugging(string jsonPath, CancellationToken cancellationToken)
+        public static async Task StartCustomFishingDebugging(string jsonPath, CancellationToken cancellationToken, bool showCompletionMessage = true)
         {
             CustomActionsFishing customFishing = new CustomActionsFishing(jsonPath);
 
-            // Prepare
-            FocusTTRWindow();
+            // Prepare - focus TTR window
+            CoreFunctionality.FocusTTRWindow();
             await Task.Delay(1000, cancellationToken).ConfigureAwait(false); // Initial delay before starting.
             await customFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false); // Start the action sequence
 
-            BringBotWindowToFront();
-            MessageBox.Show("Done Debugging Custom Action");
+            CoreFunctionality.BringBotWindowToFront();
+            if (showCompletionMessage)
+            {
+                MessageBox.Show("Done Debugging Custom Action");
+            }
         }
 
 
