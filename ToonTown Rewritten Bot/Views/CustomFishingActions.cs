@@ -25,6 +25,10 @@ namespace ToonTown_Rewritten_Bot.Views
         private Keys? _currentKeyHeld = null;
         private long _keyDownTime = 0;
 
+        // Calibration fields
+        private string _currentFilePath = null;
+        private CustomFishingActionFile _currentFile = null;
+
         // Helper class to store recorded key presses with timing
         private class RecordedKeyPress
         {
@@ -170,25 +174,42 @@ namespace ToonTown_Rewritten_Bot.Views
                 actionsList.Add(new FishingActionCommand { Action = action, Command = command });
             }
 
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(actionsList, Newtonsoft.Json.Formatting.Indented);
-            SaveToJsonFile(json);
+            // Build the v2 file format with embedded calibration
+            if (_currentFile == null)
+                _currentFile = new CustomFishingActionFile();
+
+            _currentFile.Actions = actionsList;
+
+            SaveActionFile();
         }
 
-        private void SaveToJsonFile(string jsonContent)
+        private void SaveActionFile()
         {
-            string folderPath = (string)CoreFunctionality.ManageCustomActionsFolder("Fishing", false);  // Getting the folder path only
+            string folderPath = (string)CoreFunctionality.ManageCustomActionsFolder("Fishing", false);
 
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "JSON File|*.json",
                 Title = "Save an Actions JSON File",
-                InitialDirectory = folderPath
+                InitialDirectory = folderPath,
+                FileName = !string.IsNullOrEmpty(_currentFilePath) ? Path.GetFileName(_currentFilePath) : ""
             };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(saveFileDialog.FileName, jsonContent);
-                MessageBox.Show($"Actions saved to {saveFileDialog.FileName}", "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Update name from filename
+                _currentFile.Name = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
+
+                bool success = CustomFishingActionFileManager.Save(_currentFile, saveFileDialog.FileName);
+                if (success)
+                {
+                    _currentFilePath = saveFileDialog.FileName;
+                    MessageBox.Show($"Actions saved to {saveFileDialog.FileName}", "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Failed to save file.", "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -220,6 +241,10 @@ namespace ToonTown_Rewritten_Bot.Views
                 return;
             }
 
+            // Store current file for calibration updates
+            _currentFilePath = filePath;
+            _currentFile = result.File;
+
             actionItemsListBox.Items.Clear();
             foreach (var actionCommand in result.File.Actions)
             {
@@ -237,6 +262,7 @@ namespace ToonTown_Rewritten_Bot.Views
                 actionItemsListBox.Items.Add(displayText);
             }
             UpdatePathPreview();
+            UpdateCalibrationStatus();
         }
 
         private void actionItemsListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -635,6 +661,150 @@ namespace ToonTown_Rewritten_Bot.Views
 
             string result = preview.ToString().TrimEnd();
             lblPathPreview.Text = string.IsNullOrEmpty(result) ? "(No actions)" : result;
+        }
+
+        #endregion
+
+        #region Calibration
+
+        /// <summary>
+        /// Updates the calibration status label based on the current file's calibration data.
+        /// </summary>
+        private void UpdateCalibrationStatus()
+        {
+            if (_currentFile?.Calibration != null)
+            {
+                bool hasScanArea = _currentFile.Calibration.ScanArea != null;
+                bool hasPondColors = _currentFile.Calibration.PondColors != null;
+
+                if (hasScanArea && hasPondColors)
+                {
+                    lblCalibrationStatus.Text = "✓ Scan area and pond colors calibrated";
+                    lblCalibrationStatus.ForeColor = Color.Green;
+                }
+                else if (hasScanArea)
+                {
+                    lblCalibrationStatus.Text = "✓ Scan area calibrated (no pond colors)";
+                    lblCalibrationStatus.ForeColor = Color.DarkOrange;
+                }
+                else if (hasPondColors)
+                {
+                    lblCalibrationStatus.Text = "✓ Pond colors calibrated (no scan area)";
+                    lblCalibrationStatus.ForeColor = Color.DarkOrange;
+                }
+                else
+                {
+                    lblCalibrationStatus.Text = "No calibration data (will use global settings)";
+                    lblCalibrationStatus.ForeColor = Color.Gray;
+                }
+            }
+            else
+            {
+                lblCalibrationStatus.Text = "No calibration data (will use global settings)";
+                lblCalibrationStatus.ForeColor = Color.Gray;
+            }
+        }
+
+        private void btnCalibrateScanArea_Click(object sender, EventArgs e)
+        {
+            // Ensure we have a file to save to
+            if (_currentFile == null)
+            {
+                _currentFile = new CustomFishingActionFile();
+            }
+
+            // Use the same approach as the wizard - show explanation first
+            var result = MessageBox.Show(
+                "This will open a fullscreen overlay on the game window where you can adjust the scan area.\n\n" +
+                "Make sure Toontown is running and visible before continuing.",
+                "Scan Area Calibration",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Information);
+
+            if (result != DialogResult.OK)
+                return;
+
+            // Use "CUSTOM FISHING ACTION" as the location for custom fishing calibration
+            var detector = new FishBubbleDetector("CUSTOM FISHING ACTION");
+            var defaultScanArea = detector.GetDefaultScanArea();
+
+            if (defaultScanArea.IsEmpty)
+            {
+                MessageBox.Show("No scan area defined for custom fishing.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (var calibrationForm = new ScanAreaCalibrationForm("CUSTOM FISHING ACTION", defaultScanArea))
+            {
+                calibrationForm.ShowDialog();
+
+                if (calibrationForm.WasSaved)
+                {
+                    // Get screen dimensions for percentage calculation (same as wizard)
+                    var screenBounds = Screen.PrimaryScreen.Bounds;
+                    var rect = calibrationForm.ResultScanArea;
+
+                    // Store calibration in the current file as percentages
+                    if (_currentFile.Calibration == null)
+                        _currentFile.Calibration = new CalibrationData();
+
+                    _currentFile.Calibration.ScanArea = new ScanAreaCalibration
+                    {
+                        XPercent = (float)((rect.X / (double)screenBounds.Width) * 100),
+                        YPercent = (float)((rect.Y / (double)screenBounds.Height) * 100),
+                        WidthPercent = (float)((rect.Width / (double)screenBounds.Width) * 100),
+                        HeightPercent = (float)((rect.Height / (double)screenBounds.Height) * 100)
+                    };
+
+                    UpdateCalibrationStatus();
+                    MessageBox.Show("Scan area calibrated!\n\nRemember to Save the action file to keep this calibration.",
+                        "Calibration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void btnCalibratePondColors_Click(object sender, EventArgs e)
+        {
+            // Ensure we have a file to save to
+            if (_currentFile == null)
+            {
+                _currentFile = new CustomFishingActionFile();
+            }
+
+            // Use "CUSTOM FISHING ACTION" as the location for custom fishing calibration
+            using (var colorForm = new PondColorCalibrationForm("CUSTOM FISHING ACTION"))
+            {
+                colorForm.ShowDialog();
+
+                // Same approach as wizard - read back from PondColorManager after save
+                if (colorForm.WasSaved)
+                {
+                    var colors = PondColorManager.GetPondColors("CUSTOM FISHING ACTION");
+                    if (colors != null)
+                    {
+                        if (_currentFile.Calibration == null)
+                            _currentFile.Calibration = new CalibrationData();
+
+                        _currentFile.Calibration.PondColors = new PondColorCalibration
+                        {
+                            ShadowR = colors.ShadowColor.R,
+                            ShadowG = colors.ShadowColor.G,
+                            ShadowB = colors.ShadowColor.B,
+                            WaterR = colors.WaterColor.R,
+                            WaterG = colors.WaterColor.G,
+                            WaterB = colors.WaterColor.B,
+                            ToleranceR = colors.ToleranceR,
+                            ToleranceG = colors.ToleranceG,
+                            ToleranceB = colors.ToleranceB
+                        };
+
+                        UpdateCalibrationStatus();
+                        MessageBox.Show("Pond colors calibrated!\n\nRemember to Save the action file to keep this calibration.",
+                            "Calibration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
         }
 
         #endregion

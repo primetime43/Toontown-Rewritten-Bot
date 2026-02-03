@@ -1390,16 +1390,8 @@ namespace ToonTown_Rewritten_Bot
                 string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 string filePath = Path.Combine(exePath, "Custom Fishing Actions", selectedFileName);
 
-                // Decide whether to debug custom actions or perform them normally
-                if (debugCustomActionsCheckBox.Checked)
-                {
-                    await FishingService.StartCustomFishingDebugging(filePath + ".json", token);
-                }
-                else
-                {
-                    await _fishingService.StartFishing("CUSTOM FISHING ACTION", numberOfCasts, numberOfSells,
-                        randomFishingCheckBox.Checked, token, filePath + ".json", customAutoDetectFishCheckBox.Checked);
-                }
+                await _fishingService.StartFishing("CUSTOM FISHING ACTION", numberOfCasts, numberOfSells,
+                    randomFishingCheckBox.Checked, token, filePath + ".json", customAutoDetectFishCheckBox.Checked);
             }
             catch (TaskCanceledException)
             {
@@ -1425,79 +1417,6 @@ namespace ToonTown_Rewritten_Bot
 
             _cancellationTokenSource.Cancel();
             MessageBox.Show("Custom fishing stopped!", "Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        /// <summary>
-        /// Opens the scan area calibration form for custom fishing locations.
-        /// </summary>
-        private void customScanAreaBtn_Click(object sender, EventArgs e)
-        {
-            // Show explanation before opening
-            var result = MessageBox.Show(
-                "This will open a fullscreen overlay on the game window where you can adjust the scan area.\n\n" +
-                "How to use:\n" +
-                "• Drag the corners/edges to resize the green rectangle\n" +
-                "• Drag the center to move the entire area\n" +
-                "• Press ENTER or click 'Save' to save changes\n" +
-                "• Press ESC or click 'Cancel' to exit without saving\n\n" +
-                "Make sure Toontown is running and visible before continuing.",
-                "Scan Area Calibration",
-                MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Information);
-
-            if (result != DialogResult.OK)
-                return;
-
-            // Use "CUSTOM FISHING ACTION" as the location for custom fishing calibration
-            var detector = new Utilities.FishBubbleDetector("CUSTOM FISHING ACTION");
-            var defaultScanArea = detector.GetDefaultScanArea();
-
-            if (defaultScanArea.IsEmpty)
-            {
-                MessageBox.Show("No scan area defined for custom fishing.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            using (var calibrationForm = new ScanAreaCalibrationForm("CUSTOM FISHING ACTION", defaultScanArea))
-            {
-                calibrationForm.ShowDialog();
-
-                if (calibrationForm.WasSaved)
-                {
-                    MessageBox.Show($"Custom scan area saved.\n\n" +
-                        $"New dimensions: {calibrationForm.ResultScanArea.Width} x {calibrationForm.ResultScanArea.Height}",
-                        "Scan Area Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Opens the pond color calibration form for custom fishing locations.
-        /// </summary>
-        private void customPondColorsBtn_Click(object sender, EventArgs e)
-        {
-            // Show explanation before opening
-            var result = MessageBox.Show(
-                "This will open a calibration window to set the pond water and fish shadow colors.\n\n" +
-                "How to use:\n" +
-                "• Click on the pond water to sample the water color\n" +
-                "• Click on a fish shadow to sample the shadow color\n" +
-                "• Use the sliders to adjust color tolerance\n" +
-                "• Click 'Save' when done, or 'Cancel' to exit\n\n" +
-                "Make sure Toontown is running and you can see the pond.",
-                "Pond Color Calibration",
-                MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Information);
-
-            if (result != DialogResult.OK)
-                return;
-
-            // Use "CUSTOM FISHING ACTION" as the location for custom fishing calibration
-            using (var colorForm = new PondColorCalibrationForm("CUSTOM FISHING ACTION"))
-            {
-                colorForm.ShowDialog();
-            }
         }
 
         public void LoadCustomActions(string actionType, ComboBox comboBox)
