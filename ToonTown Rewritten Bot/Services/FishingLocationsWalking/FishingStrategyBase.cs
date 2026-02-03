@@ -127,58 +127,51 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
-        /// Updates the overlay with the current action status.
+        /// Safely invokes an action on the overlay form, handling thread marshalling and disposal checks.
         /// </summary>
-        protected void UpdateOverlayAction(string currentAction, string nextAction, string status)
+        private void SafeOverlayInvoke(Action<FishingOverlayForm> action)
         {
-            if (Overlay != null && !Overlay.IsDisposed)
+            if (Overlay == null || Overlay.IsDisposed)
+                return;
+
+            try
             {
-                try
+                if (Overlay.InvokeRequired)
                 {
                     Overlay.BeginInvoke(new Action(() =>
                     {
-                        Overlay.UpdateActionStatus(currentAction, nextAction, status);
+                        if (Overlay != null && !Overlay.IsDisposed)
+                            action(Overlay);
                     }));
                 }
-                catch { }
+                else
+                {
+                    action(Overlay);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Error invoking on overlay: {ex.Message}");
             }
         }
+
+        /// <summary>
+        /// Updates the overlay with the current action status.
+        /// </summary>
+        protected void UpdateOverlayAction(string currentAction, string nextAction, string status)
+            => SafeOverlayInvoke(o => o.UpdateActionStatus(currentAction, nextAction, status));
 
         /// <summary>
         /// Updates the overlay with fishing statistics.
         /// </summary>
         protected void UpdateOverlayStats()
-        {
-            if (Overlay != null && !Overlay.IsDisposed)
-            {
-                try
-                {
-                    Overlay.BeginInvoke(new Action(() =>
-                    {
-                        Overlay.UpdateStats(_fishCaught, _castCount);
-                    }));
-                }
-                catch { }
-            }
-        }
+            => SafeOverlayInvoke(o => o.UpdateStats(_fishCaught, _castCount));
 
         /// <summary>
         /// Updates the overlay with the fishing location.
         /// </summary>
         protected void UpdateOverlayLocation(string location)
-        {
-            if (Overlay != null && !Overlay.IsDisposed)
-            {
-                try
-                {
-                    Overlay.BeginInvoke(new Action(() =>
-                    {
-                        Overlay.SetLocation(location);
-                    }));
-                }
-                catch { }
-            }
-        }
+            => SafeOverlayInvoke(o => o.SetLocation(location));
 
         /// <summary>
         /// An abstract method to be implemented by derived classes, detailing the process
@@ -219,10 +212,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public async Task StartFishingActionsAsync(int numberOfCasts, bool fishVariance, bool autoDetectFish, CancellationToken cancellationToken)
         {
             // Check if game window is available
-            if (!IsGameWindowReady())
-            {
-                throw new InvalidOperationException("Toontown Rewritten window not found. Please make sure the game is running.");
-            }
+            EnsureGameWindowReady();
 
             int totalCasts = numberOfCasts;
 
@@ -791,58 +781,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// Thread-safe - can be called from any thread.
         /// </summary>
         private void UpdateOverlay(FishDetectionDebugResult result, Point? targetFish, string status)
-        {
-            if (Overlay == null || Overlay.IsDisposed)
-                return;
-
-            try
-            {
-                if (Overlay.InvokeRequired)
-                {
-                    Overlay.BeginInvoke(new Action(() =>
-                    {
-                        if (Overlay != null && !Overlay.IsDisposed)
-                            Overlay.UpdateDetection(result, targetFish, status);
-                    }));
-                }
-                else
-                {
-                    Overlay.UpdateDetection(result, targetFish, status);
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Error updating overlay: {ex.Message}");
-            }
-        }
+            => SafeOverlayInvoke(o => o.UpdateDetection(result, targetFish, status));
 
         /// <summary>
         /// Clears the fishing overlay.
         /// </summary>
         private void ClearOverlay()
-        {
-            if (Overlay == null || Overlay.IsDisposed)
-                return;
-
-            try
-            {
-                if (Overlay.InvokeRequired)
-                {
-                    Overlay.BeginInvoke(new Action(() =>
-                    {
-                        if (Overlay != null && !Overlay.IsDisposed)
-                            Overlay.ClearOverlay();
-                    }));
-                }
-                else
-                {
-                    Overlay.ClearOverlay();
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Error clearing overlay: {ex.Message}");
-            }
-        }
+            => SafeOverlayInvoke(o => o.ClearOverlay());
     }
 }

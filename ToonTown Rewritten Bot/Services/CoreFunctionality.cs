@@ -214,6 +214,36 @@ namespace ToonTown_Rewritten_Bot.Services
             return IsWindowVisible(hwnd);
         }
 
+        private const string GameWindowNotFoundMessage = "Toontown Rewritten window not found. Please make sure the game is running.";
+
+        /// <summary>
+        /// Ensures the game window is ready, throwing an exception if not.
+        /// Use this in services that should throw on failure.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when game window is not found.</exception>
+        public static void EnsureGameWindowReady()
+        {
+            if (!IsGameWindowReady())
+            {
+                throw new InvalidOperationException(GameWindowNotFoundMessage);
+            }
+        }
+
+        /// <summary>
+        /// Checks if game window is ready, showing a message box and returning false if not.
+        /// Use this in UI event handlers that should show user-friendly errors.
+        /// </summary>
+        /// <returns>True if game window is ready, false otherwise.</returns>
+        public static bool EnsureGameWindowReadyWithMessage()
+        {
+            if (!IsGameWindowReady())
+            {
+                MessageBox.Show(GameWindowNotFoundMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// Gets the current position and size of the Toontown window.
         /// </summary>

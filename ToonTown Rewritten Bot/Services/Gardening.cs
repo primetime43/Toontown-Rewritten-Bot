@@ -25,12 +25,8 @@ namespace ToonTown_Rewritten_Bot.Services
                 return;
 
             // Check if game window is available and focus it
-            if (!IsGameWindowReady())
-            {
-                MessageBox.Show("Toontown Rewritten window not found. Please make sure the game is running.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!EnsureGameWindowReadyWithMessage())
                 return;
-            }
             FocusTTRWindow();
 
             await Task.Delay(2000);
@@ -119,12 +115,8 @@ namespace ToonTown_Rewritten_Bot.Services
             MessageBox.Show("Press OK when ready to begin!");
 
             // Check if game window is available and focus it
-            if (!IsGameWindowReady())
-            {
-                MessageBox.Show("Toontown Rewritten window not found. Please make sure the game is running.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!EnsureGameWindowReadyWithMessage())
                 return;
-            }
             FocusTTRWindow();
 
             await Task.Delay(2000, cancellationToken);
