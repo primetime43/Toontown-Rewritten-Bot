@@ -55,9 +55,10 @@ namespace ToonTown_Rewritten_Bot
 
             CoreFunctionality.EnsureAllEmbeddedJsonFilesExist();
 
-            // Load custom actions for Golf and Custom Fishing tabs
+            // Load custom actions for Golf, Custom Fishing, and Gardening tabs
             LoadCustomActions("Golf", customGolfFilesComboBox);
             LoadCustomActions("Fishing", customFishingFilesComboBox);
+            LoadCustomActions("Gardening", customGardeningFilesComboBox);
 
             CoordinatesManager.ReadCoordinates();
             LoadCoordinatesIntoResetBox();
@@ -392,6 +393,119 @@ namespace ToonTown_Rewritten_Bot
             {
                 // General error handling
                 MessageBox.Show($"An error occurred: {ex.Message}");
+            }
+        }
+
+        private void wizardCustomGardeningBtn_Click(object sender, EventArgs e)
+        {
+            using (var form = new CustomGardeningWizardForm())
+            {
+                form.ShowDialog();
+            }
+
+            LoadCustomActions("Gardening", customGardeningFilesComboBox);
+        }
+
+        private void editCustomGardeningBtn_Click(object sender, EventArgs e)
+        {
+            using (var form = new CustomGardeningActions())
+            {
+                form.ShowDialog();
+            }
+
+            LoadCustomActions("Gardening", customGardeningFilesComboBox);
+        }
+
+        private async void startCustomGardeningBtn_Click(object sender, EventArgs e)
+        {
+            string selectedFileName = customGardeningFilesComboBox.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selectedFileName))
+            {
+                MessageBox.Show("Please select a gardening routine file.");
+                return;
+            }
+
+            string folderPath = (string)CoreFunctionality.ManageCustomActionsFolder("Gardening", false);
+            string filePath = Path.Combine(folderPath, selectedFileName + ".json");
+
+            var result = Utilities.CustomGardeningActionFileManager.Load(filePath);
+            if (!result.Success)
+            {
+                MessageBox.Show($"Failed to load file: {result.ErrorMessage}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var gardeningKeys = new Models.GardeningActionKeys();
+
+            try
+            {
+                if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+                {
+                    _cancellationTokenSource?.Dispose();
+                    _cancellationTokenSource = new CancellationTokenSource();
+                }
+
+                startCustomGardeningBtn.Enabled = false;
+                CoreFunctionality.FocusTTRWindow();
+                await Task.Delay(1000);
+
+                foreach (var action in result.File.Actions)
+                {
+                    if (_cancellationTokenSource.Token.IsCancellationRequested)
+                        break;
+
+                    switch (action.Action)
+                    {
+                        case "WALK FORWARD":
+                        case "WALK BACKWARD":
+                        case "WALK LEFT":
+                        case "WALK RIGHT":
+                        case "TURN LEFT":
+                        case "TURN RIGHT":
+                            if (gardeningKeys.ActionKeyMap.TryGetValue(action.Action, out var keyCode))
+                            {
+                                WindowsInput.InputSimulator.SimulateKeyDown(keyCode);
+                                await Task.Delay(action.Duration, _cancellationTokenSource.Token);
+                                WindowsInput.InputSimulator.SimulateKeyUp(keyCode);
+                            }
+                            break;
+
+                        case "DELAY":
+                            await Task.Delay(action.Duration, _cancellationTokenSource.Token);
+                            break;
+
+                        case "PLANT FLOWER":
+                            if (!string.IsNullOrEmpty(action.BeanSequence))
+                            {
+                                await Services.Gardening.PlantFlowerAsync(action.BeanSequence, _cancellationTokenSource.Token);
+                            }
+                            break;
+
+                        case "WATER PLANT":
+                            int waterCount = action.WaterCount > 0 ? action.WaterCount : 1;
+                            await Services.Gardening.WaterPlantAsync(waterCount, _cancellationTokenSource.Token);
+                            break;
+
+                        case "REMOVE PLANT":
+                            await Services.Gardening.RemovePlantAsync(_cancellationTokenSource.Token);
+                            break;
+                    }
+                }
+
+                MessageBox.Show("Gardening routine completed!", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (OperationCanceledException)
+            {
+                MessageBox.Show("Gardening routine was canceled.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                startCustomGardeningBtn.Enabled = true;
+                CoreFunctionality.BringBotWindowToFront();
             }
         }
 

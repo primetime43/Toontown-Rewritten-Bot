@@ -90,6 +90,12 @@
             groupBox3 = new System.Windows.Forms.GroupBox();
             flowerBeanAmountDropdown = new System.Windows.Forms.ComboBox();
             selectFlowerBeanAmountBtn = new System.Windows.Forms.Button();
+            groupBoxCustomGardening = new System.Windows.Forms.GroupBox();
+            customGardeningFilesComboBox = new System.Windows.Forms.ComboBox();
+            labelSelectGardeningFile = new System.Windows.Forms.Label();
+            wizardCustomGardeningBtn = new System.Windows.Forms.Button();
+            editCustomGardeningBtn = new System.Windows.Forms.Button();
+            startCustomGardeningBtn = new System.Windows.Forms.Button();
             Golf = new System.Windows.Forms.TabPage();
             groupBox10 = new System.Windows.Forms.GroupBox();
             autoGolfStatusLabel = new System.Windows.Forms.Label();
@@ -184,6 +190,7 @@
             groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).BeginInit();
             groupBox3.SuspendLayout();
+            groupBoxCustomGardening.SuspendLayout();
             Golf.SuspendLayout();
             groupBox10.SuspendLayout();
             golfHelpGroupBox.SuspendLayout();
@@ -831,10 +838,11 @@
             startRacing.Click += button5_Click;
             // 
             // Gardening
-            // 
+            //
             Gardening.Controls.Add(groupBox5);
             Gardening.Controls.Add(groupBox4);
             Gardening.Controls.Add(groupBox3);
+            Gardening.Controls.Add(groupBoxCustomGardening);
             Gardening.Location = new System.Drawing.Point(4, 25);
             Gardening.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Gardening.Name = "Gardening";
@@ -932,7 +940,72 @@
             selectFlowerBeanAmountBtn.Text = "Select";
             selectFlowerBeanAmountBtn.UseVisualStyleBackColor = true;
             selectFlowerBeanAmountBtn.Click += selectFlowerBeanAmountBtn_Click;
-            // 
+            //
+            // groupBoxCustomGardening
+            //
+            groupBoxCustomGardening.Controls.Add(labelSelectGardeningFile);
+            groupBoxCustomGardening.Controls.Add(customGardeningFilesComboBox);
+            groupBoxCustomGardening.Controls.Add(wizardCustomGardeningBtn);
+            groupBoxCustomGardening.Controls.Add(editCustomGardeningBtn);
+            groupBoxCustomGardening.Controls.Add(startCustomGardeningBtn);
+            groupBoxCustomGardening.Location = new System.Drawing.Point(220, 3);
+            groupBoxCustomGardening.Name = "groupBoxCustomGardening";
+            groupBoxCustomGardening.Size = new System.Drawing.Size(380, 272);
+            groupBoxCustomGardening.TabIndex = 6;
+            groupBoxCustomGardening.TabStop = false;
+            groupBoxCustomGardening.Text = "Custom Gardening Routines";
+            //
+            // labelSelectGardeningFile
+            //
+            labelSelectGardeningFile.AutoSize = true;
+            labelSelectGardeningFile.Location = new System.Drawing.Point(15, 25);
+            labelSelectGardeningFile.Name = "labelSelectGardeningFile";
+            labelSelectGardeningFile.Size = new System.Drawing.Size(90, 16);
+            labelSelectGardeningFile.TabIndex = 0;
+            labelSelectGardeningFile.Text = "Select Routine:";
+            //
+            // customGardeningFilesComboBox
+            //
+            customGardeningFilesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            customGardeningFilesComboBox.FormattingEnabled = true;
+            customGardeningFilesComboBox.Location = new System.Drawing.Point(15, 45);
+            customGardeningFilesComboBox.Name = "customGardeningFilesComboBox";
+            customGardeningFilesComboBox.Size = new System.Drawing.Size(250, 24);
+            customGardeningFilesComboBox.Sorted = true;
+            customGardeningFilesComboBox.TabIndex = 1;
+            //
+            // wizardCustomGardeningBtn
+            //
+            wizardCustomGardeningBtn.BackColor = System.Drawing.Color.LightGreen;
+            wizardCustomGardeningBtn.Location = new System.Drawing.Point(15, 85);
+            wizardCustomGardeningBtn.Name = "wizardCustomGardeningBtn";
+            wizardCustomGardeningBtn.Size = new System.Drawing.Size(160, 40);
+            wizardCustomGardeningBtn.TabIndex = 2;
+            wizardCustomGardeningBtn.Text = "Create New (Wizard)";
+            toolTip1.SetToolTip(wizardCustomGardeningBtn, "Launch a step-by-step wizard to create a new gardening routine.\nGuides you through setting up flower beds and walking paths.");
+            wizardCustomGardeningBtn.UseVisualStyleBackColor = false;
+            wizardCustomGardeningBtn.Click += wizardCustomGardeningBtn_Click;
+            //
+            // editCustomGardeningBtn
+            //
+            editCustomGardeningBtn.Location = new System.Drawing.Point(185, 85);
+            editCustomGardeningBtn.Name = "editCustomGardeningBtn";
+            editCustomGardeningBtn.Size = new System.Drawing.Size(160, 40);
+            editCustomGardeningBtn.TabIndex = 3;
+            editCustomGardeningBtn.Text = "Edit Actions (Manual)";
+            editCustomGardeningBtn.UseVisualStyleBackColor = true;
+            editCustomGardeningBtn.Click += editCustomGardeningBtn_Click;
+            //
+            // startCustomGardeningBtn
+            //
+            startCustomGardeningBtn.Location = new System.Drawing.Point(15, 140);
+            startCustomGardeningBtn.Name = "startCustomGardeningBtn";
+            startCustomGardeningBtn.Size = new System.Drawing.Size(150, 40);
+            startCustomGardeningBtn.TabIndex = 4;
+            startCustomGardeningBtn.Text = "Start Routine";
+            startCustomGardeningBtn.UseVisualStyleBackColor = true;
+            startCustomGardeningBtn.Click += startCustomGardeningBtn_Click;
+            //
             // Golf
             // 
             Golf.Controls.Add(groupBox10);
@@ -1828,6 +1901,8 @@
             groupBox4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).EndInit();
             groupBox3.ResumeLayout(false);
+            groupBoxCustomGardening.ResumeLayout(false);
+            groupBoxCustomGardening.PerformLayout();
             Golf.ResumeLayout(false);
             groupBox10.ResumeLayout(false);
             groupBox10.PerformLayout();
@@ -1994,6 +2069,12 @@
         private System.Windows.Forms.NumericUpDown customNumericUpDownBiteTimeout;
         private System.Windows.Forms.Button wizardCustomFishingBtn;
         private System.Windows.Forms.Button wizardCustomGolfBtn;
+        private System.Windows.Forms.GroupBox groupBoxCustomGardening;
+        private System.Windows.Forms.ComboBox customGardeningFilesComboBox;
+        private System.Windows.Forms.Label labelSelectGardeningFile;
+        private System.Windows.Forms.Button wizardCustomGardeningBtn;
+        private System.Windows.Forms.Button editCustomGardeningBtn;
+        private System.Windows.Forms.Button startCustomGardeningBtn;
     }
 }
 
