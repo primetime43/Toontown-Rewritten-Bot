@@ -319,13 +319,19 @@ namespace ToonTown_Rewritten_Bot.Services
         /// <summary>
         /// Either creates and returns the path to a specific custom actions folder or returns the paths of all JSON files within that folder.
         /// </summary>
-        /// <param name="actionType">The type of actions folder to manage ('Fishing' or 'Golf').</param>
+        /// <param name="actionType">The type of actions folder to manage ('Fishing', 'Golf', or 'Gardening').</param>
         /// <param name="returnFiles">If true, returns paths of all .json files in the folder; otherwise, returns the folder path.</param>
         /// <returns>If returnFiles is false, returns the path to the folder. If returnFiles is true, returns an array of file paths for .json files in the folder.</returns>
         public static object ManageCustomActionsFolder(string actionType, bool returnFiles = false)
         {
             // Define the folder name based on the action type
-            string folderName = actionType == "Fishing" ? "Custom Fishing Actions" : "Custom Golf Actions";
+            string folderName = actionType switch
+            {
+                "Fishing" => "Custom Fishing Actions",
+                "Golf" => "Custom Golf Actions",
+                "Gardening" => "Custom Gardening Actions",
+                _ => $"Custom {actionType} Actions"
+            };
 
             // Get the directory where the executable is running
             string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

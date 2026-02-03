@@ -30,6 +30,12 @@
     <Compile Update="Views\CustomFishingWizardForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Views\CustomGardeningActions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\CustomGardeningWizardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Views\CustomGolfActions.cs">
       <SubType>Form</SubType>
     </Compile>
