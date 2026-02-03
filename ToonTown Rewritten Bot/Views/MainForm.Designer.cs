@@ -103,6 +103,7 @@
             golfHelpGroupBox = new System.Windows.Forms.GroupBox();
             golfInstructionsLabel = new System.Windows.Forms.Label();
             createCustomGolfActionsBtn = new System.Windows.Forms.Button();
+            wizardCustomGolfBtn = new System.Windows.Forms.Button();
             Doodles = new System.Windows.Forms.TabPage();
             richTextBox2 = new System.Windows.Forms.RichTextBox();
             groupBox8 = new System.Windows.Forms.GroupBox();
@@ -1040,8 +1041,9 @@
             button1.Click += button1_Click;
             // 
             // golfHelpGroupBox
-            // 
+            //
             golfHelpGroupBox.Controls.Add(golfInstructionsLabel);
+            golfHelpGroupBox.Controls.Add(wizardCustomGolfBtn);
             golfHelpGroupBox.Controls.Add(createCustomGolfActionsBtn);
             golfHelpGroupBox.Location = new System.Drawing.Point(367, 6);
             golfHelpGroupBox.Name = "golfHelpGroupBox";
@@ -1049,22 +1051,34 @@
             golfHelpGroupBox.TabIndex = 24;
             golfHelpGroupBox.TabStop = false;
             golfHelpGroupBox.Text = "How to Use";
-            // 
+            //
             // golfInstructionsLabel
-            // 
+            //
             golfInstructionsLabel.Location = new System.Drawing.Point(6, 20);
             golfInstructionsLabel.Name = "golfInstructionsLabel";
-            golfInstructionsLabel.Size = new System.Drawing.Size(160, 230);
+            golfInstructionsLabel.Size = new System.Drawing.Size(160, 185);
             golfInstructionsLabel.TabIndex = 0;
             golfInstructionsLabel.Text = resources.GetString("golfInstructionsLabel.Text");
-            // 
+            //
+            // wizardCustomGolfBtn
+            //
+            wizardCustomGolfBtn.BackColor = System.Drawing.Color.LightGreen;
+            wizardCustomGolfBtn.Location = new System.Drawing.Point(6, 210);
+            wizardCustomGolfBtn.Name = "wizardCustomGolfBtn";
+            wizardCustomGolfBtn.Size = new System.Drawing.Size(160, 40);
+            wizardCustomGolfBtn.TabIndex = 25;
+            wizardCustomGolfBtn.Text = "Create New (Wizard)";
+            toolTip1.SetToolTip(wizardCustomGolfBtn, "Launch a step-by-step wizard to create a new custom golf action file.\nGuides you through setting up shots with power and aim adjustments.");
+            wizardCustomGolfBtn.UseVisualStyleBackColor = false;
+            wizardCustomGolfBtn.Click += wizardCustomGolfBtn_Click;
+            //
             // createCustomGolfActionsBtn
-            // 
+            //
             createCustomGolfActionsBtn.Location = new System.Drawing.Point(6, 260);
             createCustomGolfActionsBtn.Name = "createCustomGolfActionsBtn";
             createCustomGolfActionsBtn.Size = new System.Drawing.Size(160, 45);
             createCustomGolfActionsBtn.TabIndex = 18;
-            createCustomGolfActionsBtn.Text = "Create/Edit Custom Actions";
+            createCustomGolfActionsBtn.Text = "Edit Actions (Manual)";
             createCustomGolfActionsBtn.UseVisualStyleBackColor = true;
             createCustomGolfActionsBtn.Click += createCustomGolfActionsBtn_Click;
             // 
@@ -1979,6 +1993,7 @@
         private System.Windows.Forms.Label customLabelBiteTimeout;
         private System.Windows.Forms.NumericUpDown customNumericUpDownBiteTimeout;
         private System.Windows.Forms.Button wizardCustomFishingBtn;
+        private System.Windows.Forms.Button wizardCustomGolfBtn;
     }
 }
 

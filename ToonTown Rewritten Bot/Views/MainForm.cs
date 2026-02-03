@@ -1478,6 +1478,16 @@ namespace ToonTown_Rewritten_Bot
             LoadCustomActions("Golf", customGolfFilesComboBox); // load golf actions after the form is closed
         }
 
+        private void wizardCustomGolfBtn_Click(object sender, EventArgs e)
+        {
+            using (var form = new CustomGolfWizardForm())
+            {
+                form.ShowDialog();
+            }
+
+            LoadCustomActions("Golf", customGolfFilesComboBox); // Reload after wizard closes
+        }
+
         private async void button1_Click(object sender, EventArgs e)
         {
             string selectedFileName = customGolfFilesComboBox.SelectedItem?.ToString();
