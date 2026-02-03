@@ -44,7 +44,11 @@
             lblRecordingStatus = new System.Windows.Forms.Label();
             btnAddSellFish = new System.Windows.Forms.Button();
             lblRecorderHelp = new System.Windows.Forms.Label();
+            lblLivePreview = new System.Windows.Forms.Label();
+            groupBoxPathPreview = new System.Windows.Forms.GroupBox();
+            lblPathPreview = new System.Windows.Forms.Label();
             groupBoxRecorder.SuspendLayout();
+            groupBoxPathPreview.SuspendLayout();
             SuspendLayout();
             // 
             // addItemBtn
@@ -144,9 +148,10 @@
             groupBoxRecorder.Controls.Add(btnStopRecording);
             groupBoxRecorder.Controls.Add(lblRecordingStatus);
             groupBoxRecorder.Controls.Add(btnAddSellFish);
+            groupBoxRecorder.Controls.Add(lblLivePreview);
             groupBoxRecorder.Location = new System.Drawing.Point(14, 320);
             groupBoxRecorder.Name = "groupBoxRecorder";
-            groupBoxRecorder.Size = new System.Drawing.Size(424, 145);
+            groupBoxRecorder.Size = new System.Drawing.Size(424, 150);
             groupBoxRecorder.TabIndex = 10;
             groupBoxRecorder.TabStop = false;
             groupBoxRecorder.Text = "Walk Path Recorder";
@@ -203,11 +208,42 @@
             lblRecordingStatus.TabIndex = 4;
             lblRecordingStatus.Text = "Status: Not recording";
             //
+            // lblLivePreview
+            //
+            lblLivePreview.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular);
+            lblLivePreview.ForeColor = System.Drawing.Color.DarkBlue;
+            lblLivePreview.Location = new System.Drawing.Point(10, 130);
+            lblLivePreview.Name = "lblLivePreview";
+            lblLivePreview.Size = new System.Drawing.Size(400, 15);
+            lblLivePreview.TabIndex = 5;
+            lblLivePreview.Text = "";
+            //
+            // groupBoxPathPreview
+            //
+            groupBoxPathPreview.Controls.Add(lblPathPreview);
+            groupBoxPathPreview.Location = new System.Drawing.Point(14, 475);
+            groupBoxPathPreview.Name = "groupBoxPathPreview";
+            groupBoxPathPreview.Size = new System.Drawing.Size(424, 60);
+            groupBoxPathPreview.TabIndex = 11;
+            groupBoxPathPreview.TabStop = false;
+            groupBoxPathPreview.Text = "Path Preview";
+            //
+            // lblPathPreview
+            //
+            lblPathPreview.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular);
+            lblPathPreview.Location = new System.Drawing.Point(10, 20);
+            lblPathPreview.Name = "lblPathPreview";
+            lblPathPreview.Size = new System.Drawing.Size(404, 32);
+            lblPathPreview.TabIndex = 0;
+            lblPathPreview.Text = "(No actions)";
+            lblPathPreview.AutoEllipsis = true;
+            //
             // CustomFishingActions
             //
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(453, 475);
+            ClientSize = new System.Drawing.Size(453, 545);
+            Controls.Add(groupBoxPathPreview);
             Controls.Add(groupBoxRecorder);
             Controls.Add(updateSelectedActionItemBtn);
             Controls.Add(actionItemsListBox);
@@ -222,6 +258,7 @@
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             Name = "CustomFishingActions";
             Text = "Custom Fishing Actions Manager";
+            groupBoxPathPreview.ResumeLayout(false);
             groupBoxRecorder.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -243,5 +280,8 @@
         private System.Windows.Forms.Label lblRecordingStatus;
         private System.Windows.Forms.Button btnAddSellFish;
         private System.Windows.Forms.Label lblRecorderHelp;
+        private System.Windows.Forms.Label lblLivePreview;
+        private System.Windows.Forms.GroupBox groupBoxPathPreview;
+        private System.Windows.Forms.Label lblPathPreview;
     }
 }

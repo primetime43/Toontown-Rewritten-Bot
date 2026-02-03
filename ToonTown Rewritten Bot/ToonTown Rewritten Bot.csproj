@@ -104,4 +104,8 @@
   <ItemGroup>
     <None Include="Templates\**\*" CopyToOutputDirectory="PreserveNewest" LinkBase="Templates" />
   </ItemGroup>
+  <!-- Copy CustomFishingTemplates to output directory -->
+  <ItemGroup>
+    <None Include="Templates\CustomFishingTemplates\**\*" CopyToOutputDirectory="PreserveNewest" LinkBase="Templates\CustomFishingTemplates" />
+  </ItemGroup>
 </Project>
