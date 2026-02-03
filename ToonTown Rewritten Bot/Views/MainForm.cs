@@ -100,6 +100,10 @@ namespace ToonTown_Rewritten_Bot
             }
             numericUpDownCustomCasts.Value = Math.Max(numericUpDownCustomCasts.Minimum, Math.Min(numericUpDownCustomCasts.Maximum, prefs.CustomFishingCasts));
             numericUpDownCustomSells.Value = Math.Max(numericUpDownCustomSells.Minimum, Math.Min(numericUpDownCustomSells.Maximum, prefs.CustomFishingSells));
+            customAutoDetectFishCheckBox.Checked = prefs.CustomAutoDetectFish;
+            customWaitForFishCheckBox.Checked = prefs.CustomWaitForFish;
+            customShowOverlayCheckBox.Checked = prefs.CustomShowOverlay;
+            customNumericUpDownBiteTimeout.Value = Math.Max(customNumericUpDownBiteTimeout.Minimum, Math.Min(customNumericUpDownBiteTimeout.Maximum, prefs.CustomBiteTimeoutSeconds));
 
             // Golf preferences
             if (!string.IsNullOrEmpty(prefs.GolfCourse))
@@ -155,6 +159,10 @@ namespace ToonTown_Rewritten_Bot
             prefs.CustomFishingFile = customFishingFilesComboBox.SelectedItem?.ToString() ?? "";
             prefs.CustomFishingCasts = (int)numericUpDownCustomCasts.Value;
             prefs.CustomFishingSells = (int)numericUpDownCustomSells.Value;
+            prefs.CustomAutoDetectFish = customAutoDetectFishCheckBox.Checked;
+            prefs.CustomWaitForFish = customWaitForFishCheckBox.Checked;
+            prefs.CustomShowOverlay = customShowOverlayCheckBox.Checked;
+            prefs.CustomBiteTimeoutSeconds = (int)customNumericUpDownBiteTimeout.Value;
 
             // Golf preferences
             prefs.GolfCourse = customGolfFilesComboBox.SelectedItem?.ToString() ?? "";
@@ -1763,6 +1771,16 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Add($"  Random Variance: {(prefs.RandomVariance ? "Yes" : "No")}");
             preferencesListBox.Items.Add($"  Auto Detect Fish: {(prefs.AutoDetectFish ? "Yes" : "No")}");
             preferencesListBox.Items.Add($"  Wait For Fish: {(prefs.WaitForFishBeforeCasting ? $"Yes ({prefs.MaxFishWaitAttempts} tries)" : "No")}");
+
+            preferencesListBox.Items.Add("");
+            preferencesListBox.Items.Add("═══════ CUSTOM FISHING ═══════");
+            preferencesListBox.Items.Add($"  Action File: {(string.IsNullOrEmpty(prefs.CustomFishingFile) ? "(not set)" : prefs.CustomFishingFile)}");
+            preferencesListBox.Items.Add($"  Number of Casts: {prefs.CustomFishingCasts}");
+            preferencesListBox.Items.Add($"  Number of Sells: {prefs.CustomFishingSells}");
+            preferencesListBox.Items.Add($"  Bite Timeout: {prefs.CustomBiteTimeoutSeconds} seconds");
+            preferencesListBox.Items.Add($"  Auto Detect Fish: {(prefs.CustomAutoDetectFish ? "Yes" : "No")}");
+            preferencesListBox.Items.Add($"  Wait For Fish: {(prefs.CustomWaitForFish ? "Yes" : "No")}");
+            preferencesListBox.Items.Add($"  Show Overlay: {(prefs.CustomShowOverlay ? "Yes" : "No")}");
 
             preferencesListBox.Items.Add("");
             preferencesListBox.Items.Add("═══════ GOLF ═══════");
