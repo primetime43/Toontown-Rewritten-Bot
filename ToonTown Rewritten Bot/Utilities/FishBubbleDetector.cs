@@ -182,6 +182,20 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 35
             ),
 
+            // Estate - Far Left Dock
+            ["ESTATE (FAR LEFT DOCK)"] = new FishingSpotConfig(
+                new Rectangle(200, 150, 1292, 510),
+                Color.FromArgb(56, 129, 122),
+                new Tolerance(7, 5, 5),
+                35
+            ),
+            ["Estate Far Left Dock"] = new FishingSpotConfig(
+                new Rectangle(200, 150, 1292, 510),
+                Color.FromArgb(56, 129, 122),
+                new Tolerance(7, 5, 5),
+                35
+            ),
+
             // Estate (default for Fish Anywhere)
             ["FISH ANYWHERE"] = new FishingSpotConfig(
                 new Rectangle(200, 150, 1292, 510),

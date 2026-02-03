@@ -540,6 +540,58 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
+        private void customShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (customShowOverlayCheckBox.Checked)
+            {
+                // Create and show the overlay
+                if (_fishingOverlay == null || _fishingOverlay.IsDisposed)
+                {
+                    _fishingOverlay = new FishingOverlayForm();
+                }
+                _fishingOverlay.Show();
+                _fishingOverlay.SetStatus("Overlay active - waiting for custom fishing...");
+
+                // Connect overlay to fishing strategy
+                Services.FishingLocationsWalking.FishingStrategyBase.Overlay = _fishingOverlay;
+
+                // Set callback to auto-uncheck when fishing ends
+                Services.FishingLocationsWalking.FishingStrategyBase.OnFishingEnded = OnCustomFishingEndedCallback;
+            }
+            else
+            {
+                // Clear the callback
+                Services.FishingLocationsWalking.FishingStrategyBase.OnFishingEnded = null;
+
+                // Disconnect from fishing strategy
+                Services.FishingLocationsWalking.FishingStrategyBase.Overlay = null;
+
+                // Hide and dispose the overlay
+                if (_fishingOverlay != null && !_fishingOverlay.IsDisposed)
+                {
+                    _fishingOverlay.Close();
+                    _fishingOverlay.Dispose();
+                    _fishingOverlay = null;
+                }
+            }
+        }
+
+        private void OnCustomFishingEndedCallback()
+        {
+            // This runs on a background thread, so we need to invoke on the UI thread
+            if (InvokeRequired)
+            {
+                Invoke(new Action(OnCustomFishingEndedCallback));
+                return;
+            }
+
+            // Uncheck the overlay checkbox which will trigger cleanup
+            if (customShowOverlayCheckBox.Checked)
+            {
+                customShowOverlayCheckBox.Checked = false;
+            }
+        }
+
         private void EditScanAreaBtn_Click(object sender, EventArgs e)
         {
             string selectedLocation = fishingLocationscomboBox.SelectedItem?.ToString();
@@ -1255,9 +1307,10 @@ namespace ToonTown_Rewritten_Bot
                 label12.Text = FishingLocationMessages.GetLocationMessage(selectedLocation);
                 label12.Visible = true;
 
-                // Hide "Number of Sells" controls when Fish Anywhere is selected
-                // (no sell cycle in fish anywhere mode)
-                bool showSellsControls = selectedLocation != FishingLocationNames.FishAnywhere;
+                // Hide "Number of Sells" controls when Fish Anywhere or Estate is selected
+                // (no sell cycle - no fisherman at these locations)
+                bool showSellsControls = selectedLocation != FishingLocationNames.FishAnywhere
+                    && selectedLocation != FishingLocationNames.EstateLeftDock;
                 label4.Visible = showSellsControls;
                 numericUpDown4.Visible = showSellsControls;
             }
@@ -1288,10 +1341,10 @@ namespace ToonTown_Rewritten_Bot
 
             var token = _cancellationTokenSource.Token;
 
-            // Set the fishing settings from UI controls
-            FishingStrategyBase.BiteTimeoutSeconds = Convert.ToInt32(numericUpDownBiteTimeout.Value);
-            FishingStrategyBase.WaitForFishBeforeCasting = waitForFishCheckBox.Checked && autoDetectFishCheckBox.Checked;
-            FishingStrategyBase.MaxFishWaitAttempts = Convert.ToInt32(numericUpDownWaitAttempts.Value);
+            // Set the fishing settings from Custom Fishing tab UI controls
+            FishingStrategyBase.BiteTimeoutSeconds = Convert.ToInt32(customNumericUpDownBiteTimeout.Value);
+            FishingStrategyBase.WaitForFishBeforeCasting = customWaitForFishCheckBox.Checked && customAutoDetectFishCheckBox.Checked;
+            FishingStrategyBase.MaxFishWaitAttempts = 10; // Default value for custom fishing
 
             try
             {
@@ -1317,12 +1370,12 @@ namespace ToonTown_Rewritten_Bot
                 // Decide whether to debug custom actions or perform them normally
                 if (debugCustomActionsCheckBox.Checked)
                 {
-                    await _fishingService.StartCustomFishingDebugging(filePath + ".json");
+                    await _fishingService.StartCustomFishingDebugging(filePath + ".json", token);
                 }
                 else
                 {
                     await _fishingService.StartFishing("CUSTOM FISHING ACTION", numberOfCasts, numberOfSells,
-                        randomFishingCheckBox.Checked, token, filePath + ".json", autoDetectFishCheckBox.Checked);
+                        randomFishingCheckBox.Checked, token, filePath + ".json", customAutoDetectFishCheckBox.Checked);
                 }
             }
             catch (TaskCanceledException)
