@@ -14,7 +14,7 @@ namespace ToonTown_Rewritten_Bot.Models
     /// Represents actions associated with coordinates in the UI, such as button locations.
     /// Now uses file-based definitions via TemplateDefinitionManager.
     /// </summary>
-    public class CoordinateActions : ICoordinateData
+    public class CoordinateActions
     {
         public string Key { get; set; }
         public string Description { get; set; }

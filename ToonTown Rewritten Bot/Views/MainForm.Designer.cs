@@ -42,7 +42,7 @@
             shortcutsTitleLabel = new System.Windows.Forms.Label();
             shortcutsLabel = new System.Windows.Forms.Label();
             githubLinkLabel = new System.Windows.Forms.LinkLabel();
-            button8 = new System.Windows.Forms.Button();
+            aboutBtn = new System.Windows.Forms.Button();
             Fishing = new System.Windows.Forms.TabPage();
             fishingSettingsGroup = new System.Windows.Forms.GroupBox();
             fishingLocationscomboBox = new System.Windows.Forms.ComboBox();
@@ -126,7 +126,7 @@
             golfCourseSelectLabel = new System.Windows.Forms.Label();
             golfActionsListBox = new System.Windows.Forms.ListBox();
             customGolfFilesComboBox = new System.Windows.Forms.ComboBox();
-            button1 = new System.Windows.Forms.Button();
+            startGolfBtn = new System.Windows.Forms.Button();
             golfHelpGroupBox = new System.Windows.Forms.GroupBox();
             golfInstructionsLabel = new System.Windows.Forms.Label();
             wizardCustomGolfBtn = new System.Windows.Forms.Button();
@@ -359,7 +359,7 @@
             infoGroup.Controls.Add(shortcutsTitleLabel);
             infoGroup.Controls.Add(shortcutsLabel);
             infoGroup.Controls.Add(githubLinkLabel);
-            infoGroup.Controls.Add(button8);
+            infoGroup.Controls.Add(aboutBtn);
             infoGroup.Location = new System.Drawing.Point(340, 172);
             infoGroup.Name = "infoGroup";
             infoGroup.Size = new System.Drawing.Size(260, 210);
@@ -396,16 +396,16 @@
             githubLinkLabel.Text = "GitHub";
             githubLinkLabel.LinkClicked += githubLinkLabel_LinkClicked;
             // 
-            // button8
+            // aboutBtn
             // 
-            button8.Location = new System.Drawing.Point(168, 170);
-            button8.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button8.Name = "button8";
-            button8.Size = new System.Drawing.Size(80, 28);
-            button8.TabIndex = 3;
-            button8.Text = "About";
-            button8.UseVisualStyleBackColor = true;
-            button8.Click += button8_Click;
+            aboutBtn.Location = new System.Drawing.Point(168, 170);
+            aboutBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            aboutBtn.Name = "aboutBtn";
+            aboutBtn.Size = new System.Drawing.Size(80, 28);
+            aboutBtn.TabIndex = 3;
+            aboutBtn.Text = "About";
+            aboutBtn.UseVisualStyleBackColor = true;
+            aboutBtn.Click += aboutBtn_Click;
             // 
             // Fishing
             // 
@@ -1007,7 +1007,7 @@
             startRacing.Text = "Race Screwball Stadium";
             startRacing.UseVisualStyleBackColor = true;
             startRacing.Visible = false;
-            startRacing.Click += button5_Click;
+            startRacing.Click += startRacing_Click;
             // 
             // Gardening
             // 
@@ -1287,7 +1287,7 @@
             groupBox10.Controls.Add(golfCourseSelectLabel);
             groupBox10.Controls.Add(golfActionsListBox);
             groupBox10.Controls.Add(customGolfFilesComboBox);
-            groupBox10.Controls.Add(button1);
+            groupBox10.Controls.Add(startGolfBtn);
             groupBox10.Location = new System.Drawing.Point(7, 6);
             groupBox10.Name = "groupBox10";
             groupBox10.Size = new System.Drawing.Size(354, 314);
@@ -1362,15 +1362,15 @@
             customGolfFilesComboBox.TabIndex = 19;
             customGolfFilesComboBox.SelectedIndexChanged += customGolfFilesComboBox_SelectedIndexChanged;
             // 
-            // button1
+            // startGolfBtn
             // 
-            button1.Location = new System.Drawing.Point(138, 255);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(100, 28);
-            button1.TabIndex = 20;
-            button1.Text = "Start Golf";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            startGolfBtn.Location = new System.Drawing.Point(138, 255);
+            startGolfBtn.Name = "startGolfBtn";
+            startGolfBtn.Size = new System.Drawing.Size(100, 28);
+            startGolfBtn.TabIndex = 20;
+            startGolfBtn.Text = "Start Golf";
+            startGolfBtn.UseVisualStyleBackColor = true;
+            startGolfBtn.Click += startGolfBtn_Click;
             // 
             // golfHelpGroupBox
             // 
@@ -2461,7 +2461,7 @@
         private System.Windows.Forms.Label shortcutsTitleLabel;
         private System.Windows.Forms.Label shortcutsLabel;
         private System.Windows.Forms.LinkLabel githubLinkLabel;
-        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button aboutBtn;
         private System.Windows.Forms.CheckBox randomFishingCheckBox;
         private System.Windows.Forms.Button stopFishingBtn;
         private System.Windows.Forms.TabPage Golf;
@@ -2519,7 +2519,7 @@
         private System.Windows.Forms.Label golfActionsPreviewLabel;
         private System.Windows.Forms.GroupBox golfHelpGroupBox;
         private System.Windows.Forms.Label golfInstructionsLabel;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button startGolfBtn;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.ListBox golfActionsListBox;
         private System.Windows.Forms.Button devOpenConfigBtn;
