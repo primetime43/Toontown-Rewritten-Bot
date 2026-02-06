@@ -92,8 +92,8 @@ namespace ToonTown_Rewritten_Bot
                 int index = fishingLocationscomboBox.FindStringExact(prefs.FishingLocation);
                 if (index >= 0) fishingLocationscomboBox.SelectedIndex = index;
             }
-            numericUpDown3.Value = Math.Max(numericUpDown3.Minimum, Math.Min(numericUpDown3.Maximum, prefs.NumberOfCasts));
-            numericUpDown4.Value = Math.Max(numericUpDown4.Minimum, Math.Min(numericUpDown4.Maximum, prefs.NumberOfSells));
+            numericUpDownCasts.Value = Math.Max(numericUpDownCasts.Minimum, Math.Min(numericUpDownCasts.Maximum, prefs.NumberOfCasts));
+            numericUpDownSells.Value = Math.Max(numericUpDownSells.Minimum, Math.Min(numericUpDownSells.Maximum, prefs.NumberOfSells));
             numericUpDownBiteTimeout.Value = Math.Max(numericUpDownBiteTimeout.Minimum, Math.Min(numericUpDownBiteTimeout.Maximum, prefs.BiteTimeoutSeconds));
             randomFishingCheckBox.Checked = prefs.RandomVariance;
             autoDetectFishCheckBox.Checked = prefs.AutoDetectFish;
@@ -176,8 +176,8 @@ namespace ToonTown_Rewritten_Bot
 
             // Fishing preferences
             prefs.FishingLocation = fishingLocationscomboBox.SelectedItem?.ToString() ?? "";
-            prefs.NumberOfCasts = (int)numericUpDown3.Value;
-            prefs.NumberOfSells = (int)numericUpDown4.Value;
+            prefs.NumberOfCasts = (int)numericUpDownCasts.Value;
+            prefs.NumberOfSells = (int)numericUpDownSells.Value;
             prefs.BiteTimeoutSeconds = (int)numericUpDownBiteTimeout.Value;
             prefs.RandomVariance = randomFishingCheckBox.Checked;
             prefs.AutoDetectFish = autoDetectFishCheckBox.Checked;
@@ -764,8 +764,8 @@ namespace ToonTown_Rewritten_Bot
             try
             {
                 string selectedLocation = (string)fishingLocationscomboBox.SelectedItem; // Retrieve the location selected by the user
-                int numberOfCasts = Convert.ToInt32(numericUpDown3.Value); // Number of times to cast the line
-                int numberOfSells = Convert.ToInt32(numericUpDown4.Value); // Number of times to sell the caught fish
+                int numberOfCasts = Convert.ToInt32(numericUpDownCasts.Value); // Number of times to cast the line
+                int numberOfSells = Convert.ToInt32(numericUpDownSells.Value); // Number of times to sell the caught fish
 
                 FishingLocationMessages.TellFishingLocation(selectedLocation); // Provide location-specific messages
                 var result = MessageBox.Show("Make sure you're in the fishing dock before pressing OK!",
@@ -773,14 +773,24 @@ namespace ToonTown_Rewritten_Bot
                 if (result != DialogResult.OK)
                     return;
 
+                fishingStatusLabel.Text = "Status: Fishing...";
+                fishingStatusLabel.ForeColor = System.Drawing.Color.DarkGreen;
+
                 await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, "", autoDetectFishCheckBox.Checked);
+
+                fishingStatusLabel.Text = "Status: Idle";
+                fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
             }
             catch (TaskCanceledException)
             {
+                fishingStatusLabel.Text = "Status: Idle";
+                fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
                 MessageBox.Show("Fishing was cancelled."); // Handle cancellation of the task
             }
             catch (Exception ex) // Catch any other unforeseen errors
             {
+                fishingStatusLabel.Text = "Status: Idle";
+                fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
         }
@@ -793,7 +803,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)//button to stop fishing
+        private void stopFishingBtn_Click(object sender, EventArgs e)//button to stop fishing
         {
             // Check if the operation is already canceled or not started
             if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
@@ -804,6 +814,8 @@ namespace ToonTown_Rewritten_Bot
 
             // Signal the cancellation
             _cancellationTokenSource.Cancel();
+            fishingStatusLabel.Text = "Status: Idle";
+            fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
             MessageBox.Show("Fishing stopped!");
         }
 
@@ -1617,18 +1629,17 @@ namespace ToonTown_Rewritten_Bot
             if (fishingLocationscomboBox.SelectedItem != null)
             {
                 string selectedLocation = fishingLocationscomboBox.SelectedItem.ToString();
-                label12.Text = FishingLocationMessages.GetLocationMessage(selectedLocation);
-                label12.Visible = true;
+                fishingLocationDescLabel.Text = FishingLocationMessages.GetLocationMessage(selectedLocation);
 
                 // Hide "Number of Sells" controls when Fish Anywhere or Estate is selected
                 // (no sell cycle - no fisherman at these locations)
                 bool showSellsControls = selectedLocation != FishingLocationNames.FishAnywhere
                     && selectedLocation != FishingLocationNames.EstateLeftDock;
-                label4.Visible = showSellsControls;
-                numericUpDown4.Visible = showSellsControls;
+                labelSells.Visible = showSellsControls;
+                numericUpDownSells.Visible = showSellsControls;
             }
             else
-                label12.Visible = false;
+                fishingLocationDescLabel.Text = "Select a location to see its description.";
         }
 
         private void createCustomFishingActionsBtn_Click(object sender, EventArgs e)
