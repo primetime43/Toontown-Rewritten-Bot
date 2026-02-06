@@ -1,163 +1,170 @@
 {
   "Red Fishing Button": {
     "Name": "Red Fishing Button",
-    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Red_Fishing_Button.png",
+    "TemplatePath": "Templates\\Red_Fishing_Button.png",
     "ManualCoordinates": "960, 765",
     "CachedCenter": "967, 793",
     "LastFoundTime": "2026-02-02T22:12:41.4684262-05:00"
   },
   "Exit Fishing Button": {
     "Name": "Exit Fishing Button",
-    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Exit_Fishing_Button.png",
+    "TemplatePath": "Templates\\Exit_Fishing_Button.png",
     "ManualCoordinates": "468, 38",
     "CachedCenter": "1060, 981",
     "LastFoundTime": "2026-01-31T23:59:10.306435-05:00"
   },
   "Blue Sell All Button": {
     "Name": "Blue Sell All Button",
-    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Blue_Sell_All_Button.png",
+    "TemplatePath": "Templates\\Blue_Sell_All_Button.png",
     "ManualCoordinates": "504, 60",
     "CachedCenter": "964, 680",
     "LastFoundTime": "2026-02-02T22:36:55.8509837-05:00"
   },
   "Watering Can Button": {
     "Name": "Watering Can Button",
-    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Watering_Can_Button.png",
+    "TemplatePath": "Templates\\Watering_Can_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "80, 365",
     "LastFoundTime": "2025-12-30T03:40:15.1031089-05:00"
   },
   "Feed Doodle Button": {
     "Name": "Feed Doodle Button",
-    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Feed_Doodle_Button.png",
+    "TemplatePath": "Templates\\Feed_Doodle_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "1802, 203",
     "LastFoundTime": "2025-12-30T03:56:18.9860478-05:00"
   },
   "Scratch Doodle Button": {
     "Name": "Scratch Doodle Button",
-    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Scratch_Doodle_Button.png",
+    "TemplatePath": "Templates\\Scratch_Doodle_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "1805, 255",
     "LastFoundTime": "2025-12-30T03:56:41.0135037-05:00"
   },
-  "Plant Flower/Remove Button": {
-    "Name": "Plant Flower/Remove Button",
-    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Plant_Flower_Remove_Button.png",
+  "Plant Flower Button": {
+    "Name": "Plant Flower Button",
+    "TemplatePath": "Templates\\Plant_Flower_Button.png",
     "ManualCoordinates": null,
-    "CachedCenter": "80, 259",
-    "LastFoundTime": "2025-12-30T04:04:26.8506834-05:00"
+    "CachedCenter": null,
+    "LastFoundTime": null
   },
   "Sticker Book": {
     "Name": "Sticker Book",
-    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Sticker_Book.png",
+    "TemplatePath": "Templates\\Sticker_Book.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
   "Golf Pencil Button": {
     "Name": "Golf Pencil Button",
-    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Golf_Pencil_Button.png",
+    "TemplatePath": "Templates\\Golf_Pencil_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
   "Golf_Close_Button": {
     "Name": "Golf_Close_Button",
-    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Golf_Close_Button.png",
+    "TemplatePath": "Templates\\Golf_Close_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
   "Golf_Turn_Timer": {
     "Name": "Golf_Turn_Timer",
-    "TemplatePath": "C:\\Users\\primetime43\\source\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Golf_Turn_Timer.png",
+    "TemplatePath": "Templates\\Golf_Turn_Timer.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
   "FishPopupCloseButton": {
     "Name": "FishPopupCloseButton",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\FishPopupCloseButton.png",
+    "TemplatePath": "Templates\\FishPopupCloseButton.png",
     "ManualCoordinates": null,
     "CachedCenter": "1105, 475",
     "LastFoundTime": "2026-02-01T14:53:07.3011209-05:00"
   },
   "Red Jellybean Button": {
     "Name": "Red Jellybean Button",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Red_Jellybean_Button.png",
+    "TemplatePath": "Templates\\Red_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
   "Green Jellybean Button": {
     "Name": "Green Jellybean Button",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Green_Jellybean_Button.png",
+    "TemplatePath": "Templates\\Green_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "813, 491",
     "LastFoundTime": "2026-02-05T19:30:45.5250124-05:00"
   },
   "Orange Jellybean Button": {
     "Name": "Orange Jellybean Button",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Orange_Jellybean_Button.png",
+    "TemplatePath": "Templates\\Orange_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
   "Purple Jellybean Button": {
     "Name": "Purple Jellybean Button",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Purple_Jellybean_Button.png",
+    "TemplatePath": "Templates\\Purple_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
   "Blue Jellybean Button": {
     "Name": "Blue Jellybean Button",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Blue_Jellybean_Button.png",
+    "TemplatePath": "Templates\\Blue_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
   "Pink Jellybean Button": {
     "Name": "Pink Jellybean Button",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Pink_Jellybean_Button.png",
+    "TemplatePath": "Templates\\Pink_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
   "Yellow Jellybean Button": {
     "Name": "Yellow Jellybean Button",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Yellow_Jellybean_Button.png",
+    "TemplatePath": "Templates\\Yellow_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
   "Cyan Jellybean Button": {
     "Name": "Cyan Jellybean Button",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Cyan_Jellybean_Button.png",
+    "TemplatePath": "Templates\\Cyan_Jellybean_Button.png",
     "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
+    "CachedCenter": "1129, 491",
+    "LastFoundTime": "2026-02-05T23:18:51.0238089-05:00"
   },
   "Silver Jellybean Button": {
     "Name": "Silver Jellybean Button",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Silver_Jellybean_Button.png",
+    "TemplatePath": "Templates\\Silver_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
   "Blue Plant Button": {
     "Name": "Blue Plant Button",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Blue_Plant_Button.png",
+    "TemplatePath": "Templates\\Blue_Plant_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "1123, 731",
     "LastFoundTime": "2026-02-05T22:26:44.9486385-05:00"
   },
   "Blue Ok Button": {
     "Name": "Blue Ok Button",
-    "TemplatePath": "C:\\source control\\repos\\Toontown-Rewritten-Bot\\ToonTown Rewritten Bot\\Templates\\Blue_Ok_Button.png",
+    "TemplatePath": "Templates\\Blue_Ok_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "974, 680",
     "LastFoundTime": "2026-02-05T22:27:05.730667-05:00"
+  },
+  "Remove Plant Button": {
+    "Name": "Remove Plant Button",
+    "TemplatePath": "Templates\\Remove_Plant_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
   }
 }

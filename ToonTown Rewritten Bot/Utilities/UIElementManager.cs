@@ -250,8 +250,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
             string templatePath = GetTemplatePath(elementName);
             templateImage.Save(templatePath, System.Drawing.Imaging.ImageFormat.Png);
 
+            // Store a relative path for portability (Templates/Name.png)
+            string safeName = MakeSafeFileName(elementName);
             var element = GetOrCreateElement(elementName);
-            element.TemplatePath = templatePath;
+            element.TemplatePath = Path.Combine("Templates", $"{safeName}.png");
             SaveElementData();
 
             System.Diagnostics.Debug.WriteLine($"[UIElementManager] Saved template for {elementName}");
