@@ -58,11 +58,16 @@ namespace ToonTown_Rewritten_Bot
                 fishingStatusLabel.Text = "Status: Fishing...";
                 fishingStatusLabel.ForeColor = System.Drawing.Color.DarkGreen;
 
+                // Show overlay if the checkbox is checked
+                if (showOverlayCheckBox.Checked)
+                    SetFishingOverlay(true, "Fishing...", OnFishingEndedCallback);
+
                 await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, "", autoDetectFishCheckBox.Checked);
 
                 // These run on the UI thread (await resumes on UI context)
                 fishingStatusLabel.Text = "Status: Idle";
                 fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
+                SetFishingOverlay(false, null, null);
                 CoreFunctionality.BringBotWindowToFront();
                 MessageBox.Show($"Done Fishing in '{selectedLocation}'.");
             }
@@ -70,12 +75,14 @@ namespace ToonTown_Rewritten_Bot
             {
                 fishingStatusLabel.Text = "Status: Idle";
                 fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
+                SetFishingOverlay(false, null, null);
                 MessageBox.Show("Fishing was cancelled."); // Handle cancellation of the task
             }
             catch (Exception ex) // Catch any other unforeseen errors
             {
                 fishingStatusLabel.Text = "Status: Idle";
                 fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
+                SetFishingOverlay(false, null, null);
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
         }
@@ -105,10 +112,14 @@ namespace ToonTown_Rewritten_Bot
         }
 
         private void ShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
-            => SetFishingOverlay(showOverlayCheckBox.Checked, "Overlay active - waiting for fishing...", OnFishingEndedCallback);
+        {
+            // Checkbox is a passive setting — overlay is shown/hidden when fishing starts/stops
+        }
 
         private void customShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
-            => SetFishingOverlay(customShowOverlayCheckBox.Checked, "Overlay active - waiting for custom fishing...", OnCustomFishingEndedCallback);
+        {
+            // Checkbox is a passive setting — overlay is shown/hidden when custom fishing starts/stops
+        }
 
         private void SetFishingOverlay(bool enabled, string statusMessage, Action onEndedCallback)
         {
@@ -147,11 +158,7 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
-            // Uncheck the overlay checkbox which will trigger cleanup
-            if (customShowOverlayCheckBox.Checked)
-            {
-                customShowOverlayCheckBox.Checked = false;
-            }
+            SetFishingOverlay(false, null, null);
         }
 
         private void EditScanAreaBtn_Click(object sender, EventArgs e)
@@ -239,7 +246,7 @@ namespace ToonTown_Rewritten_Bot
         }
 
         /// <summary>
-        /// Called when fishing ends to auto-uncheck the overlay checkbox.
+        /// Called when fishing ends to close the overlay.
         /// </summary>
         private void OnFishingEndedCallback()
         {
@@ -250,11 +257,7 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
-            // Uncheck the overlay checkbox (this will trigger the CheckedChanged event to close the overlay)
-            if (showOverlayCheckBox.Checked)
-            {
-                showOverlayCheckBox.Checked = false;
-            }
+            SetFishingOverlay(false, null, null);
         }
 
         private async void button5_Click(object sender, EventArgs e)
