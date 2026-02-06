@@ -282,7 +282,8 @@
   "Friends Button": {
     "Name": "Friends Button",
     "VariantPaths": [
-      "Templates\\Friends_Button.png"
+      "Templates\\Friends_Button.png",
+      "Templates\\Friends_Button_v2.png"
     ],
     "TemplatePath": "Templates\\Friends_Button.png",
     "ManualCoordinates": null,
