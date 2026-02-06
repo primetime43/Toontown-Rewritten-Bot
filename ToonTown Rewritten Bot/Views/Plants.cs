@@ -199,15 +199,15 @@ namespace ToonTown_Rewritten_Bot
             try
             {
                 // Place the task on a background thread to avoid blocking the UI
-                await Task.Run(() => Gardening.PlantFlowerAsync(plantComboDictionary[selected], _cancellationTokenSource.Token));
+                await Task.Run(() => Gardening.PlantFlowerAsync(plantComboDictionary[selected], selected, _cancellationTokenSource.Token));
             }
             catch (OperationCanceledException)
             {
-                MessageBox.Show("Planting was canceled.");
+                MessageBox.Show("Planting was canceled.", "Gardening", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}");
+                MessageBox.Show($"An error occurred: {ex.Message}", "Gardening Error", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
 

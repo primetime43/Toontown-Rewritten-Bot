@@ -416,6 +416,25 @@ namespace ToonTown_Rewritten_Bot
             LoadCustomActions("Gardening", customGardeningFilesComboBox);
         }
 
+        private void calibrateGardeningBtn_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                "Calibration Instructions:\n\n" +
+                "1. Open a flower bed in Toontown (click on it) so the jellybean buttons are visible\n" +
+                "2. Click OK to open the calibration overlay\n" +
+                "3. Drag the green box to cover ALL jellybean buttons\n" +
+                "4. The overlay will show detected beans with colored circles\n" +
+                "5. Press ENTER to save when all beans are detected",
+                "Jellybean Detection Calibration",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+
+            using (var form = new GardeningCalibrationForm())
+            {
+                form.ShowDialog();
+            }
+        }
+
         private async void startCustomGardeningBtn_Click(object sender, EventArgs e)
         {
             string selectedFileName = customGardeningFilesComboBox.SelectedItem?.ToString();
@@ -477,7 +496,8 @@ namespace ToonTown_Rewritten_Bot
                         case "PLANT FLOWER":
                             if (!string.IsNullOrEmpty(action.BeanSequence))
                             {
-                                await Services.Gardening.PlantFlowerAsync(action.BeanSequence, _cancellationTokenSource.Token);
+                                string flowerName = !string.IsNullOrEmpty(action.FlowerName) ? action.FlowerName : "Custom Flower";
+                                await Services.Gardening.PlantFlowerAsync(action.BeanSequence, flowerName, _cancellationTokenSource.Token);
                             }
                             break;
 
