@@ -115,6 +115,7 @@ namespace ToonTown_Rewritten_Bot.Views
             if (string.IsNullOrEmpty(templateName)) return;
 
             string templatePath = UIElementManager.Instance.GetTemplatePath(templateName);
+            int variantCount = UIElementManager.Instance.GetVariantCount(templateName);
 
             if (!string.IsNullOrEmpty(templatePath) && File.Exists(templatePath))
             {
@@ -123,9 +124,13 @@ namespace ToonTown_Rewritten_Bot.Views
                     _currentTemplate?.Dispose();
                     _currentTemplate = new Bitmap(templatePath);
                     templatePreviewPictureBox.Image = _currentTemplate;
-                    templatePathLabel.Text = Path.GetFileName(templatePath);
+
+                    string variantInfo = variantCount > 1
+                        ? $"{Path.GetFileName(templatePath)} (+{variantCount - 1} variant{(variantCount > 2 ? "s" : "")})"
+                        : Path.GetFileName(templatePath);
+                    templatePathLabel.Text = variantInfo;
                     templatePathLabel.ForeColor = Color.LightGreen;
-                    Log($"Loaded template: {templateName} ({_currentTemplate.Width}x{_currentTemplate.Height})");
+                    Log($"Loaded template: {templateName} ({_currentTemplate.Width}x{_currentTemplate.Height}), {variantCount} variant{(variantCount != 1 ? "s" : "")}");
                 }
                 catch (Exception ex)
                 {
@@ -805,6 +810,38 @@ namespace ToonTown_Rewritten_Bot.Views
             return _currentTemplate != null ? DeepCopyBitmap(_currentTemplate) : null;
         }
 
+        /// <summary>
+        /// Loads all variant bitmaps for the selected template definition.
+        /// Returns list of (bitmap, variant display name) tuples.
+        /// Caller is responsible for disposing the bitmaps.
+        /// </summary>
+        private List<(Bitmap bitmap, string variantName)> LoadAllTemplateBitmapsForSearch()
+        {
+            var results = new List<(Bitmap bitmap, string variantName)>();
+
+            string templateName = GetSelectedTemplateName();
+            if (!string.IsNullOrEmpty(templateName))
+            {
+                var allPaths = UIElementManager.Instance.GetAllTemplatePaths(templateName);
+                for (int i = 0; i < allPaths.Count; i++)
+                {
+                    if (File.Exists(allPaths[i]))
+                    {
+                        string name = i == 0 ? "Primary" : $"Variant {i + 1}";
+                        results.Add((new Bitmap(allPaths[i]), name));
+                    }
+                }
+            }
+
+            // Fallback: if no variants from definitions, use in-memory template
+            if (results.Count == 0 && _currentTemplate != null)
+            {
+                results.Add((DeepCopyBitmap(_currentTemplate), "In-Memory"));
+            }
+
+            return results;
+        }
+
         private async void FindTemplateBtn_Click(object sender, EventArgs e)
         {
             if (_currentScreenshot == null)
@@ -821,15 +858,14 @@ namespace ToonTown_Rewritten_Bot.Views
 
             // Disable buttons during search
             SetSearchButtonsEnabled(false, isSearching: true);
-            Log("Searching for template...");
-
-            Bitmap screenshotCopy = null;
-            Bitmap templateBitmap = null;
 
             // Create cancellation token
             _searchCancellation?.Dispose();
             _searchCancellation = new CancellationTokenSource();
             var token = _searchCancellation.Token;
+
+            Bitmap screenshotCopy = null;
+            var allVariants = new List<(Bitmap bitmap, string variantName)>();
 
             try
             {
@@ -837,51 +873,121 @@ namespace ToonTown_Rewritten_Bot.Views
 
                 // Deep copy to get independent bitmap safe for background thread
                 screenshotCopy = DeepCopyBitmap(_currentScreenshot);
-                templateBitmap = LoadTemplateBitmapForSearch();
+                allVariants = LoadAllTemplateBitmapsForSearch();
 
-                if (templateBitmap == null)
+                if (allVariants.Count == 0)
                 {
                     Log("Failed to load template for search.");
                     return;
                 }
 
-                // Progress callback to update UI
-                var progress = new Progress<int>(p =>
-                {
-                    if (!token.IsCancellationRequested)
-                        findTemplateBtn.Text = $"{p}%";
-                });
-
-                // Run template matching on background thread
-                var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-                var result = await Task.Run(() => ImageTemplateMatcher.FindTemplate(
-                    screenshotCopy, templateBitmap, threshold, token,
-                    p => ((IProgress<int>)progress).Report(p)));
-                stopwatch.Stop();
-
-                if (token.IsCancellationRequested)
-                {
-                    Log($"Search cancelled after {stopwatch.ElapsedMilliseconds}ms.");
-                    return;
-                }
-
                 _matchResults.Clear();
 
-                if (result.Found)
+                if (allVariants.Count == 1)
                 {
-                    _matchResults.Add(result);
-                    Log($"FOUND in {stopwatch.ElapsedMilliseconds}ms!");
-                    Log($"  Location: ({result.Location.X}, {result.Location.Y})");
-                    Log($"  Center (for clicking): ({result.Center.X}, {result.Center.Y})");
-                    Log($"  Size: {result.Bounds.Width}x{result.Bounds.Height}");
-                    Log($"  Confidence: {result.Confidence:P1}");
-                    previewPictureBox.Invalidate();
+                    // Single variant - original behavior
+                    Log("Searching for template...");
+                    var templateBitmap = allVariants[0].bitmap;
+
+                    var progress = new Progress<int>(p =>
+                    {
+                        if (!token.IsCancellationRequested)
+                            findTemplateBtn.Text = $"{p}%";
+                    });
+
+                    var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+                    var result = await Task.Run(() => ImageTemplateMatcher.FindTemplate(
+                        screenshotCopy, templateBitmap, threshold, token,
+                        p => ((IProgress<int>)progress).Report(p)));
+                    stopwatch.Stop();
+
+                    if (token.IsCancellationRequested)
+                    {
+                        Log($"Search cancelled after {stopwatch.ElapsedMilliseconds}ms.");
+                        return;
+                    }
+
+                    if (result.Found)
+                    {
+                        _matchResults.Add(result);
+                        Log($"FOUND in {stopwatch.ElapsedMilliseconds}ms!");
+                        Log($"  Location: ({result.Location.X}, {result.Location.Y})");
+                        Log($"  Center (for clicking): ({result.Center.X}, {result.Center.Y})");
+                        Log($"  Size: {result.Bounds.Width}x{result.Bounds.Height}");
+                        Log($"  Confidence: {result.Confidence:P1}");
+                        previewPictureBox.Invalidate();
+                    }
+                    else
+                    {
+                        Log($"Template NOT found. Search took {stopwatch.ElapsedMilliseconds}ms.");
+                        Log($"  Best match confidence: {result.Confidence:P1}");
+                        Log("  Try lowering the threshold or capturing a new template.");
+                    }
                 }
                 else
                 {
-                    Log($"Template NOT found. Search took {stopwatch.ElapsedMilliseconds}ms.");
-                    Log($"  Best match confidence: {result.Confidence:P1}");
-                    Log("  Try lowering the threshold or capturing a new template.");
+                    // Multiple variants - try each, report per-variant results
+                    Log($"Searching across {allVariants.Count} variants...");
+
+                    var totalStopwatch = System.Diagnostics.Stopwatch.StartNew();
+                    double bestOverallConfidence = 0;
+                    string bestOverallVariant = null;
+                    bool foundMatch = false;
+
+                    for (int i = 0; i < allVariants.Count; i++)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            Log("Search cancelled.");
+                            return;
+                        }
+
+                        var (templateBitmap, variantName) = allVariants[i];
+
+                        findTemplateBtn.Text = $"V{i + 1}";
+
+                        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+                        var result = await Task.Run(() => ImageTemplateMatcher.FindTemplate(
+                            screenshotCopy, templateBitmap, threshold, token));
+                        stopwatch.Stop();
+
+                        if (result.Found)
+                        {
+                            _matchResults.Add(result);
+                            Log($"  [{variantName}] MATCHED! Confidence: {result.Confidence:P1} ({stopwatch.ElapsedMilliseconds}ms)");
+                            Log($"    Center: ({result.Center.X}, {result.Center.Y}), Size: {result.Bounds.Width}x{result.Bounds.Height}");
+
+                            if (!foundMatch)
+                            {
+                                foundMatch = true;
+                                Log($"  >>> First match from {variantName} <<<");
+                            }
+                        }
+                        else
+                        {
+                            Log($"  [{variantName}] No match. Best confidence: {result.Confidence:P1} ({stopwatch.ElapsedMilliseconds}ms)");
+                        }
+
+                        if (result.Confidence > bestOverallConfidence)
+                        {
+                            bestOverallConfidence = result.Confidence;
+                            bestOverallVariant = variantName;
+                        }
+                    }
+
+                    totalStopwatch.Stop();
+
+                    if (foundMatch)
+                    {
+                        Log($"FOUND via multi-variant search in {totalStopwatch.ElapsedMilliseconds}ms total ({_matchResults.Count} match{(_matchResults.Count != 1 ? "es" : "")})");
+                        previewPictureBox.Invalidate();
+                    }
+                    else
+                    {
+                        Log($"No variant matched. Best overall: {bestOverallVariant} at {bestOverallConfidence:P1}");
+                        Log($"  Total search time: {totalStopwatch.ElapsedMilliseconds}ms");
+                        Log("  Try lowering the threshold or capturing a new variant.");
+                    }
                 }
             }
             catch (Exception ex)
@@ -891,7 +997,8 @@ namespace ToonTown_Rewritten_Bot.Views
             finally
             {
                 screenshotCopy?.Dispose();
-                templateBitmap?.Dispose();
+                foreach (var (bitmap, _) in allVariants)
+                    bitmap?.Dispose();
                 SetSearchButtonsEnabled(true, isSearching: false);
             }
         }

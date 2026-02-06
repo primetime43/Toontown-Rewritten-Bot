@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -152,26 +153,48 @@ namespace ToonTown_Rewritten_Bot.Utilities
         }
 
         /// <summary>
-        /// Finds an element on screen using its template.
+        /// Finds an element on screen using its template variants.
+        /// Tries each variant in order; returns the first match above threshold.
+        /// If none match, returns null (best confidence is logged for diagnostics).
         /// </summary>
         public async Task<Point?> FindElementAsync(string elementName, CancellationToken cancellationToken = default)
         {
-            string templatePath = GetTemplatePath(elementName);
-            if (!File.Exists(templatePath))
+            var allPaths = GetAllTemplatePaths(elementName);
+            if (allPaths.Count == 0)
                 return null;
 
             try
             {
                 using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
-                using (var template = new Bitmap(templatePath))
                 {
-                    var result = await Task.Run(() =>
-                        ImageTemplateMatcher.FindTemplate(screenshot, template, _defaultThreshold, cancellationToken));
+                    double bestConfidence = 0;
+                    string bestVariant = null;
 
-                    if (result.Found)
+                    for (int i = 0; i < allPaths.Count; i++)
                     {
-                        return result.Center;
+                        if (cancellationToken.IsCancellationRequested)
+                            break;
+
+                        using (var template = new Bitmap(allPaths[i]))
+                        {
+                            var result = await Task.Run(() =>
+                                ImageTemplateMatcher.FindTemplate(screenshot, template, _defaultThreshold, cancellationToken));
+
+                            if (result.Found)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"[UIElementManager] {elementName} matched variant {i} ({Path.GetFileName(allPaths[i])}) at {result.Confidence:P1}");
+                                return result.Center;
+                            }
+
+                            if (result.Confidence > bestConfidence)
+                            {
+                                bestConfidence = result.Confidence;
+                                bestVariant = Path.GetFileName(allPaths[i]);
+                            }
+                        }
                     }
+
+                    System.Diagnostics.Debug.WriteLine($"[UIElementManager] {elementName}: no variant matched. Best was {bestVariant} at {bestConfidence:P1}");
                 }
             }
             catch (Exception ex)
@@ -184,36 +207,43 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         /// <summary>
         /// Verifies if an element is at the expected location.
+        /// Tries each variant; returns true if any matches.
         /// </summary>
         public async Task<bool> VerifyElementAtLocationAsync(string elementName, Point expectedCenter)
         {
-            string templatePath = GetTemplatePath(elementName);
-            if (!File.Exists(templatePath))
+            var allPaths = GetAllTemplatePaths(elementName);
+            if (allPaths.Count == 0)
                 return false;
 
             try
             {
                 using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
-                using (var template = new Bitmap(templatePath))
                 {
-                    // Define a search region around the expected location
-                    int margin = 50; // pixels of tolerance
-                    int searchX = Math.Max(0, expectedCenter.X - template.Width / 2 - margin);
-                    int searchY = Math.Max(0, expectedCenter.Y - template.Height / 2 - margin);
-                    int searchWidth = Math.Min(template.Width + margin * 2, screenshot.Width - searchX);
-                    int searchHeight = Math.Min(template.Height + margin * 2, screenshot.Height - searchY);
-
-                    if (searchWidth <= template.Width || searchHeight <= template.Height)
-                        return false;
-
-                    Rectangle searchRegion = new Rectangle(searchX, searchY, searchWidth, searchHeight);
-
-                    using (var regionBitmap = screenshot.Clone(searchRegion, screenshot.PixelFormat))
+                    foreach (var templatePath in allPaths)
                     {
-                        var result = await Task.Run(() =>
-                            ImageTemplateMatcher.FindTemplate(regionBitmap, template, _defaultThreshold));
+                        using (var template = new Bitmap(templatePath))
+                        {
+                            // Define a search region around the expected location
+                            int margin = 50; // pixels of tolerance
+                            int searchX = Math.Max(0, expectedCenter.X - template.Width / 2 - margin);
+                            int searchY = Math.Max(0, expectedCenter.Y - template.Height / 2 - margin);
+                            int searchWidth = Math.Min(template.Width + margin * 2, screenshot.Width - searchX);
+                            int searchHeight = Math.Min(template.Height + margin * 2, screenshot.Height - searchY);
 
-                        return result.Found;
+                            if (searchWidth <= template.Width || searchHeight <= template.Height)
+                                continue;
+
+                            Rectangle searchRegion = new Rectangle(searchX, searchY, searchWidth, searchHeight);
+
+                            using (var regionBitmap = screenshot.Clone(searchRegion, screenshot.PixelFormat))
+                            {
+                                var result = await Task.Run(() =>
+                                    ImageTemplateMatcher.FindTemplate(regionBitmap, template, _defaultThreshold));
+
+                                if (result.Found)
+                                    return true;
+                            }
+                        }
                     }
                 }
             }
@@ -226,15 +256,15 @@ namespace ToonTown_Rewritten_Bot.Utilities
         }
 
         /// <summary>
-        /// Checks if a template exists for the given element.
+        /// Checks if any template variant exists for the given element.
         /// </summary>
         public bool HasTemplate(string elementName)
         {
-            return File.Exists(GetTemplatePath(elementName));
+            return GetAllTemplatePaths(elementName).Count > 0;
         }
 
         /// <summary>
-        /// Gets the template file path for an element.
+        /// Gets the primary template file path for an element (backward compat).
         /// </summary>
         public string GetTemplatePath(string elementName)
         {
@@ -243,7 +273,50 @@ namespace ToonTown_Rewritten_Bot.Utilities
         }
 
         /// <summary>
-        /// Saves a template image for an element.
+        /// Gets the file path for a specific variant (0-based: 0=primary, 1=_v2, etc.)
+        /// </summary>
+        public string GetVariantPath(string elementName, int variantIndex)
+        {
+            string safeName = MakeSafeFileName(elementName);
+            if (variantIndex == 0)
+                return Path.Combine(_templatesFolder, $"{safeName}.png");
+            return Path.Combine(_templatesFolder, $"{safeName}_v{variantIndex + 1}.png");
+        }
+
+        /// <summary>
+        /// Gets absolute paths of all existing variant files for the element.
+        /// </summary>
+        public List<string> GetAllTemplatePaths(string elementName)
+        {
+            var paths = new List<string>();
+            string primaryPath = GetTemplatePath(elementName);
+            if (File.Exists(primaryPath))
+                paths.Add(primaryPath);
+
+            // Check for _v2, _v3, ... up to a reasonable limit
+            string safeName = MakeSafeFileName(elementName);
+            for (int i = 2; i <= 20; i++)
+            {
+                string variantPath = Path.Combine(_templatesFolder, $"{safeName}_v{i}.png");
+                if (File.Exists(variantPath))
+                    paths.Add(variantPath);
+                else
+                    break; // Stop at first gap
+            }
+
+            return paths;
+        }
+
+        /// <summary>
+        /// Gets the number of variant files that exist on disk for the element.
+        /// </summary>
+        public int GetVariantCount(string elementName)
+        {
+            return GetAllTemplatePaths(elementName).Count;
+        }
+
+        /// <summary>
+        /// Saves a template image for an element (overwrites the primary).
         /// </summary>
         public void SaveTemplate(string elementName, Bitmap templateImage)
         {
@@ -254,9 +327,54 @@ namespace ToonTown_Rewritten_Bot.Utilities
             string safeName = MakeSafeFileName(elementName);
             var element = GetOrCreateElement(elementName);
             element.TemplatePath = Path.Combine("Templates", $"{safeName}.png");
+
+            // Rebuild VariantPaths from disk
+            RebuildVariantPaths(elementName);
             SaveElementData();
 
             System.Diagnostics.Debug.WriteLine($"[UIElementManager] Saved template for {elementName}");
+        }
+
+        /// <summary>
+        /// Saves a template image as the next available variant.
+        /// Returns the variant index that was saved (0-based).
+        /// </summary>
+        public int SaveTemplateVariant(string elementName, Bitmap templateImage)
+        {
+            // Find the next available variant number
+            int variantIndex = 0;
+            while (File.Exists(GetVariantPath(elementName, variantIndex)))
+            {
+                variantIndex++;
+            }
+
+            string variantPath = GetVariantPath(elementName, variantIndex);
+            templateImage.Save(variantPath, System.Drawing.Imaging.ImageFormat.Png);
+
+            // Rebuild VariantPaths from disk
+            RebuildVariantPaths(elementName);
+            SaveElementData();
+
+            System.Diagnostics.Debug.WriteLine($"[UIElementManager] Saved variant {variantIndex} for {elementName}");
+            return variantIndex;
+        }
+
+        /// <summary>
+        /// Deletes a specific variant file and renumbers remaining variants.
+        /// </summary>
+        public void DeleteTemplateVariant(string elementName, int variantIndex)
+        {
+            string variantPath = GetVariantPath(elementName, variantIndex);
+            if (File.Exists(variantPath))
+            {
+                File.Delete(variantPath);
+                System.Diagnostics.Debug.WriteLine($"[UIElementManager] Deleted variant {variantIndex} for {elementName}");
+            }
+
+            // Renumber remaining variants to fill the gap
+            RenumberVariants(elementName);
+            RebuildVariantPaths(elementName);
+            SaveElementData();
         }
 
         /// <summary>
@@ -361,6 +479,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     if (loaded != null)
                     {
                         _elements = new Dictionary<string, UIElementData>(loaded, StringComparer.OrdinalIgnoreCase);
+
+                        // Migration: if VariantPaths is null/empty but TemplatePath was set via old format,
+                        // the TemplatePath setter already handles populating VariantPaths[0].
+                        // No additional migration step needed.
                     }
                 }
                 catch (Exception ex)
@@ -418,6 +540,59 @@ namespace ToonTown_Rewritten_Bot.Utilities
             return name.Replace(' ', '_');
         }
 
+        /// <summary>
+        /// Rebuilds the VariantPaths list in UIElementData from files on disk.
+        /// </summary>
+        private void RebuildVariantPaths(string elementName)
+        {
+            var element = GetOrCreateElement(elementName);
+            var allPaths = GetAllTemplatePaths(elementName);
+            string safeName = MakeSafeFileName(elementName);
+
+            element.VariantPaths = allPaths
+                .Select(p => Path.Combine("Templates", Path.GetFileName(p)))
+                .ToList();
+        }
+
+        /// <summary>
+        /// Renumbers variant files to fill any gaps after a deletion.
+        /// E.g., if _v2 is deleted and _v3 exists, _v3 becomes _v2.
+        /// </summary>
+        private void RenumberVariants(string elementName)
+        {
+            string safeName = MakeSafeFileName(elementName);
+
+            // Collect all existing variant files
+            var existingFiles = new List<string>();
+            string primaryPath = Path.Combine(_templatesFolder, $"{safeName}.png");
+            if (File.Exists(primaryPath))
+                existingFiles.Add(primaryPath);
+
+            for (int i = 2; i <= 20; i++)
+            {
+                string path = Path.Combine(_templatesFolder, $"{safeName}_v{i}.png");
+                if (File.Exists(path))
+                    existingFiles.Add(path);
+            }
+
+            // Rename them in order: primary, _v2, _v3, ...
+            for (int i = 0; i < existingFiles.Count; i++)
+            {
+                string targetPath = GetVariantPath(elementName, i);
+                if (existingFiles[i] != targetPath)
+                {
+                    try
+                    {
+                        File.Move(existingFiles[i], targetPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[UIElementManager] Error renumbering variant: {ex.Message}");
+                    }
+                }
+            }
+        }
+
         #endregion
     }
 
@@ -427,7 +602,31 @@ namespace ToonTown_Rewritten_Bot.Utilities
     public class UIElementData
     {
         public string Name { get; set; }
-        public string TemplatePath { get; set; }
+
+        /// <summary>
+        /// List of relative paths for all template variants.
+        /// Index 0 is the primary template, index 1 is _v2, etc.
+        /// </summary>
+        public List<string> VariantPaths { get; set; }
+
+        /// <summary>
+        /// Primary template path (backward compat). Returns first item from VariantPaths.
+        /// On set, initializes VariantPaths if needed and sets the first element.
+        /// </summary>
+        public string TemplatePath
+        {
+            get => VariantPaths != null && VariantPaths.Count > 0 ? VariantPaths[0] : null;
+            set
+            {
+                if (VariantPaths == null)
+                    VariantPaths = new List<string>();
+                if (VariantPaths.Count == 0)
+                    VariantPaths.Add(value);
+                else
+                    VariantPaths[0] = value;
+            }
+        }
+
         public Point? ManualCoordinates { get; set; }
         public Point? CachedCenter { get; set; }
         public DateTime? LastFoundTime { get; set; }
@@ -437,6 +636,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         [JsonIgnore]
         public bool HasManualFallback => ManualCoordinates.HasValue;
+
+        [JsonIgnore]
+        public int VariantCount => VariantPaths?.Count ?? 0;
     }
 
     /// <summary>

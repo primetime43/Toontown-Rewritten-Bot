@@ -37,48 +37,51 @@ namespace ToonTown_Rewritten_Bot.Services
                 await PrepareForFishing(cancellationToken).ConfigureAwait(false);
                 await StartFishingActionsAsync(casts, variance, autoDetectFish, cancellationToken).ConfigureAwait(false);
 
-                if (locationName != FishingLocationNames.FishAnywhere && locationName != FishingLocationNames.CustomFishingAction && locationName != FishingLocationNames.EstateLeftDock)
+                if (locationName == FishingLocationNames.FishAnywhere)
                 {
-                    // Straighten the toon before exiting so they face forward for walking to sell
-                    await StraightenToonAsync(cancellationToken).ConfigureAwait(false);
-                    await ExitFishing(cancellationToken).ConfigureAwait(false);
-                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
-
-                    // Hardcoded Fishing Locations' if
-                    FishingStrategyBase fishingStrategy = DetermineFishingStrategy(locationName);
-                    await fishingStrategy.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
-                    sells--;
-                }
-                else if(locationName == FishingLocationNames.CustomFishingAction && customFishingFilePath != "")
-                {
-                    // Straighten the toon before exiting so they face forward for walking to sell
-                    await StraightenToonAsync(cancellationToken).ConfigureAwait(false);
-                    await ExitFishing(cancellationToken).ConfigureAwait(false);
-                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
-
-                    // Custom Fishing's if
-                    CustomActionsFishing customFishing = new CustomActionsFishing(customFishingFilePath);
-                    await customFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false); // Start the action sequence
-                    sells--;
-                }
-                else
-                {
-                    // If "FISH ANYWHERE" is selected, just exit fishing without straightening
+                    // Fish Anywhere - just exit fishing without selling
                     await ExitFishing(cancellationToken).ConfigureAwait(false);
                     await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
                     sells = 0;
                 }
-            }
+                else if (locationName == FishingLocationNames.CustomFishingAction && customFishingFilePath != "")
+                {
+                    // Custom fishing action - sell using custom action file
+                    await StraightenToonAsync(cancellationToken).ConfigureAwait(false);
+                    await ExitFishing(cancellationToken).ConfigureAwait(false);
+                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
-            if(locationName == FishingLocationNames.CustomFishingAction && customFishingFilePath != "")
-                // Update the location name to only the file name without the extension
-                locationName = Path.GetFileNameWithoutExtension(customFishingFilePath);
+                    CustomActionsFishing customFishing = new CustomActionsFishing(customFishingFilePath);
+                    await customFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
+                    sells--;
+                }
+                else if (locationName == FishingLocationNames.EstateLeftDock)
+                {
+                    // Estate - sell using built-in estate action file
+                    await StraightenToonAsync(cancellationToken).ConfigureAwait(false);
+                    await ExitFishing(cancellationToken).ConfigureAwait(false);
+                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
+
+                    string estateSellPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Custom Fishing Actions", "EstateFishing Far Left Dock.json");
+                    CustomActionsFishing estateFishing = new CustomActionsFishing(estateSellPath);
+                    await estateFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
+                    sells--;
+                }
+                else
+                {
+                    // Hardcoded fishing locations - sell using strategy pattern
+                    await StraightenToonAsync(cancellationToken).ConfigureAwait(false);
+                    await ExitFishing(cancellationToken).ConfigureAwait(false);
+                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
+
+                    FishingStrategyBase fishingStrategy = DetermineFishingStrategy(locationName);
+                    await fishingStrategy.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
+                    sells--;
+                }
+            }
 
             // Notify MainForm to uncheck the overlay checkbox - fishing is completely done
             OnFishingEnded?.Invoke();
-
-            BringBotWindowToFront();
-            MessageBox.Show($"Done Fishing in '{locationName}'.");
         }
 
         /// <summary>
@@ -100,12 +103,6 @@ namespace ToonTown_Rewritten_Bot.Services
             CoreFunctionality.FocusTTRWindow();
             await Task.Delay(1000, cancellationToken).ConfigureAwait(false); // Initial delay before starting.
             await customFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false); // Start the action sequence
-
-            CoreFunctionality.BringBotWindowToFront();
-            if (showCompletionMessage)
-            {
-                MessageBox.Show("Done Debugging Custom Action");
-            }
         }
 
 

@@ -194,6 +194,7 @@
             btnEditTemplate = new System.Windows.Forms.Button();
             btnDeleteTemplate = new System.Windows.Forms.Button();
             btnOpenTemplateDefinitions = new System.Windows.Forms.Button();
+            btnManageVariants = new System.Windows.Forms.Button();
             devDebugGroup = new System.Windows.Forms.GroupBox();
             devDebugDescLabel = new System.Windows.Forms.Label();
             devDebugSeparator = new System.Windows.Forms.Panel();
@@ -2035,6 +2036,7 @@
             devTemplatesGroup.Controls.Add(btnEditTemplate);
             devTemplatesGroup.Controls.Add(btnDeleteTemplate);
             devTemplatesGroup.Controls.Add(btnOpenTemplateDefinitions);
+            devTemplatesGroup.Controls.Add(btnManageVariants);
             devTemplatesGroup.Location = new System.Drawing.Point(10, 180);
             devTemplatesGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             devTemplatesGroup.Name = "devTemplatesGroup";
@@ -2159,7 +2161,19 @@
             toolTip1.SetToolTip(btnOpenTemplateDefinitions, "Open the TemplateDefinitions.json file to manually edit");
             btnOpenTemplateDefinitions.UseVisualStyleBackColor = true;
             btnOpenTemplateDefinitions.Click += btnOpenTemplateDefinitions_Click;
-            // 
+            //
+            // btnManageVariants
+            //
+            btnManageVariants.Location = new System.Drawing.Point(10, 150);
+            btnManageVariants.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnManageVariants.Name = "btnManageVariants";
+            btnManageVariants.Size = new System.Drawing.Size(150, 28);
+            btnManageVariants.TabIndex = 10;
+            btnManageVariants.Text = "Manage Variants";
+            toolTip1.SetToolTip(btnManageVariants, "Open the variant manager for the selected template");
+            btnManageVariants.UseVisualStyleBackColor = true;
+            btnManageVariants.Click += btnManageVariants_Click;
+            //
             // devDebugGroup
             // 
             devDebugGroup.Controls.Add(devDebugDescLabel);
@@ -2488,6 +2502,7 @@
         private System.Windows.Forms.Button btnOpenTemplateDefinitions;
         private System.Windows.Forms.Button btnEditTemplate;
         private System.Windows.Forms.Button btnDeleteTemplate;
+        private System.Windows.Forms.Button btnManageVariants;
         private System.Windows.Forms.CheckBox autoDetectFishCheckBox;
         private System.Windows.Forms.CheckBox showOverlayCheckBox;
         private System.Windows.Forms.Button editScanAreaBtn;

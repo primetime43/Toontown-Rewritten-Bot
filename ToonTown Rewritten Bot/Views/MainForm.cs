@@ -99,6 +99,7 @@ namespace ToonTown_Rewritten_Bot
             autoDetectFishCheckBox.Checked = prefs.AutoDetectFish;
             waitForFishCheckBox.Checked = prefs.WaitForFishBeforeCasting;
             numericUpDownWaitAttempts.Value = Math.Max(numericUpDownWaitAttempts.Minimum, Math.Min(numericUpDownWaitAttempts.Maximum, prefs.MaxFishWaitAttempts));
+            showOverlayCheckBox.Checked = prefs.ShowFishingOverlay;
 
             // Custom Fishing preferences
             if (!string.IsNullOrEmpty(prefs.CustomFishingFile))
@@ -183,6 +184,7 @@ namespace ToonTown_Rewritten_Bot
             prefs.AutoDetectFish = autoDetectFishCheckBox.Checked;
             prefs.WaitForFishBeforeCasting = waitForFishCheckBox.Checked;
             prefs.MaxFishWaitAttempts = (int)numericUpDownWaitAttempts.Value;
+            prefs.ShowFishingOverlay = showOverlayCheckBox.Checked;
 
             // Custom Fishing preferences
             prefs.CustomFishingFile = customFishingFilesComboBox.SelectedItem?.ToString() ?? "";
@@ -780,8 +782,11 @@ namespace ToonTown_Rewritten_Bot
 
                 await _fishingService.StartFishing(selectedLocation, numberOfCasts, numberOfSells, randomFishingCheckBox.Checked, token, "", autoDetectFishCheckBox.Checked);
 
+                // These run on the UI thread (await resumes on UI context)
                 fishingStatusLabel.Text = "Status: Idle";
                 fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
+                CoreFunctionality.BringBotWindowToFront();
+                MessageBox.Show($"Done Fishing in '{selectedLocation}'.");
             }
             catch (TaskCanceledException)
             {
@@ -1313,12 +1318,15 @@ namespace ToonTown_Rewritten_Bot
             if (string.IsNullOrEmpty(selectedItem))
                 return;
 
-            // Check if template exists
-            bool hasTemplate = UIElementManager.Instance.HasTemplate(selectedItem);
+            // Check if template exists and show variant count
+            int variantCount = UIElementManager.Instance.GetVariantCount(selectedItem);
 
-            if (hasTemplate)
+            if (variantCount > 0)
             {
-                labelTemplateStatus.Text = $"Template exists";
+                string variantText = variantCount == 1
+                    ? "Template exists (1 variant)"
+                    : $"Template exists ({variantCount} variants)";
+                labelTemplateStatus.Text = variantText;
                 labelTemplateStatus.ForeColor = Color.Green;
                 btnViewTemplate.Enabled = true;
             }
@@ -1339,13 +1347,39 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
-            // Use the existing TemplateCaptureForm
-            bool captured = TemplateCaptureForm.CaptureTemplate(selectedItem);
+            bool captured = false;
+
+            if (UIElementManager.Instance.HasTemplate(selectedItem))
+            {
+                // Template already exists - ask user what to do
+                var result = MessageBox.Show(
+                    $"A template already exists for '{selectedItem}'.\n\n" +
+                    "Yes = Replace existing primary template\n" +
+                    "No = Add as a new variant\n" +
+                    "Cancel = Do nothing",
+                    "Template Exists",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    captured = TemplateCaptureForm.CaptureTemplate(selectedItem);
+                }
+                else if (result == DialogResult.No)
+                {
+                    captured = TemplateCaptureForm.CaptureVariant(selectedItem);
+                }
+                // Cancel = do nothing
+            }
+            else
+            {
+                captured = TemplateCaptureForm.CaptureTemplate(selectedItem);
+            }
 
             if (captured)
             {
-                MessageBox.Show($"Template captured successfully for: {selectedItem}", "Template Captured", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                // Refresh the status
+                int count = UIElementManager.Instance.GetVariantCount(selectedItem);
+                MessageBox.Show($"Template captured successfully for: {selectedItem}\n({count} variant{(count != 1 ? "s" : "")} total)", "Template Captured", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 comboBoxTemplateItems_SelectedIndexChanged(sender, e);
             }
         }
@@ -1359,35 +1393,84 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
-            string templatePath = UIElementManager.Instance.GetTemplatePath(selectedItem);
+            var allPaths = UIElementManager.Instance.GetAllTemplatePaths(selectedItem);
 
-            if (string.IsNullOrEmpty(templatePath) || !System.IO.File.Exists(templatePath))
+            if (allPaths.Count == 0)
             {
                 MessageBox.Show($"No template found for: {selectedItem}\n\nClick 'Capture Template' to create one.", "Template Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Open the template image in a simple viewer
             try
             {
                 using (var viewerForm = new Form())
                 {
-                    viewerForm.Text = $"Template: {selectedItem}";
+                    viewerForm.Text = $"Template: {selectedItem} ({allPaths.Count} variant{(allPaths.Count != 1 ? "s" : "")})";
                     viewerForm.StartPosition = FormStartPosition.CenterParent;
+                    viewerForm.FormBorderStyle = FormBorderStyle.Sizable;
+                    viewerForm.MinimumSize = new Size(300, 200);
 
-                    var pictureBox = new PictureBox
+                    var imagesToDispose = new System.Collections.Generic.List<Image>();
+
+                    if (allPaths.Count == 1)
                     {
-                        Dock = DockStyle.Fill,
-                        SizeMode = PictureBoxSizeMode.Zoom,
-                        Image = Image.FromFile(templatePath)
-                    };
-                    viewerForm.Controls.Add(pictureBox);
+                        // Single variant - simple viewer
+                        var img = Image.FromFile(allPaths[0]);
+                        imagesToDispose.Add(img);
 
-                    // Size the form based on image size
-                    viewerForm.ClientSize = new Size(
-                        Math.Max(200, Math.Min(pictureBox.Image.Width + 20, 600)),
-                        Math.Max(150, Math.Min(pictureBox.Image.Height + 20, 400))
-                    );
+                        var pictureBox = new PictureBox
+                        {
+                            Dock = DockStyle.Fill,
+                            SizeMode = PictureBoxSizeMode.Zoom,
+                            Image = img
+                        };
+                        viewerForm.Controls.Add(pictureBox);
+
+                        viewerForm.ClientSize = new Size(
+                            Math.Max(200, Math.Min(img.Width + 20, 600)),
+                            Math.Max(150, Math.Min(img.Height + 50, 400))
+                        );
+                    }
+                    else
+                    {
+                        // Multiple variants - gallery view
+                        var galleryPanel = new FlowLayoutPanel
+                        {
+                            Dock = DockStyle.Fill,
+                            AutoScroll = true,
+                            FlowDirection = FlowDirection.LeftToRight,
+                            WrapContents = true,
+                            Padding = new Padding(10)
+                        };
+                        viewerForm.Controls.Add(galleryPanel);
+
+                        for (int i = 0; i < allPaths.Count; i++)
+                        {
+                            var img = Image.FromFile(allPaths[i]);
+                            imagesToDispose.Add(img);
+
+                            var variantGroup = new GroupBox
+                            {
+                                Text = i == 0 ? "Primary" : $"Variant {i + 1}",
+                                Size = new Size(180, 160),
+                                Margin = new Padding(5)
+                            };
+
+                            var pb = new PictureBox
+                            {
+                                Dock = DockStyle.Fill,
+                                SizeMode = PictureBoxSizeMode.Zoom,
+                                Image = img
+                            };
+                            variantGroup.Controls.Add(pb);
+                            galleryPanel.Controls.Add(variantGroup);
+                        }
+
+                        viewerForm.ClientSize = new Size(
+                            Math.Min(allPaths.Count * 200 + 30, 800),
+                            230
+                        );
+                    }
 
                     var openFolderBtn = new Button
                     {
@@ -1397,20 +1480,38 @@ namespace ToonTown_Rewritten_Bot
                     };
                     openFolderBtn.Click += (s, args) =>
                     {
-                        System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{templatePath}\"");
+                        System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{allPaths[0]}\"");
                     };
                     viewerForm.Controls.Add(openFolderBtn);
 
                     viewerForm.ShowDialog(this);
 
-                    // Dispose the image properly
-                    pictureBox.Image?.Dispose();
+                    foreach (var img in imagesToDispose)
+                        img?.Dispose();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error viewing template: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnManageVariants_Click(object sender, EventArgs e)
+        {
+            string selectedItem = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(selectedItem))
+            {
+                MessageBox.Show("Please select an item first.", "No Item Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (var form = new TemplateVariantManagerForm(selectedItem))
+            {
+                form.ShowDialog(this);
+            }
+
+            // Refresh status after managing variants
+            comboBoxTemplateItems_SelectedIndexChanged(sender, e);
         }
 
         private void btnAddTemplateItem_Click(object sender, EventArgs e)
@@ -1605,22 +1706,117 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
-            var result = MessageBox.Show(
-                $"Are you sure you want to delete the template definition '{templateName}'?\n\nThis will NOT delete the template image file.",
-                "Confirm Delete",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
+            var allPaths = UIElementManager.Instance.GetAllTemplatePaths(templateName);
+            int variantCount = allPaths.Count;
 
-            if (result == DialogResult.Yes)
+            if (variantCount > 1)
             {
-                if (TemplateDefinitionManager.Instance.RemoveDefinition(templateName))
+                // Multiple variants - let user pick which to delete
+                using (var deleteForm = new Form())
                 {
-                    MessageBox.Show($"Deleted template definition: {templateName}", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadTemplateItemsComboBox();
+                    deleteForm.Text = "Delete Template Variants";
+                    deleteForm.ClientSize = new Size(350, 250);
+                    deleteForm.StartPosition = FormStartPosition.CenterParent;
+                    deleteForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                    deleteForm.MaximizeBox = false;
+                    deleteForm.MinimizeBox = false;
+
+                    var label = new Label
+                    {
+                        Text = $"'{templateName}' has {variantCount} variants.\nSelect which to delete:",
+                        Location = new Point(15, 10),
+                        AutoSize = true
+                    };
+                    deleteForm.Controls.Add(label);
+
+                    var checkedListBox = new CheckedListBox
+                    {
+                        Location = new Point(15, 45),
+                        Size = new Size(320, 120),
+                        CheckOnClick = true
+                    };
+
+                    for (int i = 0; i < variantCount; i++)
+                    {
+                        string itemLabel = i == 0
+                            ? $"Primary ({System.IO.Path.GetFileName(allPaths[i])})"
+                            : $"Variant {i + 1} ({System.IO.Path.GetFileName(allPaths[i])})";
+                        checkedListBox.Items.Add(itemLabel);
+                    }
+                    deleteForm.Controls.Add(checkedListBox);
+
+                    var deleteAllBtn = new Button { Text = "Delete All", Location = new Point(15, 175), Size = new Size(90, 30) };
+                    var deleteSelectedBtn = new Button { Text = "Delete Selected", Location = new Point(115, 175), Size = new Size(110, 30) };
+                    var cancelBtn = new Button { Text = "Cancel", Location = new Point(255, 175), Size = new Size(80, 30), DialogResult = DialogResult.Cancel };
+
+                    deleteAllBtn.Click += (s, args) =>
+                    {
+                        for (int i = variantCount - 1; i >= 0; i--)
+                            UIElementManager.Instance.DeleteTemplateVariant(templateName, i);
+                        MessageBox.Show("All template variants deleted.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        deleteForm.DialogResult = DialogResult.OK;
+                        deleteForm.Close();
+                    };
+
+                    deleteSelectedBtn.Click += (s, args) =>
+                    {
+                        var indicesToDelete = new System.Collections.Generic.List<int>();
+                        for (int i = 0; i < checkedListBox.Items.Count; i++)
+                        {
+                            if (checkedListBox.GetItemChecked(i))
+                                indicesToDelete.Add(i);
+                        }
+
+                        if (indicesToDelete.Count == 0)
+                        {
+                            MessageBox.Show("Please check at least one variant to delete.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        // Delete in reverse order to maintain correct indices
+                        indicesToDelete.Sort();
+                        indicesToDelete.Reverse();
+                        foreach (int idx in indicesToDelete)
+                            UIElementManager.Instance.DeleteTemplateVariant(templateName, idx);
+
+                        MessageBox.Show($"Deleted {indicesToDelete.Count} variant(s).", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        deleteForm.DialogResult = DialogResult.OK;
+                        deleteForm.Close();
+                    };
+
+                    deleteForm.Controls.AddRange(new Control[] { deleteAllBtn, deleteSelectedBtn, cancelBtn });
+                    deleteForm.CancelButton = cancelBtn;
+
+                    if (deleteForm.ShowDialog(this) == DialogResult.OK)
+                    {
+                        comboBoxTemplateItems_SelectedIndexChanged(sender, e);
+                    }
                 }
-                else
+            }
+            else
+            {
+                // Single variant or definition-only delete
+                var result = MessageBox.Show(
+                    $"Are you sure you want to delete the template definition '{templateName}'?\n\nThis will also delete the template image file if it exists.",
+                    "Confirm Delete",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Yes)
                 {
-                    MessageBox.Show("Failed to delete template definition.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // Delete the template file(s)
+                    if (variantCount > 0)
+                        UIElementManager.Instance.DeleteTemplateVariant(templateName, 0);
+
+                    if (TemplateDefinitionManager.Instance.RemoveDefinition(templateName))
+                    {
+                        MessageBox.Show($"Deleted template definition: {templateName}", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadTemplateItemsComboBox();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to delete template definition.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -1633,10 +1829,9 @@ namespace ToonTown_Rewritten_Bot
                 string selectedLocation = fishingLocationscomboBox.SelectedItem.ToString();
                 fishingLocationDescLabel.Text = FishingLocationMessages.GetLocationMessage(selectedLocation);
 
-                // Hide "Number of Sells" controls when Fish Anywhere or Estate is selected
-                // (no sell cycle - no fisherman at these locations)
-                bool showSellsControls = selectedLocation != FishingLocationNames.FishAnywhere
-                    && selectedLocation != FishingLocationNames.EstateLeftDock;
+                // Hide "Number of Sells" controls when Fish Anywhere is selected
+                // (no sell cycle - no fisherman at that location)
+                bool showSellsControls = selectedLocation != FishingLocationNames.FishAnywhere;
                 labelSells.Visible = showSellsControls;
                 numericUpDownSells.Visible = showSellsControls;
             }
@@ -1718,6 +1913,10 @@ namespace ToonTown_Rewritten_Bot
 
                 await _fishingService.StartFishing("CUSTOM FISHING ACTION", numberOfCasts, numberOfSells,
                     randomFishingCheckBox.Checked, token, filePath + ".json", customAutoDetectFishCheckBox.Checked);
+
+                // These run on the UI thread (await resumes on UI context)
+                CoreFunctionality.BringBotWindowToFront();
+                MessageBox.Show($"Done Fishing with custom action '{selectedFileName}'.");
             }
             catch (TaskCanceledException)
             {
