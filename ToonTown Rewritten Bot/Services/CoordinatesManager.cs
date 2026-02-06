@@ -141,6 +141,48 @@ namespace ToonTown_Rewritten_Bot.Services
                 return manualCoords;
             }
 
+            // Offer the user a chance to recapture the template before giving up
+            // Bring bot window to front so the dialog is visible over TTR
+            DialogResult recaptureChoice = DialogResult.No;
+            if (Application.OpenForms.Count > 0 && Application.OpenForms[0].InvokeRequired)
+            {
+                Application.OpenForms[0].Invoke(new Action(() =>
+                {
+                    CoreFunctionality.BringBotWindowToFront();
+                    recaptureChoice = MessageBox.Show(
+                        $"Could not find '{elementName}' on screen. Would you like to capture the template for this element?",
+                        "Element Not Found",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+                }));
+            }
+            else
+            {
+                CoreFunctionality.BringBotWindowToFront();
+                recaptureChoice = MessageBox.Show(
+                    $"Could not find '{elementName}' on screen. Would you like to capture the template for this element?",
+                    "Element Not Found",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+            }
+
+            if (recaptureChoice == DialogResult.Yes)
+            {
+                bool captured = UIElementManager.Instance.PromptForTemplateCapture(elementName, description ?? $"Please select the '{elementName}' on screen");
+                if (captured)
+                {
+                    // Retry with the newly captured template
+                    var retryLocation = await UIElementManager.Instance.GetElementLocationAsync(elementName, description, forceSearch: true);
+                    if (retryLocation.HasValue)
+                    {
+                        var windowOffset = CoreFunctionality.GetGameWindowOffset();
+                        int screenX = retryLocation.Value.X + windowOffset.X;
+                        int screenY = retryLocation.Value.Y + windowOffset.Y;
+                        return (screenX, screenY);
+                    }
+                }
+            }
+
             throw new Exception($"Could not find element '{elementName}' via image recognition or manual coordinates.");
         }
 

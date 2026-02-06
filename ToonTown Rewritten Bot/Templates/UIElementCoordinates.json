@@ -31,15 +31,15 @@
     "Name": "Feed Doodle Button",
     "TemplatePath": "Templates\\Feed_Doodle_Button.png",
     "ManualCoordinates": null,
-    "CachedCenter": "1802, 203",
-    "LastFoundTime": "2025-12-30T03:56:18.9860478-05:00"
+    "CachedCenter": "1805, 216",
+    "LastFoundTime": "2026-02-06T01:12:17.9059036-05:00"
   },
   "Scratch Doodle Button": {
     "Name": "Scratch Doodle Button",
     "TemplatePath": "Templates\\Scratch_Doodle_Button.png",
     "ManualCoordinates": null,
-    "CachedCenter": "1805, 255",
-    "LastFoundTime": "2025-12-30T03:56:41.0135037-05:00"
+    "CachedCenter": "1814, 253",
+    "LastFoundTime": "2026-02-06T01:12:42.2775918-05:00"
   },
   "Plant Flower Button": {
     "Name": "Plant Flower Button",
@@ -166,5 +166,33 @@
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
+  },
+  "Green SpeedChat Button": {
+    "Name": "Green SpeedChat Button",
+    "TemplatePath": "Templates\\Green_SpeedChat_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "114, 69",
+    "LastFoundTime": "2026-02-06T01:13:02.7626157-05:00"
+  },
+  "Pets Tab in SpeedChat": {
+    "Name": "Pets Tab in SpeedChat",
+    "TemplatePath": "Templates\\Pets_Tab_in_SpeedChat.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "245, 101",
+    "LastFoundTime": "2026-02-06T01:13:23.0235938-05:00"
+  },
+  "Tricks Tab in SpeedChat": {
+    "Name": "Tricks Tab in SpeedChat",
+    "TemplatePath": "Templates\\Tricks_Tab_in_SpeedChat.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "490, 98",
+    "LastFoundTime": "2026-02-06T01:13:33.2004379-05:00"
+  },
+  "Jump Trick Option in SpeedChat": {
+    "Name": "Jump Trick Option in SpeedChat",
+    "TemplatePath": "Templates\\Jump_Trick_Option_in_SpeedChat.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "538, 100",
+    "LastFoundTime": "2026-02-06T01:13:46.1035895-05:00"
   }
 }
