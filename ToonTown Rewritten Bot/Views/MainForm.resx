@@ -3274,13 +3274,13 @@
 Note: Some courses require LEFT or RIGHT tee position.
 The preview tells you where to stand - you must move there yourself.</value>
   </data>
-  <data name="richTextBox2.Text" xml:space="preserve">
+  <data name="doodleHelpRichTextBox.Text" xml:space="preserve">
     <value>Note: Before starting to train, call your doodle and have it's profile box open; meaning the box 
 that shows the feed, scratch &amp; call option etc.
 Also, the bot will say the trick two times, incase the doodle gets confused the first time.
 </value>
   </data>
-  <data name="pictureBox2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="doodlePictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAQIAAADDCAIAAADm7oiiAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
         wAAADsABataJCQAAeSJJREFUeF7tvQV8lFfa/33N3OOTiSdjmclM3F2IO8Hd3SmaECACxN0FggQJEAIR

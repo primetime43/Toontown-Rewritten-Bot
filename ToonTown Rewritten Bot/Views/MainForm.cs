@@ -1074,31 +1074,41 @@ namespace ToonTown_Rewritten_Bot
             }
             _cancellationTokenSource = new CancellationTokenSource();
             isTrainingActive = true;  // Set the flag to indicate that training has started
+            doodleStatusLabel.Text = "Status: Training...";
+            doodleStatusLabel.ForeColor = System.Drawing.Color.DarkGreen;
 
             try
             {
-                // Run the training task and handle completion
+                // Run the training task
                 await Task.Run(() => new DoodleTraining().StartDoodleTraining(
                     numberOfFeeds, numberOfScratches, unlimitedCheckBox,
                     selectedTrick, justFeed, justScratch, _cancellationTokenSource.Token),
-                    _cancellationTokenSource.Token)
-                .ContinueWith(task =>
-                {
-                    isTrainingActive = false;  // Clear the flag when training completes or is canceled
-                    if (task.IsCompletedSuccessfully)
-                    {
-                        CoreFunctionality.BringBotWindowToFront();
-                        MessageBox.Show("Doodle training completed successfully!", "Training Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else if (task.IsFaulted)
-                    {
-                        MessageBox.Show($"Error occurred during doodle training: {task.Exception?.GetBaseException().Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }, TaskScheduler.FromCurrentSynchronizationContext()); // Ensure UI updates are done on the main thread.
+                    _cancellationTokenSource.Token);
+
+                // Training completed successfully
+                isTrainingActive = false;
+                doodleStatusLabel.Text = "Status: Complete";
+                doodleStatusLabel.ForeColor = System.Drawing.Color.DarkBlue;
+                CoreFunctionality.BringBotWindowToFront();
+                MessageBox.Show("Doodle training completed successfully!", "Training Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (OperationCanceledException)
             {
-                isTrainingActive = false;  // Ensure flag is cleared if training is canceled
+                isTrainingActive = false;
+            }
+            catch (Exception ex)
+            {
+                isTrainingActive = false;
+                doodleStatusLabel.Text = "Status: Error";
+                doodleStatusLabel.ForeColor = System.Drawing.Color.DarkRed;
+                CoreFunctionality.BringBotWindowToFront();
+                MessageBox.Show($"Error occurred during doodle training: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isTrainingActive = false;
+                doodleStatusLabel.Text = "Status: Idle";
+                doodleStatusLabel.ForeColor = System.Drawing.Color.Gray;
             }
         }
 
@@ -1112,7 +1122,11 @@ namespace ToonTown_Rewritten_Bot
                 _cancellationTokenSource = null;     // Reset the source to be sure it's fresh when restarted
                 isTrainingActive = false;  // Clear the flag
 
+                doodleStatusLabel.Text = "Status: Stopped";
+                doodleStatusLabel.ForeColor = System.Drawing.Color.DarkRed;
                 MessageBox.Show("Doodle Training stopped!", "Training Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                doodleStatusLabel.Text = "Status: Idle";
+                doodleStatusLabel.ForeColor = System.Drawing.Color.Gray;
             }
             else
             {
