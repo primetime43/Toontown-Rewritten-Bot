@@ -32,6 +32,9 @@ namespace ToonTown_Rewritten_Bot
         {
             InitializeComponent();
 
+            // Hide Racing tab
+            tabControl1.TabPages.Remove(Racing);
+
             // Enable keyboard shortcuts (local - when bot has focus)
             this.KeyPreview = true;
             this.KeyDown += MainForm_KeyDown;
