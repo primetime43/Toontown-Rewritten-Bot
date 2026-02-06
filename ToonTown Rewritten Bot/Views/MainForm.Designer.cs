@@ -44,8 +44,15 @@
             githubLinkLabel = new System.Windows.Forms.LinkLabel();
             button8 = new System.Windows.Forms.Button();
             Fishing = new System.Windows.Forms.TabPage();
-            label12 = new System.Windows.Forms.Label();
-            groupBox6 = new System.Windows.Forms.GroupBox();
+            fishingSettingsGroup = new System.Windows.Forms.GroupBox();
+            fishingDetectionGroup = new System.Windows.Forms.GroupBox();
+            fishingInfoGroup = new System.Windows.Forms.GroupBox();
+            fishingLocationDescLabel = new System.Windows.Forms.Label();
+            fishingSeparator1 = new System.Windows.Forms.Panel();
+            fishingSeparator2 = new System.Windows.Forms.Panel();
+            fishingSeparator3 = new System.Windows.Forms.Panel();
+            fishingSeparator4 = new System.Windows.Forms.Panel();
+            fishingStatusLabel = new System.Windows.Forms.Label();
             CustomFishing = new System.Windows.Forms.TabPage();
             groupBoxCustomFishing = new System.Windows.Forms.GroupBox();
             labelSelectCustomFile = new System.Windows.Forms.Label();
@@ -72,14 +79,14 @@
             waitForFishCheckBox = new System.Windows.Forms.CheckBox();
             labelWaitAttempts = new System.Windows.Forms.Label();
             numericUpDownWaitAttempts = new System.Windows.Forms.NumericUpDown();
-            button4 = new System.Windows.Forms.Button();
+            stopFishingBtn = new System.Windows.Forms.Button();
             randomFishingCheckBox = new System.Windows.Forms.CheckBox();
             labelBiteTimeout = new System.Windows.Forms.Label();
             numericUpDownBiteTimeout = new System.Windows.Forms.NumericUpDown();
-            label4 = new System.Windows.Forms.Label();
-            numericUpDown4 = new System.Windows.Forms.NumericUpDown();
-            label3 = new System.Windows.Forms.Label();
-            numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            labelSells = new System.Windows.Forms.Label();
+            numericUpDownSells = new System.Windows.Forms.NumericUpDown();
+            labelCasts = new System.Windows.Forms.Label();
+            numericUpDownCasts = new System.Windows.Forms.NumericUpDown();
             startFishing = new System.Windows.Forms.Button();
             fishingLocationscomboBox = new System.Windows.Forms.ComboBox();
             fishingShortcutsLabel = new System.Windows.Forms.Label();
@@ -196,7 +203,9 @@
             gettingStartedGroup.SuspendLayout();
             infoGroup.SuspendLayout();
             Fishing.SuspendLayout();
-            groupBox6.SuspendLayout();
+            fishingSettingsGroup.SuspendLayout();
+            fishingDetectionGroup.SuspendLayout();
+            fishingInfoGroup.SuspendLayout();
             CustomFishing.SuspendLayout();
             groupBoxCustomFishing.SuspendLayout();
             groupBoxCustomFishingHelp.SuspendLayout();
@@ -205,8 +214,8 @@
             ((System.ComponentModel.ISupportInitialize)customNumericUpDownBiteTimeout).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownWaitAttempts).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownBiteTimeout).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown4).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownSells).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownCasts).BeginInit();
             Racing.SuspendLayout();
             Gardening.SuspendLayout();
             gardeningActionsGroup.SuspendLayout();
@@ -389,9 +398,9 @@
             //
             // Fishing
             //
-            Fishing.Controls.Add(label12);
-            Fishing.Controls.Add(groupBox6);
-            Fishing.Controls.Add(fishingShortcutsLabel);
+            Fishing.Controls.Add(fishingSettingsGroup);
+            Fishing.Controls.Add(fishingDetectionGroup);
+            Fishing.Controls.Add(fishingInfoGroup);
             Fishing.Location = new System.Drawing.Point(4, 25);
             Fishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Fishing.Name = "Fishing";
@@ -401,101 +410,183 @@
             Fishing.Text = "Fishing";
             Fishing.UseVisualStyleBackColor = true;
             //
-            // label12
-            // 
-            label12.AutoSize = true;
-            label12.Location = new System.Drawing.Point(9, 290);
-            label12.Name = "label12";
-            label12.Size = new System.Drawing.Size(51, 16);
-            label12.TabIndex = 9;
-            label12.Text = "label12";
-            label12.Visible = false;
-            // 
-            // groupBox6
-            // 
-            groupBox6.Controls.Add(calibrateColorsBtn);
-            groupBox6.Controls.Add(editScanAreaBtn);
-            groupBox6.Controls.Add(showOverlayCheckBox);
-            groupBox6.Controls.Add(autoDetectFishCheckBox);
-            groupBox6.Controls.Add(waitForFishCheckBox);
-            groupBox6.Controls.Add(labelWaitAttempts);
-            groupBox6.Controls.Add(numericUpDownWaitAttempts);
-            groupBox6.Controls.Add(button4);
-            groupBox6.Controls.Add(randomFishingCheckBox);
-            groupBox6.Controls.Add(labelBiteTimeout);
-            groupBox6.Controls.Add(numericUpDownBiteTimeout);
-            groupBox6.Controls.Add(label4);
-            groupBox6.Controls.Add(numericUpDown4);
-            groupBox6.Controls.Add(label3);
-            groupBox6.Controls.Add(numericUpDown3);
-            groupBox6.Controls.Add(startFishing);
-            groupBox6.Controls.Add(fishingLocationscomboBox);
-            groupBox6.Location = new System.Drawing.Point(9, 7);
-            groupBox6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox6.Name = "groupBox6";
-            groupBox6.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox6.Size = new System.Drawing.Size(440, 280);
-            groupBox6.TabIndex = 8;
-            groupBox6.TabStop = false;
-            groupBox6.Text = "Fishing Locations";
-            // 
-            // calibrateColorsBtn
-            // 
-            calibrateColorsBtn.Location = new System.Drawing.Point(310, 166);
-            calibrateColorsBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            calibrateColorsBtn.Name = "calibrateColorsBtn";
-            calibrateColorsBtn.Size = new System.Drawing.Size(100, 28);
-            calibrateColorsBtn.TabIndex = 19;
-            calibrateColorsBtn.Text = "Pond Colors";
-            toolTip1.SetToolTip(calibrateColorsBtn, "Calibrate pond water and fish shadow colors for better detection.");
-            calibrateColorsBtn.UseVisualStyleBackColor = true;
-            calibrateColorsBtn.Click += CalibrateColorsBtn_Click;
-            // 
-            // editScanAreaBtn
-            // 
-            editScanAreaBtn.Location = new System.Drawing.Point(200, 166);
-            editScanAreaBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            editScanAreaBtn.Name = "editScanAreaBtn";
-            editScanAreaBtn.Size = new System.Drawing.Size(100, 28);
-            editScanAreaBtn.TabIndex = 18;
-            editScanAreaBtn.Text = "Scan Area";
-            toolTip1.SetToolTip(editScanAreaBtn, "Adjust the scan area to match the pond boundaries.");
-            editScanAreaBtn.UseVisualStyleBackColor = true;
-            editScanAreaBtn.Click += EditScanAreaBtn_Click;
-            // 
-            // showOverlayCheckBox
-            // 
-            showOverlayCheckBox.AutoSize = true;
-            showOverlayCheckBox.Location = new System.Drawing.Point(10, 170);
-            showOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            showOverlayCheckBox.Name = "showOverlayCheckBox";
-            showOverlayCheckBox.Size = new System.Drawing.Size(169, 20);
-            showOverlayCheckBox.TabIndex = 17;
-            showOverlayCheckBox.Text = "Show Detection Overlay";
-            toolTip1.SetToolTip(showOverlayCheckBox, "Shows a transparent overlay on the game window displaying detected fish shadows and targeting info.");
-            showOverlayCheckBox.UseVisualStyleBackColor = true;
-            showOverlayCheckBox.CheckedChanged += ShowOverlayCheckBox_CheckedChanged;
-            // 
+            // fishingSettingsGroup
+            //
+            fishingSettingsGroup.Controls.Add(fishingLocationscomboBox);
+            fishingSettingsGroup.Controls.Add(labelCasts);
+            fishingSettingsGroup.Controls.Add(numericUpDownCasts);
+            fishingSettingsGroup.Controls.Add(labelSells);
+            fishingSettingsGroup.Controls.Add(numericUpDownSells);
+            fishingSettingsGroup.Controls.Add(randomFishingCheckBox);
+            fishingSettingsGroup.Controls.Add(fishingSeparator1);
+            fishingSettingsGroup.Controls.Add(startFishing);
+            fishingSettingsGroup.Controls.Add(stopFishingBtn);
+            fishingSettingsGroup.Controls.Add(fishingStatusLabel);
+            fishingSettingsGroup.Location = new System.Drawing.Point(9, 3);
+            fishingSettingsGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            fishingSettingsGroup.Name = "fishingSettingsGroup";
+            fishingSettingsGroup.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            fishingSettingsGroup.Size = new System.Drawing.Size(200, 380);
+            fishingSettingsGroup.TabIndex = 8;
+            fishingSettingsGroup.TabStop = false;
+            fishingSettingsGroup.Text = "Fishing Settings";
+            //
+            // fishingLocationscomboBox
+            //
+            fishingLocationscomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            fishingLocationscomboBox.Items.AddRange(new object[] { "TOONTOWN CENTRAL PUNCHLINE PLACE", "DONALD DREAM LAND LULLABY LANE", "BRRRGH POLAR PLACE", "BRRRGH WALRUS WAY", "BRRRGH SLEET STREET", "MINNIE'S MELODYLAND TENOR TERRACE", "DONALD DOCK LIGHTHOUSE LANE", "DAISY'S GARDEN ELM STREET", "ESTATE (FAR LEFT DOCK)", "FISH ANYWHERE" });
+            fishingLocationscomboBox.Location = new System.Drawing.Point(10, 28);
+            fishingLocationscomboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            fishingLocationscomboBox.Name = "fishingLocationscomboBox";
+            fishingLocationscomboBox.Size = new System.Drawing.Size(180, 24);
+            fishingLocationscomboBox.TabIndex = 1;
+            toolTip1.SetToolTip(fishingLocationscomboBox, "Select the location you wish to fish at");
+            fishingLocationscomboBox.SelectedIndexChanged += fishingLocationscomboBox_SelectedIndexChanged;
+            //
+            // labelCasts
+            //
+            labelCasts.AutoSize = true;
+            labelCasts.Location = new System.Drawing.Point(10, 68);
+            labelCasts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelCasts.Name = "labelCasts";
+            labelCasts.Size = new System.Drawing.Size(42, 16);
+            labelCasts.TabIndex = 2;
+            labelCasts.Text = "Casts:";
+            //
+            // numericUpDownCasts
+            //
+            numericUpDownCasts.Location = new System.Drawing.Point(60, 66);
+            numericUpDownCasts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDownCasts.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
+            numericUpDownCasts.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownCasts.Name = "numericUpDownCasts";
+            numericUpDownCasts.Size = new System.Drawing.Size(48, 22);
+            numericUpDownCasts.TabIndex = 3;
+            toolTip1.SetToolTip(numericUpDownCasts, "Number of times to cast your fishing rod");
+            numericUpDownCasts.Value = new decimal(new int[] { 25, 0, 0, 0 });
+            //
+            // labelSells
+            //
+            labelSells.AutoSize = true;
+            labelSells.Location = new System.Drawing.Point(10, 98);
+            labelSells.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelSells.Name = "labelSells";
+            labelSells.Size = new System.Drawing.Size(39, 16);
+            labelSells.TabIndex = 4;
+            labelSells.Text = "Sells:";
+            //
+            // numericUpDownSells
+            //
+            numericUpDownSells.Location = new System.Drawing.Point(60, 96);
+            numericUpDownSells.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDownSells.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
+            numericUpDownSells.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownSells.Name = "numericUpDownSells";
+            numericUpDownSells.Size = new System.Drawing.Size(48, 22);
+            numericUpDownSells.TabIndex = 5;
+            toolTip1.SetToolTip(numericUpDownSells, "Number of times to go to the fisherman to sell the fish");
+            numericUpDownSells.Value = new decimal(new int[] { 2, 0, 0, 0 });
+            //
+            // randomFishingCheckBox
+            //
+            randomFishingCheckBox.AutoSize = true;
+            randomFishingCheckBox.Location = new System.Drawing.Point(10, 130);
+            randomFishingCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            randomFishingCheckBox.Name = "randomFishingCheckBox";
+            randomFishingCheckBox.Size = new System.Drawing.Size(135, 20);
+            randomFishingCheckBox.TabIndex = 6;
+            randomFishingCheckBox.Text = "Random Variance";
+            toolTip1.SetToolTip(randomFishingCheckBox, "Adds randomness so you won't cast your line at the same spot every time.");
+            randomFishingCheckBox.UseVisualStyleBackColor = true;
+            randomFishingCheckBox.CheckedChanged += randomFishing_CheckedChanged;
+            //
+            // fishingSeparator1
+            //
+            fishingSeparator1.BackColor = System.Drawing.Color.LightGray;
+            fishingSeparator1.Location = new System.Drawing.Point(10, 160);
+            fishingSeparator1.Name = "fishingSeparator1";
+            fishingSeparator1.Size = new System.Drawing.Size(180, 1);
+            fishingSeparator1.TabIndex = 7;
+            //
+            // startFishing
+            //
+            startFishing.BackColor = System.Drawing.Color.LightGreen;
+            startFishing.Location = new System.Drawing.Point(10, 173);
+            startFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            startFishing.Name = "startFishing";
+            startFishing.Size = new System.Drawing.Size(85, 32);
+            startFishing.TabIndex = 8;
+            startFishing.Text = "Start";
+            startFishing.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            startFishing.UseVisualStyleBackColor = false;
+            startFishing.Click += startFishing_Click;
+            //
+            // stopFishingBtn
+            //
+            stopFishingBtn.BackColor = System.Drawing.Color.MistyRose;
+            stopFishingBtn.Location = new System.Drawing.Point(105, 173);
+            stopFishingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            stopFishingBtn.Name = "stopFishingBtn";
+            stopFishingBtn.Size = new System.Drawing.Size(85, 32);
+            stopFishingBtn.TabIndex = 9;
+            stopFishingBtn.Text = "Stop";
+            stopFishingBtn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            stopFishingBtn.UseVisualStyleBackColor = false;
+            stopFishingBtn.Click += stopFishingBtn_Click;
+            //
+            // fishingStatusLabel
+            //
+            fishingStatusLabel.AutoSize = false;
+            fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
+            fishingStatusLabel.Location = new System.Drawing.Point(10, 213);
+            fishingStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            fishingStatusLabel.Name = "fishingStatusLabel";
+            fishingStatusLabel.Size = new System.Drawing.Size(180, 16);
+            fishingStatusLabel.TabIndex = 10;
+            fishingStatusLabel.Text = "Status: Idle";
+            //
+            // fishingDetectionGroup
+            //
+            fishingDetectionGroup.Controls.Add(autoDetectFishCheckBox);
+            fishingDetectionGroup.Controls.Add(waitForFishCheckBox);
+            fishingDetectionGroup.Controls.Add(labelWaitAttempts);
+            fishingDetectionGroup.Controls.Add(numericUpDownWaitAttempts);
+            fishingDetectionGroup.Controls.Add(showOverlayCheckBox);
+            fishingDetectionGroup.Controls.Add(fishingSeparator2);
+            fishingDetectionGroup.Controls.Add(labelBiteTimeout);
+            fishingDetectionGroup.Controls.Add(numericUpDownBiteTimeout);
+            fishingDetectionGroup.Controls.Add(fishingSeparator3);
+            fishingDetectionGroup.Controls.Add(editScanAreaBtn);
+            fishingDetectionGroup.Controls.Add(calibrateColorsBtn);
+            fishingDetectionGroup.Location = new System.Drawing.Point(220, 3);
+            fishingDetectionGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            fishingDetectionGroup.Name = "fishingDetectionGroup";
+            fishingDetectionGroup.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            fishingDetectionGroup.Size = new System.Drawing.Size(200, 380);
+            fishingDetectionGroup.TabIndex = 9;
+            fishingDetectionGroup.TabStop = false;
+            fishingDetectionGroup.Text = "Detection Options";
+            //
             // autoDetectFishCheckBox
-            // 
+            //
             autoDetectFishCheckBox.AutoSize = true;
-            autoDetectFishCheckBox.Location = new System.Drawing.Point(10, 140);
+            autoDetectFishCheckBox.Location = new System.Drawing.Point(10, 25);
             autoDetectFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             autoDetectFishCheckBox.Name = "autoDetectFishCheckBox";
-            autoDetectFishCheckBox.Size = new System.Drawing.Size(182, 20);
-            autoDetectFishCheckBox.TabIndex = 14;
-            autoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
-            toolTip1.SetToolTip(autoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them.\nClick 'Calibrate' to teach it the fish shadow color for better accuracy.");
+            autoDetectFishCheckBox.Size = new System.Drawing.Size(127, 20);
+            autoDetectFishCheckBox.TabIndex = 0;
+            autoDetectFishCheckBox.Text = "Auto Detect Fish";
+            toolTip1.SetToolTip(autoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them.\nClick 'Pond Colors' to teach it the fish shadow color for better accuracy.");
             autoDetectFishCheckBox.UseVisualStyleBackColor = true;
             //
             // waitForFishCheckBox
             //
             waitForFishCheckBox.AutoSize = true;
-            waitForFishCheckBox.Location = new System.Drawing.Point(200, 140);
+            waitForFishCheckBox.Location = new System.Drawing.Point(10, 51);
             waitForFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             waitForFishCheckBox.Name = "waitForFishCheckBox";
             waitForFishCheckBox.Size = new System.Drawing.Size(100, 20);
-            waitForFishCheckBox.TabIndex = 22;
+            waitForFishCheckBox.TabIndex = 1;
             waitForFishCheckBox.Text = "Wait for fish";
             toolTip1.SetToolTip(waitForFishCheckBox, "If enabled, waits for a fish shadow to appear before casting.\nWill scan up to X times before giving up on that cast.\nRequires Auto Detect to be enabled.");
             waitForFishCheckBox.UseVisualStyleBackColor = true;
@@ -503,146 +594,138 @@
             // labelWaitAttempts
             //
             labelWaitAttempts.AutoSize = true;
-            labelWaitAttempts.Location = new System.Drawing.Point(305, 141);
+            labelWaitAttempts.Location = new System.Drawing.Point(26, 75);
             labelWaitAttempts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             labelWaitAttempts.Name = "labelWaitAttempts";
             labelWaitAttempts.Size = new System.Drawing.Size(35, 16);
-            labelWaitAttempts.TabIndex = 23;
+            labelWaitAttempts.TabIndex = 2;
             labelWaitAttempts.Text = "tries:";
             //
             // numericUpDownWaitAttempts
             //
-            numericUpDownWaitAttempts.Location = new System.Drawing.Point(345, 138);
+            numericUpDownWaitAttempts.Location = new System.Drawing.Point(66, 73);
             numericUpDownWaitAttempts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numericUpDownWaitAttempts.Maximum = new decimal(new int[] { 30, 0, 0, 0 });
             numericUpDownWaitAttempts.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDownWaitAttempts.Name = "numericUpDownWaitAttempts";
             numericUpDownWaitAttempts.Size = new System.Drawing.Size(50, 22);
-            numericUpDownWaitAttempts.TabIndex = 24;
+            numericUpDownWaitAttempts.TabIndex = 3;
             toolTip1.SetToolTip(numericUpDownWaitAttempts, "Number of scan attempts before giving up when waiting for fish");
             numericUpDownWaitAttempts.Value = new decimal(new int[] { 10, 0, 0, 0 });
             //
-            // button4
-            // 
-            button4.Location = new System.Drawing.Point(220, 230);
-            button4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button4.Name = "button4";
-            button4.Size = new System.Drawing.Size(200, 40);
-            button4.TabIndex = 12;
-            button4.Text = "Stop Fishing";
-            button4.UseVisualStyleBackColor = true;
-            button4.Click += button4_Click;
-            // 
-            // randomFishingCheckBox
-            // 
-            randomFishingCheckBox.AutoSize = true;
-            randomFishingCheckBox.Location = new System.Drawing.Point(220, 68);
-            randomFishingCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            randomFishingCheckBox.Name = "randomFishingCheckBox";
-            randomFishingCheckBox.Size = new System.Drawing.Size(135, 20);
-            randomFishingCheckBox.TabIndex = 11;
-            randomFishingCheckBox.Text = "Random Variance";
-            toolTip1.SetToolTip(randomFishingCheckBox, "This add some randomness and will make it so you \r\nwon't cast your line at the same spot every time!");
-            randomFishingCheckBox.UseVisualStyleBackColor = true;
-            randomFishingCheckBox.CheckedChanged += randomFishing_CheckedChanged;
+            // showOverlayCheckBox
+            //
+            showOverlayCheckBox.AutoSize = true;
+            showOverlayCheckBox.Location = new System.Drawing.Point(10, 103);
+            showOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            showOverlayCheckBox.Name = "showOverlayCheckBox";
+            showOverlayCheckBox.Size = new System.Drawing.Size(113, 20);
+            showOverlayCheckBox.TabIndex = 4;
+            showOverlayCheckBox.Text = "Show Overlay";
+            toolTip1.SetToolTip(showOverlayCheckBox, "Shows a transparent overlay on the game window displaying detected fish shadows and targeting info.");
+            showOverlayCheckBox.UseVisualStyleBackColor = true;
+            showOverlayCheckBox.CheckedChanged += ShowOverlayCheckBox_CheckedChanged;
+            //
+            // fishingSeparator2
+            //
+            fishingSeparator2.BackColor = System.Drawing.Color.LightGray;
+            fishingSeparator2.Location = new System.Drawing.Point(10, 133);
+            fishingSeparator2.Name = "fishingSeparator2";
+            fishingSeparator2.Size = new System.Drawing.Size(180, 1);
+            fishingSeparator2.TabIndex = 5;
             //
             // labelBiteTimeout
             //
             labelBiteTimeout.AutoSize = true;
-            labelBiteTimeout.Location = new System.Drawing.Point(220, 100);
+            labelBiteTimeout.Location = new System.Drawing.Point(10, 145);
             labelBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             labelBiteTimeout.Name = "labelBiteTimeout";
-            labelBiteTimeout.Size = new System.Drawing.Size(108, 16);
-            labelBiteTimeout.TabIndex = 20;
-            labelBiteTimeout.Text = "Bite Timeout (s):";
+            labelBiteTimeout.Size = new System.Drawing.Size(90, 16);
+            labelBiteTimeout.TabIndex = 6;
+            labelBiteTimeout.Text = "Bite Timeout:";
             //
             // numericUpDownBiteTimeout
             //
-            numericUpDownBiteTimeout.Location = new System.Drawing.Point(355, 98);
+            numericUpDownBiteTimeout.Location = new System.Drawing.Point(110, 143);
             numericUpDownBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numericUpDownBiteTimeout.Maximum = new decimal(new int[] { 120, 0, 0, 0 });
             numericUpDownBiteTimeout.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDownBiteTimeout.Name = "numericUpDownBiteTimeout";
-            numericUpDownBiteTimeout.Size = new System.Drawing.Size(55, 22);
-            numericUpDownBiteTimeout.TabIndex = 21;
+            numericUpDownBiteTimeout.Size = new System.Drawing.Size(48, 22);
+            numericUpDownBiteTimeout.TabIndex = 7;
             toolTip1.SetToolTip(numericUpDownBiteTimeout, "How many seconds to wait for a fish to bite before timing out");
             numericUpDownBiteTimeout.Value = new decimal(new int[] { 30, 0, 0, 0 });
             //
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(10, 100);
-            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(105, 16);
-            label4.TabIndex = 9;
-            label4.Text = "Number of Sells:";
-            // 
-            // numericUpDown4
-            // 
-            numericUpDown4.Location = new System.Drawing.Point(145, 98);
-            numericUpDown4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            numericUpDown4.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
-            numericUpDown4.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericUpDown4.Name = "numericUpDown4";
-            numericUpDown4.Size = new System.Drawing.Size(55, 22);
-            numericUpDown4.TabIndex = 8;
-            toolTip1.SetToolTip(numericUpDown4, "This number indicates the number of times to go to the fisherman to sell the fish");
-            numericUpDown4.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(10, 68);
-            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(109, 16);
-            label3.TabIndex = 7;
-            label3.Text = "Number of Casts:";
-            // 
-            // numericUpDown3
-            // 
-            numericUpDown3.Location = new System.Drawing.Point(145, 66);
-            numericUpDown3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            numericUpDown3.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
-            numericUpDown3.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericUpDown3.Name = "numericUpDown3";
-            numericUpDown3.Size = new System.Drawing.Size(55, 22);
-            numericUpDown3.TabIndex = 6;
-            toolTip1.SetToolTip(numericUpDown3, "This number indicates the number of times to cast your fishing rod");
-            numericUpDown3.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            // 
-            // startFishing
-            // 
-            startFishing.Location = new System.Drawing.Point(10, 230);
-            startFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            startFishing.Name = "startFishing";
-            startFishing.Size = new System.Drawing.Size(200, 40);
-            startFishing.TabIndex = 2;
-            startFishing.Text = "Start Fishing";
-            startFishing.UseVisualStyleBackColor = true;
-            startFishing.Click += startFishing_Click;
-            // 
-            // fishingLocationscomboBox
-            // 
-            fishingLocationscomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            fishingLocationscomboBox.Items.AddRange(new object[] { "TOONTOWN CENTRAL PUNCHLINE PLACE", "DONALD DREAM LAND LULLABY LANE", "BRRRGH POLAR PLACE", "BRRRGH WALRUS WAY", "BRRRGH SLEET STREET", "MINNIE'S MELODYLAND TENOR TERRACE", "DONALD DOCK LIGHTHOUSE LANE", "DAISY'S GARDEN ELM STREET", "ESTATE (FAR LEFT DOCK)", "FISH ANYWHERE" });
-            fishingLocationscomboBox.Location = new System.Drawing.Point(10, 28);
-            fishingLocationscomboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            fishingLocationscomboBox.Name = "fishingLocationscomboBox";
-            fishingLocationscomboBox.Size = new System.Drawing.Size(420, 24);
-            fishingLocationscomboBox.TabIndex = 1;
-            toolTip1.SetToolTip(fishingLocationscomboBox, "Select the location you wish to fish at");
-            fishingLocationscomboBox.SelectedIndexChanged += fishingLocationscomboBox_SelectedIndexChanged;
+            // fishingSeparator3
+            //
+            fishingSeparator3.BackColor = System.Drawing.Color.LightGray;
+            fishingSeparator3.Location = new System.Drawing.Point(10, 178);
+            fishingSeparator3.Name = "fishingSeparator3";
+            fishingSeparator3.Size = new System.Drawing.Size(180, 1);
+            fishingSeparator3.TabIndex = 8;
+            //
+            // editScanAreaBtn
+            //
+            editScanAreaBtn.Location = new System.Drawing.Point(10, 190);
+            editScanAreaBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            editScanAreaBtn.Name = "editScanAreaBtn";
+            editScanAreaBtn.Size = new System.Drawing.Size(180, 28);
+            editScanAreaBtn.TabIndex = 9;
+            editScanAreaBtn.Text = "Scan Area";
+            toolTip1.SetToolTip(editScanAreaBtn, "Adjust the scan area to match the pond boundaries.");
+            editScanAreaBtn.UseVisualStyleBackColor = true;
+            editScanAreaBtn.Click += EditScanAreaBtn_Click;
+            //
+            // calibrateColorsBtn
+            //
+            calibrateColorsBtn.Location = new System.Drawing.Point(10, 225);
+            calibrateColorsBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            calibrateColorsBtn.Name = "calibrateColorsBtn";
+            calibrateColorsBtn.Size = new System.Drawing.Size(180, 28);
+            calibrateColorsBtn.TabIndex = 10;
+            calibrateColorsBtn.Text = "Pond Colors";
+            toolTip1.SetToolTip(calibrateColorsBtn, "Calibrate pond water and fish shadow colors for better detection.");
+            calibrateColorsBtn.UseVisualStyleBackColor = true;
+            calibrateColorsBtn.Click += CalibrateColorsBtn_Click;
+            //
+            // fishingInfoGroup
+            //
+            fishingInfoGroup.Controls.Add(fishingLocationDescLabel);
+            fishingInfoGroup.Controls.Add(fishingSeparator4);
+            fishingInfoGroup.Controls.Add(fishingShortcutsLabel);
+            fishingInfoGroup.Location = new System.Drawing.Point(430, 3);
+            fishingInfoGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            fishingInfoGroup.Name = "fishingInfoGroup";
+            fishingInfoGroup.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            fishingInfoGroup.Size = new System.Drawing.Size(170, 380);
+            fishingInfoGroup.TabIndex = 10;
+            fishingInfoGroup.TabStop = false;
+            fishingInfoGroup.Text = "Info";
+            //
+            // fishingLocationDescLabel
+            //
+            fishingLocationDescLabel.Location = new System.Drawing.Point(10, 22);
+            fishingLocationDescLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            fishingLocationDescLabel.Name = "fishingLocationDescLabel";
+            fishingLocationDescLabel.Size = new System.Drawing.Size(150, 240);
+            fishingLocationDescLabel.TabIndex = 0;
+            fishingLocationDescLabel.Text = "Select a location to see its description.";
+            //
+            // fishingSeparator4
+            //
+            fishingSeparator4.BackColor = System.Drawing.Color.LightGray;
+            fishingSeparator4.Location = new System.Drawing.Point(10, 275);
+            fishingSeparator4.Name = "fishingSeparator4";
+            fishingSeparator4.Size = new System.Drawing.Size(150, 1);
+            fishingSeparator4.TabIndex = 1;
             //
             // fishingShortcutsLabel
             //
-            fishingShortcutsLabel.AutoSize = true;
             fishingShortcutsLabel.ForeColor = System.Drawing.Color.Gray;
-            fishingShortcutsLabel.Location = new System.Drawing.Point(460, 70);
+            fishingShortcutsLabel.Location = new System.Drawing.Point(10, 285);
             fishingShortcutsLabel.Name = "fishingShortcutsLabel";
-            fishingShortcutsLabel.Size = new System.Drawing.Size(140, 64);
-            fishingShortcutsLabel.TabIndex = 18;
+            fishingShortcutsLabel.Size = new System.Drawing.Size(150, 80);
+            fishingShortcutsLabel.TabIndex = 2;
             fishingShortcutsLabel.Text = "Keyboard Shortcuts:\nF11 - Pause/Resume\nEsc/F12 - Stop";
             //
             // CustomFishing
@@ -2131,13 +2214,15 @@
             infoGroup.ResumeLayout(false);
             infoGroup.PerformLayout();
             Fishing.ResumeLayout(false);
-            Fishing.PerformLayout();
-            groupBox6.ResumeLayout(false);
-            groupBox6.PerformLayout();
+            fishingSettingsGroup.ResumeLayout(false);
+            fishingSettingsGroup.PerformLayout();
+            fishingDetectionGroup.ResumeLayout(false);
+            fishingDetectionGroup.PerformLayout();
+            fishingInfoGroup.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)numericUpDownWaitAttempts).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownBiteTimeout).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown4).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownSells).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownCasts).EndInit();
             CustomFishing.ResumeLayout(false);
             groupBoxCustomFishing.ResumeLayout(false);
             groupBoxCustomFishing.PerformLayout();
@@ -2224,13 +2309,20 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.GroupBox fishingSettingsGroup;
+        private System.Windows.Forms.GroupBox fishingDetectionGroup;
+        private System.Windows.Forms.GroupBox fishingInfoGroup;
         private System.Windows.Forms.Button startFishing;
         private System.Windows.Forms.ComboBox fishingLocationscomboBox;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.NumericUpDown numericUpDown4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.Label labelSells;
+        private System.Windows.Forms.NumericUpDown numericUpDownSells;
+        private System.Windows.Forms.Label labelCasts;
+        private System.Windows.Forms.NumericUpDown numericUpDownCasts;
+        private System.Windows.Forms.Panel fishingSeparator1;
+        private System.Windows.Forms.Panel fishingSeparator2;
+        private System.Windows.Forms.Panel fishingSeparator3;
+        private System.Windows.Forms.Panel fishingSeparator4;
+        private System.Windows.Forms.Label fishingStatusLabel;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button startRacing;
         private System.Windows.Forms.RichTextBox richTextBox1;
@@ -2247,7 +2339,7 @@
         private System.Windows.Forms.LinkLabel githubLinkLabel;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.CheckBox randomFishingCheckBox;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button stopFishingBtn;
         private System.Windows.Forms.TabPage Golf;
         private System.Windows.Forms.TabPage Doodles;
         private System.Windows.Forms.GroupBox doodleTrainingGroup;
@@ -2287,7 +2379,7 @@
         private System.Windows.Forms.CheckBox showOverlayCheckBox;
         private System.Windows.Forms.Button editScanAreaBtn;
         private System.Windows.Forms.Button calibrateColorsBtn;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label fishingLocationDescLabel;
         private System.Windows.Forms.Label fishingShortcutsLabel;
         private System.Windows.Forms.Button createCustomFishingActionsBtn;
         private System.Windows.Forms.ComboBox customFishingFilesComboBox;
