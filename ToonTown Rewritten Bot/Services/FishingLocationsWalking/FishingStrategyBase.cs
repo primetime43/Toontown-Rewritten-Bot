@@ -34,47 +34,87 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// Static reference to the fishing overlay for visualization.
         /// Set from MainForm when overlay is enabled.
         /// </summary>
-        public static FishingOverlayForm Overlay { get; set; }
+        private static volatile FishingOverlayForm _overlay;
+        public static FishingOverlayForm Overlay
+        {
+            get => _overlay;
+            set => _overlay = value;
+        }
 
         /// <summary>
         /// Callback to notify MainForm when fishing ends, so it can uncheck the overlay checkbox.
         /// </summary>
-        public static Action OnFishingEnded { get; set; }
+        private static volatile Action _onFishingEnded;
+        public static Action OnFishingEnded
+        {
+            get => _onFishingEnded;
+            set => _onFishingEnded = value;
+        }
 
         /// <summary>
         /// Static flag to pause/resume fishing from anywhere (e.g., global keyboard hook).
         /// </summary>
-        public static bool IsPaused { get; private set; } = false;
+        private static volatile bool _isPaused = false;
+        public static bool IsPaused
+        {
+            get => _isPaused;
+            private set => _isPaused = value;
+        }
 
         /// <summary>
         /// Static flag indicating a simulated key press (like ESC) is in progress.
         /// Used to prevent global keyboard hooks from interpreting bot-generated keypresses as user input.
         /// </summary>
-        public static bool IsSimulatedKeyPress { get; set; } = false;
+        private static volatile bool _isSimulatedKeyPress = false;
+        public static bool IsSimulatedKeyPress
+        {
+            get => _isSimulatedKeyPress;
+            set => _isSimulatedKeyPress = value;
+        }
 
         /// <summary>
         /// Maximum time in seconds to wait for a fish bite before timing out.
         /// Default is 30 seconds. Can be adjusted via UI.
         /// </summary>
-        public static int BiteTimeoutSeconds { get; set; } = 30;
+        private static volatile int _biteTimeoutSeconds = 30;
+        public static int BiteTimeoutSeconds
+        {
+            get => _biteTimeoutSeconds;
+            set => _biteTimeoutSeconds = value;
+        }
 
         /// <summary>
         /// If true, waits for a fish shadow to be detected before casting.
         /// When no fish is detected, it will wait and rescan instead of casting anyway.
         /// </summary>
-        public static bool WaitForFishBeforeCasting { get; set; } = false;
+        private static volatile bool _waitForFishBeforeCasting = false;
+        public static bool WaitForFishBeforeCasting
+        {
+            get => _waitForFishBeforeCasting;
+            set => _waitForFishBeforeCasting = value;
+        }
 
         /// <summary>
         /// Maximum number of scan attempts when waiting for fish before giving up.
         /// Only used when WaitForFishBeforeCasting is true. Default is 10 attempts.
         /// </summary>
-        public static int MaxFishWaitAttempts { get; set; } = 10;
+        private static volatile int _maxFishWaitAttempts = 10;
+        public static int MaxFishWaitAttempts
+        {
+            get => _maxFishWaitAttempts;
+            set => _maxFishWaitAttempts = value;
+        }
 
         /// <summary>
         /// Delay in milliseconds between fish detection scans when waiting for fish.
         /// Default is 2000ms (2 seconds).
         /// </summary>
-        public static int FishWaitScanDelayMs { get; set; } = 2000;
+        private static volatile int _fishWaitScanDelayMs = 2000;
+        public static int FishWaitScanDelayMs
+        {
+            get => _fishWaitScanDelayMs;
+            set => _fishWaitScanDelayMs = value;
+        }
 
         /// <summary>
         /// Event raised when pause state changes.
@@ -303,7 +343,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
                     stopwatch.Start();
                     bool fishCaught = false;
-                    while (stopwatch.Elapsed.Seconds < BiteTimeoutSeconds)
+                    while (stopwatch.Elapsed.TotalSeconds < BiteTimeoutSeconds)
                     {
                         if (cancellationToken.IsCancellationRequested) return;
                         if (await CheckIfFishCaught(cancellationToken))
@@ -311,6 +351,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                             fishCaught = true;
                             break;
                         }
+                        await Task.Delay(250, cancellationToken);
                     }
                     stopwatch.Stop();
                     stopwatch.Reset();
@@ -600,6 +641,13 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             await Task.Delay(100, cancellationToken);
         }
 
+        /// <summary>
+        /// Minimum number of sample positions that must match cream/green to consider the popup visible.
+        /// Requiring multiple matches prevents false positives from sky, clouds, or scenery that
+        /// happen to match cream/green at a single pixel.
+        /// </summary>
+        private const int MinPopupMatchCount = 3;
+
         protected async Task<bool> CheckIfFishCaught(CancellationToken cancellationToken)
         {
             // Get game window info for proper coordinate scaling
@@ -625,6 +673,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 new Point(popupCenterX, popupTopY + 50),
             };
 
+            int matchCount = 0;
+
             foreach (var pos in positionsToCheck)
             {
                 var color = GetColorAt(pos.X, pos.Y);
@@ -633,25 +683,40 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 // Cream colors have high R and G, lower B
                 if (IsCreamColor(color))
                 {
-                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Detected cream popup at ({pos.X}, {pos.Y}) - RGB({color.R},{color.G},{color.B})");
-                    return true;
+                    matchCount++;
+                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Cream match at ({pos.X}, {pos.Y}) - RGB({color.R},{color.G},{color.B}) [{matchCount}/{MinPopupMatchCount}]");
+                }
+                // Also check for the green border of the popup
+                else if (IsPopupGreenBorder(color))
+                {
+                    matchCount++;
+                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Green match at ({pos.X}, {pos.Y}) - RGB({color.R},{color.G},{color.B}) [{matchCount}/{MinPopupMatchCount}]");
                 }
 
-                // Also check for the green border of the popup
-                if (IsPopupGreenBorder(color))
+                if (matchCount >= MinPopupMatchCount)
                 {
-                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Detected green border at ({pos.X}, {pos.Y}) - RGB({color.R},{color.G},{color.B})");
+                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Popup confirmed with {matchCount} matching positions");
                     return true;
                 }
             }
 
-            // Fallback: Check the original positions relative to cast button
-            var (btnX, btnY) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
-            var fallbackColor = GetColorAt(btnX, Math.Max(windowRect.Y + 50, btnY - 600));
-            if (IsCreamColor(fallbackColor))
+            // Fallback: Check the original position relative to cast button.
+            // This counts as one additional match toward the threshold.
+            if (matchCount > 0)
             {
-                System.Diagnostics.Debug.WriteLine($"[FishCatch] Detected via fallback position");
-                return true;
+                var (btnX, btnY) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
+                var fallbackColor = GetColorAt(btnX, Math.Max(windowRect.Y + 50, btnY - 600));
+                if (IsCreamColor(fallbackColor))
+                {
+                    matchCount++;
+                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Fallback cream match [{matchCount}/{MinPopupMatchCount}]");
+                }
+
+                if (matchCount >= MinPopupMatchCount)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Popup confirmed with {matchCount} matching positions (with fallback)");
+                    return true;
+                }
             }
 
             return false;

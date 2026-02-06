@@ -63,6 +63,30 @@
     <Compile Update="Views\Help.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Views\MainForm.CustomFishing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Dev.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.DoodleTraining.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Fishing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Gardening.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Golf.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Misc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Views\PondColorCalibrationForm.cs">
       <SubType>Form</SubType>
     </Compile>
