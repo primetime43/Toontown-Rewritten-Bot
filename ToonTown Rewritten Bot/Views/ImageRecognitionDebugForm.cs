@@ -70,8 +70,9 @@ namespace ToonTown_Rewritten_Bot.Views
                 Directory.CreateDirectory(path);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"[ImageRecognitionDebugForm] Failed to create directory '{path}': {ex.Message}");
                 return false;
             }
         }
@@ -229,7 +230,7 @@ namespace ToonTown_Rewritten_Bot.Views
             this.Load += (s, e) =>
             {
                 try { mainSplit.SplitterDistance = Math.Max(400, this.ClientSize.Width - 280); }
-                catch { }
+                catch { /* Splitter distance can fail during form initialization */ }
             };
 
             // === LEFT PANEL: Preview + Output ===
@@ -1141,34 +1142,7 @@ namespace ToonTown_Rewritten_Bot.Views
             if (_currentScreenshot == null || previewPictureBox.Image == null)
                 return previewRect;
 
-            float imageAspect = (float)_currentScreenshot.Width / _currentScreenshot.Height;
-            float boxAspect = (float)previewPictureBox.Width / previewPictureBox.Height;
-
-            float scale;
-            int offsetX = 0, offsetY = 0;
-
-            if (imageAspect > boxAspect)
-            {
-                scale = (float)previewPictureBox.Width / _currentScreenshot.Width;
-                offsetY = (int)((previewPictureBox.Height - _currentScreenshot.Height * scale) / 2);
-            }
-            else
-            {
-                scale = (float)previewPictureBox.Height / _currentScreenshot.Height;
-                offsetX = (int)((previewPictureBox.Width - _currentScreenshot.Width * scale) / 2);
-            }
-
-            int x = (int)((previewRect.X - offsetX) / scale);
-            int y = (int)((previewRect.Y - offsetY) / scale);
-            int width = (int)(previewRect.Width / scale);
-            int height = (int)(previewRect.Height / scale);
-
-            x = Math.Max(0, Math.Min(x, _currentScreenshot.Width));
-            y = Math.Max(0, Math.Min(y, _currentScreenshot.Height));
-            width = Math.Min(width, _currentScreenshot.Width - x);
-            height = Math.Min(height, _currentScreenshot.Height - y);
-
-            return new Rectangle(x, y, width, height);
+            return ImageRecognition.ConvertToImageCoordinates(previewRect, _currentScreenshot.Size, previewPictureBox.Size);
         }
 
         private Rectangle ConvertToPreviewCoordinates(Rectangle imageRect)

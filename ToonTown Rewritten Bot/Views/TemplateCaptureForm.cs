@@ -342,7 +342,10 @@ namespace ToonTown_Rewritten_Bot.Views
                 _selectionPreviewPictureBox.Image?.Dispose();
                 _selectionPreviewPictureBox.Image = _currentScreenshot.Clone(actualRegion, _currentScreenshot.PixelFormat);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[TemplateCaptureForm] Error updating selection preview: {ex.Message}");
+            }
         }
 
         private Rectangle ConvertToImageCoordinates(Rectangle previewRect)
@@ -350,34 +353,7 @@ namespace ToonTown_Rewritten_Bot.Views
             if (_currentScreenshot == null || _previewPictureBox.Image == null)
                 return previewRect;
 
-            float imageAspect = (float)_currentScreenshot.Width / _currentScreenshot.Height;
-            float boxAspect = (float)_previewPictureBox.Width / _previewPictureBox.Height;
-
-            float scale;
-            int offsetX = 0, offsetY = 0;
-
-            if (imageAspect > boxAspect)
-            {
-                scale = (float)_previewPictureBox.Width / _currentScreenshot.Width;
-                offsetY = (int)((_previewPictureBox.Height - _currentScreenshot.Height * scale) / 2);
-            }
-            else
-            {
-                scale = (float)_previewPictureBox.Height / _currentScreenshot.Height;
-                offsetX = (int)((_previewPictureBox.Width - _currentScreenshot.Width * scale) / 2);
-            }
-
-            int x = (int)((previewRect.X - offsetX) / scale);
-            int y = (int)((previewRect.Y - offsetY) / scale);
-            int width = (int)(previewRect.Width / scale);
-            int height = (int)(previewRect.Height / scale);
-
-            x = Math.Max(0, Math.Min(x, _currentScreenshot.Width));
-            y = Math.Max(0, Math.Min(y, _currentScreenshot.Height));
-            width = Math.Min(width, _currentScreenshot.Width - x);
-            height = Math.Min(height, _currentScreenshot.Height - y);
-
-            return new Rectangle(x, y, width, height);
+            return ImageRecognition.ConvertToImageCoordinates(previewRect, _currentScreenshot.Size, _previewPictureBox.Size);
         }
 
         #endregion

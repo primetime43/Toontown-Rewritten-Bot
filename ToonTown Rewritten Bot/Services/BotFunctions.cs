@@ -92,6 +92,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
             catch (OperationCanceledException)
             {
+                // Expected when user stops the task
             }
         }
     }

@@ -264,12 +264,6 @@ namespace ToonTown_Rewritten_Bot.Services
         // Window show commands
         private const int SW_RESTORE = 9;
         private const int SW_MAXIMIZE = 3;
-        private const int SW_MINIMIZE = 6;
-        private const int SW_SHOWNORMAL = 1;
-
-        // SetWindowPos flags
-        private const uint SWP_NOZORDER = 0x0004;
-        private const uint SWP_SHOWWINDOW = 0x0040;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct RECT
@@ -288,9 +282,6 @@ namespace ToonTown_Rewritten_Bot.Services
 
         [DllImport("user32.dll")]
         private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
         /// <summary>
         /// Brings the Toontown Rewritten Bot window to the foreground.
@@ -412,54 +403,31 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
-        /// Retrieves a dictionary of embedded resource file names related to Custom Fishing Actions.
-        /// This dictionary maps the embedded resource names to more readable JSON file names, to be used when extracting these resources to the file system.
-        /// The method scans all embedded resources that start with a specific prefix related to Custom Fishing Actions.
+        /// Retrieves a dictionary of embedded resource file names for the given resource prefix.
+        /// Maps embedded resource names to readable JSON filenames for extraction to disk.
         /// </summary>
-        /// <returns>A dictionary where keys are the full embedded resource names and values are the corresponding filenames intended for saving to disk.</returns>
+        private static Dictionary<string, string> GetResourceDictionary(string prefix)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            string[] resourceNames = assembly.GetManifestResourceNames();
+            Dictionary<string, string> resourceMap = new Dictionary<string, string>();
+
+            foreach (string resourceName in resourceNames)
+            {
+                if (resourceName.StartsWith(prefix))
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(resourceName.Substring(prefix.Length + 1));
+                    resourceMap.Add(resourceName, fileName + ".json");
+                }
+            }
+            return resourceMap;
+        }
+
         public static Dictionary<string, string> GetFishingResourceDictionary()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            string[] resourceNames = assembly.GetManifestResourceNames();
-            string prefix = "ToonTown_Rewritten_Bot.Services.CustomFishingActions";
-            Dictionary<string, string> resourceMap = new Dictionary<string, string>();
+            => GetResourceDictionary("ToonTown_Rewritten_Bot.Services.CustomFishingActions");
 
-            foreach (string resourceName in resourceNames)
-            {
-                if (resourceName.StartsWith(prefix))
-                {
-                    // Extracting the filename from the resource path and removing extension for better readability
-                    string fileName = Path.GetFileNameWithoutExtension(resourceName.Substring(prefix.Length + 1));
-                    resourceMap.Add(resourceName, fileName + ".json");
-                }
-            }
-            return resourceMap;
-        }
-
-        /// <summary>
-        /// Retrieves a dictionary of embedded resource file names related to Custom Golf Actions.
-        /// This dictionary maps the embedded resource names to more readable JSON file names, to be used when extracting these resources to the file system.
-        /// The method scans all embedded resources that start with a specific prefix related to Custom Golf Actions.
-        /// </summary>
-        /// <returns>A dictionary where keys are the full embedded resource names and values are the corresponding filenames intended for saving to disk.</returns>
         public static Dictionary<string, string> GetGolfResourceDictionary()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            string[] resourceNames = assembly.GetManifestResourceNames();
-            string prefix = "ToonTown_Rewritten_Bot.Services.CustomGolfActions";
-            Dictionary<string, string> resourceMap = new Dictionary<string, string>();
-
-            foreach (string resourceName in resourceNames)
-            {
-                if (resourceName.StartsWith(prefix))
-                {
-                    // Extracting the filename from the resource path and removing extension for better readability
-                    string fileName = Path.GetFileNameWithoutExtension(resourceName.Substring(prefix.Length + 1));
-                    resourceMap.Add(resourceName, fileName + ".json");
-                }
-            }
-            return resourceMap;
-        }
+            => GetResourceDictionary("ToonTown_Rewritten_Bot.Services.CustomGolfActions");
 
         //ignore .dll imports below
         [DllImport("user32.dll")]
@@ -478,8 +446,6 @@ namespace ToonTown_Rewritten_Bot.Services
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool ShowWindow(nint hWnd, int nCmdShow);
 
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
-        private static extern int BitBlt(nint hDC, int x, int y, int nWidth, int nHeight, nint hSrcDC, int xSrc, int ySrc, int dwRop);
         [DllImport("user32.dll", SetLastError = true)]
         private static extern nint GetDesktopWindow();
         [DllImport("user32.dll", SetLastError = true)]
@@ -497,8 +463,6 @@ namespace ToonTown_Rewritten_Bot.Services
         private const uint MOUSEEVENTF_MOVE = 0x0001;
         private const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
         private const uint MOUSEEVENTF_LEFTUP = 0x0004;
-        private const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
-        private const uint MOUSEEVENTF_RIGHTUP = 0x0010;
         private const uint MOUSEEVENTF_VIRTUALDESK = 0x4000;
         private const uint MOUSEEVENTF_ABSOLUTE = 0x8000;
 
