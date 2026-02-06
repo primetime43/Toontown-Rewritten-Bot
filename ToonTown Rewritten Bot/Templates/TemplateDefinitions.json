@@ -1,7 +1,7 @@
 [
   {
     "Key": 1,
-    "Name": "Plant Flower/Remove Button",
+    "Name": "Plant Flower Button",
     "Category": "Gardening"
   },
   {
@@ -163,5 +163,10 @@
     "Key": 34,
     "Name": "FishPopupCloseButton",
     "Category": "Fishing"
+  },
+  {
+    "Key": 35,
+    "Name": "Remove Plant Button",
+    "Category": "Gardening"
   }
 ]
