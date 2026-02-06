@@ -260,7 +260,7 @@ namespace ToonTown_Rewritten_Bot
             SetFishingOverlay(false, null, null);
         }
 
-        private async void button5_Click(object sender, EventArgs e)
+        private async void startRacing_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Press OK when ready to begin!");
             Thread.Sleep(5000);

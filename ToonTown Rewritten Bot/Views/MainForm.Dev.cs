@@ -54,7 +54,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private void button8_Click(object sender, EventArgs e)
+        private void aboutBtn_Click(object sender, EventArgs e)
         {
             AboutBox1 aboutBox = new AboutBox1();
             try
