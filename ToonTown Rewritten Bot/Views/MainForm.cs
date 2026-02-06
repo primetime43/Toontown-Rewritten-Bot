@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -1190,29 +1189,6 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        //Settings page, button to open update images setting
-        private void updateImagesBtn_Click(object sender, EventArgs e)
-        {
-            UpdateImages updateRecImages = new UpdateImages();
-            try
-            {
-                updateRecImages.ShowDialog();
-            }
-            catch
-            {
-                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
-        }
-
-        //Settings page, button to reset all images (legacy - kept for compatibility)
-        private void resetImagesBtn_Click(object sender, EventArgs e)
-        {
-            foreach (SettingsProperty currentProperty in Properties.Settings.Default.Properties)
-            {
-                Properties.Settings.Default[currentProperty.Name] = "";
-            }
-            Properties.Settings.Default.Save();
-        }
 
         // Open Image Recognition Debug Window
         private void devOpenDebugBtn_Click(object sender, EventArgs e)
