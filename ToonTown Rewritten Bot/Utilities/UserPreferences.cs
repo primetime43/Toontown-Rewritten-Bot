@@ -74,6 +74,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
         // Gardening preferences
         public int WaterPlantCount { get; set; } = 2;
         public string FlowerBeanAmount { get; set; } = "";
+        public string SelectedFlower { get; set; } = "";
+        public string CustomGardeningFile { get; set; } = "";
 
         // Misc preferences
         public bool KeepProgramOnTop { get; set; } = false;
@@ -154,6 +156,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             WaterPlantCount = 2;
             FlowerBeanAmount = "";
+            SelectedFlower = "";
+            CustomGardeningFile = "";
 
             KeepProgramOnTop = false;
             KeepToonAwakeMinutes = 1;

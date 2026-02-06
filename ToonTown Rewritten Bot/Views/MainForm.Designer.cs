@@ -32,11 +32,17 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             tabControl1 = new System.Windows.Forms.TabControl();
             Main = new System.Windows.Forms.TabPage();
-            label8 = new System.Windows.Forms.Label();
-            button9 = new System.Windows.Forms.Button();
-            button8 = new System.Windows.Forms.Button();
-            label7 = new System.Windows.Forms.Label();
             pictureBox1 = new System.Windows.Forms.PictureBox();
+            mainTitleLabel = new System.Windows.Forms.Label();
+            mainVersionLabel = new System.Windows.Forms.Label();
+            mainAuthorLabel = new System.Windows.Forms.Label();
+            gettingStartedGroup = new System.Windows.Forms.GroupBox();
+            gettingStartedLabel = new System.Windows.Forms.Label();
+            infoGroup = new System.Windows.Forms.GroupBox();
+            shortcutsTitleLabel = new System.Windows.Forms.Label();
+            shortcutsLabel = new System.Windows.Forms.Label();
+            githubLinkLabel = new System.Windows.Forms.LinkLabel();
+            button8 = new System.Windows.Forms.Button();
             Fishing = new System.Windows.Forms.TabPage();
             label12 = new System.Windows.Forms.Label();
             groupBox6 = new System.Windows.Forms.GroupBox();
@@ -180,6 +186,8 @@
             tabControl1.SuspendLayout();
             Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            gettingStartedGroup.SuspendLayout();
+            infoGroup.SuspendLayout();
             Fishing.SuspendLayout();
             groupBox6.SuspendLayout();
             CustomFishing.SuspendLayout();
@@ -243,11 +251,12 @@
             // 
             // Main
             // 
-            Main.Controls.Add(label8);
-            Main.Controls.Add(button9);
-            Main.Controls.Add(button8);
-            Main.Controls.Add(label7);
             Main.Controls.Add(pictureBox1);
+            Main.Controls.Add(mainTitleLabel);
+            Main.Controls.Add(mainVersionLabel);
+            Main.Controls.Add(mainAuthorLabel);
+            Main.Controls.Add(gettingStartedGroup);
+            Main.Controls.Add(infoGroup);
             Main.Location = new System.Drawing.Point(4, 25);
             Main.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Main.Name = "Main";
@@ -256,60 +265,119 @@
             Main.TabIndex = 0;
             Main.Text = "Main";
             Main.UseVisualStyleBackColor = true;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Location = new System.Drawing.Point(88, 232);
-            label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            label8.Name = "label8";
-            label8.Size = new System.Drawing.Size(311, 16);
-            label8.TabIndex = 6;
-            label8.Text = "Note: Keep Toontown Rewritten's screen full screen";
-            // 
-            // button9
-            // 
-            button9.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            button9.Location = new System.Drawing.Point(287, 254);
-            button9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button9.Name = "button9";
-            button9.Size = new System.Drawing.Size(188, 60);
-            button9.TabIndex = 5;
-            button9.Text = "Help";
-            button9.UseVisualStyleBackColor = true;
-            button9.Click += button9_Click;
-            // 
-            // button8
-            // 
-            button8.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            button8.Location = new System.Drawing.Point(88, 254);
-            button8.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button8.Name = "button8";
-            button8.Size = new System.Drawing.Size(183, 60);
-            button8.TabIndex = 4;
-            button8.Text = "About";
-            button8.UseVisualStyleBackColor = true;
-            button8.Click += button8_Click;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new System.Drawing.Point(41, 151);
-            label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            label7.Name = "label7";
-            label7.Size = new System.Drawing.Size(0, 16);
-            label7.TabIndex = 3;
-            // 
+            //
             // pictureBox1
-            // 
+            //
             pictureBox1.Image = (System.Drawing.Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new System.Drawing.Point(88, 3);
+            pictureBox1.Location = new System.Drawing.Point(131, 3);
             pictureBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new System.Drawing.Size(387, 127);
+            pictureBox1.Size = new System.Drawing.Size(350, 110);
             pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
+            //
+            // mainTitleLabel
+            //
+            mainTitleLabel.AutoSize = true;
+            mainTitleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
+            mainTitleLabel.Location = new System.Drawing.Point(15, 120);
+            mainTitleLabel.Name = "mainTitleLabel";
+            mainTitleLabel.Size = new System.Drawing.Size(279, 24);
+            mainTitleLabel.TabIndex = 7;
+            mainTitleLabel.Text = "Toontown Rewritten Bot";
+            //
+            // mainVersionLabel
+            //
+            mainVersionLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            mainVersionLabel.ForeColor = System.Drawing.SystemColors.GrayText;
+            mainVersionLabel.Location = new System.Drawing.Point(480, 126);
+            mainVersionLabel.Name = "mainVersionLabel";
+            mainVersionLabel.Size = new System.Drawing.Size(120, 18);
+            mainVersionLabel.TabIndex = 8;
+            mainVersionLabel.Text = "v2.0.0";
+            mainVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            //
+            // mainAuthorLabel
+            //
+            mainAuthorLabel.AutoSize = true;
+            mainAuthorLabel.ForeColor = System.Drawing.SystemColors.GrayText;
+            mainAuthorLabel.Location = new System.Drawing.Point(15, 148);
+            mainAuthorLabel.Name = "mainAuthorLabel";
+            mainAuthorLabel.Size = new System.Drawing.Size(90, 15);
+            mainAuthorLabel.TabIndex = 9;
+            mainAuthorLabel.Text = "by primetime43";
+            //
+            // gettingStartedGroup
+            //
+            gettingStartedGroup.Controls.Add(gettingStartedLabel);
+            gettingStartedGroup.Location = new System.Drawing.Point(15, 172);
+            gettingStartedGroup.Name = "gettingStartedGroup";
+            gettingStartedGroup.Size = new System.Drawing.Size(310, 210);
+            gettingStartedGroup.TabIndex = 10;
+            gettingStartedGroup.TabStop = false;
+            gettingStartedGroup.Text = "Getting Started";
+            //
+            // gettingStartedLabel
+            //
+            gettingStartedLabel.Location = new System.Drawing.Point(12, 22);
+            gettingStartedLabel.Name = "gettingStartedLabel";
+            gettingStartedLabel.Size = new System.Drawing.Size(286, 175);
+            gettingStartedLabel.TabIndex = 0;
+            gettingStartedLabel.Text = "\u2022 Keep Toontown Rewritten in fullscreen\r\n\r\n\u2022 Select a tab above to begin\r\n\r\n\u2022 The bot uses image recognition with\r\n   templates to locate in-game buttons\r\n\r\n\u2022 Use Esc or F12 to stop any running task";
+            //
+            // infoGroup
+            //
+            infoGroup.Controls.Add(shortcutsTitleLabel);
+            infoGroup.Controls.Add(shortcutsLabel);
+            infoGroup.Controls.Add(githubLinkLabel);
+            infoGroup.Controls.Add(button8);
+            infoGroup.Location = new System.Drawing.Point(340, 172);
+            infoGroup.Name = "infoGroup";
+            infoGroup.Size = new System.Drawing.Size(260, 210);
+            infoGroup.TabIndex = 11;
+            infoGroup.TabStop = false;
+            infoGroup.Text = "Info";
+            //
+            // shortcutsTitleLabel
+            //
+            shortcutsTitleLabel.AutoSize = true;
+            shortcutsTitleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            shortcutsTitleLabel.Location = new System.Drawing.Point(12, 25);
+            shortcutsTitleLabel.Name = "shortcutsTitleLabel";
+            shortcutsTitleLabel.Size = new System.Drawing.Size(126, 13);
+            shortcutsTitleLabel.TabIndex = 0;
+            shortcutsTitleLabel.Text = "Keyboard Shortcuts";
+            //
+            // shortcutsLabel
+            //
+            shortcutsLabel.Location = new System.Drawing.Point(12, 48);
+            shortcutsLabel.Name = "shortcutsLabel";
+            shortcutsLabel.Size = new System.Drawing.Size(236, 80);
+            shortcutsLabel.TabIndex = 1;
+            shortcutsLabel.Text = "F11        Pause / Resume\r\nEsc        Stop task\r\nF12        Stop task";
+            //
+            // githubLinkLabel
+            //
+            githubLinkLabel.AutoSize = true;
+            githubLinkLabel.Location = new System.Drawing.Point(12, 175);
+            githubLinkLabel.Name = "githubLinkLabel";
+            githubLinkLabel.Size = new System.Drawing.Size(43, 15);
+            githubLinkLabel.TabIndex = 2;
+            githubLinkLabel.TabStop = true;
+            githubLinkLabel.Text = "GitHub";
+            githubLinkLabel.LinkClicked += githubLinkLabel_LinkClicked;
+            //
+            // button8
+            //
+            button8.Location = new System.Drawing.Point(168, 170);
+            button8.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button8.Name = "button8";
+            button8.Size = new System.Drawing.Size(80, 28);
+            button8.TabIndex = 3;
+            button8.Text = "About";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
             //
             // Fishing
             //
@@ -1972,6 +2040,9 @@
             Main.ResumeLayout(false);
             Main.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            gettingStartedGroup.ResumeLayout(false);
+            infoGroup.ResumeLayout(false);
+            infoGroup.PerformLayout();
             Fishing.ResumeLayout(false);
             Fishing.PerformLayout();
             groupBox6.ResumeLayout(false);
@@ -2077,13 +2148,19 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label mainTitleLabel;
+        private System.Windows.Forms.Label mainVersionLabel;
+        private System.Windows.Forms.Label mainAuthorLabel;
+        private System.Windows.Forms.GroupBox gettingStartedGroup;
+        private System.Windows.Forms.Label gettingStartedLabel;
+        private System.Windows.Forms.GroupBox infoGroup;
+        private System.Windows.Forms.Label shortcutsTitleLabel;
+        private System.Windows.Forms.Label shortcutsLabel;
+        private System.Windows.Forms.LinkLabel githubLinkLabel;
         private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button9;
         private System.Windows.Forms.CheckBox randomFishingCheckBox;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TabPage Golf;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TabPage Doodles;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Button stopDoodleTrainingBtn;
