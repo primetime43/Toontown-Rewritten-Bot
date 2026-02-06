@@ -330,7 +330,36 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         }
                     }
 
-                    // If template not found, try fallback positions
+                    // If template didn't match, offer recapture on first attempt
+                    if (!clicked && HasCloseButtonTemplate() && attempt == 0)
+                    {
+                        Debug.WriteLine("[GolfDetector] Close button template exists but didn't match, offering recapture...");
+                        bool recaptured = PromptForCloseButtonTemplate_Recapture();
+                        if (recaptured)
+                        {
+                            // Retry with the new template
+                            using (var retryScreenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
+                            using (var retryTemplate = new Bitmap(GetCloseButtonTemplatePath()))
+                            {
+                                if (retryScreenshot != null)
+                                {
+                                    var retryResult = ImageTemplateMatcher.FindTemplate(retryScreenshot, retryTemplate, 0.70);
+                                    if (retryResult.Found)
+                                    {
+                                        var retryRect = CoreFunctionality.GetGameWindowRect();
+                                        var retryPoint = new Point(retryRect.X + retryResult.Center.X, retryRect.Y + retryResult.Center.Y);
+                                        Debug.WriteLine($"[GolfDetector] Found close button after recapture at ({retryPoint.X}, {retryPoint.Y})");
+                                        CoreFunctionality.DoMouseClickDown(retryPoint);
+                                        await Task.Delay(50);
+                                        CoreFunctionality.DoMouseClickUp(retryPoint);
+                                        clicked = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // If still not found, try fallback positions
                     if (!clicked)
                     {
                         var gameRect = CoreFunctionality.GetGameWindowRect();
@@ -425,6 +454,19 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Prompts the user to recapture the close button template when it exists but didn't match.
+        /// </summary>
+        /// <returns>True if template was recaptured successfully</returns>
+        private bool PromptForCloseButtonTemplate_Recapture()
+        {
+            Debug.WriteLine("[GolfDetector] Close button template didn't match, prompting user to recapture...");
+
+            return UIElementManager.Instance.PromptForTemplateCapture(
+                CloseButtonTemplateName,
+                "The close button template didn't match. Please recapture the red close button (X) on the golf scoreboard.");
         }
 
         private const string PencilButtonTemplateName = "Golf_Pencil_Button";

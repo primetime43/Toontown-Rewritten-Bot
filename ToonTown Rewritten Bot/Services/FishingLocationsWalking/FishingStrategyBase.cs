@@ -657,9 +657,27 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             }
             else
             {
-                Debug.WriteLine($"[FishingStrategy] Could not find fish popup close button, trying fallback position...");
+                Debug.WriteLine($"[FishingStrategy] Could not find fish popup close button, offering recapture...");
 
-                // Fallback to estimated position if image recognition fails
+                // Template exists but didn't match — offer recapture before falling back
+                bool captured = UIElementManager.Instance.PromptForTemplateCapture(elementName, description);
+                if (captured)
+                {
+                    var retryLocation = await UIElementManager.Instance.GetElementLocationAsync(elementName, description, forceSearch: true);
+                    if (retryLocation.HasValue)
+                    {
+                        Debug.WriteLine($"[FishingStrategy] Found close button after recapture at ({retryLocation.Value.X}, {retryLocation.Value.Y})");
+                        MoveCursor(retryLocation.Value.X, retryLocation.Value.Y);
+                        await Task.Delay(100, cancellationToken);
+                        DoMouseClick();
+                        await Task.Delay(300, cancellationToken);
+                        return;
+                    }
+                }
+
+                Debug.WriteLine($"[FishingStrategy] Recapture failed or declined, trying fallback position...");
+
+                // Fallback to estimated position if image recognition still fails
                 var windowRect = GetGameWindowRect();
                 if (!windowRect.IsEmpty)
                 {
