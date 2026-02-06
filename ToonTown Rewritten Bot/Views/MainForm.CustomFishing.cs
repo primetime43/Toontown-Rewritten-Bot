@@ -84,19 +84,26 @@ namespace ToonTown_Rewritten_Bot
                 string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 string filePath = Path.Combine(exePath, "Custom Fishing Actions", selectedFileName);
 
+                // Show overlay if the checkbox is checked
+                if (customShowOverlayCheckBox.Checked)
+                    SetFishingOverlay(true, "Custom fishing...", OnCustomFishingEndedCallback);
+
                 await _fishingService.StartFishing("CUSTOM FISHING ACTION", numberOfCasts, numberOfSells,
                     randomFishingCheckBox.Checked, token, filePath + ".json", customAutoDetectFishCheckBox.Checked);
 
                 // These run on the UI thread (await resumes on UI context)
+                SetFishingOverlay(false, null, null);
                 CoreFunctionality.BringBotWindowToFront();
                 MessageBox.Show($"Done Fishing with custom action '{selectedFileName}'.");
             }
             catch (TaskCanceledException)
             {
+                SetFishingOverlay(false, null, null);
                 MessageBox.Show("Custom fishing was cancelled.");
             }
             catch (Exception ex)
             {
+                SetFishingOverlay(false, null, null);
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
         }
