@@ -692,7 +692,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void devResetCoordinatesBtn_Click(object sender, EventArgs e)
         {
             CoordinatesManager.CreateFreshCoordinatesFile();
             MessageBox.Show("All coordinates reset!");
@@ -700,14 +700,14 @@ namespace ToonTown_Rewritten_Bot
 
         private void LoadCoordinatesIntoResetBox()
         {
-            comboBox1.Items.Clear();
+            devCoordinatesComboBox.Items.Clear();
             var descriptions = CoordinateActions.GetAllDescriptions();
-            comboBox1.Items.AddRange(descriptions.Values.ToArray());
+            devCoordinatesComboBox.Items.AddRange(descriptions.Values.ToArray());
         }
 
-        private async void button6_Click(object sender, EventArgs e)
+        private async void devUpdateCoordinateBtn_Click(object sender, EventArgs e)
         {
-            string selectedDescription = comboBox1.SelectedItem as string;
+            string selectedDescription = devCoordinatesComboBox.SelectedItem as string;
             if (string.IsNullOrEmpty(selectedDescription))
             {
                 MessageBox.Show("Please select a valid item from the list.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1210,14 +1210,14 @@ namespace ToonTown_Rewritten_Bot
         }
 
         // Open Image Recognition Debug Window
-        private void openImageRecDebugBtn_Click(object sender, EventArgs e)
+        private void devOpenDebugBtn_Click(object sender, EventArgs e)
         {
             var debugForm = new ImageRecognitionDebugForm();
             debugForm.Show();
         }
 
         // Download OCR data automatically
-        private async void downloadOcrDataBtn_Click(object sender, EventArgs e)
+        private async void devDownloadOcrBtn_Click(object sender, EventArgs e)
         {
             // Check if already exists
             if (TessdataDownloader.LanguageDataExists())
@@ -1997,7 +1997,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void devOpenConfigBtn_Click(object sender, EventArgs e)
         {
             try
             {

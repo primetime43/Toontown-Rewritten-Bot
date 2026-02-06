@@ -183,25 +183,28 @@
             groupBoxAboutSettings = new System.Windows.Forms.GroupBox();
             labelSettingsInfo = new System.Windows.Forms.Label();
             Dev = new System.Windows.Forms.TabPage();
-            groupBoxTemplates = new System.Windows.Forms.GroupBox();
-            btnOpenTemplateDefinitions = new System.Windows.Forms.Button();
+            devTemplatesGroup = new System.Windows.Forms.GroupBox();
+            devSelectTemplateLabel = new System.Windows.Forms.Label();
+            comboBoxTemplateItems = new System.Windows.Forms.ComboBox();
+            btnCaptureTemplate = new System.Windows.Forms.Button();
+            btnViewTemplate = new System.Windows.Forms.Button();
+            labelTemplateStatus = new System.Windows.Forms.Label();
+            devTemplateSeparator = new System.Windows.Forms.Panel();
             btnAddTemplateItem = new System.Windows.Forms.Button();
             btnEditTemplate = new System.Windows.Forms.Button();
             btnDeleteTemplate = new System.Windows.Forms.Button();
-            labelTemplateStatus = new System.Windows.Forms.Label();
-            btnCaptureTemplate = new System.Windows.Forms.Button();
-            btnViewTemplate = new System.Windows.Forms.Button();
-            comboBoxTemplateItems = new System.Windows.Forms.ComboBox();
-            groupBox9 = new System.Windows.Forms.GroupBox();
-            label11 = new System.Windows.Forms.Label();
-            updateImagesBtn = new System.Windows.Forms.Button();
-            resetImagesBtn = new System.Windows.Forms.Button();
-            label5 = new System.Windows.Forms.Label();
-            groupBox7 = new System.Windows.Forms.GroupBox();
-            button2 = new System.Windows.Forms.Button();
-            button6 = new System.Windows.Forms.Button();
-            comboBox1 = new System.Windows.Forms.ComboBox();
-            button7 = new System.Windows.Forms.Button();
+            btnOpenTemplateDefinitions = new System.Windows.Forms.Button();
+            devDebugGroup = new System.Windows.Forms.GroupBox();
+            devDebugDescLabel = new System.Windows.Forms.Label();
+            devDebugSeparator = new System.Windows.Forms.Panel();
+            devOpenDebugBtn = new System.Windows.Forms.Button();
+            devDownloadOcrBtn = new System.Windows.Forms.Button();
+            devCoordinatesGroup = new System.Windows.Forms.GroupBox();
+            devCoordinatesComboBox = new System.Windows.Forms.ComboBox();
+            devCoordSeparator = new System.Windows.Forms.Panel();
+            devUpdateCoordinateBtn = new System.Windows.Forms.Button();
+            devResetCoordinatesBtn = new System.Windows.Forms.Button();
+            devOpenConfigBtn = new System.Windows.Forms.Button();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
             timer1 = new System.Windows.Forms.Timer(components);
             tabControl1.SuspendLayout();
@@ -247,9 +250,9 @@
             groupBoxKeyboardShortcuts.SuspendLayout();
             groupBoxAboutSettings.SuspendLayout();
             Dev.SuspendLayout();
-            groupBoxTemplates.SuspendLayout();
-            groupBox9.SuspendLayout();
-            groupBox7.SuspendLayout();
+            devTemplatesGroup.SuspendLayout();
+            devDebugGroup.SuspendLayout();
+            devCoordinatesGroup.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
@@ -2009,10 +2012,9 @@
             // 
             // Dev
             // 
-            Dev.Controls.Add(groupBoxTemplates);
-            Dev.Controls.Add(groupBox9);
-            Dev.Controls.Add(label5);
-            Dev.Controls.Add(groupBox7);
+            Dev.Controls.Add(devTemplatesGroup);
+            Dev.Controls.Add(devDebugGroup);
+            Dev.Controls.Add(devCoordinatesGroup);
             Dev.Location = new System.Drawing.Point(4, 25);
             Dev.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Dev.Name = "Dev";
@@ -2021,44 +2023,101 @@
             Dev.Text = "Dev";
             Dev.UseVisualStyleBackColor = true;
             // 
-            // groupBoxTemplates
+            // devTemplatesGroup
             // 
-            groupBoxTemplates.Controls.Add(btnOpenTemplateDefinitions);
-            groupBoxTemplates.Controls.Add(btnAddTemplateItem);
-            groupBoxTemplates.Controls.Add(btnEditTemplate);
-            groupBoxTemplates.Controls.Add(btnDeleteTemplate);
-            groupBoxTemplates.Controls.Add(labelTemplateStatus);
-            groupBoxTemplates.Controls.Add(btnCaptureTemplate);
-            groupBoxTemplates.Controls.Add(btnViewTemplate);
-            groupBoxTemplates.Controls.Add(comboBoxTemplateItems);
-            groupBoxTemplates.Location = new System.Drawing.Point(10, 180);
-            groupBoxTemplates.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBoxTemplates.Name = "groupBoxTemplates";
-            groupBoxTemplates.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBoxTemplates.Size = new System.Drawing.Size(590, 120);
-            groupBoxTemplates.TabIndex = 9;
-            groupBoxTemplates.TabStop = false;
-            groupBoxTemplates.Text = "UI Element Templates";
+            devTemplatesGroup.Controls.Add(devSelectTemplateLabel);
+            devTemplatesGroup.Controls.Add(comboBoxTemplateItems);
+            devTemplatesGroup.Controls.Add(btnCaptureTemplate);
+            devTemplatesGroup.Controls.Add(btnViewTemplate);
+            devTemplatesGroup.Controls.Add(labelTemplateStatus);
+            devTemplatesGroup.Controls.Add(devTemplateSeparator);
+            devTemplatesGroup.Controls.Add(btnAddTemplateItem);
+            devTemplatesGroup.Controls.Add(btnEditTemplate);
+            devTemplatesGroup.Controls.Add(btnDeleteTemplate);
+            devTemplatesGroup.Controls.Add(btnOpenTemplateDefinitions);
+            devTemplatesGroup.Location = new System.Drawing.Point(10, 180);
+            devTemplatesGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devTemplatesGroup.Name = "devTemplatesGroup";
+            devTemplatesGroup.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devTemplatesGroup.Size = new System.Drawing.Size(590, 200);
+            devTemplatesGroup.TabIndex = 9;
+            devTemplatesGroup.TabStop = false;
+            devTemplatesGroup.Text = "UI Element Templates";
             // 
-            // btnOpenTemplateDefinitions
+            // devSelectTemplateLabel
             // 
-            btnOpenTemplateDefinitions.Location = new System.Drawing.Point(10, 82);
-            btnOpenTemplateDefinitions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            btnOpenTemplateDefinitions.Name = "btnOpenTemplateDefinitions";
-            btnOpenTemplateDefinitions.Size = new System.Drawing.Size(130, 30);
-            btnOpenTemplateDefinitions.TabIndex = 5;
-            btnOpenTemplateDefinitions.Text = "Edit JSON File";
-            toolTip1.SetToolTip(btnOpenTemplateDefinitions, "Open the TemplateDefinitions.json file to manually edit");
-            btnOpenTemplateDefinitions.UseVisualStyleBackColor = true;
-            btnOpenTemplateDefinitions.Click += btnOpenTemplateDefinitions_Click;
+            devSelectTemplateLabel.AutoSize = true;
+            devSelectTemplateLabel.Location = new System.Drawing.Point(10, 22);
+            devSelectTemplateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            devSelectTemplateLabel.Name = "devSelectTemplateLabel";
+            devSelectTemplateLabel.Size = new System.Drawing.Size(103, 16);
+            devSelectTemplateLabel.TabIndex = 0;
+            devSelectTemplateLabel.Text = "Select template:";
+            // 
+            // comboBoxTemplateItems
+            // 
+            comboBoxTemplateItems.DropDownHeight = 300;
+            comboBoxTemplateItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBoxTemplateItems.IntegralHeight = false;
+            comboBoxTemplateItems.Location = new System.Drawing.Point(10, 42);
+            comboBoxTemplateItems.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBoxTemplateItems.Name = "comboBoxTemplateItems";
+            comboBoxTemplateItems.Size = new System.Drawing.Size(400, 24);
+            comboBoxTemplateItems.TabIndex = 1;
+            toolTip1.SetToolTip(comboBoxTemplateItems, "Select a UI element to capture or update its template");
+            comboBoxTemplateItems.SelectedIndexChanged += comboBoxTemplateItems_SelectedIndexChanged;
+            // 
+            // btnCaptureTemplate
+            // 
+            btnCaptureTemplate.Location = new System.Drawing.Point(420, 40);
+            btnCaptureTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnCaptureTemplate.Name = "btnCaptureTemplate";
+            btnCaptureTemplate.Size = new System.Drawing.Size(80, 28);
+            btnCaptureTemplate.TabIndex = 2;
+            btnCaptureTemplate.Text = "Capture";
+            toolTip1.SetToolTip(btnCaptureTemplate, "Capture a new template image for the selected item");
+            btnCaptureTemplate.UseVisualStyleBackColor = true;
+            btnCaptureTemplate.Click += btnCaptureTemplate_Click;
+            // 
+            // btnViewTemplate
+            // 
+            btnViewTemplate.Location = new System.Drawing.Point(505, 40);
+            btnViewTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnViewTemplate.Name = "btnViewTemplate";
+            btnViewTemplate.Size = new System.Drawing.Size(75, 28);
+            btnViewTemplate.TabIndex = 3;
+            btnViewTemplate.Text = "View";
+            toolTip1.SetToolTip(btnViewTemplate, "View the existing template image");
+            btnViewTemplate.UseVisualStyleBackColor = true;
+            btnViewTemplate.Click += btnViewTemplate_Click;
+            // 
+            // labelTemplateStatus
+            // 
+            labelTemplateStatus.AutoSize = true;
+            labelTemplateStatus.ForeColor = System.Drawing.Color.Gray;
+            labelTemplateStatus.Location = new System.Drawing.Point(10, 75);
+            labelTemplateStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelTemplateStatus.Name = "labelTemplateStatus";
+            labelTemplateStatus.Size = new System.Drawing.Size(143, 16);
+            labelTemplateStatus.TabIndex = 4;
+            labelTemplateStatus.Text = "Status: Select an item...";
+            // 
+            // devTemplateSeparator
+            // 
+            devTemplateSeparator.BackColor = System.Drawing.Color.LightGray;
+            devTemplateSeparator.Location = new System.Drawing.Point(10, 100);
+            devTemplateSeparator.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devTemplateSeparator.Name = "devTemplateSeparator";
+            devTemplateSeparator.Size = new System.Drawing.Size(570, 1);
+            devTemplateSeparator.TabIndex = 5;
             // 
             // btnAddTemplateItem
             // 
-            btnAddTemplateItem.Location = new System.Drawing.Point(500, 22);
+            btnAddTemplateItem.Location = new System.Drawing.Point(10, 110);
             btnAddTemplateItem.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnAddTemplateItem.Name = "btnAddTemplateItem";
-            btnAddTemplateItem.Size = new System.Drawing.Size(80, 28);
-            btnAddTemplateItem.TabIndex = 4;
+            btnAddTemplateItem.Size = new System.Drawing.Size(130, 28);
+            btnAddTemplateItem.TabIndex = 6;
             btnAddTemplateItem.Text = "Add New";
             toolTip1.SetToolTip(btnAddTemplateItem, "Add a new template item definition");
             btnAddTemplateItem.UseVisualStyleBackColor = true;
@@ -2066,11 +2125,11 @@
             // 
             // btnEditTemplate
             // 
-            btnEditTemplate.Location = new System.Drawing.Point(150, 82);
+            btnEditTemplate.Location = new System.Drawing.Point(150, 110);
             btnEditTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnEditTemplate.Name = "btnEditTemplate";
-            btnEditTemplate.Size = new System.Drawing.Size(70, 30);
-            btnEditTemplate.TabIndex = 6;
+            btnEditTemplate.Size = new System.Drawing.Size(130, 28);
+            btnEditTemplate.TabIndex = 7;
             btnEditTemplate.Text = "Edit";
             toolTip1.SetToolTip(btnEditTemplate, "Edit the selected template definition");
             btnEditTemplate.UseVisualStyleBackColor = true;
@@ -2079,182 +2138,157 @@
             // btnDeleteTemplate
             // 
             btnDeleteTemplate.ForeColor = System.Drawing.Color.Red;
-            btnDeleteTemplate.Location = new System.Drawing.Point(230, 82);
+            btnDeleteTemplate.Location = new System.Drawing.Point(290, 110);
             btnDeleteTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnDeleteTemplate.Name = "btnDeleteTemplate";
-            btnDeleteTemplate.Size = new System.Drawing.Size(70, 30);
-            btnDeleteTemplate.TabIndex = 7;
+            btnDeleteTemplate.Size = new System.Drawing.Size(130, 28);
+            btnDeleteTemplate.TabIndex = 8;
             btnDeleteTemplate.Text = "Delete";
             toolTip1.SetToolTip(btnDeleteTemplate, "Delete the selected template definition");
             btnDeleteTemplate.UseVisualStyleBackColor = true;
             btnDeleteTemplate.Click += btnDeleteTemplate_Click;
             // 
-            // labelTemplateStatus
+            // btnOpenTemplateDefinitions
             // 
-            labelTemplateStatus.AutoSize = true;
-            labelTemplateStatus.ForeColor = System.Drawing.Color.Gray;
-            labelTemplateStatus.Location = new System.Drawing.Point(10, 55);
-            labelTemplateStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            labelTemplateStatus.Name = "labelTemplateStatus";
-            labelTemplateStatus.Size = new System.Drawing.Size(228, 16);
-            labelTemplateStatus.TabIndex = 3;
-            labelTemplateStatus.Text = "Select an item to view template status";
+            btnOpenTemplateDefinitions.Location = new System.Drawing.Point(430, 110);
+            btnOpenTemplateDefinitions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnOpenTemplateDefinitions.Name = "btnOpenTemplateDefinitions";
+            btnOpenTemplateDefinitions.Size = new System.Drawing.Size(150, 28);
+            btnOpenTemplateDefinitions.TabIndex = 9;
+            btnOpenTemplateDefinitions.Text = "Edit JSON File";
+            toolTip1.SetToolTip(btnOpenTemplateDefinitions, "Open the TemplateDefinitions.json file to manually edit");
+            btnOpenTemplateDefinitions.UseVisualStyleBackColor = true;
+            btnOpenTemplateDefinitions.Click += btnOpenTemplateDefinitions_Click;
             // 
-            // btnCaptureTemplate
+            // devDebugGroup
             // 
-            btnCaptureTemplate.Location = new System.Drawing.Point(330, 22);
-            btnCaptureTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            btnCaptureTemplate.Name = "btnCaptureTemplate";
-            btnCaptureTemplate.Size = new System.Drawing.Size(80, 28);
-            btnCaptureTemplate.TabIndex = 1;
-            btnCaptureTemplate.Text = "Capture";
-            toolTip1.SetToolTip(btnCaptureTemplate, "Capture a new template image for the selected item");
-            btnCaptureTemplate.UseVisualStyleBackColor = true;
-            btnCaptureTemplate.Click += btnCaptureTemplate_Click;
+            devDebugGroup.Controls.Add(devDebugDescLabel);
+            devDebugGroup.Controls.Add(devDebugSeparator);
+            devDebugGroup.Controls.Add(devOpenDebugBtn);
+            devDebugGroup.Controls.Add(devDownloadOcrBtn);
+            devDebugGroup.Location = new System.Drawing.Point(10, 10);
+            devDebugGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devDebugGroup.Name = "devDebugGroup";
+            devDebugGroup.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devDebugGroup.Size = new System.Drawing.Size(290, 160);
+            devDebugGroup.TabIndex = 8;
+            devDebugGroup.TabStop = false;
+            devDebugGroup.Text = "Debug && Testing";
             // 
-            // btnViewTemplate
+            // devDebugDescLabel
             // 
-            btnViewTemplate.Location = new System.Drawing.Point(415, 22);
-            btnViewTemplate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            btnViewTemplate.Name = "btnViewTemplate";
-            btnViewTemplate.Size = new System.Drawing.Size(80, 28);
-            btnViewTemplate.TabIndex = 2;
-            btnViewTemplate.Text = "View";
-            toolTip1.SetToolTip(btnViewTemplate, "View the existing template image");
-            btnViewTemplate.UseVisualStyleBackColor = true;
-            btnViewTemplate.Click += btnViewTemplate_Click;
+            devDebugDescLabel.AutoSize = true;
+            devDebugDescLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            devDebugDescLabel.Location = new System.Drawing.Point(10, 22);
+            devDebugDescLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            devDebugDescLabel.Name = "devDebugDescLabel";
+            devDebugDescLabel.Size = new System.Drawing.Size(232, 30);
+            devDebugDescLabel.TabIndex = 0;
+            devDebugDescLabel.Text = "Test image recognition, fish detection,\nOCR text reading, and template matching";
             // 
-            // comboBoxTemplateItems
+            // devDebugSeparator
             // 
-            comboBoxTemplateItems.DropDownHeight = 300;
-            comboBoxTemplateItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            comboBoxTemplateItems.IntegralHeight = false;
-            comboBoxTemplateItems.Location = new System.Drawing.Point(10, 24);
-            comboBoxTemplateItems.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            comboBoxTemplateItems.Name = "comboBoxTemplateItems";
-            comboBoxTemplateItems.Size = new System.Drawing.Size(310, 24);
-            comboBoxTemplateItems.TabIndex = 0;
-            toolTip1.SetToolTip(comboBoxTemplateItems, "Select a UI element to capture or update its template");
-            comboBoxTemplateItems.SelectedIndexChanged += comboBoxTemplateItems_SelectedIndexChanged;
+            devDebugSeparator.BackColor = System.Drawing.Color.LightGray;
+            devDebugSeparator.Location = new System.Drawing.Point(10, 60);
+            devDebugSeparator.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devDebugSeparator.Name = "devDebugSeparator";
+            devDebugSeparator.Size = new System.Drawing.Size(270, 1);
+            devDebugSeparator.TabIndex = 1;
             // 
-            // groupBox9
+            // devOpenDebugBtn
             // 
-            groupBox9.Controls.Add(label11);
-            groupBox9.Controls.Add(updateImagesBtn);
-            groupBox9.Controls.Add(resetImagesBtn);
-            groupBox9.Location = new System.Drawing.Point(10, 10);
-            groupBox9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox9.Name = "groupBox9";
-            groupBox9.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox9.Size = new System.Drawing.Size(290, 160);
-            groupBox9.TabIndex = 8;
-            groupBox9.TabStop = false;
-            groupBox9.Text = "Debug & Testing";
+            devOpenDebugBtn.BackColor = System.Drawing.Color.LightGreen;
+            devOpenDebugBtn.Location = new System.Drawing.Point(10, 70);
+            devOpenDebugBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devOpenDebugBtn.Name = "devOpenDebugBtn";
+            devOpenDebugBtn.Size = new System.Drawing.Size(270, 35);
+            devOpenDebugBtn.TabIndex = 2;
+            devOpenDebugBtn.Text = "Open Debug Window";
+            devOpenDebugBtn.UseVisualStyleBackColor = false;
+            devOpenDebugBtn.Click += devOpenDebugBtn_Click;
             // 
-            // label11
+            // devDownloadOcrBtn
             // 
-            label11.AutoSize = true;
-            label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            label11.Location = new System.Drawing.Point(10, 22);
-            label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            label11.Name = "label11";
-            label11.Size = new System.Drawing.Size(232, 30);
-            label11.TabIndex = 3;
-            label11.Text = "Test image recognition, fish detection,\nOCR text reading, and template matching";
+            devDownloadOcrBtn.Location = new System.Drawing.Point(10, 113);
+            devDownloadOcrBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devDownloadOcrBtn.Name = "devDownloadOcrBtn";
+            devDownloadOcrBtn.Size = new System.Drawing.Size(270, 35);
+            devDownloadOcrBtn.TabIndex = 3;
+            devDownloadOcrBtn.Text = "Download OCR Data";
+            toolTip1.SetToolTip(devDownloadOcrBtn, "Download OCR language data for text recognition (runs automatically if needed)");
+            devDownloadOcrBtn.UseVisualStyleBackColor = true;
+            devDownloadOcrBtn.Click += devDownloadOcrBtn_Click;
             // 
-            // updateImagesBtn
+            // devCoordinatesGroup
             // 
-            updateImagesBtn.Location = new System.Drawing.Point(10, 60);
-            updateImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            updateImagesBtn.Name = "updateImagesBtn";
-            updateImagesBtn.Size = new System.Drawing.Size(270, 40);
-            updateImagesBtn.TabIndex = 2;
-            updateImagesBtn.Text = "Open Debug Window";
-            updateImagesBtn.UseVisualStyleBackColor = true;
-            updateImagesBtn.Click += openImageRecDebugBtn_Click;
+            devCoordinatesGroup.Controls.Add(devCoordinatesComboBox);
+            devCoordinatesGroup.Controls.Add(devCoordSeparator);
+            devCoordinatesGroup.Controls.Add(devUpdateCoordinateBtn);
+            devCoordinatesGroup.Controls.Add(devResetCoordinatesBtn);
+            devCoordinatesGroup.Controls.Add(devOpenConfigBtn);
+            devCoordinatesGroup.Location = new System.Drawing.Point(310, 10);
+            devCoordinatesGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devCoordinatesGroup.Name = "devCoordinatesGroup";
+            devCoordinatesGroup.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devCoordinatesGroup.Size = new System.Drawing.Size(290, 160);
+            devCoordinatesGroup.TabIndex = 7;
+            devCoordinatesGroup.TabStop = false;
+            devCoordinatesGroup.Text = "Manual Coordinates (Fallback)";
             // 
-            // resetImagesBtn
+            // devCoordinatesComboBox
             // 
-            resetImagesBtn.Location = new System.Drawing.Point(10, 108);
-            resetImagesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            resetImagesBtn.Name = "resetImagesBtn";
-            resetImagesBtn.Size = new System.Drawing.Size(270, 40);
-            resetImagesBtn.TabIndex = 0;
-            resetImagesBtn.Text = "Download OCR Data";
-            toolTip1.SetToolTip(resetImagesBtn, "Download OCR language data for text recognition (runs automatically if needed)");
-            resetImagesBtn.UseVisualStyleBackColor = true;
-            resetImagesBtn.Click += downloadOcrDataBtn_Click;
+            devCoordinatesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            devCoordinatesComboBox.Location = new System.Drawing.Point(10, 26);
+            devCoordinatesComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devCoordinatesComboBox.Name = "devCoordinatesComboBox";
+            devCoordinatesComboBox.Size = new System.Drawing.Size(270, 24);
+            devCoordinatesComboBox.TabIndex = 0;
+            toolTip1.SetToolTip(devCoordinatesComboBox, "Select a coordinate to update");
             // 
-            // label5
+            // devCoordSeparator
             // 
-            label5.AutoSize = true;
-            label5.ForeColor = System.Drawing.Color.Gray;
-            label5.Location = new System.Drawing.Point(10, 310);
-            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            label5.Name = "label5";
-            label5.Size = new System.Drawing.Size(332, 32);
-            label5.TabIndex = 8;
-            label5.Text = "Note: Manual coordinates are for advanced users only.\nUse the Debug Window for testing and troubleshooting.";
+            devCoordSeparator.BackColor = System.Drawing.Color.LightGray;
+            devCoordSeparator.Location = new System.Drawing.Point(10, 60);
+            devCoordSeparator.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devCoordSeparator.Name = "devCoordSeparator";
+            devCoordSeparator.Size = new System.Drawing.Size(270, 1);
+            devCoordSeparator.TabIndex = 1;
             // 
-            // groupBox7
+            // devUpdateCoordinateBtn
             // 
-            groupBox7.Controls.Add(button2);
-            groupBox7.Controls.Add(button6);
-            groupBox7.Controls.Add(comboBox1);
-            groupBox7.Controls.Add(button7);
-            groupBox7.Location = new System.Drawing.Point(310, 10);
-            groupBox7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox7.Name = "groupBox7";
-            groupBox7.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox7.Size = new System.Drawing.Size(290, 160);
-            groupBox7.TabIndex = 7;
-            groupBox7.TabStop = false;
-            groupBox7.Text = "Manual Coordinates (Advanced)";
+            devUpdateCoordinateBtn.Location = new System.Drawing.Point(10, 70);
+            devUpdateCoordinateBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devUpdateCoordinateBtn.Name = "devUpdateCoordinateBtn";
+            devUpdateCoordinateBtn.Size = new System.Drawing.Size(270, 35);
+            devUpdateCoordinateBtn.TabIndex = 2;
+            devUpdateCoordinateBtn.Text = "Update Selected Coordinate";
+            devUpdateCoordinateBtn.UseVisualStyleBackColor = true;
+            devUpdateCoordinateBtn.Click += devUpdateCoordinateBtn_Click;
             // 
-            // button2
+            // devResetCoordinatesBtn
             // 
-            button2.Location = new System.Drawing.Point(150, 108);
-            button2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(130, 40);
-            button2.TabIndex = 3;
-            button2.Text = "Open Config File";
-            toolTip1.SetToolTip(button2, "Open the coordinates configuration file");
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            devResetCoordinatesBtn.BackColor = System.Drawing.Color.MistyRose;
+            devResetCoordinatesBtn.Location = new System.Drawing.Point(10, 113);
+            devResetCoordinatesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devResetCoordinatesBtn.Name = "devResetCoordinatesBtn";
+            devResetCoordinatesBtn.Size = new System.Drawing.Size(130, 35);
+            devResetCoordinatesBtn.TabIndex = 3;
+            devResetCoordinatesBtn.Text = "Reset All";
+            toolTip1.SetToolTip(devResetCoordinatesBtn, "Reset all coordinates to default values");
+            devResetCoordinatesBtn.UseVisualStyleBackColor = false;
+            devResetCoordinatesBtn.Click += devResetCoordinatesBtn_Click;
             // 
-            // button6
+            // devOpenConfigBtn
             // 
-            button6.Location = new System.Drawing.Point(10, 60);
-            button6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button6.Name = "button6";
-            button6.Size = new System.Drawing.Size(270, 38);
-            button6.TabIndex = 2;
-            button6.Text = "Update Selected Coordinate";
-            button6.UseVisualStyleBackColor = true;
-            button6.Click += button6_Click;
-            // 
-            // comboBox1
-            // 
-            comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            comboBox1.Location = new System.Drawing.Point(10, 26);
-            comboBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new System.Drawing.Size(270, 24);
-            comboBox1.TabIndex = 1;
-            toolTip1.SetToolTip(comboBox1, "Select a coordinate to update");
-            // 
-            // button7
-            // 
-            button7.Location = new System.Drawing.Point(10, 108);
-            button7.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button7.Name = "button7";
-            button7.Size = new System.Drawing.Size(130, 40);
-            button7.TabIndex = 0;
-            button7.Text = "Reset All";
-            toolTip1.SetToolTip(button7, "Reset all coordinates to default values");
-            button7.UseVisualStyleBackColor = true;
-            button7.Click += button7_Click;
+            devOpenConfigBtn.Location = new System.Drawing.Point(150, 113);
+            devOpenConfigBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devOpenConfigBtn.Name = "devOpenConfigBtn";
+            devOpenConfigBtn.Size = new System.Drawing.Size(130, 35);
+            devOpenConfigBtn.TabIndex = 4;
+            devOpenConfigBtn.Text = "Open Config";
+            toolTip1.SetToolTip(devOpenConfigBtn, "Open the coordinates configuration file");
+            devOpenConfigBtn.UseVisualStyleBackColor = true;
+            devOpenConfigBtn.Click += devOpenConfigBtn_Click;
             // 
             // toolTip1
             // 
@@ -2332,12 +2366,11 @@
             groupBoxKeyboardShortcuts.ResumeLayout(false);
             groupBoxAboutSettings.ResumeLayout(false);
             Dev.ResumeLayout(false);
-            Dev.PerformLayout();
-            groupBoxTemplates.ResumeLayout(false);
-            groupBoxTemplates.PerformLayout();
-            groupBox9.ResumeLayout(false);
-            groupBox9.PerformLayout();
-            groupBox7.ResumeLayout(false);
+            devTemplatesGroup.ResumeLayout(false);
+            devTemplatesGroup.PerformLayout();
+            devDebugGroup.ResumeLayout(false);
+            devDebugGroup.PerformLayout();
+            devCoordinatesGroup.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -2382,10 +2415,10 @@
         private System.Windows.Forms.Panel miscSeparator3;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.TabPage Dev;
-        private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.GroupBox devCoordinatesGroup;
+        private System.Windows.Forms.Button devUpdateCoordinateBtn;
+        private System.Windows.Forms.ComboBox devCoordinatesComboBox;
+        private System.Windows.Forms.Button devResetCoordinatesBtn;
         private System.Windows.Forms.GroupBox fishingSettingsGroup;
         private System.Windows.Forms.GroupBox fishingDetectionGroup;
         private System.Windows.Forms.GroupBox fishingInfoGroup;
@@ -2400,7 +2433,7 @@
         private System.Windows.Forms.Panel fishingSeparator3;
         private System.Windows.Forms.Panel fishingSeparator4;
         private System.Windows.Forms.Label fishingStatusLabel;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Panel devCoordSeparator;
         private System.Windows.Forms.Button startRacing;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label6;
@@ -2439,11 +2472,14 @@
         private System.Windows.Forms.GroupBox doodleInfoGroup;
         private System.Windows.Forms.PictureBox doodlePictureBox;
         private System.Windows.Forms.RichTextBox doodleHelpRichTextBox;
-        private System.Windows.Forms.GroupBox groupBox9;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Button updateImagesBtn;
-        private System.Windows.Forms.Button resetImagesBtn;
-        private System.Windows.Forms.GroupBox groupBoxTemplates;
+        private System.Windows.Forms.GroupBox devDebugGroup;
+        private System.Windows.Forms.Label devDebugDescLabel;
+        private System.Windows.Forms.Panel devDebugSeparator;
+        private System.Windows.Forms.Button devOpenDebugBtn;
+        private System.Windows.Forms.Button devDownloadOcrBtn;
+        private System.Windows.Forms.GroupBox devTemplatesGroup;
+        private System.Windows.Forms.Label devSelectTemplateLabel;
+        private System.Windows.Forms.Panel devTemplateSeparator;
         private System.Windows.Forms.ComboBox comboBoxTemplateItems;
         private System.Windows.Forms.Button btnCaptureTemplate;
         private System.Windows.Forms.Button btnViewTemplate;
@@ -2471,7 +2507,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.ListBox golfActionsListBox;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button devOpenConfigBtn;
         private System.Windows.Forms.CheckBox showGolfOverlayCheckBox;
         private System.Windows.Forms.Button startAutoGolfBtn;
         private System.Windows.Forms.Label autoGolfStatusLabel;
