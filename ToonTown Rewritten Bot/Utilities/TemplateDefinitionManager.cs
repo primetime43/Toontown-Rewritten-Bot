@@ -129,8 +129,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
         {
             return new List<TemplateDefinition>
             {
-                // Gardening (keys 1-14)
-                new TemplateDefinition { Key = 1, Name = "Plant Flower/Remove Button", Category = "Gardening" },
+                // Gardening (keys 1-14, 35)
+                new TemplateDefinition { Key = 1, Name = "Plant Flower Button", Category = "Gardening" },
                 new TemplateDefinition { Key = 2, Name = "Red Jellybean Button", Category = "Gardening" },
                 new TemplateDefinition { Key = 3, Name = "Green Jellybean Button", Category = "Gardening" },
                 new TemplateDefinition { Key = 4, Name = "Orange Jellybean Button", Category = "Gardening" },
@@ -144,6 +144,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 new TemplateDefinition { Key = 12, Name = "Blue Ok Button", Category = "Gardening" },
                 new TemplateDefinition { Key = 13, Name = "Watering Can Button", Category = "Gardening" },
                 new TemplateDefinition { Key = 14, Name = "Blue Yes Button", Category = "Gardening" },
+                new TemplateDefinition { Key = 35, Name = "Remove Plant Button", Category = "Gardening" },
 
                 // Fishing (keys 15-18)
                 new TemplateDefinition { Key = 15, Name = "Red Fishing Button", Category = "Fishing" },
@@ -170,7 +171,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private void CreateDefaultDefinitions()
         {
             _definitions = GetDefaultDefinitions();
-            _nextKey = 31;
+            _nextKey = 36;
             SaveDefinitions();
         }
 

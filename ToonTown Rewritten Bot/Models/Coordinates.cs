@@ -55,7 +55,7 @@ namespace ToonTown_Rewritten_Bot.Models
     {
         public enum GardeningCoordinatesEnum
         {
-            PlantFlowerRemoveButton = 1,
+            PlantFlowerButton = 1,
             RedJellybeanButton,
             GreenJellybeanButton,
             OrangeJellybeanButton,
@@ -68,7 +68,8 @@ namespace ToonTown_Rewritten_Bot.Models
             BluePlantButton,
             BlueOkButton,
             WateringCanButton,
-            BlueYesButton
+            BlueYesButton,
+            RemovePlantButton = 35
         }
 
         public enum FishingCoordinatesEnum

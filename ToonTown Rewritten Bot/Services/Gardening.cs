@@ -42,7 +42,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 await Task.Delay(2000, cancellationToken);
 
                 // Hide overlay so template capture prompts can show if needed
-                var (x, y) = await FindElementWithOverlayPause(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
+                var (x, y) = await FindElementWithOverlayPause(GardeningCoordinatesEnum.PlantFlowerButton);
                 MoveCursor(x, y);
                 DoMouseClick();
 
@@ -209,7 +209,7 @@ namespace ToonTown_Rewritten_Bot.Services
             await Task.Delay(2000, cancellationToken);
 
             // Use image recognition to find button (will prompt for template capture if needed)
-            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.RemovePlantButton);
             CoreFunctionality.MoveCursor(x, y);
             CoreFunctionality.DoMouseClick();
 
