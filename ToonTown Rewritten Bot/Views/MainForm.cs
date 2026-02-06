@@ -163,8 +163,8 @@ namespace ToonTown_Rewritten_Bot
             }
 
             // Misc preferences
-            checkBox2.Checked = prefs.KeepProgramOnTop;
-            numericUpDown1.Value = Math.Max(numericUpDown1.Minimum, Math.Min(numericUpDown1.Maximum, prefs.KeepToonAwakeMinutes));
+            keepOnTopCheckBox.Checked = prefs.KeepProgramOnTop;
+            numericUpDownAwakeMinutes.Value = Math.Max(numericUpDownAwakeMinutes.Minimum, Math.Min(numericUpDownAwakeMinutes.Maximum, prefs.KeepToonAwakeMinutes));
         }
 
         /// <summary>
@@ -212,8 +212,8 @@ namespace ToonTown_Rewritten_Bot
             prefs.CustomGardeningFile = customGardeningFilesComboBox.SelectedItem?.ToString() ?? "";
 
             // Misc preferences
-            prefs.KeepProgramOnTop = checkBox2.Checked;
-            prefs.KeepToonAwakeMinutes = (int)numericUpDown1.Value;
+            prefs.KeepProgramOnTop = keepOnTopCheckBox.Checked;
+            prefs.KeepToonAwakeMinutes = (int)numericUpDownAwakeMinutes.Value;
 
             prefs.Save();
         }
@@ -289,12 +289,12 @@ namespace ToonTown_Rewritten_Bot
         //important functions for bot
         private void startSpamButton_Click(object sender, EventArgs e)//spam message on screen
         {//if the user presses ALT key, it will break the loop
-            bool loopBroken = BotFunctions.SendMessage(messageToType.Text, Convert.ToInt32(numericUpDown2.Value), checkBox1.Checked, numericUpDown2);
+            bool loopBroken = BotFunctions.SendMessage(messageToType.Text, Convert.ToInt32(numericUpDownSpamCount.Value), spamMessageCheckBox.Checked, numericUpDownSpamCount);
         }
 
         private int timeLeft;
         private bool isToonAwakeActive = false;  // Flag to track if the function is active
-        private void startKeepToonAwakeButton_Click(object sender, EventArgs e)
+        private async void startKeepToonAwakeButton_Click(object sender, EventArgs e)
         {
             if (_cancellationTokenSource != null)
             {
@@ -303,29 +303,35 @@ namespace ToonTown_Rewritten_Bot
             _cancellationTokenSource = new CancellationTokenSource();
             isToonAwakeActive = true;  // Flag to indicate the task is active
 
-            int timeInSeconds = Convert.ToInt32(numericUpDown1.Value) * 60;  // Convert minutes to seconds
+            int timeInSeconds = Convert.ToInt32(numericUpDownAwakeMinutes.Value) * 60;  // Convert minutes to seconds
             timeLeft = timeInSeconds;  // Set timeLeft for countdown
             MessageBox.Show("Press OK when ready to begin!");
 
             timer1.Start();  // Start the countdown timer
 
-            Task.Run(() =>
+            try
             {
-                return BotFunctions.KeepToonAwake(timeInSeconds, _cancellationTokenSource.Token);
-            }, _cancellationTokenSource.Token)
-            .ContinueWith(task =>
+                await BotFunctions.KeepToonAwake(timeInSeconds, _cancellationTokenSource.Token);
+
+                CoreFunctionality.BringBotWindowToFront();
+                MessageBox.Show("Keep Toon Awake completed successfully!", "Keep Awake Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (OperationCanceledException)
             {
-                if (task.IsCompletedSuccessfully)
-                {
-                    CoreFunctionality.BringBotWindowToFront();
-                    MessageBox.Show("Keep Toon Awake completed successfully!", "Keep Awake Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (task.IsFaulted)
-                {
-                    timer1.Stop();  // Ensure timer is stopped on error
-                    MessageBox.Show($"Error: {task.Exception.InnerException.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }, TaskScheduler.FromCurrentSynchronizationContext());  // Ensure UI updates are on the main thread
+                // Cancelled by user via stop button or Escape/F12
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                timer1.Stop();
+                timeLeft = 0;
+                isToonAwakeActive = false;
+                awakeCountdownLabel.Text = "Status: Idle";
+                awakeCountdownLabel.ForeColor = System.Drawing.Color.Gray;
+            }
         }
 
         #region Gardening - Flower Planting
@@ -478,34 +484,30 @@ namespace ToonTown_Rewritten_Bot
         #endregion
 
         //misc functions for bot
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void spamMessageCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox1.Checked)
-                numericUpDown2.Visible = true;
-            else
-                numericUpDown2.Visible = false;
+            numericUpDownSpamCount.Visible = spamMessageCheckBox.Checked;
+            miscSpamTimesLabel.Visible = spamMessageCheckBox.Checked;
         }
 
-        private void checkBox2_CheckedChanged_1(object sender, EventArgs e)
+        private void keepOnTopCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox2.Checked)
-                TopMost = true;
-            else
-                TopMost = false;
+            TopMost = keepOnTopCheckBox.Checked;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            label1.Visible = true;
             if (timeLeft > 0)
             {
                 timeLeft = timeLeft - 1;
-                label1.Text = timeLeft + " seconds";
+                awakeCountdownLabel.Text = timeLeft + " seconds";
+                awakeCountdownLabel.ForeColor = System.Drawing.Color.DarkGreen;
             }
             else
             {
                 timer1.Stop();
-                label1.Visible = false;
+                awakeCountdownLabel.Text = "Status: Idle";
+                awakeCountdownLabel.ForeColor = System.Drawing.Color.Gray;
             }
         }
 
@@ -1773,7 +1775,8 @@ namespace ToonTown_Rewritten_Bot
                 isToonAwakeActive = false;  // Clear the flag
                 timer1.Stop();
                 timeLeft = 0;
-                label1.Visible = false;
+                awakeCountdownLabel.Text = "Status: Idle";
+                awakeCountdownLabel.ForeColor = System.Drawing.Color.Gray;
 
                 MessageBox.Show("Keep Toon Awake stopped!", "Keep Toon Awake Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

@@ -120,21 +120,6 @@
   <metadata name="tabControl1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="groupBox3.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="Misc.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="groupBox2.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -3255,9 +3240,22 @@
         ZTqFEEIIIYQQrTM7O7vY93NUMCKEEEIIIXYH/gvUVoYcKDRDEwAAAABJRU5ErkJggg==
 </value>
   </data>
-  <metadata name="groupBox3.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
   </metadata>
+  <data name="labelCustomFishingHelp.Text" xml:space="preserve">
+    <value>Custom fishing lets you fish at any location.
+
+1. Click 'Create New' to use the guided wizard
+
+2. Select your action file
+
+3. Set casts and sells
+
+4. Stand at your dock and click Start
+
+Use 'Edit Selected' to manually modify existing files.</value>
+  </data>
   <data name="golfInstructionsLabel.Text" xml:space="preserve">
     <value>IMPORTANT: Your golf swing key in TTR must be set to CTRL (default).
 
@@ -3274,16 +3272,10 @@
 Note: Some courses require LEFT or RIGHT tee position.
 The preview tells you where to stand - you must move there yourself.</value>
   </data>
-  <data name="doodleHelpRichTextBox.Text" xml:space="preserve">
-    <value>Note: Before starting to train, call your doodle and have it's profile box open; meaning the box 
-that shows the feed, scratch &amp; call option etc.
-Also, the bot will say the trick two times, incase the doodle gets confused the first time.
-</value>
-  </data>
   <data name="doodlePictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAQIAAADDCAIAAADm7oiiAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wAAADsABataJCQAAeSJJREFUeF7tvQV8lFfa/33N3OOTiSdjmclM3F2IO8Hd3SmaECACxN0FggQJEAIR
+        vwAADr8BOAVTJAAAeSJJREFUeF7tvQV8lFfa/33N3OOTiSdjmclM3F2IO8Hd3SmaECACxN0FggQJEAIR
         Etzdra67bXfb7VYpJMQm4+f9nBlKKe0+3ad/3qfC/PYUkjAsM/d9vve5zmUHkEEGvfKCF39gkEGvngwY
         GGSQAQODDDJgYJBBBgwMMgjLgIFBBhkwMMggAwYGGWTAwCCDsAwYGGSQAQODDDJgYJBBBgwMMgjLgIFB
         BhkwMMggAwYGGWTAwCCDsAwYGGSQAQODDDJgYJBBBgwMMgjLgIFBBhkwMMggAwa/XY9V/UijREokRwMI
@@ -3803,13 +3795,13 @@ Also, the bot will say the trick two times, incase the doodle gets confused the 
         IfT/AeauYdGYM50gAAAAAElFTkSuQmCC
 </value>
   </data>
-  <metadata name="groupBox2.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="messageToType.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="startSpamButton.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <data name="doodleHelpRichTextBox.Text" xml:space="preserve">
+    <value>Note: Before starting to train, call your doodle and have it's profile box open; meaning the box 
+that shows the feed, scratch &amp; call option etc.
+Also, the bot will say the trick two times, incase the doodle gets confused the first time.
+</value>
+  </data>
+  <metadata name="Misc.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="messageToType.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
