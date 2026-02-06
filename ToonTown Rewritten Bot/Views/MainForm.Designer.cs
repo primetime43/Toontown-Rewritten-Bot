@@ -96,6 +96,7 @@
             wizardCustomGardeningBtn = new System.Windows.Forms.Button();
             editCustomGardeningBtn = new System.Windows.Forms.Button();
             startCustomGardeningBtn = new System.Windows.Forms.Button();
+            calibrateGardeningBtn = new System.Windows.Forms.Button();
             Golf = new System.Windows.Forms.TabPage();
             groupBox10 = new System.Windows.Forms.GroupBox();
             autoGolfStatusLabel = new System.Windows.Forms.Label();
@@ -948,6 +949,7 @@
             groupBoxCustomGardening.Controls.Add(wizardCustomGardeningBtn);
             groupBoxCustomGardening.Controls.Add(editCustomGardeningBtn);
             groupBoxCustomGardening.Controls.Add(startCustomGardeningBtn);
+            groupBoxCustomGardening.Controls.Add(calibrateGardeningBtn);
             groupBoxCustomGardening.Location = new System.Drawing.Point(220, 3);
             groupBoxCustomGardening.Name = "groupBoxCustomGardening";
             groupBoxCustomGardening.Size = new System.Drawing.Size(380, 272);
@@ -1005,6 +1007,18 @@
             startCustomGardeningBtn.Text = "Start Routine";
             startCustomGardeningBtn.UseVisualStyleBackColor = true;
             startCustomGardeningBtn.Click += startCustomGardeningBtn_Click;
+            //
+            // calibrateGardeningBtn
+            //
+            calibrateGardeningBtn.BackColor = System.Drawing.Color.LightBlue;
+            calibrateGardeningBtn.Location = new System.Drawing.Point(15, 195);
+            calibrateGardeningBtn.Name = "calibrateGardeningBtn";
+            calibrateGardeningBtn.Size = new System.Drawing.Size(330, 35);
+            calibrateGardeningBtn.TabIndex = 5;
+            calibrateGardeningBtn.Text = "Calibrate Jellybean Detection Area";
+            toolTip1.SetToolTip(calibrateGardeningBtn, "Open an overlay to define where the jellybean buttons appear.\nThis helps the bot find the correct buttons to click.");
+            calibrateGardeningBtn.UseVisualStyleBackColor = false;
+            calibrateGardeningBtn.Click += calibrateGardeningBtn_Click;
             //
             // Golf
             // 
@@ -2075,6 +2089,7 @@
         private System.Windows.Forms.Button wizardCustomGardeningBtn;
         private System.Windows.Forms.Button editCustomGardeningBtn;
         private System.Windows.Forms.Button startCustomGardeningBtn;
+        private System.Windows.Forms.Button calibrateGardeningBtn;
     }
 }
 
