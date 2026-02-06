@@ -119,8 +119,9 @@ namespace ToonTown_Rewritten_Bot.Views
                     var ms = new MemoryStream(bytes);
                     img = Image.FromStream(ms);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine($"[TemplateVariantManager] Failed to load image '{path}': {ex.Message}");
                     continue;
                 }
                 _loadedImages.Add(img);

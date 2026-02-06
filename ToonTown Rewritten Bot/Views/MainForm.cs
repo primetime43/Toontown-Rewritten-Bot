@@ -826,68 +826,30 @@ namespace ToonTown_Rewritten_Bot
         }
 
         private void ShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (showOverlayCheckBox.Checked)
-            {
-                // Create and show the overlay
-                if (_fishingOverlay == null || _fishingOverlay.IsDisposed)
-                {
-                    _fishingOverlay = new FishingOverlayForm();
-                }
-                _fishingOverlay.Show();
-                _fishingOverlay.SetStatus("Overlay active - waiting for fishing...");
-
-                // Connect overlay to fishing strategy
-                Services.FishingLocationsWalking.FishingStrategyBase.Overlay = _fishingOverlay;
-
-                // Set callback to auto-uncheck when fishing ends
-                Services.FishingLocationsWalking.FishingStrategyBase.OnFishingEnded = OnFishingEndedCallback;
-            }
-            else
-            {
-                // Clear the callback
-                Services.FishingLocationsWalking.FishingStrategyBase.OnFishingEnded = null;
-
-                // Disconnect from fishing strategy
-                Services.FishingLocationsWalking.FishingStrategyBase.Overlay = null;
-
-                // Hide and dispose the overlay
-                if (_fishingOverlay != null && !_fishingOverlay.IsDisposed)
-                {
-                    _fishingOverlay.Close();
-                    _fishingOverlay.Dispose();
-                    _fishingOverlay = null;
-                }
-            }
-        }
+            => SetFishingOverlay(showOverlayCheckBox.Checked, "Overlay active - waiting for fishing...", OnFishingEndedCallback);
 
         private void customShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
+            => SetFishingOverlay(customShowOverlayCheckBox.Checked, "Overlay active - waiting for custom fishing...", OnCustomFishingEndedCallback);
+
+        private void SetFishingOverlay(bool enabled, string statusMessage, Action onEndedCallback)
         {
-            if (customShowOverlayCheckBox.Checked)
+            if (enabled)
             {
-                // Create and show the overlay
                 if (_fishingOverlay == null || _fishingOverlay.IsDisposed)
                 {
                     _fishingOverlay = new FishingOverlayForm();
                 }
                 _fishingOverlay.Show();
-                _fishingOverlay.SetStatus("Overlay active - waiting for custom fishing...");
+                _fishingOverlay.SetStatus(statusMessage);
 
-                // Connect overlay to fishing strategy
                 Services.FishingLocationsWalking.FishingStrategyBase.Overlay = _fishingOverlay;
-
-                // Set callback to auto-uncheck when fishing ends
-                Services.FishingLocationsWalking.FishingStrategyBase.OnFishingEnded = OnCustomFishingEndedCallback;
+                Services.FishingLocationsWalking.FishingStrategyBase.OnFishingEnded = onEndedCallback;
             }
             else
             {
-                // Clear the callback
                 Services.FishingLocationsWalking.FishingStrategyBase.OnFishingEnded = null;
-
-                // Disconnect from fishing strategy
                 Services.FishingLocationsWalking.FishingStrategyBase.Overlay = null;
 
-                // Hide and dispose the overlay
                 if (_fishingOverlay != null && !_fishingOverlay.IsDisposed)
                 {
                     _fishingOverlay.Close();

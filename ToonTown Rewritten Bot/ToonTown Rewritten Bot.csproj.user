@@ -18,9 +18,6 @@
     <Compile Update="Views\AboutBox1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\AdvancedSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Views\CountdownOverlayForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -40,9 +37,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Views\CustomGolfWizardForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Views\FishBubbleColorCaptureForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Views\FishCalibrationForm.cs">
@@ -69,9 +63,6 @@
     <Compile Update="Views\Help.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\Plants.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Views\PondColorCalibrationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,9 +76,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Views\UpdateCoordsHelper.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Views\UpdateImages.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

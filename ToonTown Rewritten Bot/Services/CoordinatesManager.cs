@@ -206,7 +206,10 @@ namespace ToonTown_Rewritten_Bot.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[CoordinatesManager] Error reading manual coords: {ex.Message}");
+            }
             return (0, 0);
         }
 

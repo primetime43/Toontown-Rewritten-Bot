@@ -1,7 +1,3 @@
-/*using Emgu.CV.CvEnum;
-using Emgu.CV;
-using Emgu.CV.Stitching;
-using Emgu.CV.Structure;*/
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -198,9 +194,51 @@ namespace ToonTown_Rewritten_Bot.Utilities
             public static extern bool IsWindowVisible(IntPtr hWnd);
 
             // PrintWindow flags
-            public const uint PW_CLIENTONLY = 0x00000001;
             public const uint PW_RENDERFULLCONTENT = 0x00000002; // Works better with DWM/hardware acceleration
         }
         #endregion
+
+        /// <summary>
+        /// Converts a rectangle from PictureBox preview coordinates to actual image coordinates,
+        /// accounting for Zoom mode letterboxing/pillarboxing.
+        /// </summary>
+        /// <param name="previewRect">The rectangle in PictureBox coordinates.</param>
+        /// <param name="imageSize">The actual image dimensions.</param>
+        /// <param name="pictureBoxSize">The PictureBox control dimensions.</param>
+        /// <returns>The rectangle in actual image coordinates, clamped to image bounds.</returns>
+        public static Rectangle ConvertToImageCoordinates(Rectangle previewRect, Size imageSize, Size pictureBoxSize)
+        {
+            if (imageSize.Width == 0 || imageSize.Height == 0)
+                return previewRect;
+
+            float imageAspect = (float)imageSize.Width / imageSize.Height;
+            float boxAspect = (float)pictureBoxSize.Width / pictureBoxSize.Height;
+
+            float scale;
+            int offsetX = 0, offsetY = 0;
+
+            if (imageAspect > boxAspect)
+            {
+                scale = (float)pictureBoxSize.Width / imageSize.Width;
+                offsetY = (int)((pictureBoxSize.Height - imageSize.Height * scale) / 2);
+            }
+            else
+            {
+                scale = (float)pictureBoxSize.Height / imageSize.Height;
+                offsetX = (int)((pictureBoxSize.Width - imageSize.Width * scale) / 2);
+            }
+
+            int x = (int)((previewRect.X - offsetX) / scale);
+            int y = (int)((previewRect.Y - offsetY) / scale);
+            int width = (int)(previewRect.Width / scale);
+            int height = (int)(previewRect.Height / scale);
+
+            x = Math.Max(0, Math.Min(x, imageSize.Width));
+            y = Math.Max(0, Math.Min(y, imageSize.Height));
+            width = Math.Min(width, imageSize.Width - x);
+            height = Math.Min(height, imageSize.Height - y);
+
+            return new Rectangle(x, y, width, height);
+        }
     }
 }

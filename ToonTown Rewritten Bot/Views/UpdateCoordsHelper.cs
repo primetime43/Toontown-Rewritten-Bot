@@ -10,12 +10,7 @@ namespace ToonTown_Rewritten_Bot
         {
             InitializeComponent();
             this.TopMost = true;
-            bool showMessageOnce = true;
-            if(showMessageOnce)
-            {
-                MessageBox.Show("This will help you update your coordinates to work with\nwith your screen. Please move your cursor onto the\nlocation that is says it is updating.");
-                showMessageOnce = false;
-            }
+            MessageBox.Show("This will help you update your coordinates to work with\nyour screen. Please move your cursor onto the\nlocation that it says it is updating.");
         }
 
         public void startCountDown(String nameOfItem)
