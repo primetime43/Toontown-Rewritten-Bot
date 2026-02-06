@@ -438,6 +438,7 @@
             fishingLocationscomboBox.Location = new System.Drawing.Point(10, 28);
             fishingLocationscomboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             fishingLocationscomboBox.Name = "fishingLocationscomboBox";
+            fishingLocationscomboBox.DropDownWidth = 340;
             fishingLocationscomboBox.Size = new System.Drawing.Size(180, 24);
             fishingLocationscomboBox.TabIndex = 1;
             toolTip1.SetToolTip(fishingLocationscomboBox, "Select the location you wish to fish at");
