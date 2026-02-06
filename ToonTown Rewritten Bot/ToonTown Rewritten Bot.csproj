@@ -100,6 +100,33 @@
     <!-- Tesseract OCR for reading text/numbers from the game -->
     <PackageReference Include="Tesseract" Version="5.2.0" />
   </ItemGroup>
+  <!-- Mark MainForm partial class files as dependent on MainForm.cs (prevents spurious .resx generation) -->
+  <ItemGroup>
+    <Compile Update="Views\MainForm.Fishing.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainForm.CustomFishing.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainForm.Gardening.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainForm.Misc.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainForm.DoodleTraining.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainForm.Golf.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainForm.Dev.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainForm.Settings.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
   <!-- Copy Templates folder to output directory -->
   <ItemGroup>
     <None Include="Templates\**\*" CopyToOutputDirectory="PreserveNewest" LinkBase="Templates" />

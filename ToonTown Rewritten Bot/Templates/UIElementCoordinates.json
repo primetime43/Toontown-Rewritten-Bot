@@ -6,8 +6,8 @@
     ],
     "TemplatePath": "Templates\\Red_Fishing_Button.png",
     "ManualCoordinates": "960, 765",
-    "CachedCenter": "967, 793",
-    "LastFoundTime": "2026-02-06T14:19:35.9669354-05:00"
+    "CachedCenter": "970, 790",
+    "LastFoundTime": "2026-02-06T16:25:18.1462646-05:00"
   },
   "Exit Fishing Button": {
     "Name": "Exit Fishing Button",
@@ -116,8 +116,8 @@
     ],
     "TemplatePath": "Templates\\FishPopupCloseButton.png",
     "ManualCoordinates": null,
-    "CachedCenter": "1108, 473",
-    "LastFoundTime": "2026-02-06T14:19:50.7915419-05:00"
+    "CachedCenter": "1106, 477",
+    "LastFoundTime": "2026-02-06T14:55:03.6472469-05:00"
   },
   "Red Jellybean Button": {
     "Name": "Red Jellybean Button",
