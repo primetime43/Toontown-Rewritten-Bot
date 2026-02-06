@@ -133,8 +133,19 @@ namespace ToonTown_Rewritten_Bot
             waterPlantNumericUpDown.Value = Math.Max(waterPlantNumericUpDown.Minimum, Math.Min(waterPlantNumericUpDown.Maximum, prefs.WaterPlantCount));
             if (!string.IsNullOrEmpty(prefs.FlowerBeanAmount))
             {
-                int flowerIndex = flowerBeanAmountDropdown.FindStringExact(prefs.FlowerBeanAmount);
-                if (flowerIndex >= 0) flowerBeanAmountDropdown.SelectedIndex = flowerIndex;
+                // Convert old "X Bean Plant" format to new "X Bean(s)" format for the dropdown
+                string beanAmount = prefs.FlowerBeanAmount;
+                int beanIndex = -1;
+                for (int i = 0; i < beanCountComboBox.Items.Count; i++)
+                {
+                    string item = beanCountComboBox.Items[i].ToString();
+                    if (beanAmount.StartsWith(item.Split(' ')[0]))
+                    {
+                        beanIndex = i;
+                        break;
+                    }
+                }
+                if (beanIndex >= 0) beanCountComboBox.SelectedIndex = beanIndex;
             }
 
             // Misc preferences
@@ -182,7 +193,7 @@ namespace ToonTown_Rewritten_Bot
 
             // Gardening preferences
             prefs.WaterPlantCount = (int)waterPlantNumericUpDown.Value;
-            prefs.FlowerBeanAmount = flowerBeanAmountDropdown.SelectedItem?.ToString() ?? "";
+            prefs.FlowerBeanAmount = beanCountComboBox.SelectedItem?.ToString() ?? "";
 
             // Misc preferences
             prefs.KeepProgramOnTop = checkBox2.Checked;
@@ -301,23 +312,154 @@ namespace ToonTown_Rewritten_Bot
             }, TaskScheduler.FromCurrentSynchronizationContext());  // Ensure UI updates are on the main thread
         }
 
-        private void selectFlowerBeanAmountBtn_Click(object sender, EventArgs e)//open the flower manager
+        #region Gardening - Flower Planting
+
+        private static readonly System.Collections.Generic.Dictionary<string, string> _plantComboDictionary = new System.Collections.Generic.Dictionary<string, string>
         {
-            Plants plantsForm = new Plants();
+            // 1 bean
+            { "Laff-o-dil", "g" }, { "Dandy Pansy", "o" }, { "What-in Carnation", "i" },
+            { "School Daisy", "y" }, { "Lily-of-the-Alley", "c" },
+            // 2 beans
+            { "Daffy Dill", "gc" }, { "Chim Pansy", "oc" }, { "Instant Carnation", "iy" },
+            { "Lazy Daisy", "yr" }, { "Lily Pad", "cg" },
+            // 3 beans
+            { "Summer's Last Rose", "rrr" }, { "Potsen Pansy", "orr" }, { "Hybrid Carnation", "irr" },
+            { "Midsummer Daisy", "yrg" }, { "Tiger Lily", "coo" },
+            // 4 beans
+            { "Corn Rose", "ryoy" }, { "Giraff-o-dil", "giyy" }, { "Marzi Pansy", "oyyr" },
+            { "Freshasa Daisy", "yrco" }, { "Livered Lily", "cooi" },
+            // 5 beans
+            { "Time and a half-o-dil", "gibii" }, { "Onelip", "urbuu" }, { "Side Carnation", "irgbr" },
+            { "Whoopsie Daisy", "yrooo" }, { "Chili Lily", "crrrr" },
+            // 6 beans
+            { "Tinted Rose", "rioroi" }, { "Smarty Pansy", "oiiobi" }, { "Twolip", "urrruu" },
+            { "Upsy Daisy", "ybcubb" }, { "Silly Lily", "cruuuu" },
+            // 7 beans
+            { "Stinking Rose", "rcoiucc" }, { "Car Petunia", "bubucbb" }, { "Model Carnation", "iggggyg" },
+            { "Crazy Daisy", "ygroggg" }, { "Indubitab Lily", "cucbcbb" },
+            // 8 beans
+            { "Istilla Rose", "rbuubbib" }, { "Threelip", "uyyuyouy" }, { "Platoonia", "biibroyy" },
+            { "Hazy Dazy", "ybucurou" }, { "Dilly Lilly", "cbyycbyy" }
+        };
+
+        private void beanCountComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            flowerComboBox.Items.Clear();
+            beanSequencePanel.Controls.Clear();
+
+            int beanCount = beanCountComboBox.SelectedIndex + 1;
+            string[][] flowersByCount = new string[][]
+            {
+                new[] { "Laff-o-dil", "Dandy Pansy", "What-in Carnation", "School Daisy", "Lily-of-the-Alley" },
+                new[] { "Daffy Dill", "Chim Pansy", "Instant Carnation", "Lazy Daisy", "Lily Pad" },
+                new[] { "Summer's Last Rose", "Potsen Pansy", "Hybrid Carnation", "Midsummer Daisy", "Tiger Lily" },
+                new[] { "Corn Rose", "Giraff-o-dil", "Marzi Pansy", "Freshasa Daisy", "Livered Lily" },
+                new[] { "Time and a half-o-dil", "Onelip", "Side Carnation", "Whoopsie Daisy", "Chili Lily" },
+                new[] { "Tinted Rose", "Smarty Pansy", "Twolip", "Upsy Daisy", "Silly Lily" },
+                new[] { "Stinking Rose", "Car Petunia", "Model Carnation", "Crazy Daisy", "Indubitab Lily" },
+                new[] { "Istilla Rose", "Threelip", "Platoonia", "Hazy Dazy", "Dilly Lilly" }
+            };
+
+            if (beanCount >= 1 && beanCount <= 8)
+            {
+                flowerComboBox.Items.AddRange(flowersByCount[beanCount - 1]);
+            }
+        }
+
+        private void flowerComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selected = flowerComboBox.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selected) || !_plantComboDictionary.ContainsKey(selected))
+                return;
+
+            UpdateBeanSequencePreview(_plantComboDictionary[selected]);
+        }
+
+        private void UpdateBeanSequencePreview(string beanCombo)
+        {
+            beanSequencePanel.Controls.Clear();
+
+            for (int i = 0; i < beanCombo.Length; i++)
+            {
+                var panel = new Panel
+                {
+                    Size = new Size(18, 18),
+                    Location = new Point(i * 22, 3),
+                    BackColor = GetBeanColor(beanCombo[i])
+                };
+                beanSequencePanel.Controls.Add(panel);
+            }
+        }
+
+        private static Color GetBeanColor(char bean)
+        {
+            switch (bean)
+            {
+                case 'r': return Color.Red;
+                case 'g': return Color.Green;
+                case 'o': return Color.Orange;
+                case 'u': return Color.Purple;
+                case 'b': return Color.Blue;
+                case 'i': return Color.HotPink;
+                case 'y': return Color.Gold;
+                case 'c': return Color.Cyan;
+                case 's': return Color.Silver;
+                default: return Color.Gray;
+            }
+        }
+
+        private async void plantFlowerBtn_Click(object sender, EventArgs e)
+        {
+            string selectedFlower = flowerComboBox.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selectedFlower) || !_plantComboDictionary.ContainsKey(selectedFlower))
+            {
+                MessageBox.Show("Please select a bean count and flower first.", "No Flower Selected",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DialogResult confirmation = MessageBox.Show(
+                "Make sure you're at the flower bed before pressing OK!",
+                "Ready to Plant?", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            if (confirmation != DialogResult.OK)
+                return;
+
+            string beanCombo = _plantComboDictionary[selectedFlower];
+
             try
             {
-                string selected = (string)flowerBeanAmountDropdown.SelectedItem;
-                plantsForm.PopulateFlowerOptionsBasedOnBeanCount(selected);
-                this.Hide();
-                plantsForm.ShowDialog();// Shows the form that allows the user to select one of the flowers from PopulateFlowerOptionsBasedOnBeanCount
-                this.Show();
+                if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+                {
+                    _cancellationTokenSource?.Dispose();
+                    _cancellationTokenSource = new CancellationTokenSource();
+                }
+
+                await Task.Run(() => Services.Gardening.PlantFlowerAsync(beanCombo, selectedFlower, _cancellationTokenSource.Token));
             }
-            catch
+            catch (OperationCanceledException)
             {
-                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show("Planting was canceled.", "Gardening", MessageBoxButtons.OK, MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
-            plantsForm.comboBox1.Items.Clear();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Gardening Error", MessageBoxButtons.OK, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            }
         }
+
+        private void stopPlantingBtn_Click(object sender, EventArgs e)
+        {
+            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+            {
+                MessageBox.Show("Planting is not currently in progress.");
+                return;
+            }
+
+            _cancellationTokenSource.Cancel();
+        }
+
+        #endregion
 
         //misc functions for bot
         private void checkBox1_CheckedChanged(object sender, EventArgs e)

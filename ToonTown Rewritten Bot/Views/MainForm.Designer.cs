@@ -82,14 +82,21 @@
             richTextBox1 = new System.Windows.Forms.RichTextBox();
             startRacing = new System.Windows.Forms.Button();
             Gardening = new System.Windows.Forms.TabPage();
-            groupBox5 = new System.Windows.Forms.GroupBox();
-            removePlantBtn = new System.Windows.Forms.Button();
-            groupBox4 = new System.Windows.Forms.GroupBox();
+            gardeningActionsGroup = new System.Windows.Forms.GroupBox();
+            beanCountLabel = new System.Windows.Forms.Label();
+            beanCountComboBox = new System.Windows.Forms.ComboBox();
+            flowerLabel = new System.Windows.Forms.Label();
+            flowerComboBox = new System.Windows.Forms.ComboBox();
+            beanSequencePanel = new System.Windows.Forms.Panel();
+            plantFlowerBtn = new System.Windows.Forms.Button();
+            stopPlantingBtn = new System.Windows.Forms.Button();
+            separatorPanel1 = new System.Windows.Forms.Panel();
+            waterLabel = new System.Windows.Forms.Label();
             waterPlantNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            waterTimesLabel = new System.Windows.Forms.Label();
             waterPlantBtn = new System.Windows.Forms.Button();
-            groupBox3 = new System.Windows.Forms.GroupBox();
-            flowerBeanAmountDropdown = new System.Windows.Forms.ComboBox();
-            selectFlowerBeanAmountBtn = new System.Windows.Forms.Button();
+            separatorPanel2 = new System.Windows.Forms.Panel();
+            removePlantBtn = new System.Windows.Forms.Button();
             groupBoxCustomGardening = new System.Windows.Forms.GroupBox();
             customGardeningFilesComboBox = new System.Windows.Forms.ComboBox();
             labelSelectGardeningFile = new System.Windows.Forms.Label();
@@ -187,10 +194,8 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDown3).BeginInit();
             Racing.SuspendLayout();
             Gardening.SuspendLayout();
-            groupBox5.SuspendLayout();
-            groupBox4.SuspendLayout();
+            gardeningActionsGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).BeginInit();
-            groupBox3.SuspendLayout();
             groupBoxCustomGardening.SuspendLayout();
             Golf.SuspendLayout();
             groupBox10.SuspendLayout();
@@ -837,12 +842,10 @@
             startRacing.UseVisualStyleBackColor = true;
             startRacing.Visible = false;
             startRacing.Click += button5_Click;
-            // 
+            //
             // Gardening
             //
-            Gardening.Controls.Add(groupBox5);
-            Gardening.Controls.Add(groupBox4);
-            Gardening.Controls.Add(groupBox3);
+            Gardening.Controls.Add(gardeningActionsGroup);
             Gardening.Controls.Add(groupBoxCustomGardening);
             Gardening.Location = new System.Drawing.Point(4, 25);
             Gardening.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -851,96 +854,172 @@
             Gardening.TabIndex = 3;
             Gardening.Text = "Gardening";
             Gardening.UseVisualStyleBackColor = true;
-            // 
-            // groupBox5
-            // 
-            groupBox5.Controls.Add(removePlantBtn);
-            groupBox5.Location = new System.Drawing.Point(9, 198);
-            groupBox5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox5.Name = "groupBox5";
-            groupBox5.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox5.Size = new System.Drawing.Size(195, 77);
-            groupBox5.TabIndex = 5;
-            groupBox5.TabStop = false;
-            groupBox5.Text = "Remove Plant";
-            // 
-            // removePlantBtn
-            // 
-            removePlantBtn.Location = new System.Drawing.Point(34, 24);
-            removePlantBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            removePlantBtn.Name = "removePlantBtn";
-            removePlantBtn.Size = new System.Drawing.Size(115, 42);
-            removePlantBtn.TabIndex = 0;
-            removePlantBtn.Text = "Remove";
-            removePlantBtn.UseVisualStyleBackColor = true;
-            removePlantBtn.Click += removePlantBtn_Click;
-            // 
-            // groupBox4
-            // 
-            groupBox4.Controls.Add(waterPlantNumericUpDown);
-            groupBox4.Controls.Add(waterPlantBtn);
-            groupBox4.Location = new System.Drawing.Point(9, 113);
-            groupBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox4.Name = "groupBox4";
-            groupBox4.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox4.Size = new System.Drawing.Size(195, 79);
-            groupBox4.TabIndex = 4;
-            groupBox4.TabStop = false;
-            groupBox4.Text = "Water Plant";
-            // 
+            //
+            // gardeningActionsGroup
+            //
+            gardeningActionsGroup.Controls.Add(beanCountLabel);
+            gardeningActionsGroup.Controls.Add(beanCountComboBox);
+            gardeningActionsGroup.Controls.Add(flowerLabel);
+            gardeningActionsGroup.Controls.Add(flowerComboBox);
+            gardeningActionsGroup.Controls.Add(beanSequencePanel);
+            gardeningActionsGroup.Controls.Add(plantFlowerBtn);
+            gardeningActionsGroup.Controls.Add(stopPlantingBtn);
+            gardeningActionsGroup.Controls.Add(separatorPanel1);
+            gardeningActionsGroup.Controls.Add(waterLabel);
+            gardeningActionsGroup.Controls.Add(waterPlantNumericUpDown);
+            gardeningActionsGroup.Controls.Add(waterTimesLabel);
+            gardeningActionsGroup.Controls.Add(waterPlantBtn);
+            gardeningActionsGroup.Controls.Add(separatorPanel2);
+            gardeningActionsGroup.Controls.Add(removePlantBtn);
+            gardeningActionsGroup.Location = new System.Drawing.Point(9, 3);
+            gardeningActionsGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            gardeningActionsGroup.Name = "gardeningActionsGroup";
+            gardeningActionsGroup.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            gardeningActionsGroup.Size = new System.Drawing.Size(200, 380);
+            gardeningActionsGroup.TabIndex = 3;
+            gardeningActionsGroup.TabStop = false;
+            gardeningActionsGroup.Text = "Flower Actions";
+            //
+            // beanCountLabel
+            //
+            beanCountLabel.AutoSize = true;
+            beanCountLabel.Location = new System.Drawing.Point(10, 22);
+            beanCountLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            beanCountLabel.Name = "beanCountLabel";
+            beanCountLabel.Size = new System.Drawing.Size(78, 16);
+            beanCountLabel.TabIndex = 0;
+            beanCountLabel.Text = "Bean Count:";
+            //
+            // beanCountComboBox
+            //
+            beanCountComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            beanCountComboBox.Items.AddRange(new object[] { "1 Bean", "2 Beans", "3 Beans", "4 Beans", "5 Beans", "6 Beans", "7 Beans", "8 Beans" });
+            beanCountComboBox.Location = new System.Drawing.Point(10, 40);
+            beanCountComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            beanCountComboBox.Name = "beanCountComboBox";
+            beanCountComboBox.Size = new System.Drawing.Size(180, 24);
+            beanCountComboBox.TabIndex = 1;
+            beanCountComboBox.SelectedIndexChanged += beanCountComboBox_SelectedIndexChanged;
+            //
+            // flowerLabel
+            //
+            flowerLabel.AutoSize = true;
+            flowerLabel.Location = new System.Drawing.Point(10, 72);
+            flowerLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            flowerLabel.Name = "flowerLabel";
+            flowerLabel.Size = new System.Drawing.Size(50, 16);
+            flowerLabel.TabIndex = 2;
+            flowerLabel.Text = "Flower:";
+            //
+            // flowerComboBox
+            //
+            flowerComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            flowerComboBox.Location = new System.Drawing.Point(10, 90);
+            flowerComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            flowerComboBox.Name = "flowerComboBox";
+            flowerComboBox.Size = new System.Drawing.Size(180, 24);
+            flowerComboBox.TabIndex = 3;
+            flowerComboBox.SelectedIndexChanged += flowerComboBox_SelectedIndexChanged;
+            //
+            // beanSequencePanel
+            //
+            beanSequencePanel.Location = new System.Drawing.Point(10, 120);
+            beanSequencePanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            beanSequencePanel.Name = "beanSequencePanel";
+            beanSequencePanel.Size = new System.Drawing.Size(180, 24);
+            beanSequencePanel.TabIndex = 4;
+            //
+            // plantFlowerBtn
+            //
+            plantFlowerBtn.BackColor = System.Drawing.Color.LightGreen;
+            plantFlowerBtn.Location = new System.Drawing.Point(10, 152);
+            plantFlowerBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            plantFlowerBtn.Name = "plantFlowerBtn";
+            plantFlowerBtn.Size = new System.Drawing.Size(85, 32);
+            plantFlowerBtn.TabIndex = 5;
+            plantFlowerBtn.Text = "Plant";
+            plantFlowerBtn.UseVisualStyleBackColor = false;
+            plantFlowerBtn.Click += plantFlowerBtn_Click;
+            //
+            // stopPlantingBtn
+            //
+            stopPlantingBtn.Location = new System.Drawing.Point(105, 152);
+            stopPlantingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            stopPlantingBtn.Name = "stopPlantingBtn";
+            stopPlantingBtn.Size = new System.Drawing.Size(85, 32);
+            stopPlantingBtn.TabIndex = 6;
+            stopPlantingBtn.Text = "Stop";
+            stopPlantingBtn.UseVisualStyleBackColor = true;
+            stopPlantingBtn.Click += stopPlantingBtn_Click;
+            //
+            // separatorPanel1
+            //
+            separatorPanel1.BackColor = System.Drawing.Color.LightGray;
+            separatorPanel1.Location = new System.Drawing.Point(10, 195);
+            separatorPanel1.Name = "separatorPanel1";
+            separatorPanel1.Size = new System.Drawing.Size(180, 1);
+            separatorPanel1.TabIndex = 7;
+            //
+            // waterLabel
+            //
+            waterLabel.AutoSize = true;
+            waterLabel.Location = new System.Drawing.Point(10, 208);
+            waterLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            waterLabel.Name = "waterLabel";
+            waterLabel.Size = new System.Drawing.Size(44, 16);
+            waterLabel.TabIndex = 8;
+            waterLabel.Text = "Water:";
+            //
             // waterPlantNumericUpDown
-            // 
-            waterPlantNumericUpDown.Location = new System.Drawing.Point(20, 32);
+            //
+            waterPlantNumericUpDown.Location = new System.Drawing.Point(60, 206);
             waterPlantNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             waterPlantNumericUpDown.Name = "waterPlantNumericUpDown";
-            waterPlantNumericUpDown.Size = new System.Drawing.Size(44, 22);
-            waterPlantNumericUpDown.TabIndex = 1;
+            waterPlantNumericUpDown.Size = new System.Drawing.Size(40, 22);
+            waterPlantNumericUpDown.TabIndex = 9;
             waterPlantNumericUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
-            // 
+            //
+            // waterTimesLabel
+            //
+            waterTimesLabel.AutoSize = true;
+            waterTimesLabel.Location = new System.Drawing.Point(103, 208);
+            waterTimesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            waterTimesLabel.Name = "waterTimesLabel";
+            waterTimesLabel.Size = new System.Drawing.Size(38, 16);
+            waterTimesLabel.TabIndex = 10;
+            waterTimesLabel.Text = "times";
+            //
             // waterPlantBtn
-            // 
-            waterPlantBtn.Location = new System.Drawing.Point(71, 21);
+            //
+            waterPlantBtn.BackColor = System.Drawing.Color.LightBlue;
+            waterPlantBtn.Location = new System.Drawing.Point(10, 235);
             waterPlantBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             waterPlantBtn.Name = "waterPlantBtn";
-            waterPlantBtn.Size = new System.Drawing.Size(115, 42);
-            waterPlantBtn.TabIndex = 0;
+            waterPlantBtn.Size = new System.Drawing.Size(180, 32);
+            waterPlantBtn.TabIndex = 11;
             waterPlantBtn.Text = "Water";
-            waterPlantBtn.UseVisualStyleBackColor = true;
+            waterPlantBtn.UseVisualStyleBackColor = false;
             waterPlantBtn.Click += waterPlantBtn_Click;
-            // 
-            // groupBox3
-            // 
-            groupBox3.Controls.Add(flowerBeanAmountDropdown);
-            groupBox3.Controls.Add(selectFlowerBeanAmountBtn);
-            groupBox3.Location = new System.Drawing.Point(9, 3);
-            groupBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox3.Name = "groupBox3";
-            groupBox3.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox3.Size = new System.Drawing.Size(195, 103);
-            groupBox3.TabIndex = 3;
-            groupBox3.TabStop = false;
-            groupBox3.Text = "Plant Flower";
-            // 
-            // flowerBeanAmountDropdown
-            // 
-            flowerBeanAmountDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            flowerBeanAmountDropdown.Items.AddRange(new object[] { "1 Bean Plant", "2 Bean Plant", "3 Bean Plant", "4 Bean Plant", "5 Bean Plant", "6 Bean Plant", "7 Bean Plant", "8 Bean Plant" });
-            flowerBeanAmountDropdown.Location = new System.Drawing.Point(20, 24);
-            flowerBeanAmountDropdown.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            flowerBeanAmountDropdown.Name = "flowerBeanAmountDropdown";
-            flowerBeanAmountDropdown.Size = new System.Drawing.Size(140, 24);
-            flowerBeanAmountDropdown.TabIndex = 0;
-            // 
-            // selectFlowerBeanAmountBtn
-            // 
-            selectFlowerBeanAmountBtn.Location = new System.Drawing.Point(34, 59);
-            selectFlowerBeanAmountBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            selectFlowerBeanAmountBtn.Name = "selectFlowerBeanAmountBtn";
-            selectFlowerBeanAmountBtn.Size = new System.Drawing.Size(115, 29);
-            selectFlowerBeanAmountBtn.TabIndex = 1;
-            selectFlowerBeanAmountBtn.Text = "Select";
-            selectFlowerBeanAmountBtn.UseVisualStyleBackColor = true;
-            selectFlowerBeanAmountBtn.Click += selectFlowerBeanAmountBtn_Click;
+            //
+            // separatorPanel2
+            //
+            separatorPanel2.BackColor = System.Drawing.Color.LightGray;
+            separatorPanel2.Location = new System.Drawing.Point(10, 280);
+            separatorPanel2.Name = "separatorPanel2";
+            separatorPanel2.Size = new System.Drawing.Size(180, 1);
+            separatorPanel2.TabIndex = 12;
+            //
+            // removePlantBtn
+            //
+            removePlantBtn.BackColor = System.Drawing.Color.MistyRose;
+            removePlantBtn.Location = new System.Drawing.Point(10, 293);
+            removePlantBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            removePlantBtn.Name = "removePlantBtn";
+            removePlantBtn.Size = new System.Drawing.Size(180, 32);
+            removePlantBtn.TabIndex = 13;
+            removePlantBtn.Text = "Remove Plant";
+            removePlantBtn.UseVisualStyleBackColor = false;
+            removePlantBtn.Click += removePlantBtn_Click;
             //
             // groupBoxCustomGardening
             //
@@ -1911,10 +1990,9 @@
             Racing.ResumeLayout(false);
             Racing.PerformLayout();
             Gardening.ResumeLayout(false);
-            groupBox5.ResumeLayout(false);
-            groupBox4.ResumeLayout(false);
+            gardeningActionsGroup.ResumeLayout(false);
+            gardeningActionsGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)waterPlantNumericUpDown).EndInit();
-            groupBox3.ResumeLayout(false);
             groupBoxCustomGardening.ResumeLayout(false);
             groupBoxCustomGardening.PerformLayout();
             Golf.ResumeLayout(false);
@@ -1961,17 +2039,24 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.Button selectFlowerBeanAmountBtn;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ComboBox flowerBeanAmountDropdown;
+        private System.Windows.Forms.GroupBox gardeningActionsGroup;
+        private System.Windows.Forms.Label beanCountLabel;
+        private System.Windows.Forms.ComboBox beanCountComboBox;
+        private System.Windows.Forms.Label flowerLabel;
+        private System.Windows.Forms.ComboBox flowerComboBox;
+        private System.Windows.Forms.Panel beanSequencePanel;
+        private System.Windows.Forms.Button plantFlowerBtn;
+        private System.Windows.Forms.Button stopPlantingBtn;
+        private System.Windows.Forms.Panel separatorPanel1;
+        private System.Windows.Forms.Label waterLabel;
+        private System.Windows.Forms.Label waterTimesLabel;
+        private System.Windows.Forms.Panel separatorPanel2;
         public System.Windows.Forms.NumericUpDown numericUpDown1;
         public System.Windows.Forms.Button startKeepToonAwakeButton;
         private System.Windows.Forms.TextBox messageToType;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button removePlantBtn;
-        private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button waterPlantBtn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timer1;
