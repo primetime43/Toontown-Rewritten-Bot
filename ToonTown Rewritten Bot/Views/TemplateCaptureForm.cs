@@ -13,6 +13,7 @@ namespace ToonTown_Rewritten_Bot.Views
     {
         private readonly string _elementName;
         private readonly string _description;
+        private readonly bool _isVariant;
 
         private PictureBox _previewPictureBox;
         private PictureBox _selectionPreviewPictureBox;
@@ -42,10 +43,13 @@ namespace ToonTown_Rewritten_Bot.Views
         /// </summary>
         public Point CapturedLocation { get; private set; }
 
-        public TemplateCaptureForm(string elementName, string description = null)
+        public TemplateCaptureForm(string elementName, string description = null, bool isVariant = false)
         {
             _elementName = elementName;
-            _description = description ?? $"Capture template for: {elementName}";
+            _isVariant = isVariant;
+            _description = description ?? (_isVariant
+                ? $"Capture variant for: {elementName}"
+                : $"Capture template for: {elementName}");
             InitializeComponent();
 
             // Ensure this form comes to the front when shown
@@ -61,7 +65,9 @@ namespace ToonTown_Rewritten_Bot.Views
 
         private void InitializeComponent()
         {
-            this.Text = $"Capture Template: {_elementName}";
+            this.Text = _isVariant
+                ? $"Capture Variant: {_elementName}"
+                : $"Capture Template: {_elementName}";
             this.Size = new Size(900, 700);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.Sizable;
@@ -238,10 +244,18 @@ namespace ToonTown_Rewritten_Bot.Views
                     actualRegion.Y + actualRegion.Height / 2);
 
                 // Save to UIElementManager
-                UIElementManager.Instance.SaveTemplate(_elementName, CapturedTemplate);
+                if (_isVariant)
+                {
+                    int variantIndex = UIElementManager.Instance.SaveTemplateVariant(_elementName, CapturedTemplate);
+                    _statusLabel.Text = $"Variant {variantIndex + 1} saved! Size: {CapturedTemplate.Width}x{CapturedTemplate.Height}";
+                }
+                else
+                {
+                    UIElementManager.Instance.SaveTemplate(_elementName, CapturedTemplate);
+                    _statusLabel.Text = $"Template saved! Size: {CapturedTemplate.Width}x{CapturedTemplate.Height}";
+                }
 
                 TemplateCaptured = true;
-                _statusLabel.Text = $"Template saved! Size: {CapturedTemplate.Width}x{CapturedTemplate.Height}";
                 _statusLabel.ForeColor = Color.Green;
 
                 this.DialogResult = DialogResult.OK;
@@ -406,6 +420,19 @@ namespace ToonTown_Rewritten_Bot.Views
                     return true;
                 }
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Shows a dialog to capture a variant template for the specified element.
+        /// </summary>
+        /// <returns>True if variant was captured successfully</returns>
+        public static bool CaptureVariant(string elementName, string description = null)
+        {
+            using (var form = new TemplateCaptureForm(elementName, description, isVariant: true))
+            {
+                var result = form.ShowDialog();
+                return result == DialogResult.OK && form.TemplateCaptured;
             }
         }
     }

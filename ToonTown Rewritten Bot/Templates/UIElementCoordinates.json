@@ -1,13 +1,19 @@
 {
   "Red Fishing Button": {
     "Name": "Red Fishing Button",
+    "VariantPaths": [
+      "Templates\\Red_Fishing_Button.png"
+    ],
     "TemplatePath": "Templates\\Red_Fishing_Button.png",
     "ManualCoordinates": "960, 765",
-    "CachedCenter": "967, 793",
-    "LastFoundTime": "2026-02-02T22:12:41.4684262-05:00"
+    "CachedCenter": "972, 794",
+    "LastFoundTime": "2026-02-06T11:39:35.0109941-05:00"
   },
   "Exit Fishing Button": {
     "Name": "Exit Fishing Button",
+    "VariantPaths": [
+      "Templates\\Exit_Fishing_Button.png"
+    ],
     "TemplatePath": "Templates\\Exit_Fishing_Button.png",
     "ManualCoordinates": "468, 38",
     "CachedCenter": "1060, 981",
@@ -15,6 +21,9 @@
   },
   "Blue Sell All Button": {
     "Name": "Blue Sell All Button",
+    "VariantPaths": [
+      "Templates\\Blue_Sell_All_Button.png"
+    ],
     "TemplatePath": "Templates\\Blue_Sell_All_Button.png",
     "ManualCoordinates": "504, 60",
     "CachedCenter": "964, 680",
@@ -22,6 +31,9 @@
   },
   "Watering Can Button": {
     "Name": "Watering Can Button",
+    "VariantPaths": [
+      "Templates\\Watering_Can_Button.png"
+    ],
     "TemplatePath": "Templates\\Watering_Can_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "80, 365",
@@ -29,6 +41,9 @@
   },
   "Feed Doodle Button": {
     "Name": "Feed Doodle Button",
+    "VariantPaths": [
+      "Templates\\Feed_Doodle_Button.png"
+    ],
     "TemplatePath": "Templates\\Feed_Doodle_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "1805, 216",
@@ -36,6 +51,9 @@
   },
   "Scratch Doodle Button": {
     "Name": "Scratch Doodle Button",
+    "VariantPaths": [
+      "Templates\\Scratch_Doodle_Button.png"
+    ],
     "TemplatePath": "Templates\\Scratch_Doodle_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "1814, 253",
@@ -43,6 +61,9 @@
   },
   "Plant Flower Button": {
     "Name": "Plant Flower Button",
+    "VariantPaths": [
+      "Templates\\Plant_Flower_Button.png"
+    ],
     "TemplatePath": "Templates\\Plant_Flower_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -50,6 +71,9 @@
   },
   "Sticker Book": {
     "Name": "Sticker Book",
+    "VariantPaths": [
+      "Templates\\Sticker_Book.png"
+    ],
     "TemplatePath": "Templates\\Sticker_Book.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -57,6 +81,9 @@
   },
   "Golf Pencil Button": {
     "Name": "Golf Pencil Button",
+    "VariantPaths": [
+      "Templates\\Golf_Pencil_Button.png"
+    ],
     "TemplatePath": "Templates\\Golf_Pencil_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -64,6 +91,9 @@
   },
   "Golf_Close_Button": {
     "Name": "Golf_Close_Button",
+    "VariantPaths": [
+      "Templates\\Golf_Close_Button.png"
+    ],
     "TemplatePath": "Templates\\Golf_Close_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -71,6 +101,9 @@
   },
   "Golf_Turn_Timer": {
     "Name": "Golf_Turn_Timer",
+    "VariantPaths": [
+      "Templates\\Golf_Turn_Timer.png"
+    ],
     "TemplatePath": "Templates\\Golf_Turn_Timer.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -78,13 +111,19 @@
   },
   "FishPopupCloseButton": {
     "Name": "FishPopupCloseButton",
+    "VariantPaths": [
+      "Templates\\FishPopupCloseButton.png"
+    ],
     "TemplatePath": "Templates\\FishPopupCloseButton.png",
     "ManualCoordinates": null,
-    "CachedCenter": "1105, 475",
-    "LastFoundTime": "2026-02-01T14:53:07.3011209-05:00"
+    "CachedCenter": "1108, 473",
+    "LastFoundTime": "2026-02-06T11:41:42.5002255-05:00"
   },
   "Red Jellybean Button": {
     "Name": "Red Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Red_Jellybean_Button.png"
+    ],
     "TemplatePath": "Templates\\Red_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -92,6 +131,9 @@
   },
   "Green Jellybean Button": {
     "Name": "Green Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Green_Jellybean_Button.png"
+    ],
     "TemplatePath": "Templates\\Green_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "813, 491",
@@ -99,6 +141,9 @@
   },
   "Orange Jellybean Button": {
     "Name": "Orange Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Orange_Jellybean_Button.png"
+    ],
     "TemplatePath": "Templates\\Orange_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -106,6 +151,9 @@
   },
   "Purple Jellybean Button": {
     "Name": "Purple Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Purple_Jellybean_Button.png"
+    ],
     "TemplatePath": "Templates\\Purple_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -113,6 +161,9 @@
   },
   "Blue Jellybean Button": {
     "Name": "Blue Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Blue_Jellybean_Button.png"
+    ],
     "TemplatePath": "Templates\\Blue_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -120,6 +171,9 @@
   },
   "Pink Jellybean Button": {
     "Name": "Pink Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Pink_Jellybean_Button.png"
+    ],
     "TemplatePath": "Templates\\Pink_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -127,6 +181,9 @@
   },
   "Yellow Jellybean Button": {
     "Name": "Yellow Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Yellow_Jellybean_Button.png"
+    ],
     "TemplatePath": "Templates\\Yellow_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -134,6 +191,9 @@
   },
   "Cyan Jellybean Button": {
     "Name": "Cyan Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Cyan_Jellybean_Button.png"
+    ],
     "TemplatePath": "Templates\\Cyan_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "1129, 491",
@@ -141,6 +201,9 @@
   },
   "Silver Jellybean Button": {
     "Name": "Silver Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Silver_Jellybean_Button.png"
+    ],
     "TemplatePath": "Templates\\Silver_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -148,6 +211,9 @@
   },
   "Blue Plant Button": {
     "Name": "Blue Plant Button",
+    "VariantPaths": [
+      "Templates\\Blue_Plant_Button.png"
+    ],
     "TemplatePath": "Templates\\Blue_Plant_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "1123, 731",
@@ -155,6 +221,9 @@
   },
   "Blue Ok Button": {
     "Name": "Blue Ok Button",
+    "VariantPaths": [
+      "Templates\\Blue_Ok_Button.png"
+    ],
     "TemplatePath": "Templates\\Blue_Ok_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "974, 680",
@@ -162,6 +231,9 @@
   },
   "Remove Plant Button": {
     "Name": "Remove Plant Button",
+    "VariantPaths": [
+      "Templates\\Remove_Plant_Button.png"
+    ],
     "TemplatePath": "Templates\\Remove_Plant_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
@@ -169,6 +241,9 @@
   },
   "Green SpeedChat Button": {
     "Name": "Green SpeedChat Button",
+    "VariantPaths": [
+      "Templates\\Green_SpeedChat_Button.png"
+    ],
     "TemplatePath": "Templates\\Green_SpeedChat_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": "114, 69",
@@ -176,6 +251,9 @@
   },
   "Pets Tab in SpeedChat": {
     "Name": "Pets Tab in SpeedChat",
+    "VariantPaths": [
+      "Templates\\Pets_Tab_in_SpeedChat.png"
+    ],
     "TemplatePath": "Templates\\Pets_Tab_in_SpeedChat.png",
     "ManualCoordinates": null,
     "CachedCenter": "245, 101",
@@ -183,6 +261,9 @@
   },
   "Tricks Tab in SpeedChat": {
     "Name": "Tricks Tab in SpeedChat",
+    "VariantPaths": [
+      "Templates\\Tricks_Tab_in_SpeedChat.png"
+    ],
     "TemplatePath": "Templates\\Tricks_Tab_in_SpeedChat.png",
     "ManualCoordinates": null,
     "CachedCenter": "490, 98",
@@ -190,9 +271,22 @@
   },
   "Jump Trick Option in SpeedChat": {
     "Name": "Jump Trick Option in SpeedChat",
+    "VariantPaths": [
+      "Templates\\Jump_Trick_Option_in_SpeedChat.png"
+    ],
     "TemplatePath": "Templates\\Jump_Trick_Option_in_SpeedChat.png",
     "ManualCoordinates": null,
     "CachedCenter": "538, 100",
     "LastFoundTime": "2026-02-06T01:13:46.1035895-05:00"
+  },
+  "Friends Button": {
+    "Name": "Friends Button",
+    "VariantPaths": [
+      "Templates\\Friends_Button.png"
+    ],
+    "TemplatePath": "Templates\\Friends_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
   }
 }

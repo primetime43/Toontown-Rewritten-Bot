@@ -131,23 +131,32 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// </summary>
         private void SafeOverlayInvoke(Action<FishingOverlayForm> action)
         {
-            if (Overlay == null || Overlay.IsDisposed)
+            var overlay = Overlay;
+            if (overlay == null || overlay.IsDisposed)
                 return;
 
             try
             {
-                if (Overlay.InvokeRequired)
+                if (overlay.InvokeRequired)
                 {
-                    Overlay.BeginInvoke(new Action(() =>
+                    overlay.Invoke(new Action(() =>
                     {
-                        if (Overlay != null && !Overlay.IsDisposed)
-                            action(Overlay);
+                        if (overlay != null && !overlay.IsDisposed)
+                            action(overlay);
                     }));
                 }
                 else
                 {
-                    action(Overlay);
+                    action(overlay);
                 }
+            }
+            catch (ObjectDisposedException)
+            {
+                // Overlay was disposed between check and invoke - ignore
+            }
+            catch (InvalidOperationException)
+            {
+                // Handle not created yet or already destroyed - ignore
             }
             catch (Exception ex)
             {
@@ -172,6 +181,37 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// </summary>
         protected void UpdateOverlayLocation(string location)
             => SafeOverlayInvoke(o => o.SetLocation(location));
+
+        /// <summary>
+        /// Shows the initial scan area on the overlay at the start of fishing.
+        /// This ensures the scan area rectangle is always visible, even when auto-detect is off.
+        /// </summary>
+        private void ShowInitialScanAreaOnOverlay()
+        {
+            if (Overlay == null || Overlay.IsDisposed) return;
+            if (_bubbleDetector == null) return;
+
+            try
+            {
+                using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
+                {
+                    if (screenshot != null)
+                    {
+                        var result = _bubbleDetector.DetectFromScreenshot(screenshot);
+                        Debug.WriteLine($"[FishingStrategy] Initial scan area for '{_locationName}': {result.ScanArea} (IsEmpty={result.ScanArea.IsEmpty})");
+                        UpdateOverlay(result, null, "");
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"[FishingStrategy] Initial scan area: screenshot was null for '{_locationName}'");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[FishingStrategy] Error showing initial scan area for '{_locationName}': {ex.Message}");
+            }
+        }
 
         /// <summary>
         /// An abstract method to be implemented by derived classes, detailing the process
@@ -215,6 +255,9 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             EnsureGameWindowReady();
 
             int totalCasts = numberOfCasts;
+
+            // Show initial scan area on overlay so it's always visible (even without auto-detect)
+            ShowInitialScanAreaOnOverlay();
 
             try
             {
@@ -356,6 +399,10 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
                         bool fishFound = detectionResult.AllCandidates.Count > 0 ||
                                         detectionResult.BestShadowPosition.HasValue;
+
+                        // Update overlay with detection visuals (scan area, blobs, candidates)
+                        UpdateOverlay(detectionResult, detectionResult.BestShadowPosition,
+                            fishFound ? "Fish detected!" : $"Scanning... ({attempt}/{MaxFishWaitAttempts})");
 
                         if (fishFound)
                         {
@@ -799,7 +846,13 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// Thread-safe - can be called from any thread.
         /// </summary>
         private void UpdateOverlay(FishDetectionDebugResult result, Point? targetFish, string status)
-            => SafeOverlayInvoke(o => o.UpdateDetection(result, targetFish, status));
+        {
+            if (result != null)
+            {
+                Debug.WriteLine($"[FishingStrategy] UpdateOverlay: ScanArea={result.ScanArea}, IsEmpty={result.ScanArea.IsEmpty}, Candidates={result.AllCandidates?.Count ?? 0}, Status='{status}'");
+            }
+            SafeOverlayInvoke(o => o.UpdateDetection(result, targetFish, status));
+        }
 
         /// <summary>
         /// Clears the fishing overlay.
