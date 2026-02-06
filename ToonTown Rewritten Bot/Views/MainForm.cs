@@ -32,6 +32,10 @@ namespace ToonTown_Rewritten_Bot
         {
             InitializeComponent();
 
+            // Set version and author from global settings
+            mainVersionLabel.Text = $"v{GlobalSettings.ApplicationInfo.Version}";
+            mainAuthorLabel.Text = $"by {GlobalSettings.ApplicationInfo.Author}";
+
             // Hide Racing tab
             tabControl1.TabPages.Remove(Racing);
 
@@ -147,6 +151,16 @@ namespace ToonTown_Rewritten_Bot
                 }
                 if (beanIndex >= 0) beanCountComboBox.SelectedIndex = beanIndex;
             }
+            if (!string.IsNullOrEmpty(prefs.SelectedFlower))
+            {
+                int flowerIndex = flowerComboBox.FindStringExact(prefs.SelectedFlower);
+                if (flowerIndex >= 0) flowerComboBox.SelectedIndex = flowerIndex;
+            }
+            if (!string.IsNullOrEmpty(prefs.CustomGardeningFile))
+            {
+                int gardenIndex = customGardeningFilesComboBox.FindStringExact(prefs.CustomGardeningFile);
+                if (gardenIndex >= 0) customGardeningFilesComboBox.SelectedIndex = gardenIndex;
+            }
 
             // Misc preferences
             checkBox2.Checked = prefs.KeepProgramOnTop;
@@ -194,6 +208,8 @@ namespace ToonTown_Rewritten_Bot
             // Gardening preferences
             prefs.WaterPlantCount = (int)waterPlantNumericUpDown.Value;
             prefs.FlowerBeanAmount = beanCountComboBox.SelectedItem?.ToString() ?? "";
+            prefs.SelectedFlower = flowerComboBox.SelectedItem?.ToString() ?? "";
+            prefs.CustomGardeningFile = customGardeningFilesComboBox.SelectedItem?.ToString() ?? "";
 
             // Misc preferences
             prefs.KeepProgramOnTop = checkBox2.Checked;
@@ -1011,17 +1027,13 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private void button9_Click(object sender, EventArgs e)
+        private void githubLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Help helpBox = new Help();
-            try
+            Process.Start(new ProcessStartInfo
             {
-                helpBox.ShowDialog();
-            }
-            catch
-            {
-                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
+                FileName = "https://github.com/primetime43/Toontown-Rewritten-Bot",
+                UseShellExecute = true
+            });
         }
 
         private void unlimitedTrainingCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -2084,7 +2096,10 @@ namespace ToonTown_Rewritten_Bot
 
             preferencesListBox.Items.Add("");
             preferencesListBox.Items.Add("═══════ GARDENING ═══════");
+            preferencesListBox.Items.Add($"  Bean Count: {(string.IsNullOrEmpty(prefs.FlowerBeanAmount) ? "(not set)" : prefs.FlowerBeanAmount)}");
+            preferencesListBox.Items.Add($"  Selected Flower: {(string.IsNullOrEmpty(prefs.SelectedFlower) ? "(not set)" : prefs.SelectedFlower)}");
             preferencesListBox.Items.Add($"  Water Count: {prefs.WaterPlantCount}");
+            preferencesListBox.Items.Add($"  Custom File: {(string.IsNullOrEmpty(prefs.CustomGardeningFile) ? "(not set)" : prefs.CustomGardeningFile)}");
 
             preferencesListBox.Items.Add("");
             preferencesListBox.Items.Add("═══════ MISC ═══════");
