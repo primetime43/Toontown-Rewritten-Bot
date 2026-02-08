@@ -16,6 +16,19 @@ namespace ToonTown_Rewritten_Bot.Services
                 confirmation = MessageBox.Show("Send Message?", "Continue...", MessageBoxButtons.YesNo);
                 if (confirmation.Equals(DialogResult.Yes))
                 {
+                    // Focus the game window and click its center to ensure input goes to the game
+                    CoreFunctionality.FocusTTRWindow();
+                    Thread.Sleep(1000);
+                    var gameRect = CoreFunctionality.GetGameWindowRect();
+                    if (gameRect != System.Drawing.Rectangle.Empty)
+                    {
+                        int centerX = gameRect.Left + gameRect.Width / 2;
+                        int centerY = gameRect.Top + gameRect.Height / 2;
+                        CoreFunctionality.SimulateDragMove(centerX, centerY);
+                        CoreFunctionality.SendInputMouseClick();
+                        Thread.Sleep(200);
+                    }
+
                     if (spam && spamCount > 1)//spam checkbox check
                     {
                         while (spamCount >= 1)
@@ -53,8 +66,20 @@ namespace ToonTown_Rewritten_Bot.Services
         public static async Task KeepToonAwake(int timeInSeconds, CancellationToken cancellationToken)
         {
             CoreFunctionality.FocusTTRWindow(); // Ensure the game window is focused
+            await Task.Delay(1000, cancellationToken); // Give the game window time to come to the foreground
+
+            // Click the center of the game window to guarantee it has input focus
+            var gameRect = CoreFunctionality.GetGameWindowRect();
+            if (gameRect != System.Drawing.Rectangle.Empty)
+            {
+                int centerX = gameRect.Left + gameRect.Width / 2;
+                int centerY = gameRect.Top + gameRect.Height / 2;
+                CoreFunctionality.SimulateDragMove(centerX, centerY);
+                CoreFunctionality.SendInputMouseClick();
+                await Task.Delay(200, cancellationToken);
+            }
+
             DateTime endTime = DateTime.Now.AddSeconds(timeInSeconds); // Calculate the end time based on seconds
-            CoreFunctionality.DoMouseClick(); // Initial action to "keep awake"
 
             try
             {
@@ -67,6 +92,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
             catch (OperationCanceledException)
             {
+                // Expected when user stops the task
             }
         }
     }

@@ -18,22 +18,37 @@
     <Compile Update="Views\AboutBox1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\AdvancedSettings.cs">
+    <Compile Update="Views\CountdownOverlayForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Views\CustomFishingActions.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Views\CustomFishingWizardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\CustomGardeningActions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\CustomGardeningWizardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Views\CustomGolfActions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\FishBubbleColorCaptureForm.cs">
+    <Compile Update="Views\CustomGolfWizardForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Views\FishCalibrationForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Views\FishingOverlayForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\GardeningCalibrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\GardeningOverlayForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Views\GolfOverlayForm.cs">
@@ -48,7 +63,28 @@
     <Compile Update="Views\Help.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\Plants.cs">
+    <Compile Update="Views\MainForm.CustomFishing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Dev.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.DoodleTraining.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Fishing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Gardening.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Golf.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Misc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MainForm.Settings.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Views\PondColorCalibrationForm.cs">
@@ -60,10 +96,10 @@
     <Compile Update="Views\TemplateCaptureForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\UpdateCoordsHelper.cs">
+    <Compile Update="Views\TemplateVariantManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Views\UpdateImages.cs">
+    <Compile Update="Views\UpdateCoordsHelper.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

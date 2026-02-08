@@ -1,64 +1,167 @@
-﻿using System;
-using System.Drawing;
-using System.Runtime.CompilerServices;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Utilities;
 using ToonTown_Rewritten_Bot.Views;
 using static ToonTown_Rewritten_Bot.Models.Coordinates;
-using static ToonTown_Rewritten_Bot.Utilities.ImageRecognition;
 
 namespace ToonTown_Rewritten_Bot.Services
 {
     public class Gardening : CoreFunctionality
     {
-        public static async Task PlantFlowerAsync(string flowerCombo, CancellationToken cancellationToken)
+        private static GardeningOverlayForm _overlay;
+
+        public static async Task PlantFlowerAsync(string flowerCombo, string flowerName, CancellationToken cancellationToken)
         {
-            var confirmation = MessageBox.Show(
-            "Press OK when ready to begin!",
-            "Begin Gardening",
-            MessageBoxButtons.OKCancel,
-            MessageBoxIcon.None,
-            MessageBoxDefaultButton.Button1,
-            MessageBoxOptions.DefaultDesktopOnly);
-            if (confirmation == DialogResult.Cancel)
-                return;
+            int beanCount = flowerCombo.Length;
+            int waterCount = 3;
+            // Total steps: beans + plant button + OK + waterings
+            int totalSteps = beanCount + 1 + 1 + waterCount;
+            int step = 0;
 
-            // Check if game window is available and focus it
-            if (!IsGameWindowReady())
+            try
             {
-                MessageBox.Show("Toontown Rewritten window not found. Please make sure the game is running.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                ShowOverlay();
+                InvokeOverlay(() =>
+                {
+                    _overlay?.SetFlowerInfo(flowerName, flowerCombo);
+                    _overlay?.SetStatus("Running");
+                });
+
+                // Check if game window is available and focus it
+                if (!EnsureGameWindowReadyWithMessage())
+                {
+                    HideOverlay();
+                    return;
+                }
+                FocusTTRWindow();
+
+                string firstBeanName = GardeningOverlayForm.GetBeanName(flowerCombo[0]);
+                InvokeOverlay(() => _overlay?.UpdateAction("Opening planting menu", $"Selecting {firstBeanName} Bean", 0, totalSteps, 2000));
+                await Task.Delay(2000, cancellationToken);
+
+                // Hide overlay so template capture prompts can show if needed
+                var (x, y) = await FindElementWithOverlayPause(GardeningCoordinatesEnum.PlantFlowerButton);
+                MoveCursor(x, y);
+                DoMouseClick();
+
+                InvokeOverlay(() => _overlay?.UpdateAction("Waiting for planting UI", $"Selecting {firstBeanName} Bean", 0, totalSteps, 2000));
+                await Task.Delay(2000, cancellationToken);
+
+                char[] beans = flowerCombo.ToCharArray();
+                for (int i = 0; i < beans.Length; i++)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    step++;
+
+                    string currentBeanName = GardeningOverlayForm.GetBeanName(beans[i]);
+                    string nextActionText;
+                    if (i + 1 < beans.Length)
+                        nextActionText = $"Selecting {GardeningOverlayForm.GetBeanName(beans[i + 1])} Bean";
+                    else
+                        nextActionText = "Clicking Plant";
+
+                    int beanIndex = i;
+                    int currentStep = step;
+                    InvokeOverlay(() =>
+                    {
+                        _overlay?.SetCurrentBean(beanIndex);
+                        _overlay?.UpdateAction($"Selecting {currentBeanName} Bean", nextActionText, currentStep, totalSteps, 2000);
+                    });
+
+                    await SelectBeanAsync(beans[i], cancellationToken);
+                }
+
+                // Plant button
+                step++;
+                int plantStep = step;
+                InvokeOverlay(() =>
+                {
+                    _overlay?.SetCurrentBean(beans.Length); // Past all beans
+                    _overlay?.UpdateAction("Clicking Plant", "Waiting for confirmation", plantStep, totalSteps, 8000);
+                });
+
+                var (px, py) = await FindElementWithOverlayPause(GardeningCoordinatesEnum.BluePlantButton);
+                MoveCursor(px, py);
+                DoMouseClick();
+                await Task.Delay(8000, cancellationToken);
+
+                // OK button
+                step++;
+                int okStep = step;
+                InvokeOverlay(() => _overlay?.UpdateAction("Confirming plant", "Watering (1/3)", okStep, totalSteps, 2000));
+
+                var (ox, oy) = await FindElementWithOverlayPause(GardeningCoordinatesEnum.BlueOkButton);
+                MoveCursor(ox, oy);
+                DoMouseClick();
+                await Task.Delay(2000, cancellationToken);
+
+                // Watering
+                var (wx, wy) = await FindElementWithOverlayPause(GardeningCoordinatesEnum.WateringCanButton);
+                for (int i = 0; i < waterCount; i++)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    step++;
+
+                    int waterNum = i + 1;
+                    string nextWaterText = waterNum < waterCount
+                        ? $"Watering ({waterNum + 1}/{waterCount})"
+                        : "Done";
+                    int waterStep = step;
+                    InvokeOverlay(() => _overlay?.UpdateAction($"Watering ({waterNum}/{waterCount})", nextWaterText, waterStep, totalSteps, 4000));
+
+                    MoveCursor(wx, wy);
+                    DoMouseClick();
+                    await Task.Delay(4000, cancellationToken);
+                }
+
+                InvokeOverlay(() => _overlay?.SetStatus("Completed"));
+
+                MessageBox.Show(
+                    "Done!",
+                    "Gardening Complete",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.None,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
             }
-            FocusTTRWindow();
-
-            await Task.Delay(2000);
-
-            // Use image recognition to find button (will prompt for template capture if needed)
-            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
-            MoveCursor(x, y);
-            DoMouseClick();
-            await Task.Delay(2000);
-
-            char[] beans = flowerCombo.ToCharArray();
-            foreach (var bean in beans)
+            catch (OperationCanceledException)
             {
-                await SelectBeanAsync(bean, cancellationToken);
+                InvokeOverlay(() => _overlay?.SetStatus("Cancelled"));
+                throw;
             }
-            await PressPlantButtonAsync(cancellationToken);
+            catch
+            {
+                InvokeOverlay(() => _overlay?.SetStatus("Cancelled"));
+                throw;
+            }
+            finally
+            {
+                HideOverlay();
+            }
+        }
 
-            MessageBox.Show(
-            "Done!",
-            "Gardening Complete",
-            MessageBoxButtons.OKCancel,
-            MessageBoxIcon.None,
-            MessageBoxDefaultButton.Button1,
-            MessageBoxOptions.DefaultDesktopOnly);
+        /// <summary>
+        /// Temporarily hides the overlay before image recognition so template capture
+        /// prompts can display on top. Re-shows the overlay afterward.
+        /// </summary>
+        private static async Task<(int x, int y)> FindElementWithOverlayPause(GardeningCoordinatesEnum element)
+        {
+            HideOverlay();
+            try
+            {
+                return await CoordinatesManager.GetCoordsWithImageRecAsync(element);
+            }
+            finally
+            {
+                ShowOverlay();
+            }
         }
 
         private static async Task SelectBeanAsync(char beanType, CancellationToken cancellationToken)
         {
+            // Use template-based image recognition to find the jellybean button
             GardeningCoordinatesEnum location = beanType switch
             {
                 'r' => GardeningCoordinatesEnum.RedJellybeanButton,
@@ -73,30 +176,10 @@ namespace ToonTown_Rewritten_Bot.Services
                 _ => throw new ArgumentException("Invalid bean type", nameof(beanType)),
             };
 
-            // Use image recognition to find button (will prompt for template capture if needed)
-            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(location);
+            // Hide overlay so template capture prompts can show if needed
+            var (x, y) = await FindElementWithOverlayPause(location);
             MoveCursor(x, y);
             DoMouseClick();
-            await Task.Delay(2000, cancellationToken);
-        }
-
-        private static async Task PressPlantButtonAsync(CancellationToken cancellationToken)
-        {
-            // Use image recognition to find button (will prompt for template capture if needed)
-            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.BluePlantButton);
-            MoveCursor(x, y);
-            DoMouseClick();
-            await Task.Delay(8000, cancellationToken);
-            await ClickOKAfterPlantAsync(cancellationToken);
-            await WaterPlantAsync(3, cancellationToken);
-        }
-
-        private static async Task ClickOKAfterPlantAsync(CancellationToken cancellationToken)
-        {
-            // Use image recognition to find button (will prompt for template capture if needed)
-            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.BlueOkButton);
-            CoreFunctionality.MoveCursor(x, y);
-            CoreFunctionality.DoMouseClick();
             await Task.Delay(2000, cancellationToken);
         }
 
@@ -119,18 +202,14 @@ namespace ToonTown_Rewritten_Bot.Services
             MessageBox.Show("Press OK when ready to begin!");
 
             // Check if game window is available and focus it
-            if (!IsGameWindowReady())
-            {
-                MessageBox.Show("Toontown Rewritten window not found. Please make sure the game is running.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!EnsureGameWindowReadyWithMessage())
                 return;
-            }
             FocusTTRWindow();
 
             await Task.Delay(2000, cancellationToken);
 
             // Use image recognition to find button (will prompt for template capture if needed)
-            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.PlantFlowerRemoveButton);
+            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.RemovePlantButton);
             CoreFunctionality.MoveCursor(x, y);
             CoreFunctionality.DoMouseClick();
 
@@ -148,5 +227,74 @@ namespace ToonTown_Rewritten_Bot.Services
             CoreFunctionality.DoMouseClick();
             await Task.Delay(1000, cancellationToken);
         }
+
+        /// <summary>
+        /// Shows the gardening overlay. Thread-safe.
+        /// </summary>
+        public static void ShowOverlay()
+        {
+            if (Application.OpenForms.Count > 0)
+            {
+                var mainForm = Application.OpenForms[0];
+                if (mainForm.InvokeRequired)
+                {
+                    mainForm.BeginInvoke(new Action(ShowOverlayInternal));
+                    return;
+                }
+            }
+            ShowOverlayInternal();
+        }
+
+        private static void ShowOverlayInternal()
+        {
+            if (_overlay == null || _overlay.IsDisposed)
+            {
+                _overlay = new GardeningOverlayForm();
+                _overlay.Show();
+            }
+        }
+
+        /// <summary>
+        /// Hides and disposes the gardening overlay. Thread-safe.
+        /// </summary>
+        public static void HideOverlay()
+        {
+            if (Application.OpenForms.Count > 0)
+            {
+                var mainForm = Application.OpenForms[0];
+                if (mainForm.InvokeRequired)
+                {
+                    mainForm.BeginInvoke(new Action(HideOverlayInternal));
+                    return;
+                }
+            }
+            HideOverlayInternal();
+        }
+
+        private static void HideOverlayInternal()
+        {
+            if (_overlay != null && !_overlay.IsDisposed)
+            {
+                _overlay.Close();
+                _overlay.Dispose();
+                _overlay = null;
+            }
+        }
+
+        /// <summary>
+        /// Invokes an action on the overlay's UI thread.
+        /// </summary>
+        private static void InvokeOverlay(Action action)
+        {
+            if (_overlay != null && !_overlay.IsDisposed)
+            {
+                if (_overlay.InvokeRequired)
+                    _overlay.BeginInvoke(action);
+                else
+                    action();
+            }
+        }
+
+        public static bool IsOverlayVisible => _overlay != null && !_overlay.IsDisposed && _overlay.Visible;
     }
 }

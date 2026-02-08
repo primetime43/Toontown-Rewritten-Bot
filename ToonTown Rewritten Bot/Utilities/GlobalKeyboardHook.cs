@@ -13,7 +13,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
     {
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
+        private const int WM_KEYUP = 0x0101;
         private const int WM_SYSKEYDOWN = 0x0104;
+        private const int WM_SYSKEYUP = 0x0105;
 
         private IntPtr _hookId = IntPtr.Zero;
         private LowLevelKeyboardProc _proc;
@@ -23,6 +25,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// Event raised when a key is pressed globally.
         /// </summary>
         public event EventHandler<Keys> KeyPressed;
+
+        /// <summary>
+        /// Event raised when a key is released globally.
+        /// </summary>
+        public event EventHandler<Keys> KeyReleased;
 
         /// <summary>
         /// Delegate for the low-level keyboard hook procedure.
@@ -87,19 +94,25 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN))
+            if (nCode >= 0)
             {
                 int vkCode = Marshal.ReadInt32(lParam);
                 Keys key = (Keys)vkCode;
 
-                // Raise event on UI thread if possible
                 try
                 {
-                    KeyPressed?.Invoke(this, key);
+                    if (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
+                    {
+                        KeyPressed?.Invoke(this, key);
+                    }
+                    else if (wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP)
+                    {
+                        KeyReleased?.Invoke(this, key);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"[GlobalKeyboardHook] Error in KeyPressed handler: {ex.Message}");
+                    Debug.WriteLine($"[GlobalKeyboardHook] Error in key handler: {ex.Message}");
                 }
             }
 

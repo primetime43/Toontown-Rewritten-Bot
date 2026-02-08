@@ -5,8 +5,13 @@
     "Duration": 15000
   },
   {
+    "Action": "AIM STRAIGHT",
+    "Command": "AIM STRAIGHT",
+    "Duration": 50
+  },
+  {
     "Action": "SWING POWER",
     "Command": "SWING POWER",
-    "Duration": 1000
+    "Duration": 1125
   }
 ]

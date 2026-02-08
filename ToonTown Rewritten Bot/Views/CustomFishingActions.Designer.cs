@@ -38,6 +38,22 @@
             loadActionItemBtn = new System.Windows.Forms.Button();
             actionItemsListBox = new System.Windows.Forms.ListBox();
             updateSelectedActionItemBtn = new System.Windows.Forms.Button();
+            groupBoxRecorder = new System.Windows.Forms.GroupBox();
+            btnStopRecording = new System.Windows.Forms.Button();
+            btnStartRecording = new System.Windows.Forms.Button();
+            lblRecordingStatus = new System.Windows.Forms.Label();
+            btnAddSellFish = new System.Windows.Forms.Button();
+            lblRecorderHelp = new System.Windows.Forms.Label();
+            lblLivePreview = new System.Windows.Forms.Label();
+            groupBoxPathPreview = new System.Windows.Forms.GroupBox();
+            lblPathPreview = new System.Windows.Forms.Label();
+            groupBoxCalibration = new System.Windows.Forms.GroupBox();
+            btnCalibrateScanArea = new System.Windows.Forms.Button();
+            btnCalibratePondColors = new System.Windows.Forms.Button();
+            lblCalibrationStatus = new System.Windows.Forms.Label();
+            groupBoxRecorder.SuspendLayout();
+            groupBoxPathPreview.SuspendLayout();
+            groupBoxCalibration.SuspendLayout();
             SuspendLayout();
             // 
             // addItemBtn
@@ -118,9 +134,9 @@
             actionItemsListBox.Size = new System.Drawing.Size(230, 244);
             actionItemsListBox.TabIndex = 8;
             actionItemsListBox.SelectedIndexChanged += actionItemsListBox_SelectedIndexChanged;
-            // 
+            //
             // updateSelectedActionItemBtn
-            // 
+            //
             updateSelectedActionItemBtn.Enabled = false;
             updateSelectedActionItemBtn.Location = new System.Drawing.Point(250, 83);
             updateSelectedActionItemBtn.Name = "updateSelectedActionItemBtn";
@@ -129,12 +145,153 @@
             updateSelectedActionItemBtn.Text = "Update Selected Item";
             updateSelectedActionItemBtn.UseVisualStyleBackColor = true;
             updateSelectedActionItemBtn.Click += updateSelectedActionItemBtn_Click;
-            // 
+            //
+            // groupBoxRecorder
+            //
+            groupBoxRecorder.Controls.Add(lblRecorderHelp);
+            groupBoxRecorder.Controls.Add(btnStartRecording);
+            groupBoxRecorder.Controls.Add(btnStopRecording);
+            groupBoxRecorder.Controls.Add(lblRecordingStatus);
+            groupBoxRecorder.Controls.Add(btnAddSellFish);
+            groupBoxRecorder.Controls.Add(lblLivePreview);
+            groupBoxRecorder.Location = new System.Drawing.Point(14, 320);
+            groupBoxRecorder.Name = "groupBoxRecorder";
+            groupBoxRecorder.Size = new System.Drawing.Size(424, 150);
+            groupBoxRecorder.TabIndex = 10;
+            groupBoxRecorder.TabStop = false;
+            groupBoxRecorder.Text = "Walk Path Recorder";
+            //
+            // lblRecorderHelp
+            //
+            lblRecorderHelp.Location = new System.Drawing.Point(10, 22);
+            lblRecorderHelp.Name = "lblRecorderHelp";
+            lblRecorderHelp.Size = new System.Drawing.Size(404, 32);
+            lblRecorderHelp.TabIndex = 0;
+            lblRecorderHelp.Text = "Click 'Start Recording', switch to TTR, walk your path using arrow keys. Press 'Add Sell' when at the bucket. Click 'Stop' when done.";
+            //
+            // btnStartRecording
+            //
+            btnStartRecording.BackColor = System.Drawing.Color.LightGreen;
+            btnStartRecording.Location = new System.Drawing.Point(10, 60);
+            btnStartRecording.Name = "btnStartRecording";
+            btnStartRecording.Size = new System.Drawing.Size(120, 35);
+            btnStartRecording.TabIndex = 1;
+            btnStartRecording.Text = "Start Recording";
+            btnStartRecording.UseVisualStyleBackColor = false;
+            btnStartRecording.Click += btnStartRecording_Click;
+            //
+            // btnStopRecording
+            //
+            btnStopRecording.BackColor = System.Drawing.Color.LightCoral;
+            btnStopRecording.Enabled = false;
+            btnStopRecording.Location = new System.Drawing.Point(140, 60);
+            btnStopRecording.Name = "btnStopRecording";
+            btnStopRecording.Size = new System.Drawing.Size(120, 35);
+            btnStopRecording.TabIndex = 2;
+            btnStopRecording.Text = "Stop Recording";
+            btnStopRecording.UseVisualStyleBackColor = false;
+            btnStopRecording.Click += btnStopRecording_Click;
+            //
+            // btnAddSellFish
+            //
+            btnAddSellFish.Enabled = false;
+            btnAddSellFish.Location = new System.Drawing.Point(270, 60);
+            btnAddSellFish.Name = "btnAddSellFish";
+            btnAddSellFish.Size = new System.Drawing.Size(140, 35);
+            btnAddSellFish.TabIndex = 3;
+            btnAddSellFish.Text = "Add Sell Fish Action";
+            btnAddSellFish.UseVisualStyleBackColor = true;
+            btnAddSellFish.Click += btnAddSellFish_Click;
+            //
+            // lblRecordingStatus
+            //
+            lblRecordingStatus.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            lblRecordingStatus.ForeColor = System.Drawing.Color.Gray;
+            lblRecordingStatus.Location = new System.Drawing.Point(10, 105);
+            lblRecordingStatus.Name = "lblRecordingStatus";
+            lblRecordingStatus.Size = new System.Drawing.Size(400, 25);
+            lblRecordingStatus.TabIndex = 4;
+            lblRecordingStatus.Text = "Status: Not recording";
+            //
+            // lblLivePreview
+            //
+            lblLivePreview.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular);
+            lblLivePreview.ForeColor = System.Drawing.Color.DarkBlue;
+            lblLivePreview.Location = new System.Drawing.Point(10, 130);
+            lblLivePreview.Name = "lblLivePreview";
+            lblLivePreview.Size = new System.Drawing.Size(400, 15);
+            lblLivePreview.TabIndex = 5;
+            lblLivePreview.Text = "";
+            //
+            // groupBoxPathPreview
+            //
+            groupBoxPathPreview.Controls.Add(lblPathPreview);
+            groupBoxPathPreview.Location = new System.Drawing.Point(14, 475);
+            groupBoxPathPreview.Name = "groupBoxPathPreview";
+            groupBoxPathPreview.Size = new System.Drawing.Size(424, 60);
+            groupBoxPathPreview.TabIndex = 11;
+            groupBoxPathPreview.TabStop = false;
+            groupBoxPathPreview.Text = "Path Preview";
+            //
+            // lblPathPreview
+            //
+            lblPathPreview.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular);
+            lblPathPreview.Location = new System.Drawing.Point(10, 20);
+            lblPathPreview.Name = "lblPathPreview";
+            lblPathPreview.Size = new System.Drawing.Size(404, 32);
+            lblPathPreview.TabIndex = 0;
+            lblPathPreview.Text = "(No actions)";
+            lblPathPreview.AutoEllipsis = true;
+            //
+            // groupBoxCalibration
+            //
+            groupBoxCalibration.Controls.Add(btnCalibrateScanArea);
+            groupBoxCalibration.Controls.Add(btnCalibratePondColors);
+            groupBoxCalibration.Controls.Add(lblCalibrationStatus);
+            groupBoxCalibration.Location = new System.Drawing.Point(14, 540);
+            groupBoxCalibration.Name = "groupBoxCalibration";
+            groupBoxCalibration.Size = new System.Drawing.Size(424, 85);
+            groupBoxCalibration.TabIndex = 12;
+            groupBoxCalibration.TabStop = false;
+            groupBoxCalibration.Text = "Calibration (Embedded in Action File)";
+            //
+            // btnCalibrateScanArea
+            //
+            btnCalibrateScanArea.Location = new System.Drawing.Point(10, 50);
+            btnCalibrateScanArea.Name = "btnCalibrateScanArea";
+            btnCalibrateScanArea.Size = new System.Drawing.Size(140, 28);
+            btnCalibrateScanArea.TabIndex = 0;
+            btnCalibrateScanArea.Text = "Calibrate Scan Area";
+            btnCalibrateScanArea.UseVisualStyleBackColor = true;
+            btnCalibrateScanArea.Click += btnCalibrateScanArea_Click;
+            //
+            // btnCalibratePondColors
+            //
+            btnCalibratePondColors.Location = new System.Drawing.Point(160, 50);
+            btnCalibratePondColors.Name = "btnCalibratePondColors";
+            btnCalibratePondColors.Size = new System.Drawing.Size(140, 28);
+            btnCalibratePondColors.TabIndex = 1;
+            btnCalibratePondColors.Text = "Calibrate Pond Colors";
+            btnCalibratePondColors.UseVisualStyleBackColor = true;
+            btnCalibratePondColors.Click += btnCalibratePondColors_Click;
+            //
+            // lblCalibrationStatus
+            //
+            lblCalibrationStatus.ForeColor = System.Drawing.Color.Gray;
+            lblCalibrationStatus.Location = new System.Drawing.Point(10, 22);
+            lblCalibrationStatus.Name = "lblCalibrationStatus";
+            lblCalibrationStatus.Size = new System.Drawing.Size(400, 20);
+            lblCalibrationStatus.TabIndex = 2;
+            lblCalibrationStatus.Text = "No calibration data (will use global settings)";
+            //
             // CustomFishingActions
-            // 
+            //
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(453, 320);
+            ClientSize = new System.Drawing.Size(453, 640);
+            Controls.Add(groupBoxCalibration);
+            Controls.Add(groupBoxPathPreview);
+            Controls.Add(groupBoxRecorder);
             Controls.Add(updateSelectedActionItemBtn);
             Controls.Add(actionItemsListBox);
             Controls.Add(loadActionItemBtn);
@@ -148,6 +305,9 @@
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             Name = "CustomFishingActions";
             Text = "Custom Fishing Actions Manager";
+            groupBoxCalibration.ResumeLayout(false);
+            groupBoxPathPreview.ResumeLayout(false);
+            groupBoxRecorder.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -162,5 +322,18 @@
         private System.Windows.Forms.Button loadActionItemBtn;
         private System.Windows.Forms.ListBox actionItemsListBox;
         private System.Windows.Forms.Button updateSelectedActionItemBtn;
+        private System.Windows.Forms.GroupBox groupBoxRecorder;
+        private System.Windows.Forms.Button btnStartRecording;
+        private System.Windows.Forms.Button btnStopRecording;
+        private System.Windows.Forms.Label lblRecordingStatus;
+        private System.Windows.Forms.Button btnAddSellFish;
+        private System.Windows.Forms.Label lblRecorderHelp;
+        private System.Windows.Forms.Label lblLivePreview;
+        private System.Windows.Forms.GroupBox groupBoxPathPreview;
+        private System.Windows.Forms.Label lblPathPreview;
+        private System.Windows.Forms.GroupBox groupBoxCalibration;
+        private System.Windows.Forms.Button btnCalibrateScanArea;
+        private System.Windows.Forms.Button btnCalibratePondColors;
+        private System.Windows.Forms.Label lblCalibrationStatus;
     }
 }
