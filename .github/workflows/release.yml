@@ -3,13 +3,13 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*'
+      - '[0-9]*'
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version tag (e.g., v1.0.0)'
+        description: 'Version tag (e.g., 2.1.0)'
         required: true
-        default: 'v1.0.0'
+        default: '2.1.0'
 
 env:
   DOTNET_VERSION: '10.0.x'
@@ -124,7 +124,7 @@ jobs:
       id: create_zip
 
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ steps.get_version.outputs.VERSION }}
         files: |
