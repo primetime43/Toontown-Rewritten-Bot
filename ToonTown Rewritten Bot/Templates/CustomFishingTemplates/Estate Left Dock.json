@@ -1,0 +1,23 @@
+{
+  "Version": 2,
+  "Name": "Estate Left Dock",
+  "Description": "Template for the left dock at the Estate pond. Walk path to fisherman and back.",
+  "Calibration": null,
+  "Actions": [
+    { "Action": "WALK BACKWARDS", "Command": "DOWN" },
+    { "Action": "TIME", "Command": "800" },
+    { "Action": "TURN LEFT", "Command": "LEFT" },
+    { "Action": "TIME", "Command": "300" },
+    { "Action": "WALK FORWARDS", "Command": "UP" },
+    { "Action": "TIME", "Command": "1500" },
+    { "Action": "SELL FISH", "Command": "SELL" },
+    { "Action": "WALK BACKWARDS", "Command": "DOWN" },
+    { "Action": "TIME", "Command": "1500" },
+    { "Action": "TURN RIGHT", "Command": "RIGHT" },
+    { "Action": "TIME", "Command": "300" },
+    { "Action": "WALK FORWARDS", "Command": "UP" },
+    { "Action": "TIME", "Command": "800" }
+  ],
+  "CreatedAt": "2024-01-01T00:00:00",
+  "ModifiedAt": "2024-01-01T00:00:00"
+}

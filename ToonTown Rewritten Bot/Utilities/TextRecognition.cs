@@ -354,8 +354,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     return ReadTextFromRegion(screenshot, region);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"[TextRecognition] Error reading text from screen: {ex.Message}");
                 return string.Empty;
             }
         }
@@ -372,8 +373,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     return ReadNumbersFromRegion(screenshot, region);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"[TextRecognition] Error reading numbers from screen: {ex.Message}");
                 return string.Empty;
             }
         }

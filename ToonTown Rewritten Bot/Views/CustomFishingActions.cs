@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,14 +11,51 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
 using ToonTown_Rewritten_Bot.Services;
+using ToonTown_Rewritten_Bot.Utilities;
 
 namespace ToonTown_Rewritten_Bot.Views
 {
     public partial class CustomFishingActions : Form
     {
+        // Recording fields
+        private GlobalKeyboardHook _keyboardHook;
+        private bool _isRecording = false;
+        private List<RecordedKeyPress> _recordedKeys = new List<RecordedKeyPress>();
+        private Stopwatch _recordingStopwatch = new Stopwatch();
+        private Keys? _currentKeyHeld = null;
+        private long _keyDownTime = 0;
+
+        // Calibration fields
+        private string _currentFilePath = null;
+        private CustomFishingActionFile _currentFile = null;
+
+        // Helper class to store recorded key presses with timing
+        private class RecordedKeyPress
+        {
+            public string Action { get; set; }
+            public long DurationMs { get; set; }
+            public bool IsSellFish { get; set; }
+        }
+
         public CustomFishingActions()
         {
             InitializeComponent();
+            _keyboardHook = new GlobalKeyboardHook();
+            _keyboardHook.KeyPressed += OnGlobalKeyPressed;
+            _keyboardHook.KeyReleased += OnGlobalKeyReleased;
+            UpdatePathPreview();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            StopRecordingCleanup();
+            if (_keyboardHook != null)
+            {
+                _keyboardHook.KeyPressed -= OnGlobalKeyPressed;
+                _keyboardHook.KeyReleased -= OnGlobalKeyReleased;
+                _keyboardHook.Dispose();
+            }
         }
 
         private void addItemBtn_Click(object sender, EventArgs e)
@@ -28,8 +66,8 @@ namespace ToonTown_Rewritten_Bot.Views
                 // Now parse the time input as milliseconds
                 if (int.TryParse(actionTimeTxtBox.Text, out int timeInMilliseconds))
                 {
-                    // Add the time in milliseconds to the ListBox
-                    actionItemsListBox.Items.Add($"{selectedItem} ({timeInMilliseconds} milliseconds)");
+                    // Add the time in formatted display to the ListBox
+                    actionItemsListBox.Items.Add(FormatTimeDisplayItem(timeInMilliseconds));
                     actionTimeTxtBox.Clear(); // Optionally clear the TextBox after adding
                 }
                 else
@@ -46,11 +84,46 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 MessageBox.Show("Please select an item from the ComboBox.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            UpdatePathPreview();
+        }
+
+        /// <summary>
+        /// Formats a time value for display in the list (e.g., "TIME (0.8s)" instead of "TIME (847 milliseconds)")
+        /// </summary>
+        private string FormatTimeDisplayItem(long milliseconds)
+        {
+            return $"TIME ({DurationFormatter.FormatSeconds(milliseconds)})";
+        }
+
+        /// <summary>
+        /// Extracts milliseconds from a display string like "TIME (0.8s)" or "TIME (800 milliseconds)"
+        /// </summary>
+        private int ExtractMillisecondsFromDisplay(string displayText)
+        {
+            if (string.IsNullOrEmpty(displayText) || !displayText.StartsWith("TIME"))
+                return 0;
+
+            // Extract the part in parentheses
+            int start = displayText.IndexOf('(');
+            int end = displayText.IndexOf(')');
+            if (start >= 0 && end > start)
+            {
+                string timeStr = displayText.Substring(start + 1, end - start - 1);
+                return DurationFormatter.ParseToMilliseconds(timeStr);
+            }
+
+            // Fallback: extract digits only
+            string digits = new string(displayText.Where(char.IsDigit).ToArray());
+            if (int.TryParse(digits, out int ms))
+                return ms;
+
+            return 0;
         }
 
         private void removeItemBtn_Click(object sender, EventArgs e)
         {
             actionItemsListBox.Items.Remove(actionItemsListBox.SelectedItem);
+            UpdatePathPreview();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -84,7 +157,9 @@ namespace ToonTown_Rewritten_Bot.Views
                 if (actionText.StartsWith("TIME"))
                 {
                     action = "TIME";
-                    command = actionText.Split('(')[1].Split(' ')[0]; // Extracts "XXXX milliseconds" from "TIME (XXXX milliseconds)"
+                    // Extract milliseconds from the new display format (e.g., "TIME (0.8s)")
+                    int ms = ExtractMillisecondsFromDisplay(actionText);
+                    command = ms.ToString();
                 }
                 else
                 {
@@ -99,25 +174,42 @@ namespace ToonTown_Rewritten_Bot.Views
                 actionsList.Add(new FishingActionCommand { Action = action, Command = command });
             }
 
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(actionsList, Newtonsoft.Json.Formatting.Indented);
-            SaveToJsonFile(json);
+            // Build the v2 file format with embedded calibration
+            if (_currentFile == null)
+                _currentFile = new CustomFishingActionFile();
+
+            _currentFile.Actions = actionsList;
+
+            SaveActionFile();
         }
 
-        private void SaveToJsonFile(string jsonContent)
+        private void SaveActionFile()
         {
-            string folderPath = (string)CoreFunctionality.ManageCustomActionsFolder("Fishing", false);  // Getting the folder path only
+            string folderPath = (string)CoreFunctionality.ManageCustomActionsFolder("Fishing", false);
 
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
                 Filter = "JSON File|*.json",
                 Title = "Save an Actions JSON File",
-                InitialDirectory = folderPath
+                InitialDirectory = folderPath,
+                FileName = !string.IsNullOrEmpty(_currentFilePath) ? Path.GetFileName(_currentFilePath) : ""
             };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(saveFileDialog.FileName, jsonContent);
-                MessageBox.Show($"Actions saved to {saveFileDialog.FileName}", "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Update name from filename
+                _currentFile.Name = Path.GetFileNameWithoutExtension(saveFileDialog.FileName);
+
+                bool success = CustomFishingActionFileManager.Save(_currentFile, saveFileDialog.FileName);
+                if (success)
+                {
+                    _currentFilePath = saveFileDialog.FileName;
+                    MessageBox.Show($"Actions saved to {saveFileDialog.FileName}", "Save Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Failed to save file.", "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -132,18 +224,45 @@ namespace ToonTown_Rewritten_Bot.Views
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string json = File.ReadAllText(openFileDialog.FileName);
-                var actionsList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FishingActionCommand>>(json);
-
-                actionItemsListBox.Items.Clear();
-                foreach (var actionCommand in actionsList)
-                {
-                    string displayText = actionCommand.Action == "TIME"
-                        ? $"TIME ({actionCommand.Command})"
-                        : actionCommand.Action;
-                    actionItemsListBox.Items.Add(displayText);
-                }
+                LoadActionsFromFile(openFileDialog.FileName);
             }
+        }
+
+        /// <summary>
+        /// Loads actions from a file path, supporting both v1 and v2 formats.
+        /// </summary>
+        private void LoadActionsFromFile(string filePath)
+        {
+            var result = CustomFishingActionFileManager.Load(filePath);
+            if (!result.Success)
+            {
+                MessageBox.Show($"Failed to load file: {result.ErrorMessage}", "Load Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Store current file for calibration updates
+            _currentFilePath = filePath;
+            _currentFile = result.File;
+
+            actionItemsListBox.Items.Clear();
+            foreach (var actionCommand in result.File.Actions)
+            {
+                string displayText;
+                if (actionCommand.Action == "TIME")
+                {
+                    // Convert to new display format (e.g., "TIME (0.8s)")
+                    int ms = DurationFormatter.ParseToMilliseconds(actionCommand.Command);
+                    displayText = FormatTimeDisplayItem(ms);
+                }
+                else
+                {
+                    displayText = actionCommand.Action;
+                }
+                actionItemsListBox.Items.Add(displayText);
+            }
+            UpdatePathPreview();
+            UpdateCalibrationStatus();
         }
 
         private void actionItemsListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -193,8 +312,8 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 if (int.TryParse(actionTimeTxtBox.Text, out int timeInMilliseconds))
                 {
-                    // Update the item in the ListBox with the new time in milliseconds
-                    actionItemsListBox.Items[selectedIndex] = $"{selectedItem} ({timeInMilliseconds} milliseconds)";
+                    // Update the item in the ListBox with the new formatted time
+                    actionItemsListBox.Items[selectedIndex] = FormatTimeDisplayItem(timeInMilliseconds);
                 }
                 else
                 {
@@ -212,6 +331,482 @@ namespace ToonTown_Rewritten_Bot.Views
                 MessageBox.Show("Please select a valid action.", "No Action Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            UpdatePathPreview();
         }
+
+        #region Walk Path Recorder
+
+        private void btnStartRecording_Click(object sender, EventArgs e)
+        {
+            // Show countdown overlay to give user time to switch to TTR
+            lblRecordingStatus.Text = "Status: Starting countdown...";
+            lblRecordingStatus.ForeColor = Color.Orange;
+
+            // Minimize this window first
+            this.WindowState = FormWindowState.Minimized;
+
+            // Show countdown overlay
+            bool completed = CountdownOverlayForm.ShowCountdown(5);
+
+            if (!completed)
+            {
+                // User cancelled
+                this.WindowState = FormWindowState.Normal;
+                lblRecordingStatus.Text = "Status: Recording cancelled";
+                lblRecordingStatus.ForeColor = Color.Gray;
+                return;
+            }
+
+            // Clear previous recording
+            _recordedKeys.Clear();
+            _currentKeyHeld = null;
+            _keyDownTime = 0;
+
+            // Update UI
+            btnStartRecording.Enabled = false;
+            btnStopRecording.Enabled = true;
+            btnAddSellFish.Enabled = true;
+            lblRecordingStatus.Text = "Status: Recording... Press arrow keys in TTR";
+            lblRecordingStatus.ForeColor = Color.Green;
+            lblLivePreview.Text = "";
+
+            // Start recording
+            _isRecording = true;
+            _recordingStopwatch.Restart();
+            _keyboardHook.Start();
+        }
+
+        private void btnStopRecording_Click(object sender, EventArgs e)
+        {
+            // Finalize any key still being held
+            FinalizeCurrentKey();
+
+            StopRecordingCleanup();
+
+            // Convert recorded keys to action items
+            ConvertRecordedKeysToActionItems();
+
+            // Update UI
+            lblRecordingStatus.Text = $"Status: Stopped - {_recordedKeys.Count} actions recorded";
+            lblRecordingStatus.ForeColor = Color.Blue;
+
+            // Restore window
+            this.WindowState = FormWindowState.Normal;
+            this.BringToFront();
+        }
+
+        private void btnAddSellFish_Click(object sender, EventArgs e)
+        {
+            if (!_isRecording)
+                return;
+
+            // Finalize any key currently being held before adding sell fish
+            FinalizeCurrentKey();
+
+            // Add a sell fish marker
+            _recordedKeys.Add(new RecordedKeyPress
+            {
+                Action = "SELL FISH",
+                DurationMs = 0,
+                IsSellFish = true
+            });
+
+            // Provide feedback and update live preview
+            lblRecordingStatus.Text = "Status: Recording... SELL FISH added!";
+            UpdateLivePreview();
+        }
+
+        private void OnGlobalKeyPressed(object sender, Keys key)
+        {
+            if (!_isRecording)
+                return;
+
+            // Only track arrow keys (movement keys in TTR)
+            string action = GetActionFromKey(key);
+            if (action == null)
+                return;
+
+            long currentTime = _recordingStopwatch.ElapsedMilliseconds;
+
+            // If a different key is pressed, finalize the previous key
+            if (_currentKeyHeld.HasValue && _currentKeyHeld.Value != key)
+            {
+                FinalizeCurrentKey();
+            }
+
+            // If this is a new key press (not a repeat of the held key)
+            if (!_currentKeyHeld.HasValue)
+            {
+                _currentKeyHeld = key;
+                _keyDownTime = currentTime;
+
+                // Update status to show which key is being held
+                this.BeginInvoke(new Action(() =>
+                {
+                    lblRecordingStatus.Text = $"Status: Recording... Holding {action}";
+                }));
+            }
+            // If same key, this is a key repeat - ignore it
+        }
+
+        private void OnGlobalKeyReleased(object sender, Keys key)
+        {
+            if (!_isRecording)
+                return;
+
+            // Only process if this is the key we're currently tracking
+            if (_currentKeyHeld.HasValue && _currentKeyHeld.Value == key)
+            {
+                FinalizeCurrentKey();
+
+                // Update status and live preview
+                this.BeginInvoke(new Action(() =>
+                {
+                    lblRecordingStatus.Text = $"Status: Recording... {_recordedKeys.Count} actions";
+                    UpdateLivePreview();
+                }));
+            }
+        }
+
+        private void FinalizeCurrentKey()
+        {
+            if (!_currentKeyHeld.HasValue)
+                return;
+
+            long currentTime = _recordingStopwatch.ElapsedMilliseconds;
+            long duration = currentTime - _keyDownTime;
+
+            // Only add if there was meaningful duration (at least 50ms to filter accidental presses)
+            if (duration >= 50)
+            {
+                string action = GetActionFromKey(_currentKeyHeld.Value);
+                if (action != null)
+                {
+                    _recordedKeys.Add(new RecordedKeyPress
+                    {
+                        Action = action,
+                        DurationMs = duration,
+                        IsSellFish = false
+                    });
+                }
+            }
+
+            _currentKeyHeld = null;
+            _keyDownTime = 0;
+        }
+
+        private string GetActionFromKey(Keys key)
+        {
+            return key switch
+            {
+                Keys.Up => "WALK FORWARDS",
+                Keys.Down => "WALK BACKWARDS",
+                Keys.Left => "TURN LEFT",
+                Keys.Right => "TURN RIGHT",
+                _ => null
+            };
+        }
+
+        private void StopRecordingCleanup()
+        {
+            _isRecording = false;
+            _keyboardHook.Stop();
+            _recordingStopwatch.Stop();
+
+            // Update UI
+            btnStartRecording.Enabled = true;
+            btnStopRecording.Enabled = false;
+            btnAddSellFish.Enabled = false;
+        }
+
+        private void ConvertRecordedKeysToActionItems()
+        {
+            // Ask user if they want to append or replace
+            DialogResult result = DialogResult.Yes;
+            if (actionItemsListBox.Items.Count > 0)
+            {
+                result = MessageBox.Show(
+                    "Do you want to REPLACE existing actions?\n\nYes = Replace all\nNo = Append to existing\nCancel = Discard recording",
+                    "Add Recorded Actions",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question);
+            }
+
+            if (result == DialogResult.Cancel)
+                return;
+
+            if (result == DialogResult.Yes)
+                actionItemsListBox.Items.Clear();
+
+            // Add each recorded action to the list
+            foreach (var recorded in _recordedKeys)
+            {
+                if (recorded.IsSellFish)
+                {
+                    actionItemsListBox.Items.Add("SELL FISH");
+                }
+                else
+                {
+                    // Add the movement action
+                    actionItemsListBox.Items.Add(recorded.Action);
+                    // Add the duration as a TIME action with new formatting
+                    actionItemsListBox.Items.Add(FormatTimeDisplayItem(recorded.DurationMs));
+                }
+            }
+            UpdatePathPreview();
+        }
+
+        /// <summary>
+        /// Updates the live preview label during recording to show the path as it's recorded.
+        /// </summary>
+        private void UpdateLivePreview()
+        {
+            if (!_isRecording || _recordedKeys.Count == 0)
+            {
+                lblLivePreview.Text = "";
+                return;
+            }
+
+            var preview = new StringBuilder("Recording: ");
+            int maxItems = 10; // Limit how many items to show
+            int startIndex = Math.Max(0, _recordedKeys.Count - maxItems);
+
+            if (startIndex > 0)
+            {
+                preview.Append("... ");
+            }
+
+            for (int i = startIndex; i < _recordedKeys.Count; i++)
+            {
+                var recorded = _recordedKeys[i];
+                if (recorded.IsSellFish)
+                {
+                    preview.Append("[SELL] ");
+                }
+                else
+                {
+                    string arrow = DurationFormatter.GetDirectionArrow(recorded.Action);
+                    string time = DurationFormatter.FormatSeconds(recorded.DurationMs);
+                    preview.Append($"{arrow} {time} ");
+                }
+            }
+
+            lblLivePreview.Text = preview.ToString().TrimEnd();
+        }
+
+        /// <summary>
+        /// Updates the path preview group box with a visual representation of the current actions.
+        /// Format: ↓ 0.8s → ← 1.0s → ↑ 0.7s [SELL] ↓ 0.8s
+        /// </summary>
+        private void UpdatePathPreview()
+        {
+            if (actionItemsListBox.Items.Count == 0)
+            {
+                lblPathPreview.Text = "(No actions)";
+                return;
+            }
+
+            var preview = new StringBuilder();
+            string lastAction = null;
+            int lastTimeMs = 0;
+
+            for (int i = 0; i < actionItemsListBox.Items.Count; i++)
+            {
+                string item = actionItemsListBox.Items[i].ToString();
+
+                if (item.StartsWith("TIME"))
+                {
+                    // This is a duration for the previous action
+                    lastTimeMs = ExtractMillisecondsFromDisplay(item);
+
+                    // Add the previous action with its time
+                    if (!string.IsNullOrEmpty(lastAction))
+                    {
+                        string arrow = DurationFormatter.GetDirectionArrow(lastAction);
+                        string time = DurationFormatter.FormatSeconds(lastTimeMs);
+                        preview.Append($"{arrow} {time} ");
+                    }
+                    lastAction = null;
+                }
+                else if (item == "SELL FISH")
+                {
+                    // First add any pending action
+                    if (!string.IsNullOrEmpty(lastAction))
+                    {
+                        string arrow = DurationFormatter.GetDirectionArrow(lastAction);
+                        preview.Append($"{arrow} ");
+                    }
+                    preview.Append("[SELL] ");
+                    lastAction = null;
+                }
+                else
+                {
+                    // This is a movement action - save for when we get its TIME
+                    // First add any pending action without time
+                    if (!string.IsNullOrEmpty(lastAction))
+                    {
+                        string arrow = DurationFormatter.GetDirectionArrow(lastAction);
+                        preview.Append($"{arrow} ");
+                    }
+                    lastAction = item;
+                }
+            }
+
+            // Add any trailing action without time
+            if (!string.IsNullOrEmpty(lastAction))
+            {
+                string arrow = DurationFormatter.GetDirectionArrow(lastAction);
+                preview.Append($"{arrow} ");
+            }
+
+            string result = preview.ToString().TrimEnd();
+            lblPathPreview.Text = string.IsNullOrEmpty(result) ? "(No actions)" : result;
+        }
+
+        #endregion
+
+        #region Calibration
+
+        /// <summary>
+        /// Updates the calibration status label based on the current file's calibration data.
+        /// </summary>
+        private void UpdateCalibrationStatus()
+        {
+            if (_currentFile?.Calibration != null)
+            {
+                bool hasScanArea = _currentFile.Calibration.ScanArea != null;
+                bool hasPondColors = _currentFile.Calibration.PondColors != null;
+
+                if (hasScanArea && hasPondColors)
+                {
+                    lblCalibrationStatus.Text = "✓ Scan area and pond colors calibrated";
+                    lblCalibrationStatus.ForeColor = Color.Green;
+                }
+                else if (hasScanArea)
+                {
+                    lblCalibrationStatus.Text = "✓ Scan area calibrated (no pond colors)";
+                    lblCalibrationStatus.ForeColor = Color.DarkOrange;
+                }
+                else if (hasPondColors)
+                {
+                    lblCalibrationStatus.Text = "✓ Pond colors calibrated (no scan area)";
+                    lblCalibrationStatus.ForeColor = Color.DarkOrange;
+                }
+                else
+                {
+                    lblCalibrationStatus.Text = "No calibration data (will use global settings)";
+                    lblCalibrationStatus.ForeColor = Color.Gray;
+                }
+            }
+            else
+            {
+                lblCalibrationStatus.Text = "No calibration data (will use global settings)";
+                lblCalibrationStatus.ForeColor = Color.Gray;
+            }
+        }
+
+        private void btnCalibrateScanArea_Click(object sender, EventArgs e)
+        {
+            // Ensure we have a file to save to
+            if (_currentFile == null)
+            {
+                _currentFile = new CustomFishingActionFile();
+            }
+
+            // Use the same approach as the wizard - show explanation first
+            var result = MessageBox.Show(
+                "This will open a fullscreen overlay on the game window where you can adjust the scan area.\n\n" +
+                "Make sure Toontown is running and visible before continuing.",
+                "Scan Area Calibration",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Information);
+
+            if (result != DialogResult.OK)
+                return;
+
+            // Use "CUSTOM FISHING ACTION" as the location for custom fishing calibration
+            var detector = new FishBubbleDetector("CUSTOM FISHING ACTION");
+            var defaultScanArea = detector.GetDefaultScanArea();
+
+            if (defaultScanArea.IsEmpty)
+            {
+                MessageBox.Show("No scan area defined for custom fishing.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (var calibrationForm = new ScanAreaCalibrationForm("CUSTOM FISHING ACTION", defaultScanArea))
+            {
+                calibrationForm.ShowDialog();
+
+                if (calibrationForm.WasSaved)
+                {
+                    // Get screen dimensions for percentage calculation (same as wizard)
+                    var screenBounds = Screen.PrimaryScreen.Bounds;
+                    var rect = calibrationForm.ResultScanArea;
+
+                    // Store calibration in the current file as percentages
+                    if (_currentFile.Calibration == null)
+                        _currentFile.Calibration = new CalibrationData();
+
+                    _currentFile.Calibration.ScanArea = new ScanAreaCalibration
+                    {
+                        XPercent = (float)((rect.X / (double)screenBounds.Width) * 100),
+                        YPercent = (float)((rect.Y / (double)screenBounds.Height) * 100),
+                        WidthPercent = (float)((rect.Width / (double)screenBounds.Width) * 100),
+                        HeightPercent = (float)((rect.Height / (double)screenBounds.Height) * 100)
+                    };
+
+                    UpdateCalibrationStatus();
+                    MessageBox.Show("Scan area calibrated!\n\nRemember to Save the action file to keep this calibration.",
+                        "Calibration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void btnCalibratePondColors_Click(object sender, EventArgs e)
+        {
+            // Ensure we have a file to save to
+            if (_currentFile == null)
+            {
+                _currentFile = new CustomFishingActionFile();
+            }
+
+            // Use "CUSTOM FISHING ACTION" as the location for custom fishing calibration
+            using (var colorForm = new PondColorCalibrationForm("CUSTOM FISHING ACTION"))
+            {
+                colorForm.ShowDialog();
+
+                // Same approach as wizard - read back from PondColorManager after save
+                if (colorForm.WasSaved)
+                {
+                    var colors = PondColorManager.GetPondColors("CUSTOM FISHING ACTION");
+                    if (colors != null)
+                    {
+                        if (_currentFile.Calibration == null)
+                            _currentFile.Calibration = new CalibrationData();
+
+                        _currentFile.Calibration.PondColors = new PondColorCalibration
+                        {
+                            ShadowR = colors.ShadowColor.R,
+                            ShadowG = colors.ShadowColor.G,
+                            ShadowB = colors.ShadowColor.B,
+                            WaterR = colors.WaterColor.R,
+                            WaterG = colors.WaterColor.G,
+                            WaterB = colors.WaterColor.B,
+                            ToleranceR = colors.ToleranceR,
+                            ToleranceG = colors.ToleranceG,
+                            ToleranceB = colors.ToleranceB
+                        };
+
+                        UpdateCalibrationStatus();
+                        MessageBox.Show("Pond colors calibrated!\n\nRemember to Save the action file to keep this calibration.",
+                            "Calibration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+        }
+
+        #endregion
     }
 }

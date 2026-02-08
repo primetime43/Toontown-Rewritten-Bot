@@ -38,6 +38,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         {
             // The keys are what we expect to read from the screen (course name)
             // The values are the file names (without .json extension)
+            // EASY courses (Walk in the Par)
             { "Afternoon Tee", "EASY - Afternoon Tee" },
             { "Down the Hatch", "EASY - Down the Hatch" },
             { "Hole In Fun", "EASY - Hole In Fun" },
@@ -51,13 +52,43 @@ namespace ToonTown_Rewritten_Bot.Utilities
             { "Swing Time", "EASY - Swing Time" },
             { "Swing-A-Long", "EASY - Swing-A-Long" },
             { "Swing A Long", "EASY - Swing-A-Long" }, // Alternative without hyphen
+            // MEDIUM courses (Hole-some Fun)
+            { "At the Drive In", "MEDIUM - At the Drive In" },
+            { "Bogey Nights-2", "MEDIUM - Bogey Nights-2" },
+            { "Down the Hatch-2", "MEDIUM - Down the Hatch-2" },
+            { "Hole in Fun-2", "MEDIUM - Hole in Fun-2" },
+            { "Holey Mackerel-2", "MEDIUM - Holey Mackerel-2" },
+            { "Holey Mackeral-2", "MEDIUM - Holey Mackerel-2" }, // Alternative spelling
+            { "Hot Links-2", "MEDIUM - Hot Links-2" },
+            { "No Putts About It", "MEDIUM - No Putts About It" },
+            { "Rock and Roll In", "MEDIUM - Rock and Roll In" },
+            { "Rock and Roll In-2", "MEDIUM - Rock and Roll In-2" },
+            { "Second Wind", "MEDIUM - Second Wind" },
+            { "Swing Time-2", "MEDIUM - Swing Time-2" },
+            { "Tea Off Time", "MEDIUM - Tea Off Time" },
+            // HARD courses (The Hole Kit and Caboodle)
+            { "Afternoon Tee-2", "HARD - Afternoon Tee-2" },
+            { "At the Drive In-2", "HARD - At the Drive In-2" },
+            { "Hole on the Range-2", "HARD - Hole on the Range-2" },
+            { "No Putts About It-2", "HARD - No Putts About It-2" },
+            { "One Little Birdie-2", "HARD - One Little Birdie-2" },
+            { "Peanut Putter-2", "HARD - Peanut Putter-2" },
+            { "Second Wind-2", "HARD - Second Wind-2" },
+            { "Seeing Green-2", "HARD - Seeing Green-2" },
+            { "Swing-A-Long-2", "HARD - Swing-A-Long-2" },
+            { "Swing A Long-2", "HARD - Swing-A-Long-2" }, // Alternative without hyphen
+            { "Tea Off Time-2", "HARD - Tea Off Time-2" },
+            { "Whole in Won", "HARD - Whole in Won" },
+            { "Whole in Won-2", "HARD - Whole in Won-2" },
         };
 
         // Partial matches for fuzzy detection
         private static readonly string[] CourseKeywords = new[]
         {
             "Afternoon", "Hatch", "Hole", "Range", "Holey", "Mackeral", "Mackerel",
-            "Hot Links", "Birdie", "Peanut", "Putter", "Seeing", "Green", "Swing"
+            "Hot Links", "Birdie", "Peanut", "Putter", "Seeing", "Green", "Swing",
+            "Drive In", "Putts", "Rock", "Roll", "Second", "Wind", "Tea Off", "Whole", "Won",
+            "Bogey", "Nights", "-2"
         };
 
         public GolfCourseDetector(string pencilButtonTemplatePath = null)
@@ -299,7 +330,36 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         }
                     }
 
-                    // If template not found, try fallback positions
+                    // If template didn't match, offer recapture on first attempt
+                    if (!clicked && HasCloseButtonTemplate() && attempt == 0)
+                    {
+                        Debug.WriteLine("[GolfDetector] Close button template exists but didn't match, offering recapture...");
+                        bool recaptured = PromptForCloseButtonTemplate_Recapture();
+                        if (recaptured)
+                        {
+                            // Retry with the new template
+                            using (var retryScreenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
+                            using (var retryTemplate = new Bitmap(GetCloseButtonTemplatePath()))
+                            {
+                                if (retryScreenshot != null)
+                                {
+                                    var retryResult = ImageTemplateMatcher.FindTemplate(retryScreenshot, retryTemplate, 0.70);
+                                    if (retryResult.Found)
+                                    {
+                                        var retryRect = CoreFunctionality.GetGameWindowRect();
+                                        var retryPoint = new Point(retryRect.X + retryResult.Center.X, retryRect.Y + retryResult.Center.Y);
+                                        Debug.WriteLine($"[GolfDetector] Found close button after recapture at ({retryPoint.X}, {retryPoint.Y})");
+                                        CoreFunctionality.DoMouseClickDown(retryPoint);
+                                        await Task.Delay(50);
+                                        CoreFunctionality.DoMouseClickUp(retryPoint);
+                                        clicked = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // If still not found, try fallback positions
                     if (!clicked)
                     {
                         var gameRect = CoreFunctionality.GetGameWindowRect();
@@ -394,6 +454,19 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Prompts the user to recapture the close button template when it exists but didn't match.
+        /// </summary>
+        /// <returns>True if template was recaptured successfully</returns>
+        private bool PromptForCloseButtonTemplate_Recapture()
+        {
+            Debug.WriteLine("[GolfDetector] Close button template didn't match, prompting user to recapture...");
+
+            return UIElementManager.Instance.PromptForTemplateCapture(
+                CloseButtonTemplateName,
+                "The close button template didn't match. Please recapture the red close button (X) on the golf scoreboard.");
         }
 
         private const string PencilButtonTemplateName = "Golf_Pencil_Button";

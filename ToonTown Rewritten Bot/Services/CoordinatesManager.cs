@@ -52,70 +52,51 @@ namespace ToonTown_Rewritten_Bot.Services
         /// <returns>True if the coordinates are valid and set; otherwise, false if they are default (0,0) or not found.</returns>
         public static bool CheckCoordinates(Enum coordinateKey)
         {
-            // Check if the coordinates file exists. If not, create a fresh one with default values.
+            // Ensure file exists
             if (!File.Exists(CoordinatesFilePath))
             {
                 CreateFreshCoordinatesFile();
             }
 
-            // Read the JSON file containing the coordinates data.
-            string json = File.ReadAllText(CoordinatesFilePath);
-            // Deserialize the JSON data into a list of CoordinateActions objects.
-            List<CoordinateActions> coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
-
-            // Convert the enum key to its corresponding integer value, then convert that to a string.
             string keyAsString = Convert.ToInt32(coordinateKey).ToString();
+            var coordinate = FindCoordinateByKey(keyAsString);
 
-            // Attempt to find a CoordinateAction that matches the provided key.
-            var coordinate = coordinateActions.FirstOrDefault(ca => ca.Key == keyAsString);
-
-            // Check if the coordinate exists and if its X and Y values are not the default (0,0), indicating they have been set.
-            if (coordinate != null && (coordinate.X == 0 && coordinate.Y == 0))
-            {
-                return false; // The coordinates are default (0,0), indicating they have not been properly set.
-            }
-
-            // If the coordinate exists and is not default, or if no coordinate with the provided key exists, assume the coordinates are valid.
-            return true; // The coordinates are valid and have been set.
+            // Coordinates at (0,0) are considered unset
+            return coordinate != null && !(coordinate.X == 0 && coordinate.Y == 0);
         }
 
         /// <summary>
         /// Retrieves the coordinates from a JSON file based on the given enum key.
         /// </summary>
-        /// <param name="key">An enum value representing the coordinate key to retrieve. The enum should be convertible to an integer that matches keys stored in the JSON.</param>
+        /// <param name="key">An enum value representing the coordinate key to retrieve.</param>
         /// <returns>A tuple containing the X and Y coordinates associated with the provided enum key.</returns>
-        /// <exception cref="FileNotFoundException">Thrown if the UIElementCoordinates cannot be found at the expected location.</exception>
-        /// <exception cref="Exception">Thrown if no coordinates are found for the given key, indicating a possible issue with data consistency or key validity.</exception>
-        /// <remarks>
-        /// This method reads from a JSON file located relative to the executable's directory, deserializing it into a list of <see cref="CoordinateActions"/> objects.
-        /// It then attempts to find a <see cref="CoordinateActions"/> object where the key matches the provided enum's numeric value converted to string.
-        /// If found, it returns the X and Y coordinates; otherwise, it throws an exception indicating the key was not found.
-        /// </remarks>
+        /// <exception cref="FileNotFoundException">Thrown if the UIElementCoordinates cannot be found.</exception>
+        /// <exception cref="Exception">Thrown if no coordinates are found for the given key.</exception>
         public static (int x, int y) GetCoordsFromMap(Enum key)
         {
-            // Convert the Enum to its integer value, then to string
-            string keyAsString = Convert.ToInt32(key).ToString();
-
-            if (File.Exists(CoordinatesFilePath))
-            {
-                string json = File.ReadAllText(CoordinatesFilePath);
-                //Gets all of the coordinate models
-                var coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
-
-                var action = coordinateActions.FirstOrDefault(a => a.Key == keyAsString);
-                if (action != null)
-                {
-                    return (action.X, action.Y);
-                }
-                else
-                {
-                    throw new Exception($"No coordinates found for the key: {keyAsString}");
-                }
-            }
-            else
+            if (!File.Exists(CoordinatesFilePath))
             {
                 throw new FileNotFoundException("UIElementCoordinates not found.");
             }
+
+            string keyAsString = Convert.ToInt32(key).ToString();
+            var action = FindCoordinateByKey(keyAsString);
+
+            if (action != null)
+            {
+                return (action.X, action.Y);
+            }
+
+            throw new Exception($"No coordinates found for the key: {keyAsString}");
+        }
+
+        /// <summary>
+        /// Finds a coordinate entry by its key.
+        /// </summary>
+        private static CoordinateActions FindCoordinateByKey(string key)
+        {
+            var coordinateActions = ReadCoordinatesFromJsonFile();
+            return coordinateActions.FirstOrDefault(ca => ca.Key == key);
         }
 
         /// <summary>
@@ -160,6 +141,48 @@ namespace ToonTown_Rewritten_Bot.Services
                 return manualCoords;
             }
 
+            // Offer the user a chance to recapture the template before giving up
+            // Bring bot window to front so the dialog is visible over TTR
+            DialogResult recaptureChoice = DialogResult.No;
+            if (Application.OpenForms.Count > 0 && Application.OpenForms[0].InvokeRequired)
+            {
+                Application.OpenForms[0].Invoke(new Action(() =>
+                {
+                    CoreFunctionality.BringBotWindowToFront();
+                    recaptureChoice = MessageBox.Show(
+                        $"Could not find '{elementName}' on screen. Would you like to capture the template for this element?",
+                        "Element Not Found",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+                }));
+            }
+            else
+            {
+                CoreFunctionality.BringBotWindowToFront();
+                recaptureChoice = MessageBox.Show(
+                    $"Could not find '{elementName}' on screen. Would you like to capture the template for this element?",
+                    "Element Not Found",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+            }
+
+            if (recaptureChoice == DialogResult.Yes)
+            {
+                bool captured = UIElementManager.Instance.PromptForTemplateCapture(elementName, description ?? $"Please select the '{elementName}' on screen");
+                if (captured)
+                {
+                    // Retry with the newly captured template
+                    var retryLocation = await UIElementManager.Instance.GetElementLocationAsync(elementName, description, forceSearch: true);
+                    if (retryLocation.HasValue)
+                    {
+                        var windowOffset = CoreFunctionality.GetGameWindowOffset();
+                        int screenX = retryLocation.Value.X + windowOffset.X;
+                        int screenY = retryLocation.Value.Y + windowOffset.Y;
+                        return (screenX, screenY);
+                    }
+                }
+            }
+
             throw new Exception($"Could not find element '{elementName}' via image recognition or manual coordinates.");
         }
 
@@ -183,7 +206,10 @@ namespace ToonTown_Rewritten_Bot.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[CoordinatesManager] Error reading manual coords: {ex.Message}");
+            }
             return (0, 0);
         }
 
@@ -228,116 +254,85 @@ namespace ToonTown_Rewritten_Bot.Services
             }
         }
 
+        /// <summary>
+        /// Manually updates coordinates for a location using cursor position after countdown.
+        /// </summary>
+        /// <param name="locationToUpdateEnum">The enum value representing the location to update.</param>
         public static async Task ManualUpdateCoordinates(Enum locationToUpdateEnum)
         {
-            CoreFunctionality.BringBotWindowToFront();
-
-            UpdateCoordsHelper updateCoordsWindow = new UpdateCoordsHelper();
-            // Convert the Enum to its integer value, then to string
             string keyAsString = Convert.ToInt32(locationToUpdateEnum).ToString();
-            try
-            {
-                // Use CoordinateActions.GetDescription to retrieve the description by key
-                string description = CoordinateActions.GetDescription(keyAsString);
-                if (description == null)
-                {
-                    throw new Exception("Description not found for the given key.");
-                }
-                updateCoordsWindow.startCountDown(description);
-                // Set the window to be topmost to ensure it appears above other applications.
-                updateCoordsWindow.TopMost = true;
-                updateCoordsWindow.ShowDialog();
-            }
-            catch
-            {
-                MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-            }
-
-            // Get the updated cursor location
-            Point coords = CoreFunctionality.getCursorLocation();
-            string x = Convert.ToString(coords.X);
-            string y = Convert.ToString(coords.Y);
-
-            // Read the JSON file and deserialize it into a list of CoordinateAction objects
-            List<CoordinateActions> coordinateActions;
-            if (File.Exists(CoordinatesFilePath))
-            {
-                string json = File.ReadAllText(CoordinatesFilePath);
-                coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
-            }
-            else
-            {
-                // Handle case where file does not exist
-                coordinateActions = new List<CoordinateActions>();
-            }
-
-            // Find the coordinate by key and update its X and Y values
-            var coordinateToUpdate = coordinateActions.FirstOrDefault(ca => ca.Key == keyAsString);
-            if (coordinateToUpdate != null)
-            {
-                coordinateToUpdate.X = int.Parse(x);
-                coordinateToUpdate.Y = int.Parse(y);
-            }
-
-            // Serialize the list back to JSON and write it to the file
-            string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
-            File.WriteAllText(CoordinatesFilePath, updatedJson);
-
-            CoreFunctionality.FocusTTRWindow();
+            await ManualUpdateCoordinatesCore(keyAsString, focusTTRAfter: true);
         }
 
+        /// <summary>
+        /// Manually updates coordinates for a location using cursor position after countdown.
+        /// </summary>
+        /// <param name="locationToUpdate">The string key of the location to update.</param>
         public async Task ManualUpdateCoordinates(string locationToUpdate)
+        {
+            await ManualUpdateCoordinatesCore(locationToUpdate, focusTTRAfter: false);
+        }
+
+        /// <summary>
+        /// Core implementation for manual coordinate updates.
+        /// </summary>
+        private static async Task ManualUpdateCoordinatesCore(string key, bool focusTTRAfter)
         {
             CoreFunctionality.BringBotWindowToFront();
 
-            UpdateCoordsHelper updateCoordsWindow = new UpdateCoordsHelper();
             try
             {
-                // Use CoordinateActions.GetDescription to retrieve the description by key
-                string description = CoordinateActions.GetDescription(locationToUpdate);
+                string description = CoordinateActions.GetDescription(key);
                 if (description == null)
                 {
                     throw new Exception("Description not found for the given key.");
                 }
+
+                UpdateCoordsHelper updateCoordsWindow = new UpdateCoordsHelper();
                 updateCoordsWindow.startCountDown(description);
-                // Set the window to be topmost to ensure it appears above other applications.
                 updateCoordsWindow.TopMost = true;
                 updateCoordsWindow.ShowDialog();
             }
             catch
             {
                 MessageBox.Show("Unable to perform this action", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                return;
             }
 
-            // Get the updated cursor location
+            // Get the updated cursor location and save
             Point coords = CoreFunctionality.getCursorLocation();
-            string x = Convert.ToString(coords.X);
-            string y = Convert.ToString(coords.Y);
+            UpdateCoordinateByKey(key, coords.X, coords.Y);
 
-            // Read the JSON file and deserialize it into a list of CoordinateAction objects
-            List<CoordinateActions> coordinateActions;
-            if (File.Exists(CoordinatesFilePath))
+            if (focusTTRAfter)
             {
-                string json = File.ReadAllText(CoordinatesFilePath);
-                coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
+                CoreFunctionality.FocusTTRWindow();
             }
-            else
-            {
-                // Handle case where file does not exist
-                coordinateActions = new List<CoordinateActions>();
-            }
+        }
 
-            // Find the coordinate by key and update its X and Y values
-            var coordinateToUpdate = coordinateActions.FirstOrDefault(ca => ca.Key == locationToUpdate);
+        /// <summary>
+        /// Updates a coordinate entry by key and saves to file.
+        /// </summary>
+        private static void UpdateCoordinateByKey(string key, int x, int y)
+        {
+            var coordinateActions = ReadCoordinatesFromJsonFile();
+
+            var coordinateToUpdate = coordinateActions.FirstOrDefault(ca => ca.Key == key);
             if (coordinateToUpdate != null)
             {
-                coordinateToUpdate.X = int.Parse(x);
-                coordinateToUpdate.Y = int.Parse(y);
+                coordinateToUpdate.X = x;
+                coordinateToUpdate.Y = y;
             }
 
-            // Serialize the list back to JSON and write it to the file
-            string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
-            File.WriteAllText(CoordinatesFilePath, updatedJson);
+            SaveCoordinatesToFile(coordinateActions);
+        }
+
+        /// <summary>
+        /// Saves coordinate actions list to the JSON file.
+        /// </summary>
+        private static void SaveCoordinatesToFile(List<CoordinateActions> coordinateActions)
+        {
+            string json = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
+            File.WriteAllText(CoordinatesFilePath, json);
         }
 
         /// <summary>

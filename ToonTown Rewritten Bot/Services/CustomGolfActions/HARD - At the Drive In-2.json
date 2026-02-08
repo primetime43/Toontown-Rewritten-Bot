@@ -1,0 +1,22 @@
+[
+  {
+    "Action": "DELAY TIME",
+    "Command": "DELAY TIME",
+    "Duration": 15000
+  },
+  {
+    "Action": "MOVE TO LEFT TEE SPOT",
+    "Command": "LEFT",
+    "Duration": 100
+  },
+  {
+    "Action": "TURN RIGHT",
+    "Command": "TURN RIGHT",
+    "Duration": 814
+  },
+  {
+    "Action": "SWING POWER",
+    "Command": "SWING POWER",
+    "Duration": 1625
+  }
+]

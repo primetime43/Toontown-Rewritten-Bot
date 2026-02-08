@@ -10,6 +10,7 @@
         public static readonly string MinniesMelodylandTenorTerrace = "MINNIE'S MELODYLAND TENOR TERRACE";
         public static readonly string DonaldDockLighthouseLane = "DONALD DOCK LIGHTHOUSE LANE";
         public static readonly string DaisysGardenElmStreet = "DAISY'S GARDEN ELM STREET";
+        public static readonly string EstateLeftDock = "ESTATE (FAR LEFT DOCK)";
         public static readonly string FishAnywhere = "FISH ANYWHERE";
         public static readonly string CustomFishingAction = "CUSTOM FISHING ACTION";
     }

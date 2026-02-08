@@ -214,6 +214,36 @@ namespace ToonTown_Rewritten_Bot.Services
             return IsWindowVisible(hwnd);
         }
 
+        private const string GameWindowNotFoundMessage = "Toontown Rewritten window not found. Please make sure the game is running.";
+
+        /// <summary>
+        /// Ensures the game window is ready, throwing an exception if not.
+        /// Use this in services that should throw on failure.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when game window is not found.</exception>
+        public static void EnsureGameWindowReady()
+        {
+            if (!IsGameWindowReady())
+            {
+                throw new InvalidOperationException(GameWindowNotFoundMessage);
+            }
+        }
+
+        /// <summary>
+        /// Checks if game window is ready, showing a message box and returning false if not.
+        /// Use this in UI event handlers that should show user-friendly errors.
+        /// </summary>
+        /// <returns>True if game window is ready, false otherwise.</returns>
+        public static bool EnsureGameWindowReadyWithMessage()
+        {
+            if (!IsGameWindowReady())
+            {
+                MessageBox.Show(GameWindowNotFoundMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// Gets the current position and size of the Toontown window.
         /// </summary>
@@ -234,12 +264,6 @@ namespace ToonTown_Rewritten_Bot.Services
         // Window show commands
         private const int SW_RESTORE = 9;
         private const int SW_MAXIMIZE = 3;
-        private const int SW_MINIMIZE = 6;
-        private const int SW_SHOWNORMAL = 1;
-
-        // SetWindowPos flags
-        private const uint SWP_NOZORDER = 0x0004;
-        private const uint SWP_SHOWWINDOW = 0x0040;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct RECT
@@ -258,9 +282,6 @@ namespace ToonTown_Rewritten_Bot.Services
 
         [DllImport("user32.dll")]
         private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
         /// <summary>
         /// Brings the Toontown Rewritten Bot window to the foreground.
@@ -289,13 +310,19 @@ namespace ToonTown_Rewritten_Bot.Services
         /// <summary>
         /// Either creates and returns the path to a specific custom actions folder or returns the paths of all JSON files within that folder.
         /// </summary>
-        /// <param name="actionType">The type of actions folder to manage ('Fishing' or 'Golf').</param>
+        /// <param name="actionType">The type of actions folder to manage ('Fishing', 'Golf', or 'Gardening').</param>
         /// <param name="returnFiles">If true, returns paths of all .json files in the folder; otherwise, returns the folder path.</param>
         /// <returns>If returnFiles is false, returns the path to the folder. If returnFiles is true, returns an array of file paths for .json files in the folder.</returns>
         public static object ManageCustomActionsFolder(string actionType, bool returnFiles = false)
         {
             // Define the folder name based on the action type
-            string folderName = actionType == "Fishing" ? "Custom Fishing Actions" : "Custom Golf Actions";
+            string folderName = actionType switch
+            {
+                "Fishing" => "Custom Fishing Actions",
+                "Golf" => "Custom Golf Actions",
+                "Gardening" => "Custom Gardening Actions",
+                _ => $"Custom {actionType} Actions"
+            };
 
             // Get the directory where the executable is running
             string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -376,54 +403,31 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
-        /// Retrieves a dictionary of embedded resource file names related to Custom Fishing Actions.
-        /// This dictionary maps the embedded resource names to more readable JSON file names, to be used when extracting these resources to the file system.
-        /// The method scans all embedded resources that start with a specific prefix related to Custom Fishing Actions.
+        /// Retrieves a dictionary of embedded resource file names for the given resource prefix.
+        /// Maps embedded resource names to readable JSON filenames for extraction to disk.
         /// </summary>
-        /// <returns>A dictionary where keys are the full embedded resource names and values are the corresponding filenames intended for saving to disk.</returns>
+        private static Dictionary<string, string> GetResourceDictionary(string prefix)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            string[] resourceNames = assembly.GetManifestResourceNames();
+            Dictionary<string, string> resourceMap = new Dictionary<string, string>();
+
+            foreach (string resourceName in resourceNames)
+            {
+                if (resourceName.StartsWith(prefix))
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(resourceName.Substring(prefix.Length + 1));
+                    resourceMap.Add(resourceName, fileName + ".json");
+                }
+            }
+            return resourceMap;
+        }
+
         public static Dictionary<string, string> GetFishingResourceDictionary()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            string[] resourceNames = assembly.GetManifestResourceNames();
-            string prefix = "ToonTown_Rewritten_Bot.Services.CustomFishingActions";
-            Dictionary<string, string> resourceMap = new Dictionary<string, string>();
+            => GetResourceDictionary("ToonTown_Rewritten_Bot.Services.CustomFishingActions");
 
-            foreach (string resourceName in resourceNames)
-            {
-                if (resourceName.StartsWith(prefix))
-                {
-                    // Extracting the filename from the resource path and removing extension for better readability
-                    string fileName = Path.GetFileNameWithoutExtension(resourceName.Substring(prefix.Length + 1));
-                    resourceMap.Add(resourceName, fileName + ".json");
-                }
-            }
-            return resourceMap;
-        }
-
-        /// <summary>
-        /// Retrieves a dictionary of embedded resource file names related to Custom Golf Actions.
-        /// This dictionary maps the embedded resource names to more readable JSON file names, to be used when extracting these resources to the file system.
-        /// The method scans all embedded resources that start with a specific prefix related to Custom Golf Actions.
-        /// </summary>
-        /// <returns>A dictionary where keys are the full embedded resource names and values are the corresponding filenames intended for saving to disk.</returns>
         public static Dictionary<string, string> GetGolfResourceDictionary()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            string[] resourceNames = assembly.GetManifestResourceNames();
-            string prefix = "ToonTown_Rewritten_Bot.Services.CustomGolfActions";
-            Dictionary<string, string> resourceMap = new Dictionary<string, string>();
-
-            foreach (string resourceName in resourceNames)
-            {
-                if (resourceName.StartsWith(prefix))
-                {
-                    // Extracting the filename from the resource path and removing extension for better readability
-                    string fileName = Path.GetFileNameWithoutExtension(resourceName.Substring(prefix.Length + 1));
-                    resourceMap.Add(resourceName, fileName + ".json");
-                }
-            }
-            return resourceMap;
-        }
+            => GetResourceDictionary("ToonTown_Rewritten_Bot.Services.CustomGolfActions");
 
         //ignore .dll imports below
         [DllImport("user32.dll")]
@@ -442,8 +446,6 @@ namespace ToonTown_Rewritten_Bot.Services
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool ShowWindow(nint hWnd, int nCmdShow);
 
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
-        private static extern int BitBlt(nint hDC, int x, int y, int nWidth, int nHeight, nint hSrcDC, int xSrc, int ySrc, int dwRop);
         [DllImport("user32.dll", SetLastError = true)]
         private static extern nint GetDesktopWindow();
         [DllImport("user32.dll", SetLastError = true)]
@@ -461,8 +463,7 @@ namespace ToonTown_Rewritten_Bot.Services
         private const uint MOUSEEVENTF_MOVE = 0x0001;
         private const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
         private const uint MOUSEEVENTF_LEFTUP = 0x0004;
-        private const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
-        private const uint MOUSEEVENTF_RIGHTUP = 0x0010;
+        private const uint MOUSEEVENTF_VIRTUALDESK = 0x4000;
         private const uint MOUSEEVENTF_ABSOLUTE = 0x8000;
 
         private const int INPUT_MOUSE = 0;
@@ -487,15 +488,21 @@ namespace ToonTown_Rewritten_Bot.Services
 
         /// <summary>
         /// Converts screen coordinates to normalized mouse coordinates (0-65535 range).
+        /// Uses the virtual screen (all monitors combined) for proper multi-monitor support.
         /// </summary>
         private static (int mouseX, int mouseY) GetNormalizedMouseCoordinates(int screenX, int screenY)
         {
-            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
-            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+            // Use virtual screen bounds to support multiple monitors
+            // VirtualScreen represents the bounding rectangle of all monitors combined
+            int virtualScreenLeft = SystemInformation.VirtualScreen.Left;
+            int virtualScreenTop = SystemInformation.VirtualScreen.Top;
+            int virtualScreenWidth = SystemInformation.VirtualScreen.Width;
+            int virtualScreenHeight = SystemInformation.VirtualScreen.Height;
 
-            // Normalize to 0-65535 range as required by SendInput with ABSOLUTE flag
-            int mouseX = (int)((screenX * 65536L) / screenWidth);
-            int mouseY = (int)((screenY * 65536L) / screenHeight);
+            // Normalize to 0-65535 range, accounting for virtual screen offset
+            // This correctly handles monitors to the left of or above the primary monitor
+            int mouseX = (int)(((screenX - virtualScreenLeft) * 65536L) / virtualScreenWidth);
+            int mouseY = (int)(((screenY - virtualScreenTop) * 65536L) / virtualScreenHeight);
 
             return (mouseX, mouseY);
         }
@@ -516,7 +523,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     dx = mouseX,
                     dy = mouseY,
                     mouseData = 0,
-                    dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
+                    dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
                     time = 0,
                     dwExtraInfo = IntPtr.Zero
                 }
@@ -541,7 +548,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     dx = mouseX,
                     dy = mouseY,
                     mouseData = 0,
-                    dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE,
+                    dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
                     time = 0,
                     dwExtraInfo = IntPtr.Zero
                 }
@@ -566,7 +573,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     dx = mouseX,
                     dy = mouseY,
                     mouseData = 0,
-                    dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE,
+                    dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
                     time = 0,
                     dwExtraInfo = IntPtr.Zero
                 }
@@ -594,7 +601,7 @@ namespace ToonTown_Rewritten_Bot.Services
                         dx = mouseX,
                         dy = mouseY,
                         mouseData = 0,
-                        dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE,
+                        dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
                         time = 0,
                         dwExtraInfo = IntPtr.Zero
                     }
@@ -607,7 +614,7 @@ namespace ToonTown_Rewritten_Bot.Services
                         dx = mouseX,
                         dy = mouseY,
                         mouseData = 0,
-                        dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE,
+                        dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
                         time = 0,
                         dwExtraInfo = IntPtr.Zero
                     }

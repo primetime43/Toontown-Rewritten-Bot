@@ -5,6 +5,11 @@
     "Duration": 15000
   },
   {
+    "Action": "MOVE TO LEFT TEE SPOT",
+    "Command": "LEFT",
+    "Duration": 100
+  },
+  {
     "Action": "TURN RIGHT",
     "Command": "TURN RIGHT",
     "Duration": 700
@@ -12,6 +17,6 @@
   {
     "Action": "SWING POWER",
     "Command": "SWING POWER",
-    "Duration": 1870
+    "Duration": 1925
   }
 ]

@@ -14,7 +14,7 @@ namespace ToonTown_Rewritten_Bot.Models
     /// Represents actions associated with coordinates in the UI, such as button locations.
     /// Now uses file-based definitions via TemplateDefinitionManager.
     /// </summary>
-    public class CoordinateActions : ICoordinateData
+    public class CoordinateActions
     {
         public string Key { get; set; }
         public string Description { get; set; }
@@ -55,7 +55,7 @@ namespace ToonTown_Rewritten_Bot.Models
     {
         public enum GardeningCoordinatesEnum
         {
-            PlantFlowerRemoveButton = 1,
+            PlantFlowerButton = 1,
             RedJellybeanButton,
             GreenJellybeanButton,
             OrangeJellybeanButton,
@@ -68,7 +68,8 @@ namespace ToonTown_Rewritten_Bot.Models
             BluePlantButton,
             BlueOkButton,
             WateringCanButton,
-            BlueYesButton
+            BlueYesButton,
+            RemovePlantButton = 35
         }
 
         public enum FishingCoordinatesEnum
@@ -107,6 +108,7 @@ namespace ToonTown_Rewritten_Bot.Models
             ["MINNIE'S MELODYLAND TENOR TERRACE"] = "Fishes in the top left dock",
             ["DONALD DOCK LIGHTHOUSE LANE"] = "Fishes in the middle right dock (middle right)",
             ["DAISY'S GARDEN ELM STREET"] = "Fishes in the bottom left dock when you walk in",
+            ["ESTATE (FAR LEFT DOCK)"] = "Fishes at your estate's far left dock. Sells fish using the built-in walk path.",
             ["FISH ANYWHERE"] = "Fishes for you anywhere, but will only fish, will not sell fish!",
             ["CUSTOM FISHING ACTION"] = "Select your custom fishing actions in the dropdown"
         };

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -69,8 +70,9 @@ namespace ToonTown_Rewritten_Bot.Views
                 Directory.CreateDirectory(path);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"[ImageRecognitionDebugForm] Failed to create directory '{path}': {ex.Message}");
                 return false;
             }
         }
@@ -88,32 +90,48 @@ namespace ToonTown_Rewritten_Bot.Views
         {
             templateDefinitionsComboBox.Items.Clear();
             var definitions = TemplateDefinitionManager.Instance.GetAllDefinitions();
-            foreach (var def in definitions.OrderBy(d => d.Category).ThenBy(d => d.Name))
+            foreach (var def in definitions)
             {
-                templateDefinitionsComboBox.Items.Add($"{def.Name}");
+                templateDefinitionsComboBox.Items.Add($"[{def.Category}] {def.Name}");
             }
             if (templateDefinitionsComboBox.Items.Count > 0)
                 templateDefinitionsComboBox.SelectedIndex = 0;
         }
 
+        private string GetSelectedTemplateName()
+        {
+            if (templateDefinitionsComboBox.SelectedItem == null)
+                return null;
+
+            string selected = templateDefinitionsComboBox.SelectedItem.ToString();
+            int bracketEnd = selected.IndexOf("] ");
+            if (bracketEnd >= 0)
+                return selected.Substring(bracketEnd + 2);
+            return selected;
+        }
+
         private void TemplateDefinitionsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (templateDefinitionsComboBox.SelectedItem == null) return;
+            string templateName = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(templateName)) return;
 
-            string templateName = templateDefinitionsComboBox.SelectedItem.ToString();
-            string templateFileName = GetTemplateFileName(templateName);
-            string templatePath = Path.Combine(TemplatesFolder, templateFileName);
+            string templatePath = UIElementManager.Instance.GetTemplatePath(templateName);
+            int variantCount = UIElementManager.Instance.GetVariantCount(templateName);
 
-            if (File.Exists(templatePath))
+            if (!string.IsNullOrEmpty(templatePath) && File.Exists(templatePath))
             {
                 try
                 {
                     _currentTemplate?.Dispose();
                     _currentTemplate = new Bitmap(templatePath);
                     templatePreviewPictureBox.Image = _currentTemplate;
-                    templatePathLabel.Text = templateFileName;
+
+                    string variantInfo = variantCount > 1
+                        ? $"{Path.GetFileName(templatePath)} (+{variantCount - 1} variant{(variantCount > 2 ? "s" : "")})"
+                        : Path.GetFileName(templatePath);
+                    templatePathLabel.Text = variantInfo;
                     templatePathLabel.ForeColor = Color.LightGreen;
-                    Log($"Loaded template: {templateName} ({_currentTemplate.Width}x{_currentTemplate.Height})");
+                    Log($"Loaded template: {templateName} ({_currentTemplate.Width}x{_currentTemplate.Height}), {variantCount} variant{(variantCount != 1 ? "s" : "")}");
                 }
                 catch (Exception ex)
                 {
@@ -142,22 +160,23 @@ namespace ToonTown_Rewritten_Bot.Views
                 }
             }
 
-            if (templateDefinitionsComboBox.SelectedItem == null)
+            string templateName = GetSelectedTemplateName();
+            if (string.IsNullOrEmpty(templateName))
             {
                 Log("Please select a template from the dropdown.");
                 return;
             }
 
-            string templateName = templateDefinitionsComboBox.SelectedItem.ToString();
-            string templateFileName = GetTemplateFileName(templateName);
-            string templatePath = Path.Combine(TemplatesFolder, templateFileName);
+            string templatePath = UIElementManager.Instance.GetTemplatePath(templateName);
 
-            if (!File.Exists(templatePath))
+            if (string.IsNullOrEmpty(templatePath) || !File.Exists(templatePath))
             {
-                Log($"Template image not found: {templateFileName}");
+                Log($"Template image not found for: {templateName}");
                 Log($"Please capture this template first using the Dev tab.");
                 return;
             }
+
+            string templateFileName = Path.GetFileName(templatePath);
 
             // Load the template if not already loaded
             if (_currentTemplate == null || templatePathLabel.Text != templateFileName)
@@ -180,12 +199,6 @@ namespace ToonTown_Rewritten_Bot.Views
 
             // Use the existing find template logic
             FindTemplateBtn_Click(sender, e);
-        }
-
-        private string GetTemplateFileName(string templateName)
-        {
-            // Convert template name to filename format (same as UIElementManager)
-            return templateName.Replace(" ", "_").Replace("/", "_") + ".png";
         }
 
         private void EnsureTemplatesFolderExists()
@@ -217,7 +230,7 @@ namespace ToonTown_Rewritten_Bot.Views
             this.Load += (s, e) =>
             {
                 try { mainSplit.SplitterDistance = Math.Max(400, this.ClientSize.Width - 280); }
-                catch { }
+                catch { /* Splitter distance can fail during form initialization */ }
             };
 
             // === LEFT PANEL: Preview + Output ===
@@ -339,6 +352,15 @@ namespace ToonTown_Rewritten_Bot.Views
             };
             templateInner.Controls.Add(templatePreviewPictureBox);
 
+            var confidenceRow = CreateFlowRow();
+            templateInner.Controls.Add(confidenceRow);
+            confidenceRow.Controls.Add(new Label { Text = "Confidence:", AutoSize = true, Margin = new Padding(0, 5, 0, 0) });
+            confidenceTrackBar = new TrackBar { Minimum = 50, Maximum = 100, Value = 85, TickFrequency = 5, SmallChange = 1, LargeChange = 5, Size = new Size(110, 25), Margin = new Padding(0) };
+            confidenceTrackBar.ValueChanged += (s, ev) => confidenceValueLabel.Text = $"{confidenceTrackBar.Value}%";
+            confidenceRow.Controls.Add(confidenceTrackBar);
+            confidenceValueLabel = new Label { Text = "85%", AutoSize = true, Margin = new Padding(0, 5, 0, 0) };
+            confidenceRow.Controls.Add(confidenceValueLabel);
+
             var templateRow1 = CreateFlowRow();
             templateInner.Controls.Add(templateRow1);
             findTemplateBtn = CreateButton("Find", 55);
@@ -416,7 +438,6 @@ namespace ToonTown_Rewritten_Bot.Views
             this.Controls.Add(coordsLabel);
 
             // Initialize dummy controls that are no longer in UI but referenced elsewhere
-            thresholdNumeric = new NumericUpDown { Value = 85, Minimum = 50, Maximum = 100 };
             stopSearchBtn = new Button();
             testTemplateBtn = new Button();
             loadTemplateBtn = new Button();
@@ -575,9 +596,8 @@ namespace ToonTown_Rewritten_Bot.Views
             SetSearchButtonsEnabled(false, isSearching: true);
             Log("Searching for all template matches...");
 
-            // Clone bitmaps for thread safety - GDI+ bitmaps can't be used across threads
             Bitmap screenshotCopy = null;
-            Bitmap templateCopy = null;
+            Bitmap templateBitmap = null;
 
             // Create cancellation token
             _searchCancellation?.Dispose();
@@ -586,11 +606,17 @@ namespace ToonTown_Rewritten_Bot.Views
 
             try
             {
-                double threshold = (double)thresholdNumeric.Value / 100.0;
+                double threshold = (double)confidenceTrackBar.Value / 100.0;
 
-                // Create copies for the background thread
-                screenshotCopy = (Bitmap)_currentScreenshot.Clone();
-                templateCopy = (Bitmap)_currentTemplate.Clone();
+                // Deep copy to get independent bitmap safe for background thread
+                screenshotCopy = DeepCopyBitmap(_currentScreenshot);
+                templateBitmap = LoadTemplateBitmapForSearch();
+
+                if (templateBitmap == null)
+                {
+                    Log("Failed to load template for search.");
+                    return;
+                }
 
                 // Progress callback to update UI
                 var progress = new Progress<int>(p =>
@@ -602,7 +628,7 @@ namespace ToonTown_Rewritten_Bot.Views
                 // Run template matching on background thread
                 var stopwatch = System.Diagnostics.Stopwatch.StartNew();
                 var results = await Task.Run(() => ImageTemplateMatcher.FindAllTemplates(
-                    screenshotCopy, templateCopy, threshold, 10, token,
+                    screenshotCopy, templateBitmap, threshold, 10, token,
                     p => ((IProgress<int>)progress).Report(p)));
                 stopwatch.Stop();
 
@@ -638,7 +664,7 @@ namespace ToonTown_Rewritten_Bot.Views
             finally
             {
                 screenshotCopy?.Dispose();
-                templateCopy?.Dispose();
+                templateBitmap?.Dispose();
                 SetSearchButtonsEnabled(true, isSearching: false);
             }
         }
@@ -748,6 +774,75 @@ namespace ToonTown_Rewritten_Bot.Views
             }
         }
 
+        /// <summary>
+        /// Creates a deep copy of a bitmap with its own independent pixel data.
+        /// Unlike Bitmap.Clone() which can share the underlying buffer, this creates
+        /// a fully independent copy safe for cross-thread use (same as how the bot
+        /// creates fresh bitmaps via new Bitmap(path) in UIElementManager.FindElementAsync).
+        /// </summary>
+        private static Bitmap DeepCopyBitmap(Bitmap source)
+        {
+            var copy = new Bitmap(source.Width, source.Height, PixelFormat.Format32bppArgb);
+            using (var g = Graphics.FromImage(copy))
+            {
+                g.DrawImage(source, 0, 0, source.Width, source.Height);
+            }
+            return copy;
+        }
+
+        /// <summary>
+        /// Loads a fresh template bitmap from disk (same approach as UIElementManager.FindElementAsync).
+        /// Falls back to deep-copying the in-memory template for manually loaded/selection-based templates.
+        /// </summary>
+        private Bitmap LoadTemplateBitmapForSearch()
+        {
+            // If a template definition is selected, load fresh from file (same as actual bot)
+            string templateName = GetSelectedTemplateName();
+            if (!string.IsNullOrEmpty(templateName))
+            {
+                string templatePath = UIElementManager.Instance.GetTemplatePath(templateName);
+                if (!string.IsNullOrEmpty(templatePath) && File.Exists(templatePath))
+                {
+                    return new Bitmap(templatePath);
+                }
+            }
+
+            // Fallback: deep copy in-memory template (for manually loaded or selection-based templates)
+            return _currentTemplate != null ? DeepCopyBitmap(_currentTemplate) : null;
+        }
+
+        /// <summary>
+        /// Loads all variant bitmaps for the selected template definition.
+        /// Returns list of (bitmap, variant display name) tuples.
+        /// Caller is responsible for disposing the bitmaps.
+        /// </summary>
+        private List<(Bitmap bitmap, string variantName)> LoadAllTemplateBitmapsForSearch()
+        {
+            var results = new List<(Bitmap bitmap, string variantName)>();
+
+            string templateName = GetSelectedTemplateName();
+            if (!string.IsNullOrEmpty(templateName))
+            {
+                var allPaths = UIElementManager.Instance.GetAllTemplatePaths(templateName);
+                for (int i = 0; i < allPaths.Count; i++)
+                {
+                    if (File.Exists(allPaths[i]))
+                    {
+                        string name = i == 0 ? "Primary" : $"Variant {i + 1}";
+                        results.Add((new Bitmap(allPaths[i]), name));
+                    }
+                }
+            }
+
+            // Fallback: if no variants from definitions, use in-memory template
+            if (results.Count == 0 && _currentTemplate != null)
+            {
+                results.Add((DeepCopyBitmap(_currentTemplate), "In-Memory"));
+            }
+
+            return results;
+        }
+
         private async void FindTemplateBtn_Click(object sender, EventArgs e)
         {
             if (_currentScreenshot == null)
@@ -764,62 +859,136 @@ namespace ToonTown_Rewritten_Bot.Views
 
             // Disable buttons during search
             SetSearchButtonsEnabled(false, isSearching: true);
-            Log("Searching for template...");
-
-            // Clone bitmaps for thread safety - GDI+ bitmaps can't be used across threads
-            Bitmap screenshotCopy = null;
-            Bitmap templateCopy = null;
 
             // Create cancellation token
             _searchCancellation?.Dispose();
             _searchCancellation = new CancellationTokenSource();
             var token = _searchCancellation.Token;
 
+            Bitmap screenshotCopy = null;
+            var allVariants = new List<(Bitmap bitmap, string variantName)>();
+
             try
             {
-                double threshold = (double)thresholdNumeric.Value / 100.0;
+                double threshold = (double)confidenceTrackBar.Value / 100.0;
 
-                // Create copies for the background thread
-                screenshotCopy = (Bitmap)_currentScreenshot.Clone();
-                templateCopy = (Bitmap)_currentTemplate.Clone();
+                // Deep copy to get independent bitmap safe for background thread
+                screenshotCopy = DeepCopyBitmap(_currentScreenshot);
+                allVariants = LoadAllTemplateBitmapsForSearch();
 
-                // Progress callback to update UI
-                var progress = new Progress<int>(p =>
+                if (allVariants.Count == 0)
                 {
-                    if (!token.IsCancellationRequested)
-                        findTemplateBtn.Text = $"{p}%";
-                });
-
-                // Run template matching on background thread
-                var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-                var result = await Task.Run(() => ImageTemplateMatcher.FindTemplate(
-                    screenshotCopy, templateCopy, threshold, token,
-                    p => ((IProgress<int>)progress).Report(p)));
-                stopwatch.Stop();
-
-                if (token.IsCancellationRequested)
-                {
-                    Log($"Search cancelled after {stopwatch.ElapsedMilliseconds}ms.");
+                    Log("Failed to load template for search.");
                     return;
                 }
 
                 _matchResults.Clear();
 
-                if (result.Found)
+                if (allVariants.Count == 1)
                 {
-                    _matchResults.Add(result);
-                    Log($"FOUND in {stopwatch.ElapsedMilliseconds}ms!");
-                    Log($"  Location: ({result.Location.X}, {result.Location.Y})");
-                    Log($"  Center (for clicking): ({result.Center.X}, {result.Center.Y})");
-                    Log($"  Size: {result.Bounds.Width}x{result.Bounds.Height}");
-                    Log($"  Confidence: {result.Confidence:P1}");
-                    previewPictureBox.Invalidate();
+                    // Single variant - original behavior
+                    Log("Searching for template...");
+                    var templateBitmap = allVariants[0].bitmap;
+
+                    var progress = new Progress<int>(p =>
+                    {
+                        if (!token.IsCancellationRequested)
+                            findTemplateBtn.Text = $"{p}%";
+                    });
+
+                    var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+                    var result = await Task.Run(() => ImageTemplateMatcher.FindTemplate(
+                        screenshotCopy, templateBitmap, threshold, token,
+                        p => ((IProgress<int>)progress).Report(p)));
+                    stopwatch.Stop();
+
+                    if (token.IsCancellationRequested)
+                    {
+                        Log($"Search cancelled after {stopwatch.ElapsedMilliseconds}ms.");
+                        return;
+                    }
+
+                    if (result.Found)
+                    {
+                        _matchResults.Add(result);
+                        Log($"FOUND in {stopwatch.ElapsedMilliseconds}ms!");
+                        Log($"  Location: ({result.Location.X}, {result.Location.Y})");
+                        Log($"  Center (for clicking): ({result.Center.X}, {result.Center.Y})");
+                        Log($"  Size: {result.Bounds.Width}x{result.Bounds.Height}");
+                        Log($"  Confidence: {result.Confidence:P1}");
+                        previewPictureBox.Invalidate();
+                    }
+                    else
+                    {
+                        Log($"Template NOT found. Search took {stopwatch.ElapsedMilliseconds}ms.");
+                        Log($"  Best match confidence: {result.Confidence:P1}");
+                        Log("  Try lowering the threshold or capturing a new template.");
+                    }
                 }
                 else
                 {
-                    Log($"Template NOT found. Search took {stopwatch.ElapsedMilliseconds}ms.");
-                    Log($"  Best match confidence: {result.Confidence:P1}");
-                    Log("  Try lowering the threshold or capturing a new template.");
+                    // Multiple variants - try each, report per-variant results
+                    Log($"Searching across {allVariants.Count} variants...");
+
+                    var totalStopwatch = System.Diagnostics.Stopwatch.StartNew();
+                    double bestOverallConfidence = 0;
+                    string bestOverallVariant = null;
+                    bool foundMatch = false;
+
+                    for (int i = 0; i < allVariants.Count; i++)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            Log("Search cancelled.");
+                            return;
+                        }
+
+                        var (templateBitmap, variantName) = allVariants[i];
+
+                        findTemplateBtn.Text = $"V{i + 1}";
+
+                        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+                        var result = await Task.Run(() => ImageTemplateMatcher.FindTemplate(
+                            screenshotCopy, templateBitmap, threshold, token));
+                        stopwatch.Stop();
+
+                        if (result.Found)
+                        {
+                            _matchResults.Add(result);
+                            Log($"  [{variantName}] MATCHED! Confidence: {result.Confidence:P1} ({stopwatch.ElapsedMilliseconds}ms)");
+                            Log($"    Center: ({result.Center.X}, {result.Center.Y}), Size: {result.Bounds.Width}x{result.Bounds.Height}");
+
+                            if (!foundMatch)
+                            {
+                                foundMatch = true;
+                                Log($"  >>> First match from {variantName} <<<");
+                            }
+                        }
+                        else
+                        {
+                            Log($"  [{variantName}] No match. Best confidence: {result.Confidence:P1} ({stopwatch.ElapsedMilliseconds}ms)");
+                        }
+
+                        if (result.Confidence > bestOverallConfidence)
+                        {
+                            bestOverallConfidence = result.Confidence;
+                            bestOverallVariant = variantName;
+                        }
+                    }
+
+                    totalStopwatch.Stop();
+
+                    if (foundMatch)
+                    {
+                        Log($"FOUND via multi-variant search in {totalStopwatch.ElapsedMilliseconds}ms total ({_matchResults.Count} match{(_matchResults.Count != 1 ? "es" : "")})");
+                        previewPictureBox.Invalidate();
+                    }
+                    else
+                    {
+                        Log($"No variant matched. Best overall: {bestOverallVariant} at {bestOverallConfidence:P1}");
+                        Log($"  Total search time: {totalStopwatch.ElapsedMilliseconds}ms");
+                        Log("  Try lowering the threshold or capturing a new variant.");
+                    }
                 }
             }
             catch (Exception ex)
@@ -829,7 +998,8 @@ namespace ToonTown_Rewritten_Bot.Views
             finally
             {
                 screenshotCopy?.Dispose();
-                templateCopy?.Dispose();
+                foreach (var (bitmap, _) in allVariants)
+                    bitmap?.Dispose();
                 SetSearchButtonsEnabled(true, isSearching: false);
             }
         }
@@ -885,7 +1055,7 @@ namespace ToonTown_Rewritten_Bot.Views
 
             try
             {
-                screenshotCopy = (Bitmap)_currentScreenshot.Clone();
+                screenshotCopy = DeepCopyBitmap(_currentScreenshot);
                 var ocr = _ocr;
 
                 var stopwatch = System.Diagnostics.Stopwatch.StartNew();
@@ -936,7 +1106,7 @@ namespace ToonTown_Rewritten_Bot.Views
             try
             {
                 var actualRegion = ConvertToImageCoordinates(_selectedRegion);
-                screenshotCopy = (Bitmap)_currentScreenshot.Clone();
+                screenshotCopy = DeepCopyBitmap(_currentScreenshot);
                 var ocr = _ocr;
 
                 var stopwatch = System.Diagnostics.Stopwatch.StartNew();
@@ -972,34 +1142,7 @@ namespace ToonTown_Rewritten_Bot.Views
             if (_currentScreenshot == null || previewPictureBox.Image == null)
                 return previewRect;
 
-            float imageAspect = (float)_currentScreenshot.Width / _currentScreenshot.Height;
-            float boxAspect = (float)previewPictureBox.Width / previewPictureBox.Height;
-
-            float scale;
-            int offsetX = 0, offsetY = 0;
-
-            if (imageAspect > boxAspect)
-            {
-                scale = (float)previewPictureBox.Width / _currentScreenshot.Width;
-                offsetY = (int)((previewPictureBox.Height - _currentScreenshot.Height * scale) / 2);
-            }
-            else
-            {
-                scale = (float)previewPictureBox.Height / _currentScreenshot.Height;
-                offsetX = (int)((previewPictureBox.Width - _currentScreenshot.Width * scale) / 2);
-            }
-
-            int x = (int)((previewRect.X - offsetX) / scale);
-            int y = (int)((previewRect.Y - offsetY) / scale);
-            int width = (int)(previewRect.Width / scale);
-            int height = (int)(previewRect.Height / scale);
-
-            x = Math.Max(0, Math.Min(x, _currentScreenshot.Width));
-            y = Math.Max(0, Math.Min(y, _currentScreenshot.Height));
-            width = Math.Min(width, _currentScreenshot.Width - x);
-            height = Math.Min(height, _currentScreenshot.Height - y);
-
-            return new Rectangle(x, y, width, height);
+            return ImageRecognition.ConvertToImageCoordinates(previewRect, _currentScreenshot.Size, previewPictureBox.Size);
         }
 
         private Rectangle ConvertToPreviewCoordinates(Rectangle imageRect)
@@ -1267,7 +1410,7 @@ namespace ToonTown_Rewritten_Bot.Views
 
                 // Store screenshot for confirmation
                 _lastFishScreenshot?.Dispose();
-                _lastFishScreenshot = (Bitmap)_currentScreenshot.Clone();
+                _lastFishScreenshot = DeepCopyBitmap(_currentScreenshot);
 
                 // Run detection using shared detector
                 var result = await Task.Run(() => _currentFishDetector.DetectFromScreenshot(_lastFishScreenshot));
@@ -1577,7 +1720,8 @@ namespace ToonTown_Rewritten_Bot.Views
         private Button findAllTemplatesBtn;
         private Button stopSearchBtn;
         private Button clearMatchesBtn;
-        private NumericUpDown thresholdNumeric;
+        private TrackBar confidenceTrackBar;
+        private Label confidenceValueLabel;
         private Button readTextBtn;
         private Button readNumbersBtn;
         private Button readFullScreenBtn;

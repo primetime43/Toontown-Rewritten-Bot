@@ -21,6 +21,7 @@ namespace ToonTown_Rewritten_Bot.Models
                 {"SWING POWER", VirtualKeyCode.CONTROL},
                 {"TURN LEFT", VirtualKeyCode.LEFT},
                 {"TURN RIGHT", VirtualKeyCode.RIGHT},
+                {"AIM STRAIGHT", VirtualKeyCode.UP},
                 {"MOVE TO LEFT TEE SPOT", VirtualKeyCode.LEFT},
                 {"MOVE TO RIGHT TEE SPOT", VirtualKeyCode.RIGHT},
             };
