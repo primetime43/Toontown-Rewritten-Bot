@@ -42,15 +42,21 @@ namespace ToonTown_Rewritten_Bot.Services
                 if (locationName == FishingLocationNames.FishAnywhere)
                 {
                     // Fish Anywhere - just exit fishing without selling
-                    await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
+                    if (!_engine.BucketWasFull)
+                    {
+                        await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
+                    }
                     await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
                     sells = 0;
                 }
                 else if (locationName == FishingLocationNames.CustomFishingAction && customFishingFilePath != "")
                 {
                     // Custom fishing action - sell using custom action file
-                    await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
-                    await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
+                    if (!_engine.BucketWasFull)
+                    {
+                        await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
+                        await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
+                    }
                     await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
                     CustomActionsFishing customFishing = new CustomActionsFishing(customFishingFilePath);
@@ -60,8 +66,11 @@ namespace ToonTown_Rewritten_Bot.Services
                 else if (locationName == FishingLocationNames.EstateLeftDock)
                 {
                     // Estate - sell using built-in estate action file
-                    await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
-                    await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
+                    if (!_engine.BucketWasFull)
+                    {
+                        await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
+                        await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
+                    }
                     await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
                     string estateSellPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Custom Fishing Actions", "EstateFishing Far Left Dock.json");
@@ -72,8 +81,11 @@ namespace ToonTown_Rewritten_Bot.Services
                 else
                 {
                     // Hardcoded fishing locations - sell using strategy pattern
-                    await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
-                    await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
+                    if (!_engine.BucketWasFull)
+                    {
+                        await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
+                        await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
+                    }
                     await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
                     FishingStrategyBase fishingStrategy = DetermineFishingStrategy(locationName);

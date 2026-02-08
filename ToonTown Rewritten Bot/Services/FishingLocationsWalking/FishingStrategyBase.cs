@@ -15,6 +15,14 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
     public abstract class FishingStrategyBase : CoreFunctionality
     {
         protected bool shouldStopFishing = false;
+
+        /// <summary>
+        /// Set when the bucket-full popup was detected and dismissed.
+        /// The toon is already off the dock, so StraightenToon and ExitFishing should be skipped.
+        /// Reset at the start of each fishing session via SetFishingLocation.
+        /// </summary>
+        public bool BucketWasFull { get; private set; } = false;
+
         /// <summary>
         /// The random variance of casting the fishing rod, if enabled.
         /// </summary>
@@ -160,6 +168,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         {
             // Reset state from any previous fishing session
             shouldStopFishing = false;
+            BucketWasFull = false;
             _fishCaught = 0;
             _castCount = 0;
             ResetPause(); // Ensure not paused when starting new session
@@ -278,31 +287,35 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// </summary>
         private async Task WaitForFishingButtonAsync(CancellationToken cancellationToken)
         {
-            const int maxAttempts = 15;
-            const int delayBetweenAttempts = 500;
+            const int delayBetweenAttempts = 1000;
+            const int maxWaitSeconds = 30;
             string elementName = CoordinateActions.GetDescription(Convert.ToInt32(FishingCoordinatesEnum.RedFishingButton).ToString())
                                  ?? $"Element_{Convert.ToInt32(FishingCoordinatesEnum.RedFishingButton)}";
 
             Debug.WriteLine("[FishingStrategy] Waiting for red fishing button to appear...");
             UpdateOverlayAction("Waiting for dock...", "Looking for cast button", "Waiting");
 
-            for (int attempt = 1; attempt <= maxAttempts; attempt++)
+            var stopwatch = Stopwatch.StartNew();
+            int attempt = 0;
+
+            while (stopwatch.Elapsed.TotalSeconds < maxWaitSeconds)
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                attempt++;
 
                 // Force a fresh search (not cached) to ensure the button is actually on screen
-                var location = await UIElementManager.Instance.GetElementLocationAsync(elementName, forceSearch: true);
+                var location = await UIElementManager.Instance.FindElementAsync(elementName, cancellationToken);
                 if (location.HasValue)
                 {
                     Debug.WriteLine($"[FishingStrategy] Red fishing button found on attempt {attempt}");
                     return;
                 }
 
-                Debug.WriteLine($"[FishingStrategy] Fishing button not visible yet (attempt {attempt}/{maxAttempts})");
+                Debug.WriteLine($"[FishingStrategy] Fishing button not visible yet (attempt {attempt}, {stopwatch.Elapsed.TotalSeconds:F0}s elapsed)");
                 await Task.Delay(delayBetweenAttempts, cancellationToken);
             }
 
-            Debug.WriteLine("[FishingStrategy] Fishing button wait timed out, proceeding anyway");
+            Debug.WriteLine($"[FishingStrategy] Fishing button wait timed out after {maxWaitSeconds}s, proceeding anyway");
         }
 
         /// <summary>
@@ -413,6 +426,32 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     }
                     else
                     {
+                        // Timed out with no bite — check if the red fishing button is still visible.
+                        // If it's gone, a popup (like bucket full) may have appeared over it.
+                        if (_cachedRedButtonPos.HasValue)
+                        {
+                            string redButtonName = CoordinateActions.GetDescription(
+                                Convert.ToInt32(FishingCoordinatesEnum.RedFishingButton).ToString())
+                                ?? $"Element_{Convert.ToInt32(FishingCoordinatesEnum.RedFishingButton)}";
+
+                            bool redButtonStillVisible = await UIElementManager.Instance
+                                .VerifyElementAtLocationAsync(redButtonName, _cachedRedButtonPos.Value);
+
+                            if (!redButtonStillVisible)
+                            {
+                                System.Diagnostics.Debug.WriteLine("[FishingStrategy] Red fishing button gone after timeout - checking for bucket full popup...");
+
+                                if (await FishBucketFullDetector.CheckForBucketFullPopupAsync(cancellationToken))
+                                {
+                                    UpdateOverlayAction("Bucket full!", "Going to sell fish", "Selling");
+                                    System.Diagnostics.Debug.WriteLine("[FishingStrategy] BUCKET FULL - Going to sell fish.");
+                                    await HandleBucketFullPopup(cancellationToken);
+                                    BucketWasFull = true;
+                                    return;
+                                }
+                            }
+                        }
+
                         UpdateOverlayAction("No bite (timeout)", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
                     }
 
@@ -800,12 +839,13 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         protected async Task CloseFishCaughtPopup(CancellationToken cancellationToken)
         {
             const string elementName = "FishPopupCloseButton";
-            const string description = "Select the small red X button in the bottom-right corner of the fish caught popup";
 
             Debug.WriteLine($"[FishingStrategy] Looking for fish popup close button...");
 
-            // Use image recognition to find the close button
-            var buttonLocation = await UIElementManager.Instance.GetElementLocationAsync(elementName, description, forceSearch: true);
+            // Use silent search (FindElementAsync) — no prompts during active fishing.
+            // Color-based catch detection can have false positives, so we don't want to
+            // prompt for template capture when there may be no popup on screen.
+            var buttonLocation = await UIElementManager.Instance.FindElementAsync(elementName, cancellationToken);
 
             if (buttonLocation.HasValue)
             {
@@ -818,27 +858,9 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             }
             else
             {
-                Debug.WriteLine($"[FishingStrategy] Could not find fish popup close button, offering recapture...");
+                Debug.WriteLine($"[FishingStrategy] Close button not found, using fallback position...");
 
-                // Template exists but didn't match — offer recapture before falling back
-                bool captured = UIElementManager.Instance.PromptForTemplateCapture(elementName, description);
-                if (captured)
-                {
-                    var retryLocation = await UIElementManager.Instance.GetElementLocationAsync(elementName, description, forceSearch: true);
-                    if (retryLocation.HasValue)
-                    {
-                        Debug.WriteLine($"[FishingStrategy] Found close button after recapture at ({retryLocation.Value.X}, {retryLocation.Value.Y})");
-                        MoveCursor(retryLocation.Value.X, retryLocation.Value.Y);
-                        await Task.Delay(100, cancellationToken);
-                        DoMouseClick();
-                        await Task.Delay(300, cancellationToken);
-                        return;
-                    }
-                }
-
-                Debug.WriteLine($"[FishingStrategy] Recapture failed or declined, trying fallback position...");
-
-                // Fallback to estimated position if image recognition still fails
+                // Fallback to estimated position — handles both missing template and false positive cases
                 var windowRect = GetGameWindowRect();
                 if (!windowRect.IsEmpty)
                 {
@@ -874,6 +896,40 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             {
                 // Fallback: press ESC to close the popup
                 // Set flag to prevent global keyboard hook from treating this as a user-initiated cancel
+                System.Diagnostics.Debug.WriteLine("[FishingStrategy] Could not find Exit button, pressing ESC...");
+                IsSimulatedKeyPress = true;
+                try
+                {
+                    SendKeys.SendWait("{ESC}");
+                }
+                finally
+                {
+                    IsSimulatedKeyPress = false;
+                }
+                await Task.Delay(500, cancellationToken);
+            }
+        }
+
+        /// <summary>
+        /// Handles the "fish bucket full" popup by clicking the Exit button.
+        /// Does NOT set shouldStopFishing so the outer sell loop continues naturally.
+        /// </summary>
+        protected async Task HandleBucketFullPopup(CancellationToken cancellationToken)
+        {
+            System.Diagnostics.Debug.WriteLine("[FishingStrategy] Handling 'bucket full' popup - clicking Exit...");
+
+            var exitPos = FishBucketFullDetector.GetExitButtonPosition();
+            if (exitPos.HasValue)
+            {
+                MoveCursor(exitPos.Value.X, exitPos.Value.Y);
+                await Task.Delay(100, cancellationToken);
+                DoMouseClick();
+                await Task.Delay(500, cancellationToken);
+                System.Diagnostics.Debug.WriteLine("[FishingStrategy] Exit button clicked. Proceeding to sell fish.");
+            }
+            else
+            {
+                // Fallback: press ESC to close the popup
                 System.Diagnostics.Debug.WriteLine("[FishingStrategy] Could not find Exit button, pressing ESC...");
                 IsSimulatedKeyPress = true;
                 try
