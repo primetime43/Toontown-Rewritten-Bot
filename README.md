@@ -8,13 +8,6 @@ Table of Contents
   - [Requirements](#requirements)
   - [Previous Releases](#previous-releases)
 
-## What's New in v2.0.0
-
-- **Template Matching** - The bot now uses image recognition to find buttons and UI elements instead of hardcoded coordinates. Works regardless of window size or position.
-- **Improved Fishing** - Computer vision fish shadow detection, customizable scan area, per-location color calibration, real-time overlay with stats, and out-of-jellybeans detection.
-- **Auto Golf** - Automatically detects which course you're on via OCR and plays the correct actions for each hole.
-- **Global Hotkeys** - F11 to pause/resume, Esc/F12 to stop. Works even when the game has focus.
-
 ## Features
 - **Fishing** - Auto-cast with fish shadow detection using computer vision, sell cycles, multiple location support, and a real-time overlay showing fish caught and cast count.
 - **Golfing** - Automated golf with automatic course detection and custom action support. Consistently score under par or achieve hole-in-ones.
