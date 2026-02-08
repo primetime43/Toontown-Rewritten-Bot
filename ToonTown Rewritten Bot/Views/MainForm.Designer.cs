@@ -323,7 +323,7 @@
             mainVersionLabel.Name = "mainVersionLabel";
             mainVersionLabel.Size = new System.Drawing.Size(120, 18);
             mainVersionLabel.TabIndex = 8;
-            mainVersionLabel.Text = "v2.0.0";
+            mainVersionLabel.Text = "v2.1.0";
             mainVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // mainAuthorLabel
