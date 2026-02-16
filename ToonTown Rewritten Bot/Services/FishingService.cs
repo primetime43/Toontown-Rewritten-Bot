@@ -34,10 +34,12 @@ namespace ToonTown_Rewritten_Bot.Services
             // Set the fishing location for proper bubble detection configuration
             _engine.SetFishingLocation(locationName);
 
+            bool isFirstCycle = true;
             while (sells > 0 && !cancellationToken.IsCancellationRequested)
             {
                 await _engine.PrepareForFishing(cancellationToken).ConfigureAwait(false);
-                await _engine.StartFishingActionsAsync(casts, variance, autoDetectFish, cancellationToken).ConfigureAwait(false);
+                await _engine.StartFishingActionsAsync(casts, variance, autoDetectFish, isFirstCycle, cancellationToken).ConfigureAwait(false);
+                isFirstCycle = false;
 
                 if (locationName == FishingLocationNames.FishAnywhere)
                 {
