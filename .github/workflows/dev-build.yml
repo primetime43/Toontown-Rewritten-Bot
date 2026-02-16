@@ -1,0 +1,121 @@
+name: Dev Build
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  PROJECT_PATH: 'ToonTown Rewritten Bot/ToonTown Rewritten Bot.csproj'
+  OUTPUT_NAME: 'ToonTown-Rewritten-Bot'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore "${{ env.PROJECT_PATH }}"
+
+    - name: Publish single-file executable
+      run: |
+        dotnet publish "${{ env.PROJECT_PATH }}" `
+          --configuration Release `
+          --runtime win-x64 `
+          --self-contained true `
+          --output ./publish `
+          -p:PublishSingleFile=true `
+          -p:IncludeNativeLibrariesForSelfExtract=true `
+          -p:EnableCompressionInSingleFile=true
+
+    - name: Download Tesseract language data
+      run: |
+        # Create tessdata folder in publish directory
+        New-Item -ItemType Directory -Force -Path "./publish/tessdata"
+
+        # Download eng.traineddata from tessdata_fast
+        $url = "https://github.com/tesseract-ocr/tessdata_fast/raw/main/eng.traineddata"
+        $output = "./publish/tessdata/eng.traineddata"
+
+        Write-Host "Downloading Tesseract language data..."
+        Invoke-WebRequest -Uri $url -OutFile $output
+
+        # Verify download
+        if (Test-Path $output) {
+          $size = (Get-Item $output).Length
+          Write-Host "Downloaded eng.traineddata ($size bytes)"
+        } else {
+          Write-Error "Failed to download tessdata"
+          exit 1
+        }
+
+    - name: Copy required folders
+      run: |
+        # Build folder path (where intermediate files are)
+        $buildFolder = "ToonTown Rewritten Bot/bin/Release/net10.0-windows/win-x64"
+
+        # Create the release folder structure
+        New-Item -ItemType Directory -Force -Path "./release"
+
+        # Copy the single-file executable
+        Copy-Item "./publish/*.exe" -Destination "./release/" -Force
+
+        # Copy tessdata folder (already created and populated above)
+        if (Test-Path "./publish/tessdata") {
+          Copy-Item -Path "./publish/tessdata" -Destination "./release/tessdata" -Recurse -Force
+        }
+
+        # Copy x64 native DLLs (Tesseract) from build folder
+        if (Test-Path "$buildFolder/x64") {
+          Copy-Item -Path "$buildFolder/x64" -Destination "./release/x64" -Recurse -Force
+        }
+
+        # Copy Templates folder from build folder
+        if (Test-Path "$buildFolder/Templates") {
+          Copy-Item -Path "$buildFolder/Templates" -Destination "./release/Templates" -Recurse -Force
+        }
+
+        # Copy Custom Golf Actions folder from build folder
+        if (Test-Path "$buildFolder/Custom Golf Actions") {
+          Copy-Item -Path "$buildFolder/Custom Golf Actions" -Destination "./release/Custom Golf Actions" -Recurse -Force
+        }
+
+        # Copy Custom Fishing Actions folder from build folder
+        if (Test-Path "$buildFolder/Custom Fishing Actions") {
+          Copy-Item -Path "$buildFolder/Custom Fishing Actions" -Destination "./release/Custom Fishing Actions" -Recurse -Force
+        }
+
+        # List contents for verification
+        Write-Host "Release folder contents:"
+        Get-ChildItem -Path "./release" -Recurse | Select-Object FullName
+
+    - name: Get short SHA
+      id: short_sha
+      run: |
+        if ("${{ github.event_name }}" -eq "pull_request") {
+          $sha = "${{ github.event.pull_request.head.sha }}".Substring(0, 7)
+        } else {
+          $sha = "${{ github.sha }}".Substring(0, 7)
+        }
+        echo "SHORT_SHA=$sha" >> $env:GITHUB_OUTPUT
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.OUTPUT_NAME }}-dev-${{ steps.short_sha.outputs.SHORT_SHA }}
+        path: ./release/
+        retention-days: 14
