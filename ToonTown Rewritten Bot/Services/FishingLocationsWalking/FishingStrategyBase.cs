@@ -282,40 +282,19 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public abstract Task LeaveDockAndSellAsync(CancellationToken cancellationToken);
 
         /// <summary>
-        /// Waits until the red fishing button is visible on screen using a fresh template search.
-        /// This ensures the toon has fully entered the fishing dock before attempting to cast.
+        /// Waits for the dock UI to be ready after returning from a sell trip.
+        /// Uses a simple timed delay since the sell strategies already handle walking back to the dock.
         /// </summary>
-        private async Task WaitForFishingButtonAsync(CancellationToken cancellationToken)
+        private async Task WaitForDockReadyAsync(CancellationToken cancellationToken)
         {
-            const int delayBetweenAttempts = 1000;
-            const int maxWaitSeconds = 30;
-            string elementName = CoordinateActions.GetDescription(Convert.ToInt32(FishingCoordinatesEnum.RedFishingButton).ToString())
-                                 ?? $"Element_{Convert.ToInt32(FishingCoordinatesEnum.RedFishingButton)}";
+            const int dockSettleDelayMs = 3000;
 
-            Debug.WriteLine("[FishingStrategy] Waiting for red fishing button to appear...");
-            UpdateOverlayAction("Waiting for dock...", "Looking for cast button", "Waiting");
+            Debug.WriteLine("[FishingStrategy] Waiting for dock UI to settle after sell trip...");
+            UpdateOverlayAction("Returning to dock...", "Waiting for fishing UI", "Waiting");
 
-            var stopwatch = Stopwatch.StartNew();
-            int attempt = 0;
+            await Task.Delay(dockSettleDelayMs, cancellationToken);
 
-            while (stopwatch.Elapsed.TotalSeconds < maxWaitSeconds)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                attempt++;
-
-                // Force a fresh search (not cached) to ensure the button is actually on screen
-                var location = await UIElementManager.Instance.FindElementAsync(elementName, cancellationToken);
-                if (location.HasValue)
-                {
-                    Debug.WriteLine($"[FishingStrategy] Red fishing button found on attempt {attempt}");
-                    return;
-                }
-
-                Debug.WriteLine($"[FishingStrategy] Fishing button not visible yet (attempt {attempt}, {stopwatch.Elapsed.TotalSeconds:F0}s elapsed)");
-                await Task.Delay(delayBetweenAttempts, cancellationToken);
-            }
-
-            Debug.WriteLine($"[FishingStrategy] Fishing button wait timed out after {maxWaitSeconds}s, proceeding anyway");
+            Debug.WriteLine("[FishingStrategy] Dock settle delay complete, proceeding to fish.");
         }
 
         /// <summary>
@@ -332,7 +311,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// </remarks>
         public async Task StartFishingActionsAsync(int numberOfCasts, bool fishVariance, CancellationToken cancellationToken)
         {
-            await StartFishingActionsAsync(numberOfCasts, fishVariance, autoDetectFish: false, cancellationToken);
+            await StartFishingActionsAsync(numberOfCasts, fishVariance, autoDetectFish: false, isFirstCycle: true, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -341,15 +320,19 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// <param name="numberOfCasts">The total number of casts to attempt.</param>
         /// <param name="fishVariance">Indicates whether to apply random variance to casting.</param>
         /// <param name="autoDetectFish">If true, automatically detects fish shadows and aims accordingly.</param>
+        /// <param name="isFirstCycle">If true, skips the dock-ready wait since the user already confirmed they're at the dock.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
-        public async Task StartFishingActionsAsync(int numberOfCasts, bool fishVariance, bool autoDetectFish, CancellationToken cancellationToken)
+        public async Task StartFishingActionsAsync(int numberOfCasts, bool fishVariance, bool autoDetectFish, bool isFirstCycle, CancellationToken cancellationToken)
         {
             // Check if game window is available
             EnsureGameWindowReady();
 
-            // Wait for the red fishing button to be visible before starting casts.
-            // This prevents casting too early after returning from a sell trip.
-            await WaitForFishingButtonAsync(cancellationToken);
+            // On subsequent cycles (after a sell trip), wait for the dock UI to settle.
+            // Skip on the first cycle since the user already confirmed they're at the dock.
+            if (!isFirstCycle)
+            {
+                await WaitForDockReadyAsync(cancellationToken);
+            }
 
             int totalCasts = numberOfCasts;
 
