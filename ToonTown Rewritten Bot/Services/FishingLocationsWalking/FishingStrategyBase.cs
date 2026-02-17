@@ -150,9 +150,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         /// <summary>
         /// Tracks fishing statistics for overlay display.
+        /// Cycle counts reset each fishing/sell cycle; session counts accumulate across the entire session.
         /// </summary>
         protected int _fishCaught = 0;
         protected int _castCount = 0;
+        protected int _sessionFishCaught = 0;
+        protected int _sessionCastCount = 0;
 
         /// <summary>
         /// Cached red fishing button position to avoid expensive template matching during catch detection.
@@ -171,6 +174,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             BucketWasFull = false;
             _fishCaught = 0;
             _castCount = 0;
+            _sessionFishCaught = 0;
+            _sessionCastCount = 0;
             ResetPause(); // Ensure not paused when starting new session
 
             _locationName = locationName;
@@ -230,7 +235,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// Updates the overlay with fishing statistics.
         /// </summary>
         protected void UpdateOverlayStats()
-            => SafeOverlayInvoke(o => o.UpdateStats(_fishCaught, _castCount));
+            => SafeOverlayInvoke(o => o.UpdateStats(_fishCaught, _castCount, _sessionFishCaught, _sessionCastCount));
 
         /// <summary>
         /// Updates the overlay with the fishing location.
@@ -324,6 +329,10 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// <param name="cancellationToken">Cancellation token.</param>
         public async Task StartFishingActionsAsync(int numberOfCasts, bool fishVariance, bool autoDetectFish, bool isFirstCycle, CancellationToken cancellationToken)
         {
+            // Reset cycle counts for this fishing round (session totals keep accumulating)
+            _fishCaught = 0;
+            _castCount = 0;
+
             // Check if game window is available
             EnsureGameWindowReady();
 
@@ -353,6 +362,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     if (cancellationToken.IsCancellationRequested) return;
 
                     _castCount++;
+                    _sessionCastCount++;
                     UpdateOverlayStats();
 
                     // Update overlay - casting
@@ -400,6 +410,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     if (fishCaught)
                     {
                         _fishCaught++;
+                        _sessionFishCaught++;
                         UpdateOverlayStats();
                         UpdateOverlayAction("Fish caught!", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
 
