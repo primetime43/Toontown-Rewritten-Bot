@@ -658,7 +658,14 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         var castResult = _bubbleDetector.CalculateCastFromPosition(newFishPosition.Value.X, newFishPosition.Value.Y);
                         if (castResult != null)
                         {
-                            castDestination = castResult.CastDestination;
+                            // Extract the intended drag vector from the formula (relative to its reference rod position)
+                            // and apply it from the ACTUAL button position. Without this, any offset between where
+                            // image recognition found the button and the formula's reference position causes the
+                            // cast to aim in the wrong direction.
+                            int dragX = castResult.CastDestination.X - castResult.RodButtonPosition.X;
+                            int dragY = castResult.CastDestination.Y - castResult.RodButtonPosition.Y;
+                            castDestination = new Point(btnX + dragX, btnY + dragY);
+                            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Drag vector: ({dragX},{dragY}), btn offset from ref: ({btnX - castResult.RodButtonPosition.X},{btnY - castResult.RodButtonPosition.Y})");
                         }
                         else
                         {
