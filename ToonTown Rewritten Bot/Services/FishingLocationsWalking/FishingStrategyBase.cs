@@ -158,6 +158,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         protected int _sessionCastCount = 0;
 
         /// <summary>
+        /// Session totals for the completed fishing run (accumulated across all sell cycles).
+        /// </summary>
+        public int SessionFishCaught => _sessionFishCaught;
+        public int SessionCastCount => _sessionCastCount;
+
+        /// <summary>
         /// Cached red fishing button position to avoid expensive template matching during catch detection.
         /// Set during CastLine/CastLineAuto; used by CheckIfFishCaught fallback.
         /// </summary>
