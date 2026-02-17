@@ -41,6 +41,8 @@ namespace ToonTown_Rewritten_Bot.Views
         private string _fishingStatus = "Ready";
         private int _fishCaught = 0;
         private int _castCount = 0;
+        private int _sessionFishCaught = 0;
+        private int _sessionCastCount = 0;
         private string _location = "";
 
         // Timer for repositioning over game window
@@ -140,6 +142,8 @@ namespace ToonTown_Rewritten_Bot.Views
             _fishingStatus = "Ready";
             _fishCaught = 0;
             _castCount = 0;
+            _sessionFishCaught = 0;
+            _sessionCastCount = 0;
             _location = "";
             this.Invalidate();
         }
@@ -167,10 +171,12 @@ namespace ToonTown_Rewritten_Bot.Views
         /// <summary>
         /// Updates the fishing statistics.
         /// </summary>
-        public void UpdateStats(int fishCaught, int castCount)
+        public void UpdateStats(int fishCaught, int castCount, int sessionFishCaught, int sessionCastCount)
         {
             _fishCaught = fishCaught;
             _castCount = castCount;
+            _sessionFishCaught = sessionFishCaught;
+            _sessionCastCount = sessionCastCount;
             this.Invalidate();
         }
 
@@ -424,13 +430,18 @@ namespace ToonTown_Rewritten_Bot.Views
                 textY += 18;
             }
 
-            // Stats (Fish caught / Casts)
+            // Stats (Fish caught / Casts) — cycle counts with session totals
             using (var font = new Font("Segoe UI", 9))
-            using (var labelBrush = new SolidBrush(Color.LightGray))
             using (var valueBrush = new SolidBrush(Color.White))
+            using (var totalBrush = new SolidBrush(Color.LightGray))
             {
-                string statsText = $"Fish: {_fishCaught}  |  Casts: {_castCount}";
-                g.DrawString(statsText, font, valueBrush, textX, textY);
+                string fishText = _sessionFishCaught > _fishCaught
+                    ? $"Fish: {_fishCaught} ({_sessionFishCaught} total)"
+                    : $"Fish: {_fishCaught}";
+                string castText = _sessionCastCount > _castCount
+                    ? $"Casts: {_castCount} ({_sessionCastCount} total)"
+                    : $"Casts: {_castCount}";
+                g.DrawString($"{fishText}  |  {castText}", font, valueBrush, textX, textY);
             }
 
             textY += 22;
