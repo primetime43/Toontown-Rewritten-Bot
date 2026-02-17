@@ -94,7 +94,13 @@ namespace ToonTown_Rewritten_Bot
                 // These run on the UI thread (await resumes on UI context)
                 SetFishingOverlay(false, null, null);
                 CoreFunctionality.BringBotWindowToFront();
-                MessageBox.Show($"Done Fishing with custom action '{selectedFileName}'.");
+                int fish = _fishingService.SessionFishCaught;
+                int casts = _fishingService.SessionCastCount;
+                int pct = casts > 0 ? (int)Math.Round(100.0 * fish / casts) : 0;
+                MessageBox.Show(
+                    $"Done Fishing with custom action '{selectedFileName}'.\n\n" +
+                    $"Fish Caught: {fish}/{casts} ({pct}% catch rate)",
+                    "Fishing Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (TaskCanceledException)
             {

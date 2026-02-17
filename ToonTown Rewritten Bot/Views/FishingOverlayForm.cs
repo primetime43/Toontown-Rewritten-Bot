@@ -433,7 +433,6 @@ namespace ToonTown_Rewritten_Bot.Views
             // Stats (Fish caught / Casts) — cycle counts with session totals
             using (var font = new Font("Segoe UI", 9))
             using (var valueBrush = new SolidBrush(Color.White))
-            using (var totalBrush = new SolidBrush(Color.LightGray))
             {
                 string fishText = _sessionFishCaught > _fishCaught
                     ? $"Fish: {_fishCaught} ({_sessionFishCaught} total)"
