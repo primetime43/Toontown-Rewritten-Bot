@@ -461,6 +461,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
             _cachedRedButtonPos = new Point(x, y);
 
+            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] CastLine: Red button at screen ({x}, {y})");
+
             int randX = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
             int randY = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
             MoveCursor(x + randX, y + randY);
@@ -547,15 +549,13 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 _bubbleDetector = new FishBubbleDetector(_locationName);
             }
 
-            // Wait for fish detection if enabled
+            // Wait for fish detection if enabled — but always proceed to cast
             if (WaitForFishBeforeCasting)
             {
                 bool fishFound = await WaitForFishDetectionAsync(cancellationToken);
                 if (!fishFound)
                 {
-                    // No fish found after waiting, skip this cast
-                    await Task.Delay(500, cancellationToken);
-                    return;
+                    System.Diagnostics.Debug.WriteLine("[FishingStrategy] No fish found after waiting, casting straight ahead...");
                 }
             }
 
@@ -575,17 +575,18 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             int defaultCastX = (int)(800 * scaleX) + windowRect.X;
             int defaultCastY = (int)(1009 * scaleY) + windowRect.Y;
 
-            // Find the cast button and calculate rod button screen position
+            // Find the cast button using image recognition — use the actual detected position
             var (btnX, btnY) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
             _cachedRedButtonPos = new Point(btnX, btnY);
-            int rodButtonX = (int)(800 * scaleX) + windowRect.X;
-            int rodButtonY = (int)(846 * scaleY) + windowRect.Y;
 
-            // Move to rod button and press down
-            SimulateDragMove(rodButtonX, rodButtonY);
-            await Task.Delay(100, cancellationToken);
+            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Red button found at screen ({btnX}, {btnY}), window rect: {windowRect}");
+
+            // Move to the actual red fishing button position (from image recognition) and press down
+            SimulateDragMove(btnX, btnY);
+            await Task.Delay(150, cancellationToken);
             SendInputMouseDown();
-            await Task.Delay(400, cancellationToken); // Wait for popup to close and aim mode to activate
+            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Mouse down at ({btnX}, {btnY})");
+            await Task.Delay(400, cancellationToken); // Wait for aim mode to activate
 
             try
             {
@@ -710,29 +711,62 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
-        /// Minimum number of sample positions that must match cream/green to consider the popup visible.
-        /// Requiring multiple matches prevents false positives from sky, clouds, or scenery that
-        /// happen to match cream/green at a single pixel.
+        /// Minimum number of sample positions that must match cream/green to consider the popup visible
+        /// via the secondary color-spot check.
         /// </summary>
-        private const int MinPopupMatchCount = 3;
+        private const int MinPopupMatchCount = 2;
+
+        /// <summary>
+        /// Fraction of pond sample points that must be non-water to confirm occlusion by a popup.
+        /// </summary>
+        private const double PondOcclusionThreshold = 0.50;
 
         protected Task<bool> CheckIfFishCaught(CancellationToken cancellationToken)
         {
-            // Get game window info for proper coordinate scaling
             var windowRect = CoreFunctionality.GetGameWindowRect();
             if (windowRect.IsEmpty) return Task.FromResult(false);
 
-            // The fish caught popup appears in the upper-right area of the screen
-            // It has a cream/beige background color and green border
+            // --- Primary: Pond occlusion detection ---
+            // When a catch popup appears it covers most of the pond area.
+            // Sample a grid across the pond region and count how many points
+            // are NOT the distinctive teal/cyan water color.
+            const int cols = 6;
+            const int rows = 4;
+            int nonWaterCount = 0;
+            int totalSamples = cols * rows;
 
-            // Check multiple positions where the popup typically appears
-            // Popup is roughly in the right third of the screen, upper half
-            int popupCenterX = windowRect.X + (int)(windowRect.Width * 0.7);  // 70% from left
-            int popupTopY = windowRect.Y + (int)(windowRect.Height * 0.15);   // 15% from top
-            int popupMidY = windowRect.Y + (int)(windowRect.Height * 0.25);   // 25% from top
+            for (int r = 0; r < rows; r++)
+            {
+                // Y spans ~8-45% of window height (the visible pond from the dock)
+                double yFrac = 0.08 + (0.37 * (r + 0.5) / rows);
+                int y = windowRect.Y + (int)(windowRect.Height * yFrac);
 
-            // Check several positions for the cream popup background
-            // Extra positions improve reliability and reduce need for expensive fallback
+                for (int c = 0; c < cols; c++)
+                {
+                    // X spans ~20-80% of window width (center of the pond)
+                    double xFrac = 0.20 + (0.60 * (c + 0.5) / cols);
+                    int x = windowRect.X + (int)(windowRect.Width * xFrac);
+
+                    var color = GetColorAt(x, y);
+                    if (!IsWaterColor(color))
+                        nonWaterCount++;
+                }
+            }
+
+            double occlusionRatio = (double)nonWaterCount / totalSamples;
+            System.Diagnostics.Debug.WriteLine($"[FishCatch] Pond occlusion: {nonWaterCount}/{totalSamples} non-water ({occlusionRatio:P0})");
+
+            if (occlusionRatio >= PondOcclusionThreshold)
+            {
+                System.Diagnostics.Debug.WriteLine($"[FishCatch] Popup confirmed via pond occlusion ({occlusionRatio:P0} >= {PondOcclusionThreshold:P0})");
+                return Task.FromResult(true);
+            }
+
+            // --- Secondary: Centered cream/green color-spot check ---
+            int popupCenterX = windowRect.X + (int)(windowRect.Width * 0.50);
+            int popupTopY = windowRect.Y + (int)(windowRect.Height * 0.10);
+            int popupMidY = windowRect.Y + (int)(windowRect.Height * 0.25);
+
             var positionsToCheck = new[]
             {
                 new Point(popupCenterX, popupTopY),
@@ -750,14 +784,11 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             {
                 var color = GetColorAt(pos.X, pos.Y);
 
-                // Check for cream/beige background (the popup card)
-                // Cream colors have high R and G, lower B
                 if (IsCreamColor(color))
                 {
                     matchCount++;
                     System.Diagnostics.Debug.WriteLine($"[FishCatch] Cream match at ({pos.X}, {pos.Y}) - RGB({color.R},{color.G},{color.B}) [{matchCount}/{MinPopupMatchCount}]");
                 }
-                // Also check for the green border of the popup
                 else if (IsPopupGreenBorder(color))
                 {
                     matchCount++;
@@ -766,31 +797,25 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
                 if (matchCount >= MinPopupMatchCount)
                 {
-                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Popup confirmed with {matchCount} matching positions");
-                    return Task.FromResult(true);
-                }
-            }
-
-            // Fallback: Check the position relative to cached cast button (no template matching).
-            if (matchCount > 0 && _cachedRedButtonPos.HasValue)
-            {
-                int btnX = _cachedRedButtonPos.Value.X;
-                int btnY = _cachedRedButtonPos.Value.Y;
-                var fallbackColor = GetColorAt(btnX, Math.Max(windowRect.Y + 50, btnY - 600));
-                if (IsCreamColor(fallbackColor))
-                {
-                    matchCount++;
-                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Fallback cream match [{matchCount}/{MinPopupMatchCount}]");
-                }
-
-                if (matchCount >= MinPopupMatchCount)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Popup confirmed with {matchCount} matching positions (with fallback)");
+                    System.Diagnostics.Debug.WriteLine($"[FishCatch] Popup confirmed via color-spot ({matchCount} matches)");
                     return Task.FromResult(true);
                 }
             }
 
             return Task.FromResult(false);
+        }
+
+        /// <summary>
+        /// Checks if a color matches the distinctive teal/cyan pond water.
+        /// Water has dominant green, moderate blue, low red.
+        /// </summary>
+        private bool IsWaterColor(Color color)
+        {
+            return color.G >= 140
+                && color.G >= color.R && color.G >= color.B  // G is highest channel
+                && color.R <= 170
+                && (color.G - color.R) >= 30                 // noticeably more green than red
+                && (color.G + color.B) > 250;                // not too dark
         }
 
         /// <summary>
