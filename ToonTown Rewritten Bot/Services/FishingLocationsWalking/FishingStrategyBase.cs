@@ -664,8 +664,14 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                             // cast to aim in the wrong direction.
                             int dragX = castResult.CastDestination.X - castResult.RodButtonPosition.X;
                             int dragY = castResult.CastDestination.Y - castResult.RodButtonPosition.Y;
+
+                            // The original formula's horizontal factor (factorX ≈ 0.28) undershoots for
+                            // fish to the left/right. Boost the horizontal drag so side casts reach.
+                            const double horizontalBoost = 1.25;
+                            dragX = (int)(dragX * horizontalBoost);
+
                             castDestination = new Point(btnX + dragX, btnY + dragY);
-                            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Drag vector: ({dragX},{dragY}), btn offset from ref: ({btnX - castResult.RodButtonPosition.X},{btnY - castResult.RodButtonPosition.Y})");
+                            System.Diagnostics.Debug.WriteLine($"[FishingStrategy] Drag vector: ({dragX},{dragY}) [hBoost={horizontalBoost}], btn offset from ref: ({btnX - castResult.RodButtonPosition.X},{btnY - castResult.RodButtonPosition.Y})");
                         }
                         else
                         {
