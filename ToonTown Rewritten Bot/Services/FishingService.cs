@@ -81,7 +81,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     }
                     await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
-                    string estateSellPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Custom Fishing Actions", "EstateFishing Far Left Dock.json");
+                    string estateSellPath = Path.Combine(AppPaths.ExeDirectory, "Custom Fishing Actions", "EstateFishing Far Left Dock.json");
                     CustomActionsFishing estateFishing = new CustomActionsFishing(estateSellPath);
                     await estateFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
                     sells--;

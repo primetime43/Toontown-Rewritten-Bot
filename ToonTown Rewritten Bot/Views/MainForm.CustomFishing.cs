@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Services;
 using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
+using ToonTown_Rewritten_Bot.Utilities;
 using ToonTown_Rewritten_Bot.Views;
 
 namespace ToonTown_Rewritten_Bot
@@ -81,7 +81,7 @@ namespace ToonTown_Rewritten_Bot
                 if (result != DialogResult.OK)
                     return;
 
-                string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string exePath = AppPaths.ExeDirectory;
                 string filePath = Path.Combine(exePath, "Custom Fishing Actions", selectedFileName);
 
                 // Show overlay if the checkbox is checked

@@ -34,7 +34,7 @@ namespace ToonTown_Rewritten_Bot
         private void btnOpenPreferencesFile_Click(object sender, EventArgs e)
         {
             string filePath = Path.Combine(
-                Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
+                AppPaths.ExeDirectory,
                 "user_preferences.json");
 
             if (!File.Exists(filePath))

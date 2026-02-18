@@ -21,7 +21,6 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
     <!-- Suppress platform compatibility warnings since this is a Windows-only app -->
     <NoWarn>$(NoWarn);CA1416</NoWarn>

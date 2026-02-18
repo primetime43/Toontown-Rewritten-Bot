@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -1086,7 +1085,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// </summary>
         public static List<string> GetAvailableActionFiles()
         {
-            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string exePath = AppPaths.ExeDirectory;
             string golfActionsPath = Path.Combine(exePath, "Custom Golf Actions");
 
             if (!Directory.Exists(golfActionsPath))
@@ -1104,7 +1103,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// </summary>
         public static bool ActionFileExists(string courseFileName)
         {
-            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string exePath = AppPaths.ExeDirectory;
             string filePath = Path.Combine(exePath, "Custom Golf Actions", courseFileName + ".json");
             return File.Exists(filePath);
         }

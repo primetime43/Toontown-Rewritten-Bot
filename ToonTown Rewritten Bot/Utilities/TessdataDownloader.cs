@@ -14,7 +14,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private const string TessdataFastBaseUrl = "https://github.com/tesseract-ocr/tessdata_fast/raw/main/";
 
         private static readonly string DefaultTessDataPath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory, "tessdata");
+            AppPaths.ExeDirectory, "tessdata");
 
         /// <summary>
         /// Ensures the specified language data file exists, downloading if necessary.

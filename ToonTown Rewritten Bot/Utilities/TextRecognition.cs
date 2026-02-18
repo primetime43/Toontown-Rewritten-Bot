@@ -17,7 +17,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private TesseractEngine _engine;
         private bool _disposed = false;
         private static readonly string DefaultTessDataPath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory, "tessdata");
+            AppPaths.ExeDirectory, "tessdata");
 
         /// <summary>
         /// Initializes the OCR engine with the specified language.
