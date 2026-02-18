@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -374,7 +373,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static string GetCustomGolfActionFilePath(string fileName)
         {
-            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string exePath = AppPaths.ExeDirectory;
             return Path.Combine(exePath, "Custom Golf Actions", fileName + ".json");
         }
 

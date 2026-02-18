@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
@@ -16,7 +15,7 @@ namespace ToonTown_Rewritten_Bot.Services
     {
         private const string CoordinatesFileName = "UIElementCoordinates.json";
         // Static readonly field that computes the file path only once when the class is loaded
-        private static readonly string CoordinatesFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), CoordinatesFileName);
+        private static readonly string CoordinatesFilePath = Path.Combine(AppPaths.ExeDirectory, CoordinatesFileName);
         public CoordinatesManager()
         {
             if (!File.Exists(CoordinatesFilePath))

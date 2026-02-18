@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
-using System.Reflection;
 
 namespace ToonTown_Rewritten_Bot.Utilities
 {
@@ -16,7 +15,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         static UserPreferences()
         {
-            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string exePath = AppPaths.ExeDirectory;
             PreferencesFilePath = Path.Combine(exePath, "user_preferences.json");
         }
 

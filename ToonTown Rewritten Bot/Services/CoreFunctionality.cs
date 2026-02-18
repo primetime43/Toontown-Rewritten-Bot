@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
 using static ToonTown_Rewritten_Bot.Models.Coordinates;
+using ToonTown_Rewritten_Bot.Utilities;
 using static ToonTown_Rewritten_Bot.Utilities.ImageRecognition;
 
 namespace ToonTown_Rewritten_Bot.Services
@@ -325,7 +326,7 @@ namespace ToonTown_Rewritten_Bot.Services
             };
 
             // Get the directory where the executable is running
-            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string exePath = AppPaths.ExeDirectory;
 
             // Combine the executable path with the specific folder name
             string customActionsFolderPath = Path.Combine(exePath, folderName);

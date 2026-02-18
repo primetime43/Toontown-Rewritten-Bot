@@ -13,7 +13,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
     public static class PondColorManager
     {
         private static readonly string TemplatesFolder = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory, "Templates");
+            AppPaths.ExeDirectory, "Templates");
 
         private static readonly string PondColorsFile = Path.Combine(
             TemplatesFolder, "PondColors.json");
