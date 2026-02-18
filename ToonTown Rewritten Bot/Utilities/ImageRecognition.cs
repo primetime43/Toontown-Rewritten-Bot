@@ -51,10 +51,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         /// <summary>
         /// Captures a window using PrintWindow API, which works even when the window is obscured.
+        /// Falls back to CopyFromScreen if PrintWindow fails or returns a black frame.
         /// </summary>
         private static Bitmap CaptureWindowWithPrintWindow(nint windowHandle, int width, int height)
         {
             Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            bool printWindowSucceeded = false;
 
             using (Graphics graphics = Graphics.FromImage(bitmap))
             {
@@ -62,31 +64,85 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 try
                 {
                     // PW_RENDERFULLCONTENT (0x2) works better with DWM/hardware-accelerated windows
-                    bool success = NativeMethods.PrintWindow(windowHandle, hdc, NativeMethods.PW_RENDERFULLCONTENT);
+                    printWindowSucceeded = NativeMethods.PrintWindow(windowHandle, hdc, NativeMethods.PW_RENDERFULLCONTENT);
 
-                    if (!success)
+                    if (!printWindowSucceeded)
                     {
                         // Fallback: try without the flag
-                        success = NativeMethods.PrintWindow(windowHandle, hdc, 0);
-                    }
-
-                    if (!success)
-                    {
-                        // If PrintWindow fails completely, fall back to screen capture
-                        graphics.ReleaseHdc(hdc);
-                        NativeMethods.Rect windowRect = new NativeMethods.Rect();
-                        NativeMethods.GetWindowRect(windowHandle, ref windowRect);
-                        graphics.CopyFromScreen(windowRect.Left, windowRect.Top, 0, 0, bitmap.Size);
-                        return bitmap;
+                        printWindowSucceeded = NativeMethods.PrintWindow(windowHandle, hdc, 0);
                     }
                 }
                 finally
                 {
                     graphics.ReleaseHdc(hdc);
                 }
+
+                if (!printWindowSucceeded)
+                {
+                    // PrintWindow failed completely, fall back to screen capture
+                    Debug.WriteLine("PrintWindow failed, falling back to CopyFromScreen");
+                    NativeMethods.Rect windowRect = new NativeMethods.Rect();
+                    NativeMethods.GetWindowRect(windowHandle, ref windowRect);
+                    graphics.CopyFromScreen(windowRect.Left, windowRect.Top, 0, 0, bitmap.Size);
+                    return bitmap;
+                }
+            }
+
+            // PrintWindow reported success — verify the capture isn't a black frame
+            // (common with DirectX/OpenGL games on certain GPU/driver configurations)
+            if (IsBitmapBlack(bitmap))
+            {
+                Debug.WriteLine("PrintWindow returned a black frame, falling back to CopyFromScreen");
+                NativeMethods.Rect windowRect = new NativeMethods.Rect();
+                NativeMethods.GetWindowRect(windowHandle, ref windowRect);
+                using (Graphics graphics = Graphics.FromImage(bitmap))
+                {
+                    graphics.CopyFromScreen(windowRect.Left, windowRect.Top, 0, 0, bitmap.Size);
+                }
             }
 
             return bitmap;
+        }
+
+        /// <summary>
+        /// Checks if a bitmap is effectively all black by sampling pixels across the inner region.
+        /// Avoids window chrome/borders by sampling within the center 60% of the image.
+        /// </summary>
+        private static bool IsBitmapBlack(Bitmap bitmap)
+        {
+            if (bitmap.Width == 0 || bitmap.Height == 0)
+                return true;
+
+            // 20% margin on each side to avoid window frame/title bar
+            int marginX = bitmap.Width / 5;
+            int marginY = bitmap.Height / 5;
+            int innerWidth = bitmap.Width - 2 * marginX;
+            int innerHeight = bitmap.Height - 2 * marginY;
+
+            if (innerWidth <= 0 || innerHeight <= 0)
+                return true;
+
+            const int cols = 5;
+            const int rows = 4;
+            const int brightnessThreshold = 10;
+
+            for (int row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < cols; col++)
+                {
+                    int x = marginX + (innerWidth * col) / (cols - 1);
+                    int y = marginY + (innerHeight * row) / (rows - 1);
+
+                    x = Math.Min(x, bitmap.Width - 1);
+                    y = Math.Min(y, bitmap.Height - 1);
+
+                    Color pixel = bitmap.GetPixel(x, y);
+                    if (pixel.R > brightnessThreshold || pixel.G > brightnessThreshold || pixel.B > brightnessThreshold)
+                        return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
