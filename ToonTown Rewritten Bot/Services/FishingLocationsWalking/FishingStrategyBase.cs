@@ -250,6 +250,18 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             => SafeOverlayInvoke(o => o.SetLocation(location));
 
         /// <summary>
+        /// Updates the overlay with cast progress (casts remaining in this round).
+        /// </summary>
+        protected void UpdateOverlayCastProgress(int castsRemaining, int totalCasts)
+            => SafeOverlayInvoke(o => o.UpdateCastProgress(castsRemaining, totalCasts));
+
+        /// <summary>
+        /// Updates the overlay with round/sell progress.
+        /// </summary>
+        public void UpdateOverlayRoundProgress(int currentRound, int totalRounds)
+            => SafeOverlayInvoke(o => o.UpdateRoundProgress(currentRound, totalRounds));
+
+        /// <summary>
         /// Shows the initial scan area on the overlay at the start of fishing.
         /// This ensures the scan area rectangle is always visible, even when auto-detect is off.
         /// </summary>
@@ -351,6 +363,9 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
             int totalCasts = numberOfCasts;
 
+            // Show initial cast progress on overlay
+            UpdateOverlayCastProgress(numberOfCasts, totalCasts);
+
             // Show initial scan area on overlay so it's always visible (even without auto-detect)
             ShowInitialScanAreaOnOverlay();
 
@@ -383,8 +398,10 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         await CastLine(fishVariance, cancellationToken);
                     }
 
+                    // Brief delay for "no jellybeans" popup to appear (shows immediately on cast attempt)
+                    await Task.Delay(300, cancellationToken);
+
                     // Check if "no jellybeans" popup appeared (out of bait money)
-                    await Task.Delay(300, cancellationToken); // Brief delay for popup to appear
                     if (NoJellybeansDetector.IsNoJellybeansPopupVisible())
                     {
                         UpdateOverlayAction("Out of jellybeans!", "-", "Stopped");
@@ -393,6 +410,11 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         shouldStopFishing = true;
                         return;
                     }
+
+                    // Wait for the casting animation to finish (rod swing + line flying out + landing)
+                    // before checking for fish caught. Without this delay, the animation itself
+                    // changes pond colors and triggers false "fish caught" detections.
+                    await Task.Delay(1500, cancellationToken);
 
                     // Update overlay - waiting for bite
                     UpdateOverlayAction("Waiting for bite...", $"Cast {totalCasts - numberOfCasts + 1}/{totalCasts}", "Fishing");
@@ -420,8 +442,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         UpdateOverlayStats();
                         UpdateOverlayAction("Fish caught!", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
 
-                        // Close the fish caught popup so we can see the pond for the next cast
-                        await Task.Delay(200, cancellationToken);
+                        // Wait for the catch popup to fully appear, then close it
+                        await Task.Delay(500, cancellationToken);
                         await CloseFishCaughtPopup(cancellationToken);
                     }
                     else
@@ -456,6 +478,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     }
 
                     numberOfCasts--;
+                    UpdateOverlayCastProgress(numberOfCasts, totalCasts);
                     await Task.Delay(500, cancellationToken);
                 }
 
@@ -750,12 +773,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// Minimum number of sample positions that must match cream/green to consider the popup visible
         /// via the secondary color-spot check.
         /// </summary>
-        private const int MinPopupMatchCount = 2;
+        private const int MinPopupMatchCount = 1;
 
         /// <summary>
         /// Fraction of pond sample points that must be non-water to confirm occlusion by a popup.
         /// </summary>
-        private const double PondOcclusionThreshold = 0.50;
+        private const double PondOcclusionThreshold = 0.35;
 
         protected Task<bool> CheckIfFishCaught(CancellationToken cancellationToken)
         {
