@@ -9,41 +9,56 @@ namespace ToonTown_Rewritten_Bot.Views
 {
     public partial class LogViewerForm : Form
     {
-        private LogLevel _filterLevel = LogLevel.Debug;
-        private string _filterCategory = "(All)";
-
         public LogViewerForm()
         {
             InitializeComponent();
 
-            // Set the global log level combo to match current Logger setting
-            _logLevelCombo.SelectedIndex = (int)Logger.Instance.MinimumLevel;
-
-            _levelFilter.SelectedIndex = 0;
-            _categoryFilter.SelectedIndex = 0;
+            // Load existing log entries from today's file
+            LoadExistingLogFile();
 
             Logger.Instance.LogEntryWritten += OnLogEntryWritten;
             this.FormClosing += (s, e) => Logger.Instance.LogEntryWritten -= OnLogEntryWritten;
         }
 
-        private void logLevelCombo_SelectedIndexChanged(object sender, EventArgs e)
+        private void LoadExistingLogFile()
         {
-            var newLevel = (LogLevel)_logLevelCombo.SelectedIndex;
-            Logger.Instance.MinimumLevel = newLevel;
+            string path = Logger.Instance.GetCurrentLogFilePath();
+            if (!System.IO.File.Exists(path))
+                return;
 
-            // Persist to user preferences
-            UserPreferences.Instance.LogLevel = newLevel.ToString();
-            UserPreferences.Instance.Save();
-        }
+            try
+            {
+                // Flush any pending writes so we read the latest content
+                Logger.Instance.Flush();
 
-        private void levelFilter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _filterLevel = (LogLevel)_levelFilter.SelectedIndex;
-        }
+                string[] allLines = System.IO.File.ReadAllLines(path);
+                // Only load the last 30 lines to avoid lag
+                int startIndex = Math.Max(0, allLines.Length - 30);
+                var lines = allLines.AsSpan(startIndex);
+                foreach (string line in lines)
+                {
+                    if (string.IsNullOrWhiteSpace(line))
+                        continue;
 
-        private void categoryFilter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _filterCategory = _categoryFilter.SelectedItem?.ToString() ?? "(All)";
+                    Color color = Color.Black;
+                    if (line.Contains("[DBG]")) color = Color.Gray;
+                    else if (line.Contains("[WRN]")) color = Color.DarkOrange;
+                    else if (line.Contains("[ERR]")) color = Color.Red;
+
+                    _logTextBox.SelectionStart = _logTextBox.TextLength;
+                    _logTextBox.SelectionLength = 0;
+                    _logTextBox.SelectionColor = color;
+                    _logTextBox.AppendText(line + Environment.NewLine);
+                }
+
+                // Scroll to bottom
+                _logTextBox.SelectionStart = _logTextBox.TextLength;
+                _logTextBox.ScrollToCaret();
+            }
+            catch
+            {
+                // File may be locked or unreadable
+            }
         }
 
         private void clearBtn_Click(object sender, EventArgs e)
@@ -86,12 +101,6 @@ namespace ToonTown_Rewritten_Bot.Views
         private void OnLogEntryWritten(LogEntry entry)
         {
             if (this.IsDisposed || !this.IsHandleCreated)
-                return;
-
-            if (entry.Level < _filterLevel)
-                return;
-
-            if (_filterCategory != "(All)" && !string.Equals(entry.Category, _filterCategory, StringComparison.OrdinalIgnoreCase))
                 return;
 
             try

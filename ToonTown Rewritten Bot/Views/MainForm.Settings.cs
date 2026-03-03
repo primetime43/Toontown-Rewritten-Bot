@@ -127,11 +127,6 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Add("═══════ MISC ═══════");
             preferencesListBox.Items.Add($"  Keep On Top: {(prefs.KeepProgramOnTop ? "Yes" : "No")}");
             preferencesListBox.Items.Add($"  Keep Awake Minutes: {prefs.KeepToonAwakeMinutes}");
-
-            preferencesListBox.Items.Add("");
-            preferencesListBox.Items.Add("═══════ LOGGING ═══════");
-            preferencesListBox.Items.Add($"  Log Level: {prefs.LogLevel}");
-            preferencesListBox.Items.Add($"  Log Directory: {Utilities.Logger.Instance.LogDirectory}");
         }
 
         #endregion

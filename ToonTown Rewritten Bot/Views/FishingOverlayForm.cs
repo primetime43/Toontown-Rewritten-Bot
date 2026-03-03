@@ -45,6 +45,12 @@ namespace ToonTown_Rewritten_Bot.Views
         private int _sessionCastCount = 0;
         private string _location = "";
 
+        // Round progress
+        private int _castsRemaining = 0;
+        private int _totalCasts = 0;
+        private int _currentRound = 0;
+        private int _totalRounds = 0;
+
         // Timer for repositioning over game window
         private Timer _repositionTimer;
 
@@ -145,6 +151,10 @@ namespace ToonTown_Rewritten_Bot.Views
             _sessionFishCaught = 0;
             _sessionCastCount = 0;
             _location = "";
+            _castsRemaining = 0;
+            _totalCasts = 0;
+            _currentRound = 0;
+            _totalRounds = 0;
             this.Invalidate();
         }
 
@@ -177,6 +187,26 @@ namespace ToonTown_Rewritten_Bot.Views
             _castCount = castCount;
             _sessionFishCaught = sessionFishCaught;
             _sessionCastCount = sessionCastCount;
+            this.Invalidate();
+        }
+
+        /// <summary>
+        /// Updates the cast progress (casts remaining in this round).
+        /// </summary>
+        public void UpdateCastProgress(int castsRemaining, int totalCasts)
+        {
+            _castsRemaining = castsRemaining;
+            _totalCasts = totalCasts;
+            this.Invalidate();
+        }
+
+        /// <summary>
+        /// Updates the round/sell progress.
+        /// </summary>
+        public void UpdateRoundProgress(int currentRound, int totalRounds)
+        {
+            _currentRound = currentRound;
+            _totalRounds = totalRounds;
             this.Invalidate();
         }
 
@@ -430,20 +460,30 @@ namespace ToonTown_Rewritten_Bot.Views
                 textY += 18;
             }
 
-            // Stats (Fish caught / Casts) — cycle counts with session totals
-            using (var font = new Font("Segoe UI", 9))
-            using (var valueBrush = new SolidBrush(Color.White))
+            // Progress line: Cast X/Y | Round X/Y
+            if (_totalCasts > 0 || _totalRounds > 0)
             {
-                string fishText = _sessionFishCaught > _fishCaught
-                    ? $"Fish: {_fishCaught} ({_sessionFishCaught} total)"
-                    : $"Fish: {_fishCaught}";
-                string castText = _sessionCastCount > _castCount
-                    ? $"Casts: {_castCount} ({_sessionCastCount} total)"
-                    : $"Casts: {_castCount}";
-                g.DrawString($"{fishText}  |  {castText}", font, valueBrush, textX, textY);
+                using (var labelFont = new Font("Segoe UI", 9))
+                using (var labelBrush = new SolidBrush(Color.LightGray))
+                using (var valueBrush = new SolidBrush(Color.White))
+                {
+                    string progressText = "";
+                    if (_totalCasts > 0)
+                    {
+                        int castsDone = _totalCasts - _castsRemaining;
+                        progressText = $"Cast {castsDone}/{_totalCasts}";
+                    }
+                    if (_totalRounds > 0)
+                    {
+                        if (progressText.Length > 0) progressText += "  |  ";
+                        progressText += $"Round {_currentRound}/{_totalRounds}";
+                    }
+                    g.DrawString(progressText, labelFont, valueBrush, textX, textY);
+                }
+                textY += 18;
             }
 
-            textY += 22;
+            textY += 4;
 
             // Current action
             using (var labelFont = new Font("Segoe UI", 9))
