@@ -64,6 +64,19 @@ namespace ToonTown_Rewritten_Bot.Views
             }
         }
 
+        private void openFolderBtn_Click(object sender, EventArgs e)
+        {
+            string logDir = Logger.Instance.LogDirectory;
+            if (System.IO.Directory.Exists(logDir))
+            {
+                Process.Start(new ProcessStartInfo { FileName = logDir, UseShellExecute = true });
+            }
+            else
+            {
+                MessageBox.Show("The Logs folder does not exist yet.", "No Logs Folder", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
         private void copyAllBtn_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(_logTextBox.Text))

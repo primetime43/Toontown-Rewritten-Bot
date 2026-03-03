@@ -29,6 +29,7 @@ namespace ToonTown_Rewritten_Bot.Views
             _categoryFilter = new System.Windows.Forms.ComboBox();
             _clearBtn = new System.Windows.Forms.Button();
             _openFileBtn = new System.Windows.Forms.Button();
+            _openFolderBtn = new System.Windows.Forms.Button();
             _copyAllBtn = new System.Windows.Forms.Button();
             _logTextBox = new System.Windows.Forms.RichTextBox();
             toolPanel.SuspendLayout();
@@ -45,6 +46,7 @@ namespace ToonTown_Rewritten_Bot.Views
             toolPanel.Controls.Add(_categoryFilter);
             toolPanel.Controls.Add(_clearBtn);
             toolPanel.Controls.Add(_openFileBtn);
+            toolPanel.Controls.Add(_openFolderBtn);
             toolPanel.Controls.Add(_copyAllBtn);
             toolPanel.Dock = System.Windows.Forms.DockStyle.Top;
             toolPanel.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
@@ -143,6 +145,16 @@ namespace ToonTown_Rewritten_Bot.Views
             _openFileBtn.Click += openFileBtn_Click;
             toolTip.SetToolTip(_openFileBtn, "Open today's log file in your default text editor");
             //
+            // _openFolderBtn
+            //
+            _openFolderBtn.Name = "_openFolderBtn";
+            _openFolderBtn.Size = new System.Drawing.Size(90, 23);
+            _openFolderBtn.TabIndex = 13;
+            _openFolderBtn.Text = "Open Folder";
+            _openFolderBtn.UseVisualStyleBackColor = true;
+            _openFolderBtn.Click += openFolderBtn_Click;
+            toolTip.SetToolTip(_openFolderBtn, "Open the Logs folder in File Explorer to view previous log files");
+            //
             // _copyAllBtn
             //
             _copyAllBtn.Name = "_copyAllBtn";
@@ -195,6 +207,7 @@ namespace ToonTown_Rewritten_Bot.Views
         private System.Windows.Forms.ComboBox _categoryFilter;
         private System.Windows.Forms.Button _clearBtn;
         private System.Windows.Forms.Button _openFileBtn;
+        private System.Windows.Forms.Button _openFolderBtn;
         private System.Windows.Forms.Button _copyAllBtn;
         private System.Windows.Forms.RichTextBox _logTextBox;
     }
