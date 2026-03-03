@@ -37,6 +37,8 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </remarks>
         public async Task StartFishing(string locationName, int casts, int sells, bool variance, CancellationToken cancellationToken, string customFishingFilePath = "", bool autoDetectFish = false)
         {
+            Logger.Info("Fishing", $"Session start: location={locationName}, casts={casts}, sells={sells}, variance={variance}, autoDetect={autoDetectFish}");
+
             // Set the fishing location for proper bubble detection configuration
             _engine.SetFishingLocation(locationName);
 
@@ -74,6 +76,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 else if (locationName == FishingLocationNames.EstateLeftDock)
                 {
                     // Estate - sell using built-in estate action file
+                    Logger.Info("Fishing", "Estate sell: starting sell trip.");
                     if (!_engine.BucketWasFull)
                     {
                         await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
@@ -82,8 +85,10 @@ namespace ToonTown_Rewritten_Bot.Services
                     await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
                     string estateSellPath = Path.Combine(AppPaths.ExeDirectory, "Custom Fishing Actions", "EstateFishing Far Left Dock.json");
+                    Logger.Debug("Fishing", $"Estate sell path: {estateSellPath}, exists: {System.IO.File.Exists(estateSellPath)}");
                     CustomActionsFishing estateFishing = new CustomActionsFishing(estateSellPath);
                     await estateFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
+                    Logger.Info("Fishing", "Estate sell: sell trip complete.");
                     sells--;
                 }
                 else
@@ -102,6 +107,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 }
             }
 
+            Logger.Info("Fishing", $"Session end: fish caught={SessionFishCaught}, casts={SessionCastCount}");
             // Notify MainForm to uncheck the overlay checkbox - fishing is completely done
             FishingStrategyBase.OnFishingEnded?.Invoke();
         }
@@ -129,6 +135,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private FishingStrategyBase DetermineFishingStrategy(string locationName)
         {
+            Logger.Debug("Fishing", $"Selecting strategy for location: {locationName}");
             return locationName switch
             {
                 var location when location == FishingLocationNames.ToontownCentralPunchlinePlace => new TTCPunchlinePlaceFishing(),

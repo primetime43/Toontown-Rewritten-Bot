@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Utilities;
 using ToonTown_Rewritten_Bot.Views;
 using static ToonTown_Rewritten_Bot.Models.Coordinates;
 
@@ -14,6 +15,8 @@ namespace ToonTown_Rewritten_Bot.Services
         private static bool infiniteTimeCheckBox, justFeedCheckBox, justScratchCheckBox;
         public async Task StartDoodleTraining(int feeds, int scratches, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch, CancellationToken cancellationToken)
         {
+            Logger.Info("Doodle", $"Training start: feeds={feeds}, scratches={scratches}, trick={trick}, unlimited={unlimitedCheckBox}");
+
             numberOfFeeds = feeds;
             numberOfScratches = scratches;
             selectedTrick = trick;
@@ -89,6 +92,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private async Task PerformTrickAsync(Func<CancellationToken, Task> trickAction, CancellationToken cancellationToken)
         {
+            Logger.Debug("Doodle", $"Performing trick: {selectedTrick}");
             for (int i = 0; i < 2; i++)
             {
                 await OpenSpeedChat(cancellationToken);
@@ -186,6 +190,7 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task feedDoodle(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            Logger.Debug("Doodle", "Feeding doodle");
             // Use image recognition (will prompt for template capture if needed)
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(DoodleTrainingCoordinatesEnum.FeedDoodleButton);
             MoveCursor(x, y);
@@ -196,6 +201,7 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task scratchDoodle(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            Logger.Debug("Doodle", "Scratching doodle");
             // Use image recognition (will prompt for template capture if needed)
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(DoodleTrainingCoordinatesEnum.ScratchDoodleButton);
             CoreFunctionality.MoveCursor(x, y);

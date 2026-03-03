@@ -74,6 +74,10 @@ namespace ToonTown_Rewritten_Bot
             // Load saved user preferences
             LoadUserPreferences();
 
+            // Initialize logger with saved preference
+            if (Enum.TryParse<LogLevel>(UserPreferences.Instance.LogLevel, true, out var logLevel))
+                Logger.Instance.MinimumLevel = logLevel;
+
             // Populate the Settings tab preferences display
             RefreshPreferencesDisplay();
         }
@@ -285,6 +289,9 @@ namespace ToonTown_Rewritten_Bot
 
             // Save user preferences on close
             SaveUserPreferences();
+
+            // Shutdown logger
+            Logger.Instance.Shutdown();
         }
 
         public void LoadCustomActions(string actionType, ComboBox comboBox)

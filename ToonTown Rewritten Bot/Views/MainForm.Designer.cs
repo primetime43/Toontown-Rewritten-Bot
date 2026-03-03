@@ -199,6 +199,7 @@
             devDebugDescLabel = new System.Windows.Forms.Label();
             devDebugSeparator = new System.Windows.Forms.Panel();
             devOpenDebugBtn = new System.Windows.Forms.Button();
+            devOpenLogViewerBtn = new System.Windows.Forms.Button();
             devDownloadOcrBtn = new System.Windows.Forms.Button();
             devCoordinatesGroup = new System.Windows.Forms.GroupBox();
             devCoordinatesComboBox = new System.Windows.Forms.ComboBox();
@@ -2179,6 +2180,7 @@
             devDebugGroup.Controls.Add(devDebugDescLabel);
             devDebugGroup.Controls.Add(devDebugSeparator);
             devDebugGroup.Controls.Add(devOpenDebugBtn);
+            devDebugGroup.Controls.Add(devOpenLogViewerBtn);
             devDebugGroup.Controls.Add(devDownloadOcrBtn);
             devDebugGroup.Location = new System.Drawing.Point(10, 10);
             devDebugGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -2215,14 +2217,26 @@
             devOpenDebugBtn.Location = new System.Drawing.Point(10, 70);
             devOpenDebugBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             devOpenDebugBtn.Name = "devOpenDebugBtn";
-            devOpenDebugBtn.Size = new System.Drawing.Size(270, 35);
+            devOpenDebugBtn.Size = new System.Drawing.Size(130, 35);
             devOpenDebugBtn.TabIndex = 2;
-            devOpenDebugBtn.Text = "Open Debug Window";
+            devOpenDebugBtn.Text = "Debug Window";
             devOpenDebugBtn.UseVisualStyleBackColor = false;
             devOpenDebugBtn.Click += devOpenDebugBtn_Click;
-            // 
+            //
+            // devOpenLogViewerBtn
+            //
+            devOpenLogViewerBtn.BackColor = System.Drawing.Color.LightBlue;
+            devOpenLogViewerBtn.Location = new System.Drawing.Point(150, 70);
+            devOpenLogViewerBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devOpenLogViewerBtn.Name = "devOpenLogViewerBtn";
+            devOpenLogViewerBtn.Size = new System.Drawing.Size(130, 35);
+            devOpenLogViewerBtn.TabIndex = 4;
+            devOpenLogViewerBtn.Text = "Log Viewer";
+            devOpenLogViewerBtn.UseVisualStyleBackColor = false;
+            devOpenLogViewerBtn.Click += devOpenLogViewerBtn_Click;
+            //
             // devDownloadOcrBtn
-            // 
+            //
             devDownloadOcrBtn.Location = new System.Drawing.Point(10, 113);
             devDownloadOcrBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             devDownloadOcrBtn.Name = "devDownloadOcrBtn";
@@ -2490,6 +2504,7 @@
         private System.Windows.Forms.Label devDebugDescLabel;
         private System.Windows.Forms.Panel devDebugSeparator;
         private System.Windows.Forms.Button devOpenDebugBtn;
+        private System.Windows.Forms.Button devOpenLogViewerBtn;
         private System.Windows.Forms.Button devDownloadOcrBtn;
         private System.Windows.Forms.GroupBox devTemplatesGroup;
         private System.Windows.Forms.Label devSelectTemplateLabel;

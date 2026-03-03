@@ -6,8 +6,8 @@
     ],
     "TemplatePath": "Templates\\Red_Fishing_Button.png",
     "ManualCoordinates": "960, 765",
-    "CachedCenter": "968, 793",
-    "LastFoundTime": "2026-02-07T23:07:51.4089513-05:00"
+    "CachedCenter": "968, 789",
+    "LastFoundTime": "2026-03-03T15:16:18.3926724-05:00"
   },
   "Exit Fishing Button": {
     "Name": "Exit Fishing Button",
@@ -16,8 +16,8 @@
     ],
     "TemplatePath": "Templates\\Exit_Fishing_Button.png",
     "ManualCoordinates": "468, 38",
-    "CachedCenter": "1060, 981",
-    "LastFoundTime": "2026-01-31T23:59:10.306435-05:00"
+    "CachedCenter": "1628, 659",
+    "LastFoundTime": "2026-03-03T14:44:12.7782236-05:00"
   },
   "Blue Sell All Button": {
     "Name": "Blue Sell All Button",
