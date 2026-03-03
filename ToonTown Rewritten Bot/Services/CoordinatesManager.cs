@@ -111,10 +111,13 @@ namespace ToonTown_Rewritten_Bot.Services
             string description = CoordinateActions.GetDescription(keyAsString);
             string elementName = description ?? $"Element_{keyAsString}";
 
+            Logger.Info("Coordinates", $"Resolving coords for '{elementName}' (key={keyAsString})");
+
             // First, load manual coordinates as fallback for UIElementManager
             var manualCoords = GetManualCoordsOrDefault(key);
             if (manualCoords.x != 0 || manualCoords.y != 0)
             {
+                Logger.Debug("Coordinates", $"Manual coords available for '{elementName}': ({manualCoords.x}, {manualCoords.y})");
                 UIElementManager.Instance.SetManualCoordinates(elementName, new Point(manualCoords.x, manualCoords.y));
             }
 
@@ -128,7 +131,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 int screenX = location.Value.X + windowOffset.X;
                 int screenY = location.Value.Y + windowOffset.Y;
 
-                System.Diagnostics.Debug.WriteLine($"[CoordinatesManager] {elementName}: window coords ({location.Value.X}, {location.Value.Y}) + offset ({windowOffset.X}, {windowOffset.Y}) = screen ({screenX}, {screenY})");
+                Logger.Info("Coordinates", $"'{elementName}': screen ({screenX}, {screenY}) [source=ImageRec]");
 
                 return (screenX, screenY);
             }
@@ -137,6 +140,7 @@ namespace ToonTown_Rewritten_Bot.Services
             // Manual coordinates are already screen coordinates
             if (manualCoords.x != 0 || manualCoords.y != 0)
             {
+                Logger.Info("Coordinates", $"'{elementName}': screen ({manualCoords.x}, {manualCoords.y}) [source=ManualFallback]");
                 return manualCoords;
             }
 
@@ -167,6 +171,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
             if (recaptureChoice == DialogResult.Yes)
             {
+                Logger.Info("Coordinates", $"User chose to recapture template for '{elementName}'");
                 bool captured = UIElementManager.Instance.PromptForTemplateCapture(elementName, description ?? $"Please select the '{elementName}' on screen");
                 if (captured)
                 {
@@ -177,11 +182,13 @@ namespace ToonTown_Rewritten_Bot.Services
                         var windowOffset = CoreFunctionality.GetGameWindowOffset();
                         int screenX = retryLocation.Value.X + windowOffset.X;
                         int screenY = retryLocation.Value.Y + windowOffset.Y;
+                        Logger.Info("Coordinates", $"'{elementName}': screen ({screenX}, {screenY}) [source=Recapture]");
                         return (screenX, screenY);
                     }
                 }
             }
 
+            Logger.Error("Coordinates", $"Could not find '{elementName}' via image recognition or manual coordinates");
             throw new Exception($"Could not find element '{elementName}' via image recognition or manual coordinates.");
         }
 
@@ -207,7 +214,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[CoordinatesManager] Error reading manual coords: {ex.Message}");
+                Logger.Warning("Coordinates", $"Error reading manual coords: {ex.Message}");
             }
             return (0, 0);
         }

@@ -80,6 +80,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public bool KeepProgramOnTop { get; set; } = false;
         public int KeepToonAwakeMinutes { get; set; } = 1;
 
+        // Logging preferences
+        public string LogLevel { get; set; } = "Debug";
+
         /// <summary>
         /// Saves current preferences to file.
         /// </summary>
@@ -160,6 +163,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             KeepProgramOnTop = false;
             KeepToonAwakeMinutes = 1;
+
+            LogLevel = "Debug";
 
             Save();
         }

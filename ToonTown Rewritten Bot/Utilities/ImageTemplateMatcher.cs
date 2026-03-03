@@ -100,6 +100,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
             progressCallback?.Invoke(100);
 
             bool found = bestMatch >= threshold;
+            if (found)
+                Logger.Debug("TemplateMatch", $"Template matched at ({bestLocation.X}, {bestLocation.Y}) confidence={bestMatch:P1} threshold={threshold:P1}");
+            else
+                Logger.Debug("TemplateMatch", $"Template not found, best confidence={bestMatch:P1} threshold={threshold:P1}");
+
             return new MatchResult
             {
                 Found = found,

@@ -84,6 +84,7 @@
     <EmbeddedResource Include="Services\CustomFishingActions\DDLLullabyLaneFishing Dock Left Of The Small Box.json" />
     <EmbeddedResource Include="Services\CustomFishingActions\MMTenorTerraceFishing Top Left Dock.json" />
     <EmbeddedResource Include="Services\CustomFishingActions\TTCPunchlinePlaceFishing First Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\EstateFishing Far Left Dock.json" />
   </ItemGroup>
   <!-- Copy Custom Golf Actions to output directory -->
   <ItemGroup>
@@ -124,6 +125,9 @@
     </Compile>
     <Compile Update="Views\MainForm.Settings.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LogViewerForm.Designer.cs">
+      <DependentUpon>LogViewerForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <!-- Copy Templates folder to output directory -->
