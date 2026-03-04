@@ -75,7 +75,7 @@ namespace ToonTown_Rewritten_Bot.Views
             }
             else
             {
-                MessageBox.Show("No log file exists yet for today.", "No Log File", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No log file exists yet for this session.", "No Log File", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
