@@ -43,7 +43,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private readonly string _logDirectory;
         private readonly string _sessionLogFilePath;
 
-        public LogLevel MinimumLevel { get; set; } = LogLevel.Debug;
+        public LogLevel MinimumLevel { get; set; } = LogLevel.Info;
 
         public event Action<LogEntry> LogEntryWritten;
 
