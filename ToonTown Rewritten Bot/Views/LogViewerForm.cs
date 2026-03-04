@@ -31,7 +31,13 @@ namespace ToonTown_Rewritten_Bot.Views
                 // Flush any pending writes so we read the latest content
                 Logger.Instance.Flush();
 
-                string[] allLines = System.IO.File.ReadAllLines(path);
+                // Open with FileShare.ReadWrite so the Logger's StreamWriter doesn't block us
+                string[] allLines;
+                using (var fs = new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite))
+                using (var reader = new System.IO.StreamReader(fs))
+                {
+                    allLines = reader.ReadToEnd().Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                }
                 // Only load the last 30 lines to avoid lag
                 int startIndex = Math.Max(0, allLines.Length - 30);
                 var lines = allLines.AsSpan(startIndex);
