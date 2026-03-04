@@ -61,6 +61,7 @@
             labelWaitAttempts = new System.Windows.Forms.Label();
             numericUpDownWaitAttempts = new System.Windows.Forms.NumericUpDown();
             showOverlayCheckBox = new System.Windows.Forms.CheckBox();
+            quickCastingCheckBox = new System.Windows.Forms.CheckBox();
             fishingSeparator2 = new System.Windows.Forms.Panel();
             labelBiteTimeout = new System.Windows.Forms.Label();
             numericUpDownBiteTimeout = new System.Windows.Forms.NumericUpDown();
@@ -561,6 +562,7 @@
             fishingDetectionGroup.Controls.Add(labelWaitAttempts);
             fishingDetectionGroup.Controls.Add(numericUpDownWaitAttempts);
             fishingDetectionGroup.Controls.Add(showOverlayCheckBox);
+            fishingDetectionGroup.Controls.Add(quickCastingCheckBox);
             fishingDetectionGroup.Controls.Add(fishingSeparator2);
             fishingDetectionGroup.Controls.Add(labelBiteTimeout);
             fishingDetectionGroup.Controls.Add(numericUpDownBiteTimeout);
@@ -634,11 +636,24 @@
             toolTip1.SetToolTip(showOverlayCheckBox, "Shows a transparent overlay on the game window displaying detected fish shadows and targeting info.");
             showOverlayCheckBox.UseVisualStyleBackColor = true;
             showOverlayCheckBox.CheckedChanged += ShowOverlayCheckBox_CheckedChanged;
-            // 
+            //
+            // quickCastingCheckBox
+            //
+            quickCastingCheckBox.AutoSize = true;
+            quickCastingCheckBox.Location = new System.Drawing.Point(10, 129);
+            quickCastingCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            quickCastingCheckBox.Name = "quickCastingCheckBox";
+            quickCastingCheckBox.Size = new System.Drawing.Size(109, 20);
+            quickCastingCheckBox.TabIndex = 5;
+            quickCastingCheckBox.Text = "Quick Casting";
+            toolTip1.SetToolTip(quickCastingCheckBox, "Casts quickly without waiting for the animation to finish. Faster but may occasionally misdetect fish caught.");
+            quickCastingCheckBox.UseVisualStyleBackColor = true;
+            quickCastingCheckBox.CheckedChanged += QuickCastingCheckBox_CheckedChanged;
+            //
             // fishingSeparator2
             // 
             fishingSeparator2.BackColor = System.Drawing.Color.LightGray;
-            fishingSeparator2.Location = new System.Drawing.Point(10, 133);
+            fishingSeparator2.Location = new System.Drawing.Point(10, 159);
             fishingSeparator2.Name = "fishingSeparator2";
             fishingSeparator2.Size = new System.Drawing.Size(180, 1);
             fishingSeparator2.TabIndex = 5;
@@ -646,7 +661,7 @@
             // labelBiteTimeout
             // 
             labelBiteTimeout.AutoSize = true;
-            labelBiteTimeout.Location = new System.Drawing.Point(10, 145);
+            labelBiteTimeout.Location = new System.Drawing.Point(10, 171);
             labelBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             labelBiteTimeout.Name = "labelBiteTimeout";
             labelBiteTimeout.Size = new System.Drawing.Size(85, 16);
@@ -655,7 +670,7 @@
             // 
             // numericUpDownBiteTimeout
             // 
-            numericUpDownBiteTimeout.Location = new System.Drawing.Point(110, 143);
+            numericUpDownBiteTimeout.Location = new System.Drawing.Point(110, 169);
             numericUpDownBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numericUpDownBiteTimeout.Maximum = new decimal(new int[] { 120, 0, 0, 0 });
             numericUpDownBiteTimeout.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
@@ -668,14 +683,14 @@
             // fishingSeparator3
             // 
             fishingSeparator3.BackColor = System.Drawing.Color.LightGray;
-            fishingSeparator3.Location = new System.Drawing.Point(10, 178);
+            fishingSeparator3.Location = new System.Drawing.Point(10, 204);
             fishingSeparator3.Name = "fishingSeparator3";
             fishingSeparator3.Size = new System.Drawing.Size(180, 1);
             fishingSeparator3.TabIndex = 8;
             // 
             // editScanAreaBtn
             // 
-            editScanAreaBtn.Location = new System.Drawing.Point(10, 190);
+            editScanAreaBtn.Location = new System.Drawing.Point(10, 216);
             editScanAreaBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             editScanAreaBtn.Name = "editScanAreaBtn";
             editScanAreaBtn.Size = new System.Drawing.Size(180, 28);
@@ -687,7 +702,7 @@
             // 
             // calibrateColorsBtn
             // 
-            calibrateColorsBtn.Location = new System.Drawing.Point(10, 225);
+            calibrateColorsBtn.Location = new System.Drawing.Point(10, 251);
             calibrateColorsBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             calibrateColorsBtn.Name = "calibrateColorsBtn";
             calibrateColorsBtn.Size = new System.Drawing.Size(180, 28);
@@ -2520,6 +2535,7 @@
         private System.Windows.Forms.Button btnManageVariants;
         private System.Windows.Forms.CheckBox autoDetectFishCheckBox;
         private System.Windows.Forms.CheckBox showOverlayCheckBox;
+        private System.Windows.Forms.CheckBox quickCastingCheckBox;
         private System.Windows.Forms.Button editScanAreaBtn;
         private System.Windows.Forms.Button calibrateColorsBtn;
         private System.Windows.Forms.Label fishingLocationDescLabel;

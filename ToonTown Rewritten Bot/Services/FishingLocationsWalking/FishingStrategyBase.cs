@@ -115,6 +115,17 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
+        /// When true, uses a shorter delay after casting (300ms instead of 1500ms).
+        /// Faster fishing but may occasionally misdetect fish caught from the casting animation.
+        /// </summary>
+        private static volatile bool _quickCasting = false;
+        public static bool QuickCasting
+        {
+            get => _quickCasting;
+            set => _quickCasting = value;
+        }
+
+        /// <summary>
         /// Delay in milliseconds between fish detection scans when waiting for fish.
         /// Default is 2000ms (2 seconds).
         /// </summary>
@@ -414,7 +425,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     // Wait for the casting animation to finish (rod swing + line flying out + landing)
                     // before checking for fish caught. Without this delay, the animation itself
                     // changes pond colors and triggers false "fish caught" detections.
-                    await Task.Delay(1500, cancellationToken);
+                    int animationDelay = QuickCasting ? 300 : 1500;
+                    await Task.Delay(animationDelay, cancellationToken);
 
                     // Update overlay - waiting for bite
                     UpdateOverlayAction("Waiting for bite...", $"Cast {totalCasts - numberOfCasts + 1}/{totalCasts}", "Fishing");
