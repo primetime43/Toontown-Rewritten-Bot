@@ -14,7 +14,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 {
     public abstract class FishingStrategyBase : CoreFunctionality
     {
-        protected bool shouldStopFishing = false;
+        protected volatile bool shouldStopFishing = false;
 
         /// <summary>
         /// Set when the bucket-full popup was detected and dismissed.
