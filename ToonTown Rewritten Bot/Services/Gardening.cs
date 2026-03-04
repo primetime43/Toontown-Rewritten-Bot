@@ -286,13 +286,18 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         private static void InvokeOverlay(Action action)
         {
-            if (_overlay != null && !_overlay.IsDisposed)
+            try
             {
-                if (_overlay.InvokeRequired)
-                    _overlay.BeginInvoke(action);
-                else
-                    action();
+                if (_overlay != null && !_overlay.IsDisposed)
+                {
+                    if (_overlay.InvokeRequired)
+                        _overlay.BeginInvoke(action);
+                    else
+                        action();
+                }
             }
+            catch (ObjectDisposedException) { }
+            catch (InvalidOperationException) { }
         }
 
         public static bool IsOverlayVisible => _overlay != null && !_overlay.IsDisposed && _overlay.Visible;
