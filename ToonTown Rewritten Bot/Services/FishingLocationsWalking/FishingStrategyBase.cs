@@ -433,16 +433,31 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
                     stopwatch.Start();
                     bool fishCaught = false;
-                    while (stopwatch.Elapsed.TotalSeconds < BiteTimeoutSeconds)
+
+                    if (QuickCasting)
                     {
-                        if (cancellationToken.IsCancellationRequested) return;
-                        if (await CheckIfFishCaught(cancellationToken))
+                        // Quick casting skips fish-caught detection (too unreliable with short delay).
+                        // Just wait for the bite timeout.
+                        while (stopwatch.Elapsed.TotalSeconds < BiteTimeoutSeconds)
                         {
-                            fishCaught = true;
-                            break;
+                            if (cancellationToken.IsCancellationRequested) return;
+                            await Task.Delay(100, cancellationToken);
                         }
-                        await Task.Delay(100, cancellationToken);
                     }
+                    else
+                    {
+                        while (stopwatch.Elapsed.TotalSeconds < BiteTimeoutSeconds)
+                        {
+                            if (cancellationToken.IsCancellationRequested) return;
+                            if (await CheckIfFishCaught(cancellationToken))
+                            {
+                                fishCaught = true;
+                                break;
+                            }
+                            await Task.Delay(100, cancellationToken);
+                        }
+                    }
+
                     stopwatch.Stop();
                     stopwatch.Reset();
 
