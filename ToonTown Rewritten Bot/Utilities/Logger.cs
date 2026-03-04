@@ -39,9 +39,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private static readonly object _lock = new object();
 
         private readonly object _fileLock = new object();
-        private string _currentLogDate;
         private StreamWriter _writer;
         private readonly string _logDirectory;
+        private readonly string _sessionLogFilePath;
 
         public LogLevel MinimumLevel { get; set; } = LogLevel.Debug;
 
@@ -69,6 +69,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
         {
             _logDirectory = Path.Combine(AppPaths.ExeDirectory, "Logs");
             Directory.CreateDirectory(_logDirectory);
+
+            // Each session gets its own log file based on startup time
+            string sessionTimestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+            _sessionLogFilePath = Path.Combine(_logDirectory, $"ttrbot_{sessionTimestamp}.log");
+
+            CleanupOldLogs();
         }
 
         public static void Debug(string category, string message)
@@ -109,23 +115,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
             {
                 try
                 {
-                    string today = DateTime.Now.ToString("yyyy-MM-dd");
-
-                    if (_currentLogDate != today)
-                    {
-                        _writer?.Flush();
-                        _writer?.Dispose();
-                        _writer = null;
-                        _currentLogDate = today;
-
-                        // Clean up old logs on date rollover
-                        CleanupOldLogs();
-                    }
-
                     if (_writer == null)
                     {
-                        string filePath = Path.Combine(_logDirectory, $"ttrbot_{_currentLogDate}.log");
-                        _writer = new StreamWriter(filePath, append: true) { AutoFlush = true };
+                        _writer = new StreamWriter(_sessionLogFilePath, append: true) { AutoFlush = true };
                     }
 
                     _writer.WriteLine(entry.ToString());
@@ -184,8 +176,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         public string GetCurrentLogFilePath()
         {
-            string today = DateTime.Now.ToString("yyyy-MM-dd");
-            return Path.Combine(_logDirectory, $"ttrbot_{today}.log");
+            return _sessionLogFilePath;
         }
 
         public string LogDirectory => _logDirectory;
