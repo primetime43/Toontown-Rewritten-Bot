@@ -10,19 +10,19 @@ namespace ToonTown_Rewritten_Bot.Services
 {
     public class DoodleTraining : CoreFunctionality
     {
-        public static int numberOfFeeds, numberOfScratches;
-        private static string selectedTrick;
-        private static bool infiniteTimeCheckBox, justFeedCheckBox, justScratchCheckBox;
+        private int _numberOfFeeds, _numberOfScratches;
+        private string _selectedTrick;
+        private bool _infiniteTime, _justFeed, _justScratch;
         public async Task StartDoodleTraining(int feeds, int scratches, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch, CancellationToken cancellationToken)
         {
             Logger.Info("Doodle", $"Training start: feeds={feeds}, scratches={scratches}, trick={trick}, unlimited={unlimitedCheckBox}");
 
-            numberOfFeeds = feeds;
-            numberOfScratches = scratches;
-            selectedTrick = trick;
-            infiniteTimeCheckBox = unlimitedCheckBox;
-            justFeedCheckBox = justFeed;
-            justScratchCheckBox = justScratch;
+            _numberOfFeeds = feeds;
+            _numberOfScratches = scratches;
+            _selectedTrick = trick;
+            _infiniteTime = unlimitedCheckBox;
+            _justFeed = justFeed;
+            _justScratch = justScratch;
 
             // Check if game window is available and focus it
             EnsureGameWindowReady();
@@ -34,23 +34,23 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private async Task feedAndScratch(CancellationToken cancellationToken)
         {
-            while (infiniteTimeCheckBox || numberOfFeeds > 0 || numberOfScratches > 0)
+            while (_infiniteTime || _numberOfFeeds > 0 || _numberOfScratches > 0)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (!justScratchCheckBox && numberOfFeeds > 0)
+                if (!_justScratch && _numberOfFeeds > 0)
                 {
                     await feedDoodle(cancellationToken);
-                    if (!infiniteTimeCheckBox) numberOfFeeds--;
+                    if (!_infiniteTime) _numberOfFeeds--;
                 }
 
-                if (!justFeedCheckBox && numberOfScratches > 0)
+                if (!_justFeed && _numberOfScratches > 0)
                 {
                     await scratchDoodle(cancellationToken);
-                    if (!infiniteTimeCheckBox) numberOfScratches--;
+                    if (!_infiniteTime) _numberOfScratches--;
                 }
 
-                if (selectedTrick != "None")
+                if (_selectedTrick != "None")
                     await DetermineSelectedTrick(cancellationToken);
 
                 await Task.Delay(5000, cancellationToken);
@@ -61,7 +61,7 @@ namespace ToonTown_Rewritten_Bot.Services
         {
             await Task.Delay(1000, cancellationToken);
 
-            switch (selectedTrick)
+            switch (_selectedTrick)
             {
                 case "Jump (5 - 10 laff)":
                     await PerformTrickAsync(TrainJump, cancellationToken);
@@ -92,7 +92,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private async Task PerformTrickAsync(Func<CancellationToken, Task> trickAction, CancellationToken cancellationToken)
         {
-            Logger.Debug("Doodle", $"Performing trick: {selectedTrick}");
+            Logger.Debug("Doodle", $"Performing trick: {_selectedTrick}");
             for (int i = 0; i < 2; i++)
             {
                 await OpenSpeedChat(cancellationToken);
