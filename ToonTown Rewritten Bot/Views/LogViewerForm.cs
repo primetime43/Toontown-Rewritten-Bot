@@ -101,7 +101,17 @@ namespace ToonTown_Rewritten_Bot.Views
         private void copyAllBtn_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(_logTextBox.Text))
-                Clipboard.SetText(_logTextBox.Text);
+            {
+                try
+                {
+                    Clipboard.SetText(_logTextBox.Text);
+                }
+                catch (System.Runtime.InteropServices.ExternalException)
+                {
+                    MessageBox.Show("Could not copy to clipboard. It may be in use by another application.",
+                        "Clipboard Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
         }
 
         private void OnLogEntryWritten(LogEntry entry)
