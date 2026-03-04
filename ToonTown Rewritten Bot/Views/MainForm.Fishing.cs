@@ -71,19 +71,8 @@ namespace ToonTown_Rewritten_Bot
                 SetFishingOverlay(false, null, null);
                 CoreFunctionality.BringBotWindowToFront();
                 int casts = _fishingService.SessionCastCount;
-                string statsLine;
-                if (quickCastingCheckBox.Checked)
-                {
-                    statsLine = $"Total Casts: {casts}";
-                }
-                else
-                {
-                    int fish = _fishingService.SessionFishCaught;
-                    int pct = casts > 0 ? (int)Math.Round(100.0 * fish / casts) : 0;
-                    statsLine = $"Fish Caught: {fish}/{casts} ({pct}% catch rate)";
-                }
                 MessageBox.Show(
-                    $"Done Fishing in '{selectedLocation}'.\n\n{statsLine}",
+                    $"Done Fishing in '{selectedLocation}'.\n\nTotal Casts: {casts}",
                     "Fishing Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (TaskCanceledException)
