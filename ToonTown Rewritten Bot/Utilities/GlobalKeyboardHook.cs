@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Utilities;
 
 namespace ToonTown_Rewritten_Bot.Utilities
 {
@@ -71,11 +72,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
             if (_hookId == IntPtr.Zero)
             {
                 int errorCode = Marshal.GetLastWin32Error();
-                Debug.WriteLine($"[GlobalKeyboardHook] Failed to set hook. Error code: {errorCode}");
+                Logger.Error("Input", $"Failed to install keyboard hook (error {errorCode}). F12/Esc hotkeys will not work.");
             }
             else
             {
-                Debug.WriteLine("[GlobalKeyboardHook] Hook installed successfully");
+                Logger.Debug("Input", "Global keyboard hook installed successfully");
             }
         }
 

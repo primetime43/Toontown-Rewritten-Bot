@@ -57,12 +57,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
             {
                 if (_learnedColors.TryGetValue(_currentLocationName, out var learned))
                 {
-                    System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using learned color for {_currentLocationName}: " +
+                    Logger.Debug("FishDetect", $"Using learned color for {_currentLocationName}: " +
                         $"RGB({learned.color.R},{learned.color.G},{learned.color.B}), confidence={learned.confidence}");
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using config for {locationName}: " +
+            Logger.Debug("FishDetect", $"Using config for {locationName}: " +
                 $"Color=({_spotConfig.BubbleColor.R},{_spotConfig.BubbleColor.G},{_spotConfig.BubbleColor.B}), " +
                 $"YAdj={_spotConfig.YAdjustment}");
         }
@@ -123,7 +123,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             if (customColors != null)
             {
-                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using CUSTOM colors for '{_currentLocationName}': " +
+                Logger.Debug("FishDetect", $"Using CUSTOM colors for '{_currentLocationName}': " +
                     $"Shadow=({customColors.ShadowR},{customColors.ShadowG},{customColors.ShadowB}), " +
                     $"Tolerance=({customColors.ToleranceR},{customColors.ToleranceG},{customColors.ToleranceB})");
             }
@@ -142,7 +142,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             {
                 result.ScanArea = customScanArea.Value;
                 result.UsedDynamicPondDetection = false;
-                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using CUSTOM scan area for '{_currentLocationName}': {result.ScanArea}");
+                Logger.Debug("FishDetect", $"Using CUSTOM scan area for '{_currentLocationName}': {result.ScanArea}");
             }
             else
             {
@@ -197,12 +197,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
             if (usingLearnedColor)
             {
                 var lc = LearnedShadowColor.Value;
-                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using LEARNED color RGB({lc.R},{lc.G},{lc.B}) with tolerance ±35");
+                Logger.Debug("FishDetect", $"Using LEARNED color RGB({lc.R},{lc.G},{lc.B}) with tolerance ±35");
             }
             else
             {
                 var bc = _spotConfig.BubbleColor;
-                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using location config color RGB({bc.R},{bc.G},{bc.B}) + general dark detection (threshold={result.DarkThreshold})");
+                Logger.Debug("FishDetect", $"Using location config color RGB({bc.R},{bc.G},{bc.B}) + general dark detection (threshold={result.DarkThreshold})");
             }
 
             var fishShadowPixels = new List<Point>();
@@ -373,7 +373,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             else if (allBlobs.Count > 0 && candidates.Count == 0)
             {
                 // FALLBACK: No candidates passed filters, but we have raw blobs
-                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] No candidates passed filters, using blob fallback");
+                Logger.Debug("FishDetect", $"No candidates passed filters, using blob fallback");
 
                 var centerX = (startX + endX) / 2;
                 var centerY = (startY + endY) / 2;
@@ -409,7 +409,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         HasBubblesAbove = false
                     });
 
-                    System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Fallback blob at ({bestFallbackBlob.center.X},{bestFallbackBlob.center.Y}), size={bestFallbackBlob.size}");
+                    Logger.Debug("FishDetect", $"Fallback blob at ({bestFallbackBlob.center.X},{bestFallbackBlob.center.Y}), size={bestFallbackBlob.size}");
                 }
             }
 
@@ -439,13 +439,13 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// </summary>
         public async Task<CastingResult> DetectFishAndCalculateCastAsync(CancellationToken cancellationToken = default)
         {
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] === Starting NEW fish detection scan ===");
+            Logger.Info("FishDetect", $"Starting NEW fish detection scan");
 
             // Get current game window info
             var windowRect = CoreFunctionality.GetGameWindowRect();
             if (windowRect.IsEmpty)
             {
-                System.Diagnostics.Debug.WriteLine("[FishBubbleDetector] Game window not found");
+                Logger.Warning("FishDetect", "Game window not found");
                 return null;
             }
 
@@ -466,7 +466,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     customScanArea.Value.Width,
                     customScanArea.Value.Height
                 );
-                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using CUSTOM scan area: {scaledScanArea}");
+                Logger.Debug("FishDetect", $"Using CUSTOM scan area: {scaledScanArea}");
             }
             else
             {
@@ -478,7 +478,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 );
             }
 
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Scanning area: {scaledScanArea}, " +
+            Logger.Debug("FishDetect", $"Scanning area: {scaledScanArea}, " +
                 $"looking for color ({_spotConfig.BubbleColor.R},{_spotConfig.BubbleColor.G},{_spotConfig.BubbleColor.B})");
 
             Point? lastCoords = null;
@@ -501,7 +501,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         Math.Abs(lastCoords.Value.Y - newCoords.Value.Y) <= positionTolerance)
                     {
                         stableCount++;
-                        System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Fish stable at ({newCoords.Value.X}, {newCoords.Value.Y}) - count: {stableCount}/{requiredStableScans}");
+                        Logger.Info("FishDetect", $"Fish stable at ({newCoords.Value.X}, {newCoords.Value.Y}) - count: {stableCount}/{requiredStableScans}");
 
                         if (stableCount >= requiredStableScans)
                         {
@@ -514,7 +514,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                             int screenRodX = (int)(RodButtonX * scaleX) + windowRect.X;
                             int screenRodY = (int)(RodButtonY * scaleY) + windowRect.Y;
 
-                            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Fish stopped! Casting from ({screenRodX}, {screenRodY}) to ({screenCastX}, {screenCastY})");
+                            Logger.Info("FishDetect", $"Fish stopped! Casting from ({screenRodX}, {screenRodY}) to ({screenCastX}, {screenCastY})");
 
                             return new CastingResult
                             {
@@ -527,7 +527,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     else
                     {
                         stableCount = 0;
-                        System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Fish moving... now at ({newCoords.Value.X}, {newCoords.Value.Y})");
+                        Logger.Debug("FishDetect", $"Fish moving... now at ({newCoords.Value.X}, {newCoords.Value.Y})");
                     }
 
                     lastCoords = newCoords;
@@ -536,13 +536,13 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 {
                     lastCoords = null;
                     stableCount = 0;
-                    System.Diagnostics.Debug.WriteLine("[FishBubbleDetector] No fish found in scan...");
+                    Logger.Warning("FishDetect", "No fish found in scan...");
                 }
 
                 await Task.Delay(200, cancellationToken);
             }
 
-            System.Diagnostics.Debug.WriteLine("[FishBubbleDetector] Timeout - no stable bubble found");
+            Logger.Warning("FishDetect", "Timeout - no stable bubble found");
             return null;
         }
 
@@ -559,7 +559,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     {
                         if (screenshot == null)
                         {
-                            System.Diagnostics.Debug.WriteLine("[FishBubbleDetector] Failed to capture screenshot");
+                            Logger.Warning("FishDetect", "Failed to capture screenshot");
                             return null;
                         }
 
@@ -576,18 +576,18 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         {
                             int screenX = shadowResult.Value.X + windowOffset.X;
                             int screenY = shadowResult.Value.Y + windowOffset.Y;
-                            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Shadow detected at ({screenX}, {screenY})");
+                            Logger.Info("FishDetect", $"Shadow detected at ({screenX}, {screenY})");
                             return new Point(screenX, screenY);
                         }
 
                         // Fallback to color matching if shadow detection fails
-                        System.Diagnostics.Debug.WriteLine("[FishBubbleDetector] Shadow detection failed, trying color match...");
+                        Logger.Debug("FishDetect", "Shadow detection failed, trying color match...");
                         return ScanForBubbleByColor(screenshot, sStartX, sStartY, sEndX, sEndY, windowOffset, cancellationToken);
                     }
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Error scanning: {ex.Message}");
+                    Logger.Warning("FishDetect", $"Scan error: {ex.Message}");
                 }
                 return (Point?)null;
             }, cancellationToken);
@@ -620,7 +620,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             if (pixelCount == 0) return null;
             int avgBrightness = (int)(totalBrightness / pixelCount);
 
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Avg brightness: {avgBrightness}");
+            Logger.Debug("FishDetect", $"Avg brightness: {avgBrightness}");
 
             // Second pass: Find dark pixels that could be fish shadows
             int darkThreshold = Math.Max(10, avgBrightness - 25);
@@ -640,7 +640,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Found {fishShadowPixels.Count} fish shadow colored pixels");
+            Logger.Debug("FishDetect", $"Found {fishShadowPixels.Count} fish shadow colored pixels");
 
             if (fishShadowPixels.Count < minBlobSize / (step * step))
                 return null;
@@ -648,7 +648,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             // Simple blob detection: Find clusters of fish shadow colored pixels
             var blobs = _shadowAnalyzer.FindBlobs(fishShadowPixels, step * 3);
 
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Found {blobs.Count} blobs");
+            Logger.Debug("FishDetect", $"Found {blobs.Count} blobs");
 
             // Find the best blob that has bubbles above it (confirmed fish)
             float scaleX = (float)screenshot.Width / ReferenceWidth;
@@ -687,7 +687,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 candidates.Add((blobCenter, blobColor, blobSize, castPower));
             }
 
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] {candidates.Count} candidates passed color check, now checking for bubbles...");
+            Logger.Debug("FishDetect", $"{candidates.Count} candidates passed color check, now checking for bubbles...");
 
             // First pass: Look for shadows with bubbles above (confirmed fish)
             Point? bestWithBubbles = null;
@@ -735,24 +735,24 @@ namespace ToonTown_Rewritten_Bot.Utilities
             {
                 bestBlob = bestWithBubbles;
                 bestBlobColor = bestBubblesColor;
-                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] CONFIRMED fish at ({bestBlob.Value.X}, {bestBlob.Value.Y}) - has bubbles above!");
+                Logger.Info("FishDetect", $"CONFIRMED fish at ({bestBlob.Value.X}, {bestBlob.Value.Y}) - has bubbles above!");
 
                 // AUTO-CALIBRATE: If we have high confidence (bubbles) and not yet calibrated, learn this color
                 if (NeedsCalibration)
                 {
                     LearnShadowColor(bestBlobColor);
-                    System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] AUTO-CALIBRATED from confirmed fish: RGB({bestBlobColor.R},{bestBlobColor.G},{bestBlobColor.B})");
+                    Logger.Info("FishDetect", $"AUTO-CALIBRATED from confirmed fish: RGB({bestBlobColor.R},{bestBlobColor.G},{bestBlobColor.B})");
                 }
             }
             else if (bestWithoutBubbles.HasValue)
             {
                 bestBlob = bestWithoutBubbles;
                 bestBlobColor = bestNoBubblesColor;
-                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Using shadow at ({bestBlob.Value.X}, {bestBlob.Value.Y}) - no bubbles detected but best candidate");
+                Logger.Debug("FishDetect", $"Using shadow at ({bestBlob.Value.X}, {bestBlob.Value.Y}) - no bubbles detected but best candidate");
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] No valid fish shadows found");
+                Logger.Warning("FishDetect", $"No valid fish shadows found");
             }
 
             return bestBlob;
@@ -768,7 +768,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 if (!_learnedColors.TryGetValue(_currentLocationName, out var existing))
                 {
                     _learnedColors[_currentLocationName] = (shadowColor, 1);
-                    System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Learned new shadow color for {_currentLocationName}: ({shadowColor.R},{shadowColor.G},{shadowColor.B})");
+                    Logger.Info("FishDetect", $"Learned new shadow color for {_currentLocationName}: ({shadowColor.R},{shadowColor.G},{shadowColor.B})");
                 }
                 else
                 {
@@ -779,7 +779,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     );
                     int newConfidence = Math.Min(existing.confidence + 1, 10);
                     _learnedColors[_currentLocationName] = (newColor, newConfidence);
-                    System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Updated learned color for {_currentLocationName} to ({newColor.R},{newColor.G},{newColor.B}), confidence={newConfidence}");
+                    Logger.Info("FishDetect", $"Updated learned color for {_currentLocationName} to ({newColor.R},{newColor.G},{newColor.B}), confidence={newConfidence}");
                 }
             }
         }
@@ -802,7 +802,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     var color = screenshot.GetPixel(x, y);
                     if (_colorMatcher.IsMatchingColor(color, targetColor, tolerance))
                     {
-                        System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Learned color match at ({x}, {y})");
+                        Logger.Debug("FishDetect", $"Learned color match at ({x}, {y})");
                         return new Point(x, y);
                     }
                 }
@@ -829,7 +829,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     {
                         int screenX = x + windowOffset.X;
                         int screenY = y + windowOffset.Y;
-                        System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Color match at ({screenX}, {screenY})");
+                        Logger.Debug("FishDetect", $"Color match at ({screenX}, {screenY})");
                         return new Point(screenX, screenY);
                     }
                 }
@@ -852,7 +852,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             int destX = (int)(RodButtonX + factorX * (BubbleRefX - bubbleX) * yAdjustment);
             int destY = (int)(RodButtonY + factorY * (BubbleRefY - bubbleY));
 
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Cast calc: bubble({bubbleX},{bubbleY}) -> dest({destX},{destY})");
+            Logger.Debug("FishDetect", $"Cast calc: bubble({bubbleX},{bubbleY}) -> dest({destX},{destY})");
 
             return new Point(destX, destY);
         }
@@ -890,7 +890,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             {
                 _learnedColors.Remove(_currentLocationName);
             }
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Learned color reset for {_currentLocationName}");
+            Logger.Info("FishDetect", $"Learned color reset for {_currentLocationName}");
         }
 
         /// <summary>
@@ -902,7 +902,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             {
                 _learnedColors.Clear();
             }
-            System.Diagnostics.Debug.WriteLine("[FishBubbleDetector] All learned colors reset");
+            Logger.Info("FishDetect", "All learned colors reset");
         }
 
         /// <summary>
@@ -953,7 +953,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             int screenRodX = (int)(RodButtonX * scaleX) + windowRect.X;
             int screenRodY = (int)(RodButtonY * scaleY) + windowRect.Y;
 
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] Cast: shadow({shadowX},{shadowY}) ref({refX:F0},{refY:F0}) -> screen dest({screenDestX},{screenDestY})");
+            Logger.Info("FishDetect", $"Cast: shadow({shadowX},{shadowY}) ref({refX:F0},{refY:F0}) -> screen dest({screenDestX},{screenDestY})");
 
             return new CastingResult
             {
@@ -998,7 +998,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             Color shadowColor = screenshot.GetPixel(x, y);
 
             LearnShadowColor(shadowColor);
-            System.Diagnostics.Debug.WriteLine($"[FishBubbleDetector] User confirmed fish at ({x},{y}) - learned color ({shadowColor.R},{shadowColor.G},{shadowColor.B})");
+            Logger.Info("FishDetect", $"User confirmed fish at ({x},{y}) - learned color ({shadowColor.R},{shadowColor.G},{shadowColor.B})");
         }
 
         /// <summary>
@@ -1006,7 +1006,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// </summary>
         public void RejectFishShadow()
         {
-            System.Diagnostics.Debug.WriteLine("[FishBubbleDetector] User rejected detected shadow");
+            Logger.Info("FishDetect", "User rejected detected shadow");
         }
     }
 }

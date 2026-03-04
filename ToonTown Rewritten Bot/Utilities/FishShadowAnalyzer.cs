@@ -45,7 +45,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             float aspectRatio = (float)blobWidth / blobHeight;
             if (aspectRatio < 0.3f || aspectRatio > 3.0f)
             {
-                System.Diagnostics.Debug.WriteLine($"[FishShadowAnalyzer] Blob rejected: bad aspect ratio {aspectRatio:F2} ({blobWidth}x{blobHeight})");
+                Logger.Debug("FishDetect", $"Blob rejected: bad aspect ratio {aspectRatio:F2} ({blobWidth}x{blobHeight})");
                 return false;
             }
 
@@ -57,14 +57,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             if (fillRatio < 0.2f)
             {
-                System.Diagnostics.Debug.WriteLine($"[FishShadowAnalyzer] Blob rejected: sparse/not compact (fill={fillRatio:F2})");
+                Logger.Debug("FishDetect", $"Blob rejected: sparse/not compact (fill={fillRatio:F2})");
                 return false;
             }
 
             // Minimum size check - fish shadows should be reasonably sized
             if (blobWidth < 15 || blobHeight < 15)
             {
-                System.Diagnostics.Debug.WriteLine($"[FishShadowAnalyzer] Blob rejected: too small ({blobWidth}x{blobHeight})");
+                Logger.Debug("FishDetect", $"Blob rejected: too small ({blobWidth}x{blobHeight})");
                 return false;
             }
 
@@ -106,7 +106,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             if (!surrounded)
             {
-                System.Diagnostics.Debug.WriteLine($"[FishShadowAnalyzer] Blob at ({blobCenter.X},{blobCenter.Y}) rejected: not surrounded by water ({waterRatio:P0})");
+                Logger.Debug("FishDetect", $"Blob at ({blobCenter.X},{blobCenter.Y}) rejected: not surrounded by water ({waterRatio:P0})");
             }
 
             return surrounded;
@@ -203,7 +203,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
 
             bool hasBubbles = bubblePixelCount >= minBubblePixels;
-            System.Diagnostics.Debug.WriteLine($"[FishShadowAnalyzer] Bubble check at ({shadowCenter.X},{shadowCenter.Y}): " +
+            Logger.Debug("FishDetect", $"Bubble check at ({shadowCenter.X},{shadowCenter.Y}): " +
                 $"found {bubblePixelCount} bubble pixels (threshold={bubbleThreshold}, need {minBubblePixels}) -> {(hasBubbles ? "HAS BUBBLES" : "no bubbles")}");
 
             return hasBubbles;
@@ -251,7 +251,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             // Need at least some water pixels to consider it valid
             if (waterPixelCount < 50)
             {
-                System.Diagnostics.Debug.WriteLine($"[FishShadowAnalyzer] Pond detection: insufficient water pixels ({waterPixelCount})");
+                Logger.Warning("FishDetect", $"Pond detection: insufficient water pixels ({waterPixelCount})");
                 return Rectangle.Empty;
             }
 
@@ -264,7 +264,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             var pondRect = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 
-            System.Diagnostics.Debug.WriteLine($"[FishShadowAnalyzer] Pond detected: ({pondRect.X}, {pondRect.Y}) - {pondRect.Width}x{pondRect.Height} ({waterPixelCount} water pixels)");
+            Logger.Debug("FishDetect", $"Pond detected: ({pondRect.X}, {pondRect.Y}) - {pondRect.Width}x{pondRect.Height} ({waterPixelCount} water pixels)");
 
             return pondRect;
         }

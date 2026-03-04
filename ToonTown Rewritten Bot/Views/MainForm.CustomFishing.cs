@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Services;
 using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
+using ToonTown_Rewritten_Bot.Utilities;
 using ToonTown_Rewritten_Bot.Views;
 
 namespace ToonTown_Rewritten_Bot
@@ -62,6 +62,7 @@ namespace ToonTown_Rewritten_Bot
             FishingStrategyBase.BiteTimeoutSeconds = Convert.ToInt32(customNumericUpDownBiteTimeout.Value);
             FishingStrategyBase.WaitForFishBeforeCasting = customWaitForFishCheckBox.Checked && customAutoDetectFishCheckBox.Checked;
             FishingStrategyBase.MaxFishWaitAttempts = 10; // Default value for custom fishing
+            FishingStrategyBase.QuickCasting = quickCastingCheckBox.Checked;
 
             try
             {
@@ -81,7 +82,7 @@ namespace ToonTown_Rewritten_Bot
                 if (result != DialogResult.OK)
                     return;
 
-                string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string exePath = AppPaths.ExeDirectory;
                 string filePath = Path.Combine(exePath, "Custom Fishing Actions", selectedFileName);
 
                 // Show overlay if the checkbox is checked
@@ -94,12 +95,9 @@ namespace ToonTown_Rewritten_Bot
                 // These run on the UI thread (await resumes on UI context)
                 SetFishingOverlay(false, null, null);
                 CoreFunctionality.BringBotWindowToFront();
-                int fish = _fishingService.SessionFishCaught;
                 int casts = _fishingService.SessionCastCount;
-                int pct = casts > 0 ? (int)Math.Round(100.0 * fish / casts) : 0;
                 MessageBox.Show(
-                    $"Done Fishing with custom action '{selectedFileName}'.\n\n" +
-                    $"Fish Caught: {fish}/{casts} ({pct}% catch rate)",
+                    $"Done Fishing with custom action '{selectedFileName}'.\n\nTotal Casts: {casts}",
                     "Fishing Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (TaskCanceledException)

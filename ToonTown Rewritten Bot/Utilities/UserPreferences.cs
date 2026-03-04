@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
-using System.Reflection;
 
 namespace ToonTown_Rewritten_Bot.Utilities
 {
@@ -16,7 +15,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         static UserPreferences()
         {
-            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string exePath = AppPaths.ExeDirectory;
             PreferencesFilePath = Path.Combine(exePath, "user_preferences.json");
         }
 
@@ -58,6 +57,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public int CustomBiteTimeoutSeconds { get; set; } = 30;
         public bool WaitForFishBeforeCasting { get; set; } = false;
         public int MaxFishWaitAttempts { get; set; } = 10;
+        public bool QuickCasting { get; set; } = false;
 
         // Golf preferences
         public string GolfCourse { get; set; } = "";
@@ -143,6 +143,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             CustomBiteTimeoutSeconds = 30;
             WaitForFishBeforeCasting = false;
             MaxFishWaitAttempts = 10;
+            QuickCasting = false;
 
             GolfCourse = "";
             ShowGolfOverlay = true;

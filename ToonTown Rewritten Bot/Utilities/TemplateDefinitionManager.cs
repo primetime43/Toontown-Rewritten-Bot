@@ -30,7 +30,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private static string ComputeDefinitionsFilePath()
         {
             // Try to find the project source folder first (for persistence)
-            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string baseDir = AppPaths.ExeDirectory;
             DirectoryInfo dir = new DirectoryInfo(baseDir);
 
             while (dir != null && dir.Parent != null)
