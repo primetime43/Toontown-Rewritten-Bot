@@ -57,6 +57,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public int CustomBiteTimeoutSeconds { get; set; } = 30;
         public bool WaitForFishBeforeCasting { get; set; } = false;
         public int MaxFishWaitAttempts { get; set; } = 10;
+        public bool QuickCasting { get; set; } = false;
 
         // Golf preferences
         public string GolfCourse { get; set; } = "";
@@ -142,6 +143,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             CustomBiteTimeoutSeconds = 30;
             WaitForFishBeforeCasting = false;
             MaxFishWaitAttempts = 10;
+            QuickCasting = false;
 
             GolfCourse = "";
             ShowGolfOverlay = true;

@@ -42,6 +42,7 @@ namespace ToonTown_Rewritten_Bot
             FishingStrategyBase.BiteTimeoutSeconds = Convert.ToInt32(numericUpDownBiteTimeout.Value);
             FishingStrategyBase.WaitForFishBeforeCasting = waitForFishCheckBox.Checked && autoDetectFishCheckBox.Checked;
             FishingStrategyBase.MaxFishWaitAttempts = Convert.ToInt32(numericUpDownWaitAttempts.Value);
+            FishingStrategyBase.QuickCasting = quickCastingCheckBox.Checked;
 
             try
             {
@@ -120,6 +121,19 @@ namespace ToonTown_Rewritten_Bot
         private void ShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             // Checkbox is a passive setting — overlay is shown/hidden when fishing starts/stops
+        }
+
+        private void QuickCastingCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (quickCastingCheckBox.Checked)
+            {
+                waitForFishCheckBox.Checked = false;
+                waitForFishCheckBox.Enabled = false;
+            }
+            else
+            {
+                waitForFishCheckBox.Enabled = true;
+            }
         }
 
         private void customShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
