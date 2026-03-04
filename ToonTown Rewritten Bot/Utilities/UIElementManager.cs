@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -20,7 +21,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private static UIElementManager _instance;
         private static readonly object _lock = new object();
 
-        private Dictionary<string, UIElementData> _elements;
+        private ConcurrentDictionary<string, UIElementData> _elements;
         private readonly string _dataFilePath;
         private readonly string _templatesFolder;
         private double _defaultThreshold = 0.85;
@@ -458,17 +459,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         private UIElementData GetOrCreateElement(string elementName)
         {
-            if (!_elements.TryGetValue(elementName, out var element))
-            {
-                element = new UIElementData { Name = elementName };
-                _elements[elementName] = element;
-            }
-            return element;
+            return _elements.GetOrAdd(elementName, key => new UIElementData { Name = key });
         }
 
         private void LoadElementData()
         {
-            _elements = new Dictionary<string, UIElementData>(StringComparer.OrdinalIgnoreCase);
+            _elements = new ConcurrentDictionary<string, UIElementData>(StringComparer.OrdinalIgnoreCase);
 
             if (File.Exists(_dataFilePath))
             {
@@ -478,7 +474,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     var loaded = JsonConvert.DeserializeObject<Dictionary<string, UIElementData>>(json);
                     if (loaded != null)
                     {
-                        _elements = new Dictionary<string, UIElementData>(loaded, StringComparer.OrdinalIgnoreCase);
+                        _elements = new ConcurrentDictionary<string, UIElementData>(loaded, StringComparer.OrdinalIgnoreCase);
 
                         // Migration: if VariantPaths is null/empty but TemplatePath was set via old format,
                         // the TemplatePath setter already handles populating VariantPaths[0].
