@@ -422,42 +422,29 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         return;
                     }
 
-                    // Wait for the casting animation to finish (rod swing + line flying out + landing)
-                    // before checking for fish caught. Without this delay, the animation itself
-                    // changes pond colors and triggers false "fish caught" detections.
-                    int animationDelay = QuickCasting ? 300 : 1500;
-                    await Task.Delay(animationDelay, cancellationToken);
+                    if (!QuickCasting)
+                    {
+                        // Wait for the casting animation to finish (rod swing + line flying out + landing)
+                        // before checking for fish caught. Without this delay, the animation itself
+                        // changes pond colors and triggers false "fish caught" detections.
+                        await Task.Delay(1500, cancellationToken);
+                    }
 
                     // Update overlay - waiting for bite
                     UpdateOverlayAction("Waiting for bite...", $"Cast {totalCasts - numberOfCasts + 1}/{totalCasts}", "Fishing");
 
                     stopwatch.Start();
                     bool fishCaught = false;
-
-                    if (QuickCasting)
+                    while (stopwatch.Elapsed.TotalSeconds < BiteTimeoutSeconds)
                     {
-                        // Quick casting skips fish-caught detection (too unreliable with short delay).
-                        // Just wait for the bite timeout.
-                        while (stopwatch.Elapsed.TotalSeconds < BiteTimeoutSeconds)
+                        if (cancellationToken.IsCancellationRequested) return;
+                        if (await CheckIfFishCaught(cancellationToken))
                         {
-                            if (cancellationToken.IsCancellationRequested) return;
-                            await Task.Delay(100, cancellationToken);
+                            fishCaught = true;
+                            break;
                         }
+                        await Task.Delay(100, cancellationToken);
                     }
-                    else
-                    {
-                        while (stopwatch.Elapsed.TotalSeconds < BiteTimeoutSeconds)
-                        {
-                            if (cancellationToken.IsCancellationRequested) return;
-                            if (await CheckIfFishCaught(cancellationToken))
-                            {
-                                fishCaught = true;
-                                break;
-                            }
-                            await Task.Delay(100, cancellationToken);
-                        }
-                    }
-
                     stopwatch.Stop();
                     stopwatch.Reset();
 
