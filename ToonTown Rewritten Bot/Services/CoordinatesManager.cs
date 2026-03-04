@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
@@ -16,7 +15,8 @@ namespace ToonTown_Rewritten_Bot.Services
     {
         private const string CoordinatesFileName = "UIElementCoordinates.json";
         // Static readonly field that computes the file path only once when the class is loaded
-        private static readonly string CoordinatesFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), CoordinatesFileName);
+        private static readonly string CoordinatesFilePath = Path.Combine(AppPaths.ExeDirectory, CoordinatesFileName);
+        private static readonly object _fileLock = new object();
         public CoordinatesManager()
         {
             if (!File.Exists(CoordinatesFilePath))
@@ -112,10 +112,13 @@ namespace ToonTown_Rewritten_Bot.Services
             string description = CoordinateActions.GetDescription(keyAsString);
             string elementName = description ?? $"Element_{keyAsString}";
 
+            Logger.Info("Coordinates", $"Resolving coords for '{elementName}' (key={keyAsString})");
+
             // First, load manual coordinates as fallback for UIElementManager
             var manualCoords = GetManualCoordsOrDefault(key);
             if (manualCoords.x != 0 || manualCoords.y != 0)
             {
+                Logger.Debug("Coordinates", $"Manual coords available for '{elementName}': ({manualCoords.x}, {manualCoords.y})");
                 UIElementManager.Instance.SetManualCoordinates(elementName, new Point(manualCoords.x, manualCoords.y));
             }
 
@@ -129,7 +132,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 int screenX = location.Value.X + windowOffset.X;
                 int screenY = location.Value.Y + windowOffset.Y;
 
-                System.Diagnostics.Debug.WriteLine($"[CoordinatesManager] {elementName}: window coords ({location.Value.X}, {location.Value.Y}) + offset ({windowOffset.X}, {windowOffset.Y}) = screen ({screenX}, {screenY})");
+                Logger.Info("Coordinates", $"'{elementName}': screen ({screenX}, {screenY}) [source=ImageRec]");
 
                 return (screenX, screenY);
             }
@@ -138,6 +141,7 @@ namespace ToonTown_Rewritten_Bot.Services
             // Manual coordinates are already screen coordinates
             if (manualCoords.x != 0 || manualCoords.y != 0)
             {
+                Logger.Info("Coordinates", $"'{elementName}': screen ({manualCoords.x}, {manualCoords.y}) [source=ManualFallback]");
                 return manualCoords;
             }
 
@@ -168,6 +172,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
             if (recaptureChoice == DialogResult.Yes)
             {
+                Logger.Info("Coordinates", $"User chose to recapture template for '{elementName}'");
                 bool captured = UIElementManager.Instance.PromptForTemplateCapture(elementName, description ?? $"Please select the '{elementName}' on screen");
                 if (captured)
                 {
@@ -178,11 +183,13 @@ namespace ToonTown_Rewritten_Bot.Services
                         var windowOffset = CoreFunctionality.GetGameWindowOffset();
                         int screenX = retryLocation.Value.X + windowOffset.X;
                         int screenY = retryLocation.Value.Y + windowOffset.Y;
+                        Logger.Info("Coordinates", $"'{elementName}': screen ({screenX}, {screenY}) [source=Recapture]");
                         return (screenX, screenY);
                     }
                 }
             }
 
+            Logger.Error("Coordinates", $"Could not find '{elementName}' via image recognition or manual coordinates");
             throw new Exception($"Could not find element '{elementName}' via image recognition or manual coordinates.");
         }
 
@@ -191,26 +198,29 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         private static (int x, int y) GetManualCoordsOrDefault(Enum key)
         {
-            try
+            lock (_fileLock)
             {
-                string keyAsString = Convert.ToInt32(key).ToString();
-
-                if (File.Exists(CoordinatesFilePath))
+                try
                 {
-                    string json = File.ReadAllText(CoordinatesFilePath);
-                    var coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
-                    var action = coordinateActions.FirstOrDefault(a => a.Key == keyAsString);
-                    if (action != null)
+                    string keyAsString = Convert.ToInt32(key).ToString();
+
+                    if (File.Exists(CoordinatesFilePath))
                     {
-                        return (action.X, action.Y);
+                        string json = File.ReadAllText(CoordinatesFilePath);
+                        var coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
+                        var action = coordinateActions.FirstOrDefault(a => a.Key == keyAsString);
+                        if (action != null)
+                        {
+                            return (action.X, action.Y);
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Logger.Warning("Coordinates", $"Error reading manual coords: {ex.Message}");
+                }
+                return (0, 0);
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[CoordinatesManager] Error reading manual coords: {ex.Message}");
-            }
-            return (0, 0);
         }
 
         /// <summary>
@@ -223,34 +233,37 @@ namespace ToonTown_Rewritten_Bot.Services
         /// <param name="coordinates">The new coordinates to set for the location, encapsulated in a Point structure.</param>
         public static void UpdateCoordinatesAutomatically(Enum locationToUpdateEnum, Point coordinates)
         {
-            // Convert the Enum to its integer value, then to string
-            string keyAsString = Convert.ToInt32(locationToUpdateEnum).ToString();
-
-            // Read the existing JSON file
-            if (File.Exists(CoordinatesFilePath))
+            lock (_fileLock)
             {
-                string json = File.ReadAllText(CoordinatesFilePath);
-                var coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
+                // Convert the Enum to its integer value, then to string
+                string keyAsString = Convert.ToInt32(locationToUpdateEnum).ToString();
 
-                // Find and update the coordinates for the specified location
-                var actionToUpdate = coordinateActions.Find(action => action.Key == keyAsString);
-                if (actionToUpdate != null)
+                // Read the existing JSON file
+                if (File.Exists(CoordinatesFilePath))
                 {
-                    actionToUpdate.X = coordinates.X;
-                    actionToUpdate.Y = coordinates.Y;
+                    string json = File.ReadAllText(CoordinatesFilePath);
+                    var coordinateActions = JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
 
-                    // Serialize the updated list back to JSON and write it to the file
-                    string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
-                    File.WriteAllText(CoordinatesFilePath, updatedJson);
+                    // Find and update the coordinates for the specified location
+                    var actionToUpdate = coordinateActions.Find(action => action.Key == keyAsString);
+                    if (actionToUpdate != null)
+                    {
+                        actionToUpdate.X = coordinates.X;
+                        actionToUpdate.Y = coordinates.Y;
+
+                        // Serialize the updated list back to JSON and write it to the file
+                        string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
+                        File.WriteAllText(CoordinatesFilePath, updatedJson);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("No matching coordinate action found for the given key.");
+                    }
                 }
                 else
                 {
-                    throw new InvalidOperationException("No matching coordinate action found for the given key.");
+                    throw new FileNotFoundException("UIElementCoordinates not found.");
                 }
-            }
-            else
-            {
-                throw new FileNotFoundException("UIElementCoordinates not found.");
             }
         }
 
@@ -331,8 +344,11 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         private static void SaveCoordinatesToFile(List<CoordinateActions> coordinateActions)
         {
-            string json = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
-            File.WriteAllText(CoordinatesFilePath, json);
+            lock (_fileLock)
+            {
+                string json = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
+                File.WriteAllText(CoordinatesFilePath, json);
+            }
         }
 
         /// <summary>
@@ -341,49 +357,55 @@ namespace ToonTown_Rewritten_Bot.Services
         /// <returns>A list of CoordinateActions representing the coordinates. If the file does not exist, returns an empty list.</returns>
         private static List<CoordinateActions> ReadCoordinatesFromJsonFile()
         {
-            // Check if the file exists at the specified path.
-            if (File.Exists(CoordinatesFilePath))
+            lock (_fileLock)
             {
-                // Read the JSON content from the file.
-                string json = File.ReadAllText(CoordinatesFilePath);
+                // Check if the file exists at the specified path.
+                if (File.Exists(CoordinatesFilePath))
+                {
+                    // Read the JSON content from the file.
+                    string json = File.ReadAllText(CoordinatesFilePath);
 
-                // Deserialize the JSON content into a list of CoordinateActions objects.
-                return JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
+                    // Deserialize the JSON content into a list of CoordinateActions objects.
+                    return JsonConvert.DeserializeObject<List<CoordinateActions>>(json);
+                }
+
+                // If the file does not exist, return an empty list to prevent null reference issues.
+                return new List<CoordinateActions>();
             }
-
-            // If the file does not exist, return an empty list to prevent null reference issues.
-            return new List<CoordinateActions>();
         }
 
         public static void CreateFreshCoordinatesFile()
         {
-            // Delete the file if it exists
-            if (File.Exists(CoordinatesFilePath))
-                File.Delete(CoordinatesFilePath);
-
-            // Retrieve all descriptions to populate the JSON file
-            var allDescriptions = CoordinateActions.GetAllDescriptions();
-
-            // Create a list to hold coordinate data
-            List<CoordinateActions> coordinateList = new List<CoordinateActions>();
-
-            // Populate the list with default values
-            foreach (var entry in allDescriptions)
+            lock (_fileLock)
             {
-                coordinateList.Add(new CoordinateActions
+                // Delete the file if it exists
+                if (File.Exists(CoordinatesFilePath))
+                    File.Delete(CoordinatesFilePath);
+
+                // Retrieve all descriptions to populate the JSON file
+                var allDescriptions = CoordinateActions.GetAllDescriptions();
+
+                // Create a list to hold coordinate data
+                List<CoordinateActions> coordinateList = new List<CoordinateActions>();
+
+                // Populate the list with default values
+                foreach (var entry in allDescriptions)
                 {
-                    Key = entry.Key,
-                    Description = entry.Value,
-                    X = 0, // Default X coordinate
-                    Y = 0  // Default Y coordinate
-                });
+                    coordinateList.Add(new CoordinateActions
+                    {
+                        Key = entry.Key,
+                        Description = entry.Value,
+                        X = 0, // Default X coordinate
+                        Y = 0  // Default Y coordinate
+                    });
+                }
+
+                // Serialize the list to JSON
+                string json = JsonConvert.SerializeObject(coordinateList, Formatting.Indented);
+
+                // Write the JSON to the file
+                File.WriteAllText(CoordinatesFilePath, json);
             }
-
-            // Serialize the list to JSON
-            string json = JsonConvert.SerializeObject(coordinateList, Formatting.Indented);
-
-            // Write the JSON to the file
-            File.WriteAllText(CoordinatesFilePath, json);
         }
     }
 }

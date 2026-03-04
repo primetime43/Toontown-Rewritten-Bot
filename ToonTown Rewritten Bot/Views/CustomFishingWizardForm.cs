@@ -755,7 +755,7 @@ namespace ToonTown_Rewritten_Bot.Views
                 allActions.AddRange(_walkBackToDock);
 
                 // Save to temp file for testing
-                string tempPath = Path.Combine(Path.GetTempPath(), "wizard_test.json");
+                string tempPath = Path.Combine(AppPaths.ExeDirectory, "wizard_test.json");
                 CustomFishingActionFileManager.SaveV1Format(allActions, tempPath);
 
                 // Use the same method as "Test Walk Path Only" checkbox

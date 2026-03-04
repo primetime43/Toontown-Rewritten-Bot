@@ -41,7 +41,7 @@ namespace ToonTown_Rewritten_Bot.Views
         private static string GetTemplatesFolder()
         {
             // First, try to find the project source folder (for development)
-            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string baseDir = AppPaths.ExeDirectory;
 
             // Navigate up from bin/Debug/net10.0-windows to find the project folder
             DirectoryInfo dir = new DirectoryInfo(baseDir);

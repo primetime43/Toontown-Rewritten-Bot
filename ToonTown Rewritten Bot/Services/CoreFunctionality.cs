@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows.Forms;
 using ToonTown_Rewritten_Bot.Models;
 using static ToonTown_Rewritten_Bot.Models.Coordinates;
+using ToonTown_Rewritten_Bot.Utilities;
 using static ToonTown_Rewritten_Bot.Utilities.ImageRecognition;
 
 namespace ToonTown_Rewritten_Bot.Services
@@ -22,6 +23,7 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static void DoMouseClick()
         {
+            Logger.Debug("Input", $"DoMouseClick at {getCursorLocation()}");
             SendInputMouseClick();
         }
 
@@ -32,6 +34,7 @@ namespace ToonTown_Rewritten_Bot.Services
         public static void DoFishingClick()
         {
             Point startPos = getCursorLocation();
+            Logger.Debug("Input", $"DoFishingClick from ({startPos.X}, {startPos.Y}) drag to ({startPos.X}, {startPos.Y + 150})");
 
             SendInputMouseDown();
             Thread.Sleep(500);
@@ -50,7 +53,7 @@ namespace ToonTown_Rewritten_Bot.Services
         {
             Point startPos = getCursorLocation();
 
-            System.Diagnostics.Debug.WriteLine($"[DoFishingClickWithDestination] Start: ({startPos.X}, {startPos.Y}) -> Dest: ({destinationX}, {destinationY})");
+            Logger.Debug("Input", $"DoFishingClickWithDestination: ({startPos.X}, {startPos.Y}) -> ({destinationX}, {destinationY})");
 
             SendInputMouseDown();
             Thread.Sleep(500);
@@ -111,6 +114,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static void MoveCursor(int x, int y)
         {
+            Logger.Debug("Input", $"MoveCursor to ({x}, {y})");
             Cursor.Position = new Point(x, y);
         }
 
@@ -157,7 +161,7 @@ namespace ToonTown_Rewritten_Bot.Services
             nint hwnd = FindToontownWindow();
             if (hwnd == IntPtr.Zero)
             {
-                System.Diagnostics.Debug.WriteLine("[CoreFunctionality] Toontown window not found");
+                Logger.Warning("Input", "Toontown window not found");
                 return false;
             }
 
@@ -179,7 +183,7 @@ namespace ToonTown_Rewritten_Bot.Services
             RECT rect;
             if (GetWindowRect(hwnd, out rect))
             {
-                System.Diagnostics.Debug.WriteLine($"[CoreFunctionality] Game window maximized at ({rect.Left}, {rect.Top}) size {rect.Right - rect.Left}x{rect.Bottom - rect.Top}");
+                Logger.Debug("Input", $"Game window maximized at ({rect.Left}, {rect.Top}) size {rect.Right - rect.Left}x{rect.Bottom - rect.Top}");
             }
 
             return true;
@@ -325,7 +329,7 @@ namespace ToonTown_Rewritten_Bot.Services
             };
 
             // Get the directory where the executable is running
-            string exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string exePath = AppPaths.ExeDirectory;
 
             // Combine the executable path with the specific folder name
             string customActionsFolderPath = Path.Combine(exePath, folderName);
@@ -513,6 +517,7 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static void SimulateDragMove(int x, int y)
         {
+            Logger.Debug("Input", $"SimulateDragMove to ({x}, {y})");
             var (mouseX, mouseY) = GetNormalizedMouseCoordinates(x, y);
 
             var input = new INPUT
@@ -538,6 +543,7 @@ namespace ToonTown_Rewritten_Bot.Services
         public static void SendInputMouseDown()
         {
             var currentPos = getCursorLocation();
+            Logger.Debug("Input", $"SendInputMouseDown at ({currentPos.X}, {currentPos.Y})");
             var (mouseX, mouseY) = GetNormalizedMouseCoordinates(currentPos.X, currentPos.Y);
 
             var input = new INPUT
@@ -563,6 +569,7 @@ namespace ToonTown_Rewritten_Bot.Services
         public static void SendInputMouseUp()
         {
             var currentPos = getCursorLocation();
+            Logger.Debug("Input", $"SendInputMouseUp at ({currentPos.X}, {currentPos.Y})");
             var (mouseX, mouseY) = GetNormalizedMouseCoordinates(currentPos.X, currentPos.Y);
 
             var input = new INPUT

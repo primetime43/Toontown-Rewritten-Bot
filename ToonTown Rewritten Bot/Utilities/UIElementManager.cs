@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -20,7 +21,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private static UIElementManager _instance;
         private static readonly object _lock = new object();
 
-        private Dictionary<string, UIElementData> _elements;
+        private ConcurrentDictionary<string, UIElementData> _elements;
         private readonly string _dataFilePath;
         private readonly string _templatesFolder;
         private double _defaultThreshold = 0.85;
@@ -73,7 +74,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             // If no template exists, prompt user to capture one
             if (!HasTemplate(elementName))
             {
-                System.Diagnostics.Debug.WriteLine($"[UIElementManager] No template for {elementName}, prompting capture...");
+                Logger.Info("TemplateMatch", $"No template for '{elementName}', prompting capture...");
 
                 bool captured = PromptForTemplateCapture(elementName, description ?? $"Please select the '{elementName}' on screen");
 
@@ -82,7 +83,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     // User cancelled - fall back to manual if available
                     if (element.ManualCoordinates.HasValue)
                     {
-                        System.Diagnostics.Debug.WriteLine($"[UIElementManager] Using manual coordinates for {elementName}");
+                        Logger.Info("TemplateMatch", $"Using manual coordinates for '{elementName}'");
                         return element.ManualCoordinates;
                     }
                     return null;
@@ -99,10 +100,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     bool stillThere = await VerifyElementAtLocationAsync(elementName, element.CachedCenter.Value);
                     if (stillThere)
                     {
-                        System.Diagnostics.Debug.WriteLine($"[UIElementManager] {elementName} found at cached location");
+                        Logger.Debug("TemplateMatch", $"'{elementName}' found at cached location");
                         return element.CachedCenter;
                     }
-                    System.Diagnostics.Debug.WriteLine($"[UIElementManager] {elementName} not at cached location, searching...");
+                    Logger.Debug("TemplateMatch", $"'{elementName}' not at cached location, searching...");
                 }
 
                 // Search for the element
@@ -120,11 +121,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
             // Image rec failed - check if we have manual coordinates as fallback
             if (element.ManualCoordinates.HasValue)
             {
-                System.Diagnostics.Debug.WriteLine($"[UIElementManager] Image rec failed, using manual coordinates for {elementName}");
+                Logger.Info("TemplateMatch", $"Image rec failed, using manual coordinates for '{elementName}'");
                 return element.ManualCoordinates;
             }
 
-            System.Diagnostics.Debug.WriteLine($"[UIElementManager] Could not find {elementName}");
+            Logger.Warning("TemplateMatch", $"Could not find '{elementName}'");
             return null;
         }
 
@@ -182,7 +183,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
                             if (result.Found)
                             {
-                                System.Diagnostics.Debug.WriteLine($"[UIElementManager] {elementName} matched variant {i} ({Path.GetFileName(allPaths[i])}) at {result.Confidence:P1}");
+                                Logger.Debug("TemplateMatch", $"'{elementName}' matched variant {i} ({Path.GetFileName(allPaths[i])}) at {result.Confidence:P1}");
                                 return result.Center;
                             }
 
@@ -194,12 +195,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         }
                     }
 
-                    System.Diagnostics.Debug.WriteLine($"[UIElementManager] {elementName}: no variant matched. Best was {bestVariant} at {bestConfidence:P1}");
+                    Logger.Debug("TemplateMatch", $"'{elementName}': no variant matched. Best was {bestVariant} at {bestConfidence:P1}");
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[UIElementManager] Error finding {elementName}: {ex.Message}");
+                Logger.Error("TemplateMatch", $"Error finding '{elementName}': {ex.Message}");
             }
 
             return null;
@@ -249,7 +250,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[UIElementManager] Error verifying {elementName}: {ex.Message}");
+                Logger.Error("TemplateMatch", $"Error verifying '{elementName}': {ex.Message}");
             }
 
             return false;
@@ -332,7 +333,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             RebuildVariantPaths(elementName);
             SaveElementData();
 
-            System.Diagnostics.Debug.WriteLine($"[UIElementManager] Saved template for {elementName}");
+            Logger.Info("TemplateMatch", $"Saved template for '{elementName}'");
         }
 
         /// <summary>
@@ -355,7 +356,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             RebuildVariantPaths(elementName);
             SaveElementData();
 
-            System.Diagnostics.Debug.WriteLine($"[UIElementManager] Saved variant {variantIndex} for {elementName}");
+            Logger.Info("TemplateMatch", $"Saved variant {variantIndex} for '{elementName}'");
             return variantIndex;
         }
 
@@ -368,7 +369,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             if (File.Exists(variantPath))
             {
                 File.Delete(variantPath);
-                System.Diagnostics.Debug.WriteLine($"[UIElementManager] Deleted variant {variantIndex} for {elementName}");
+                Logger.Debug("TemplateMatch", $"Deleted variant {variantIndex} for '{elementName}'");
             }
 
             // Renumber remaining variants to fill the gap
@@ -458,17 +459,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         private UIElementData GetOrCreateElement(string elementName)
         {
-            if (!_elements.TryGetValue(elementName, out var element))
-            {
-                element = new UIElementData { Name = elementName };
-                _elements[elementName] = element;
-            }
-            return element;
+            return _elements.GetOrAdd(elementName, key => new UIElementData { Name = key });
         }
 
         private void LoadElementData()
         {
-            _elements = new Dictionary<string, UIElementData>(StringComparer.OrdinalIgnoreCase);
+            _elements = new ConcurrentDictionary<string, UIElementData>(StringComparer.OrdinalIgnoreCase);
 
             if (File.Exists(_dataFilePath))
             {
@@ -478,7 +474,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     var loaded = JsonConvert.DeserializeObject<Dictionary<string, UIElementData>>(json);
                     if (loaded != null)
                     {
-                        _elements = new Dictionary<string, UIElementData>(loaded, StringComparer.OrdinalIgnoreCase);
+                        _elements = new ConcurrentDictionary<string, UIElementData>(loaded, StringComparer.OrdinalIgnoreCase);
 
                         // Migration: if VariantPaths is null/empty but TemplatePath was set via old format,
                         // the TemplatePath setter already handles populating VariantPaths[0].
@@ -487,7 +483,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"[UIElementManager] Error loading data: {ex.Message}");
+                    Logger.Error("TemplateMatch", $"Error loading element data: {ex.Message}");
                 }
             }
         }
@@ -501,13 +497,13 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[UIElementManager] Error saving data: {ex.Message}");
+                Logger.Error("TemplateMatch", $"Error saving element data: {ex.Message}");
             }
         }
 
         private string GetTemplatesFolder()
         {
-            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string baseDir = AppPaths.ExeDirectory;
 
             // Navigate up from bin/Debug/net10.0-windows to find the project folder
             DirectoryInfo dir = new DirectoryInfo(baseDir);
@@ -587,7 +583,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.WriteLine($"[UIElementManager] Error renumbering variant: {ex.Message}");
+                        Logger.Warning("TemplateMatch", $"Error renumbering variant: {ex.Message}");
                     }
                 }
             }

@@ -34,7 +34,7 @@ namespace ToonTown_Rewritten_Bot
         private void btnOpenPreferencesFile_Click(object sender, EventArgs e)
         {
             string filePath = Path.Combine(
-                Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
+                AppPaths.ExeDirectory,
                 "user_preferences.json");
 
             if (!File.Exists(filePath))
@@ -94,6 +94,7 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Add($"  Random Variance: {(prefs.RandomVariance ? "Yes" : "No")}");
             preferencesListBox.Items.Add($"  Auto Detect Fish: {(prefs.AutoDetectFish ? "Yes" : "No")}");
             preferencesListBox.Items.Add($"  Wait For Fish: {(prefs.WaitForFishBeforeCasting ? $"Yes ({prefs.MaxFishWaitAttempts} tries)" : "No")}");
+            preferencesListBox.Items.Add($"  Quick Casting: {(prefs.QuickCasting ? "Yes" : "No")}");
 
             preferencesListBox.Items.Add("");
             preferencesListBox.Items.Add("═══════ CUSTOM FISHING ═══════");

@@ -83,6 +83,13 @@ namespace ToonTown_Rewritten_Bot
             debugForm.Show();
         }
 
+        // Open Log Viewer Window
+        private void devOpenLogViewerBtn_Click(object sender, EventArgs e)
+        {
+            var logViewer = new LogViewerForm();
+            logViewer.Show();
+        }
+
         // Download OCR data automatically
         private async void devDownloadOcrBtn_Click(object sender, EventArgs e)
         {

@@ -14,14 +14,13 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>2.1.1.0</ApplicationVersion>
+    <ApplicationVersion>2.2.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
     <!-- Suppress platform compatibility warnings since this is a Windows-only app -->
     <NoWarn>$(NoWarn);CA1416</NoWarn>
@@ -85,6 +84,7 @@
     <EmbeddedResource Include="Services\CustomFishingActions\DDLLullabyLaneFishing Dock Left Of The Small Box.json" />
     <EmbeddedResource Include="Services\CustomFishingActions\MMTenorTerraceFishing Top Left Dock.json" />
     <EmbeddedResource Include="Services\CustomFishingActions\TTCPunchlinePlaceFishing First Dock.json" />
+    <EmbeddedResource Include="Services\CustomFishingActions\EstateFishing Far Left Dock.json" />
   </ItemGroup>
   <!-- Copy Custom Golf Actions to output directory -->
   <ItemGroup>
@@ -125,6 +125,9 @@
     </Compile>
     <Compile Update="Views\MainForm.Settings.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LogViewerForm.Designer.cs">
+      <DependentUpon>LogViewerForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <!-- Copy Templates folder to output directory -->
