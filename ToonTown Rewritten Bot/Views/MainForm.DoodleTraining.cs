@@ -89,9 +89,7 @@ namespace ToonTown_Rewritten_Bot
             // Check if the cancellation token source is created and the training is active
             if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested && isTrainingActive)
             {
-                _cancellationTokenSource.Cancel();  // Request cancellation
-                _cancellationTokenSource.Dispose();  // Dispose the token source
-                _cancellationTokenSource = null;     // Reset the source to be sure it's fresh when restarted
+                _cancellationTokenSource.Cancel();  // Request cancellation; disposal handled by start handler's finally block
                 isTrainingActive = false;  // Clear the flag
 
                 doodleStatusLabel.Text = "Status: Stopped";
