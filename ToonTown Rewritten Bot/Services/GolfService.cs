@@ -52,18 +52,24 @@ namespace ToonTown_Rewritten_Bot.Services
                 // Subscribe to progress events
                 customGolfActions.ProgressChanged += (s, e) =>
                 {
-                    _overlay?.BeginInvoke(new Action(() =>
+                    try
                     {
-                        _overlay?.UpdateAction(e.CurrentAction, e.NextAction, e.CurrentStep, e.TotalSteps, e.DurationMs);
-                    }));
+                        if (_overlay != null && !_overlay.IsDisposed)
+                            _overlay.BeginInvoke(new Action(() => _overlay?.UpdateAction(e.CurrentAction, e.NextAction, e.CurrentStep, e.TotalSteps, e.DurationMs)));
+                    }
+                    catch (ObjectDisposedException) { }
+                    catch (InvalidOperationException) { }
                 };
 
                 customGolfActions.StatusChanged += (s, status) =>
                 {
-                    _overlay?.BeginInvoke(new Action(() =>
+                    try
                     {
-                        _overlay?.SetStatus(status);
-                    }));
+                        if (_overlay != null && !_overlay.IsDisposed)
+                            _overlay.BeginInvoke(new Action(() => _overlay?.SetStatus(status)));
+                    }
+                    catch (ObjectDisposedException) { }
+                    catch (InvalidOperationException) { }
                 };
             }
 
@@ -287,18 +293,28 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private static void UpdateOverlayStatus(string status)
         {
-            if (_overlay != null && !_overlay.IsDisposed)
+            try
             {
-                _overlay.BeginInvoke(new Action(() => _overlay.SetStatus(status)));
+                if (_overlay != null && !_overlay.IsDisposed)
+                {
+                    _overlay.BeginInvoke(new Action(() => _overlay.SetStatus(status)));
+                }
             }
+            catch (ObjectDisposedException) { }
+            catch (InvalidOperationException) { }
         }
 
         private static void UpdateOverlayCourseInfo(string courseName, string position)
         {
-            if (_overlay != null && !_overlay.IsDisposed)
+            try
             {
-                _overlay.BeginInvoke(new Action(() => _overlay.SetCourseInfo(courseName, position)));
+                if (_overlay != null && !_overlay.IsDisposed)
+                {
+                    _overlay.BeginInvoke(new Action(() => _overlay.SetCourseInfo(courseName, position)));
+                }
             }
+            catch (ObjectDisposedException) { }
+            catch (InvalidOperationException) { }
         }
 
         /// <summary>
