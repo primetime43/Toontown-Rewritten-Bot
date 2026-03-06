@@ -207,11 +207,14 @@ namespace ToonTown_Rewritten_Bot
             if (result != DialogResult.OK)
                 return;
 
-            // Get the default scan area for this location
+            // Get the scan area for this location — use custom if saved, otherwise default
             var detector = new Utilities.FishBubbleDetector(selectedLocation);
-            var defaultScanArea = detector.GetDefaultScanArea();
+            var windowRect = CoreFunctionality.GetGameWindowRect();
+            var customScanArea = windowRect.IsEmpty ? null
+                : Utilities.CustomScanAreaManager.GetCustomScanArea(selectedLocation, windowRect.Width, windowRect.Height);
+            var scanArea = customScanArea ?? detector.GetDefaultScanArea();
 
-            if (defaultScanArea.IsEmpty)
+            if (scanArea.IsEmpty)
             {
                 MessageBox.Show($"No scan area defined for location: {selectedLocation}",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -219,7 +222,7 @@ namespace ToonTown_Rewritten_Bot
             }
 
             // Open the calibration form
-            using (var calibrationForm = new ScanAreaCalibrationForm(selectedLocation, defaultScanArea))
+            using (var calibrationForm = new ScanAreaCalibrationForm(selectedLocation, scanArea))
             {
                 calibrationForm.ShowDialog();
 

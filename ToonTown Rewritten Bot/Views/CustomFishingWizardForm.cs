@@ -647,16 +647,19 @@ namespace ToonTown_Rewritten_Bot.Views
             if (result != DialogResult.OK) return;
 
             var detector = new FishBubbleDetector("CUSTOM FISHING ACTION");
-            var defaultScanArea = detector.GetDefaultScanArea();
+            var gameRect = CoreFunctionality.GetGameWindowRect();
+            var customScanArea = gameRect.IsEmpty ? null
+                : CustomScanAreaManager.GetCustomScanArea("CUSTOM FISHING ACTION", gameRect.Width, gameRect.Height);
+            var scanArea = customScanArea ?? detector.GetDefaultScanArea();
 
-            if (defaultScanArea.IsEmpty)
+            if (scanArea.IsEmpty)
             {
                 MessageBox.Show("No scan area defined. Make sure the game is running.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            using (var calibrationForm = new ScanAreaCalibrationForm("CUSTOM FISHING ACTION", defaultScanArea))
+            using (var calibrationForm = new ScanAreaCalibrationForm("CUSTOM FISHING ACTION", scanArea))
             {
                 calibrationForm.ShowDialog();
 
