@@ -151,6 +151,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 new TemplateDefinition { Key = 16, Name = "Exit Fishing Button", Category = "Fishing" },
                 new TemplateDefinition { Key = 17, Name = "Blue Sell All Button", Category = "Fishing" },
                 new TemplateDefinition { Key = 30, Name = "FishPopupCloseButton", Category = "Fishing" },
+                new TemplateDefinition { Key = 31, Name = "PopupExitButton", Category = "Fishing" },
 
                 // Doodle Training (keys 18-29)
                 new TemplateDefinition { Key = 18, Name = "Feed Doodle Button", Category = "Doodle Training" },

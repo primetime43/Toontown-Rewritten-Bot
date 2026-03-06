@@ -15,12 +15,18 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
     public abstract class FishingStrategyBase : CoreFunctionality
     {
         protected volatile bool shouldStopFishing = false;
+        protected volatile string stopReasonMessage = null;
 
         /// <summary>
-        /// True when fishing was stopped due to an error (window not found, popup stuck, etc.).
+        /// True when fishing was stopped due to an error or expected condition (no jellybeans, etc.).
         /// Checked by FishingService to break out of the sell loop.
         /// </summary>
         public bool ShouldStopFishing => shouldStopFishing;
+
+        /// <summary>
+        /// Human-readable reason why fishing was stopped. Null if not stopped.
+        /// </summary>
+        public string StopReasonMessage => stopReasonMessage;
 
         /// <summary>
         /// Set when the bucket-full popup was detected and dismissed.
@@ -194,6 +200,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         {
             // Reset state from any previous fishing session
             shouldStopFishing = false;
+            stopReasonMessage = null;
             BucketWasFull = false;
             _fishCaught = 0;
             _castCount = 0;
@@ -425,6 +432,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         Logger.Info("Fishing", "NO JELLYBEANS - Out of bait! Stopping fishing.");
                         await HandleNoJellybeansPopup(cancellationToken);
                         shouldStopFishing = true;
+                        stopReasonMessage = "Out of jellybeans";
                         return;
                     }
 
@@ -636,6 +644,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             {
                 Logger.Error("Fishing", "Stopping: game window not found.");
                 shouldStopFishing = true;
+                stopReasonMessage = "Game window not found";
                 return;
             }
 
@@ -973,37 +982,61 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
+        /// Finds the Exit button on a popup using template matching.
+        /// If no template exists, prompts the user to capture one.
+        /// </summary>
+        private async Task<Point?> FindPopupExitButton(CancellationToken cancellationToken)
+        {
+            const string elementName = "PopupExitButton";
+
+            Logger.Debug("Fishing", "Looking for popup Exit button via template matching...");
+
+            // GetElementLocationAsync will prompt user to capture template if none exists
+            var location = await UIElementManager.Instance.GetElementLocationAsync(
+                elementName, "Please click on the Exit button on the popup");
+
+            if (location.HasValue)
+            {
+                // Template includes the red X icon + "Exit" text label below it.
+                // The center lands on the text, so offset upward to hit the actual button.
+                var adjusted = new Point(location.Value.X, location.Value.Y - 15);
+                Logger.Info("Fishing", $"Found popup Exit button at ({adjusted.X}, {adjusted.Y})");
+                return adjusted;
+            }
+
+            Logger.Warning("Fishing", "Could not find popup Exit button via template matching.");
+            return null;
+        }
+
+        /// <summary>
         /// Handles the "no jellybeans" popup by clicking the Exit button.
         /// </summary>
         protected async Task HandleNoJellybeansPopup(CancellationToken cancellationToken)
         {
             Logger.Info("Fishing", "Handling 'no jellybeans' popup - clicking Exit...");
 
-            // Get the Exit button position
-            var exitPos = NoJellybeansDetector.GetExitButtonPosition();
-            if (exitPos.HasValue)
+            var exitPos = await FindPopupExitButton(cancellationToken);
+            if (!exitPos.HasValue)
             {
-                MoveCursor(exitPos.Value.X, exitPos.Value.Y);
-                await Task.Delay(100, cancellationToken);
-                DoMouseClick();
-                await Task.Delay(500, cancellationToken);
-                Logger.Info("Fishing", "Exit button clicked. Fishing stopped due to no jellybeans.");
+                Logger.Error("Fishing", "Stopping: could not find popup Exit button.");
+                shouldStopFishing = true;
+                stopReasonMessage = "Could not find popup Exit button";
+                return;
+            }
+
+            MoveCursor(exitPos.Value.X, exitPos.Value.Y);
+            await Task.Delay(100, cancellationToken);
+            DoMouseClick();
+            await Task.Delay(800, cancellationToken);
+
+            // Verify the popup was dismissed
+            if (NoJellybeansDetector.IsNoJellybeansPopupVisible())
+            {
+                Logger.Warning("Fishing", "No jellybeans popup still visible after clicking Exit — may not have been dismissed.");
             }
             else
             {
-                // Fallback: press ESC to close the popup
-                // Set flag to prevent global keyboard hook from treating this as a user-initiated cancel
-                Logger.Warning("Fishing", "Could not find Exit button, pressing ESC...");
-                IsSimulatedKeyPress = true;
-                try
-                {
-                    SendKeys.SendWait("{ESC}");
-                }
-                finally
-                {
-                    IsSimulatedKeyPress = false;
-                }
-                await Task.Delay(500, cancellationToken);
+                Logger.Info("Fishing", "No jellybeans popup dismissed successfully.");
             }
         }
 
@@ -1015,11 +1048,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         {
             Logger.Info("Fishing", "Handling 'bucket full' popup - clicking Exit...");
 
-            var exitPos = FishBucketFullDetector.GetExitButtonPosition();
+            var exitPos = await FindPopupExitButton(cancellationToken);
             if (!exitPos.HasValue)
             {
-                Logger.Error("Fishing", "Stopping: cannot determine Exit button position — game window not found.");
+                Logger.Error("Fishing", "Stopping: could not find popup Exit button.");
                 shouldStopFishing = true;
+                stopReasonMessage = "Could not find popup Exit button";
                 return;
             }
 
@@ -1033,6 +1067,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             {
                 Logger.Error("Fishing", "Stopping: bucket full popup still visible after clicking Exit — unable to dismiss it.");
                 shouldStopFishing = true;
+                stopReasonMessage = "Unable to dismiss bucket full popup";
             }
             else
             {

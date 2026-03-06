@@ -179,7 +179,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             // Exit button is at the bottom center of the popup
             // Based on the screenshot, it's roughly at center X, and below center Y
             int exitX = windowRect.X + windowRect.Width / 2;
-            int exitY = windowRect.Y + (int)(windowRect.Height * 0.65); // About 65% down the screen
+            int exitY = windowRect.Y + (int)(windowRect.Height * 0.72); // About 72% down the screen
 
             return new Point(exitX, exitY);
         }
