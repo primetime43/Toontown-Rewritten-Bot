@@ -17,6 +17,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         protected volatile bool shouldStopFishing = false;
 
         /// <summary>
+        /// True when fishing was stopped due to an error (window not found, popup stuck, etc.).
+        /// Checked by FishingService to break out of the sell loop.
+        /// </summary>
+        public bool ShouldStopFishing => shouldStopFishing;
+
+        /// <summary>
         /// Set when the bucket-full popup was detected and dismissed.
         /// The toon is already off the dock, so StraightenToon and ExitFishing should be skipped.
         /// Reset at the start of each fishing session via SetFishingLocation.
@@ -628,7 +634,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             var windowRect = GetGameWindowRect();
             if (windowRect.IsEmpty)
             {
-                Logger.Warning("Fishing", "Window not found!");
+                Logger.Error("Fishing", "Stopping: game window not found.");
+                shouldStopFishing = true;
                 return;
             }
 
@@ -1002,35 +1009,34 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         /// <summary>
         /// Handles the "fish bucket full" popup by clicking the Exit button.
-        /// Does NOT set shouldStopFishing so the outer sell loop continues naturally.
+        /// Sets shouldStopFishing if unable to dismiss the popup.
         /// </summary>
         protected async Task HandleBucketFullPopup(CancellationToken cancellationToken)
         {
             Logger.Info("Fishing", "Handling 'bucket full' popup - clicking Exit...");
 
             var exitPos = FishBucketFullDetector.GetExitButtonPosition();
-            if (exitPos.HasValue)
+            if (!exitPos.HasValue)
             {
-                MoveCursor(exitPos.Value.X, exitPos.Value.Y);
-                await Task.Delay(100, cancellationToken);
-                DoMouseClick();
-                await Task.Delay(500, cancellationToken);
-                Logger.Info("Fishing", "Exit button clicked. Proceeding to sell fish.");
+                Logger.Error("Fishing", "Stopping: cannot determine Exit button position — game window not found.");
+                shouldStopFishing = true;
+                return;
+            }
+
+            MoveCursor(exitPos.Value.X, exitPos.Value.Y);
+            await Task.Delay(100, cancellationToken);
+            DoMouseClick();
+            await Task.Delay(800, cancellationToken);
+
+            // Verify the popup was dismissed
+            if (await FishBucketFullDetector.CheckForBucketFullPopupAsync(cancellationToken))
+            {
+                Logger.Error("Fishing", "Stopping: bucket full popup still visible after clicking Exit — unable to dismiss it.");
+                shouldStopFishing = true;
             }
             else
             {
-                // Fallback: press ESC to close the popup
-                Logger.Warning("Fishing", "Could not find Exit button, pressing ESC...");
-                IsSimulatedKeyPress = true;
-                try
-                {
-                    SendKeys.SendWait("{ESC}");
-                }
-                finally
-                {
-                    IsSimulatedKeyPress = false;
-                }
-                await Task.Delay(500, cancellationToken);
+                Logger.Info("Fishing", "Bucket full popup dismissed. Proceeding to sell fish.");
             }
         }
 
