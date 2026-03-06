@@ -58,7 +58,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 // Check if fishing was stopped due to an error (window lost, popup stuck, etc.)
                 if (_engine.ShouldStopFishing)
                 {
-                    Logger.Info("Fishing", "Fishing stopped due to an error — aborting sell loop.");
+                    Logger.Info("Fishing", $"Fishing stopped: {_engine.StopReasonMessage ?? "unknown error"} — aborting sell loop.");
                     break;
                 }
 
@@ -121,7 +121,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
 
             string stopReason = cancellationToken.IsCancellationRequested ? "User stopped"
-                : _engine.ShouldStopFishing ? "Stopped due to error"
+                : _engine.ShouldStopFishing ? (_engine.StopReasonMessage ?? "Stopped due to error")
                 : "Completed all rounds";
             Logger.Info("Fishing", $"Session end: reason=\"{stopReason}\", casts completed={SessionCastCount}/{totalExpectedCasts}, fish caught={SessionFishCaught}");
             // Notify MainForm to uncheck the overlay checkbox - fishing is completely done

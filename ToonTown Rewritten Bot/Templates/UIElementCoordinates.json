@@ -1,210 +1,10 @@
 {
-  "Red Fishing Button": {
-    "Name": "Red Fishing Button",
-    "VariantPaths": [
-      "Templates\\Red_Fishing_Button.png"
-    ],
-    "TemplatePath": "Templates\\Red_Fishing_Button.png",
-    "ManualCoordinates": "960, 765",
-    "CachedCenter": "966, 782",
-    "LastFoundTime": "2026-03-03T15:35:57.4550924-05:00"
-  },
-  "Exit Fishing Button": {
-    "Name": "Exit Fishing Button",
-    "VariantPaths": [
-      "Templates\\Exit_Fishing_Button.png"
-    ],
-    "TemplatePath": "Templates\\Exit_Fishing_Button.png",
-    "ManualCoordinates": "468, 38",
-    "CachedCenter": "1628, 659",
-    "LastFoundTime": "2026-03-03T14:44:12.7782236-05:00"
-  },
-  "Blue Sell All Button": {
-    "Name": "Blue Sell All Button",
-    "VariantPaths": [
-      "Templates\\Blue_Sell_All_Button.png"
-    ],
-    "TemplatePath": "Templates\\Blue_Sell_All_Button.png",
-    "ManualCoordinates": "504, 60",
-    "CachedCenter": "1272, 852",
-    "LastFoundTime": "2026-02-06T14:18:46.4411074-05:00"
-  },
-  "Watering Can Button": {
-    "Name": "Watering Can Button",
-    "VariantPaths": [
-      "Templates\\Watering_Can_Button.png"
-    ],
-    "TemplatePath": "Templates\\Watering_Can_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": "80, 365",
-    "LastFoundTime": "2025-12-30T03:40:15.1031089-05:00"
-  },
-  "Feed Doodle Button": {
-    "Name": "Feed Doodle Button",
-    "VariantPaths": [
-      "Templates\\Feed_Doodle_Button.png"
-    ],
-    "TemplatePath": "Templates\\Feed_Doodle_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": "1805, 216",
-    "LastFoundTime": "2026-02-06T01:12:17.9059036-05:00"
-  },
-  "Scratch Doodle Button": {
-    "Name": "Scratch Doodle Button",
-    "VariantPaths": [
-      "Templates\\Scratch_Doodle_Button.png"
-    ],
-    "TemplatePath": "Templates\\Scratch_Doodle_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": "1814, 253",
-    "LastFoundTime": "2026-02-06T01:12:42.2775918-05:00"
-  },
-  "Plant Flower Button": {
-    "Name": "Plant Flower Button",
-    "VariantPaths": [
-      "Templates\\Plant_Flower_Button.png"
-    ],
-    "TemplatePath": "Templates\\Plant_Flower_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
-  "Sticker Book": {
-    "Name": "Sticker Book",
-    "VariantPaths": [
-      "Templates\\Sticker_Book.png"
-    ],
-    "TemplatePath": "Templates\\Sticker_Book.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
-  "Golf Pencil Button": {
-    "Name": "Golf Pencil Button",
-    "VariantPaths": [
-      "Templates\\Golf_Pencil_Button.png"
-    ],
-    "TemplatePath": "Templates\\Golf_Pencil_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
   "Golf_Close_Button": {
     "Name": "Golf_Close_Button",
     "VariantPaths": [
       "Templates\\Golf_Close_Button.png"
     ],
     "TemplatePath": "Templates\\Golf_Close_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
-  "Golf_Turn_Timer": {
-    "Name": "Golf_Turn_Timer",
-    "VariantPaths": [
-      "Templates\\Golf_Turn_Timer.png"
-    ],
-    "TemplatePath": "Templates\\Golf_Turn_Timer.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
-  "FishPopupCloseButton": {
-    "Name": "FishPopupCloseButton",
-    "VariantPaths": [
-      "Templates\\FishPopupCloseButton.png"
-    ],
-    "TemplatePath": "Templates\\FishPopupCloseButton.png",
-    "ManualCoordinates": null,
-    "CachedCenter": "1107, 477",
-    "LastFoundTime": "2026-02-07T23:15:00.7774808-05:00"
-  },
-  "Red Jellybean Button": {
-    "Name": "Red Jellybean Button",
-    "VariantPaths": [
-      "Templates\\Red_Jellybean_Button.png"
-    ],
-    "TemplatePath": "Templates\\Red_Jellybean_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
-  "Green Jellybean Button": {
-    "Name": "Green Jellybean Button",
-    "VariantPaths": [
-      "Templates\\Green_Jellybean_Button.png"
-    ],
-    "TemplatePath": "Templates\\Green_Jellybean_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": "813, 491",
-    "LastFoundTime": "2026-02-05T19:30:45.5250124-05:00"
-  },
-  "Orange Jellybean Button": {
-    "Name": "Orange Jellybean Button",
-    "VariantPaths": [
-      "Templates\\Orange_Jellybean_Button.png"
-    ],
-    "TemplatePath": "Templates\\Orange_Jellybean_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
-  "Purple Jellybean Button": {
-    "Name": "Purple Jellybean Button",
-    "VariantPaths": [
-      "Templates\\Purple_Jellybean_Button.png"
-    ],
-    "TemplatePath": "Templates\\Purple_Jellybean_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
-  "Blue Jellybean Button": {
-    "Name": "Blue Jellybean Button",
-    "VariantPaths": [
-      "Templates\\Blue_Jellybean_Button.png"
-    ],
-    "TemplatePath": "Templates\\Blue_Jellybean_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
-  "Pink Jellybean Button": {
-    "Name": "Pink Jellybean Button",
-    "VariantPaths": [
-      "Templates\\Pink_Jellybean_Button.png"
-    ],
-    "TemplatePath": "Templates\\Pink_Jellybean_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
-  "Yellow Jellybean Button": {
-    "Name": "Yellow Jellybean Button",
-    "VariantPaths": [
-      "Templates\\Yellow_Jellybean_Button.png"
-    ],
-    "TemplatePath": "Templates\\Yellow_Jellybean_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
-  "Cyan Jellybean Button": {
-    "Name": "Cyan Jellybean Button",
-    "VariantPaths": [
-      "Templates\\Cyan_Jellybean_Button.png"
-    ],
-    "TemplatePath": "Templates\\Cyan_Jellybean_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": "1129, 491",
-    "LastFoundTime": "2026-02-05T23:18:51.0238089-05:00"
-  },
-  "Silver Jellybean Button": {
-    "Name": "Silver Jellybean Button",
-    "VariantPaths": [
-      "Templates\\Silver_Jellybean_Button.png"
-    ],
-    "TemplatePath": "Templates\\Silver_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
@@ -219,35 +19,25 @@
     "CachedCenter": "1123, 731",
     "LastFoundTime": "2026-02-05T22:26:44.9486385-05:00"
   },
-  "Blue Ok Button": {
-    "Name": "Blue Ok Button",
+  "Exit Fishing Button": {
+    "Name": "Exit Fishing Button",
     "VariantPaths": [
-      "Templates\\Blue_Ok_Button.png"
+      "Templates\\Exit_Fishing_Button.png"
     ],
-    "TemplatePath": "Templates\\Blue_Ok_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": "974, 680",
-    "LastFoundTime": "2026-02-05T22:27:05.730667-05:00"
+    "TemplatePath": "Templates\\Exit_Fishing_Button.png",
+    "ManualCoordinates": "468, 38",
+    "CachedCenter": "1628, 659",
+    "LastFoundTime": "2026-03-03T14:44:12.7782236-05:00"
   },
-  "Remove Plant Button": {
-    "Name": "Remove Plant Button",
+  "FishPopupCloseButton": {
+    "Name": "FishPopupCloseButton",
     "VariantPaths": [
-      "Templates\\Remove_Plant_Button.png"
+      "Templates\\FishPopupCloseButton.png"
     ],
-    "TemplatePath": "Templates\\Remove_Plant_Button.png",
+    "TemplatePath": "Templates\\FishPopupCloseButton.png",
     "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
-  },
-  "Green SpeedChat Button": {
-    "Name": "Green SpeedChat Button",
-    "VariantPaths": [
-      "Templates\\Green_SpeedChat_Button.png"
-    ],
-    "TemplatePath": "Templates\\Green_SpeedChat_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": "114, 69",
-    "LastFoundTime": "2026-02-06T01:13:02.7626157-05:00"
+    "CachedCenter": "1107, 477",
+    "LastFoundTime": "2026-02-07T23:15:00.7774808-05:00"
   },
   "Pets Tab in SpeedChat": {
     "Name": "Pets Tab in SpeedChat",
@@ -259,15 +49,66 @@
     "CachedCenter": "245, 101",
     "LastFoundTime": "2026-02-06T01:13:23.0235938-05:00"
   },
-  "Tricks Tab in SpeedChat": {
-    "Name": "Tricks Tab in SpeedChat",
+  "Feed Doodle Button": {
+    "Name": "Feed Doodle Button",
     "VariantPaths": [
-      "Templates\\Tricks_Tab_in_SpeedChat.png"
+      "Templates\\Feed_Doodle_Button.png"
     ],
-    "TemplatePath": "Templates\\Tricks_Tab_in_SpeedChat.png",
+    "TemplatePath": "Templates\\Feed_Doodle_Button.png",
     "ManualCoordinates": null,
-    "CachedCenter": "490, 98",
-    "LastFoundTime": "2026-02-06T01:13:33.2004379-05:00"
+    "CachedCenter": "1805, 216",
+    "LastFoundTime": "2026-02-06T01:12:17.9059036-05:00"
+  },
+  "Red Fishing Button": {
+    "Name": "Red Fishing Button",
+    "VariantPaths": [
+      "Templates\\Red_Fishing_Button.png"
+    ],
+    "TemplatePath": "Templates\\Red_Fishing_Button.png",
+    "ManualCoordinates": "960, 765",
+    "CachedCenter": "966, 782",
+    "LastFoundTime": "2026-03-03T15:35:57.4550924-05:00"
+  },
+  "Green SpeedChat Button": {
+    "Name": "Green SpeedChat Button",
+    "VariantPaths": [
+      "Templates\\Green_SpeedChat_Button.png"
+    ],
+    "TemplatePath": "Templates\\Green_SpeedChat_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "114, 69",
+    "LastFoundTime": "2026-02-06T01:13:02.7626157-05:00"
+  },
+  "Silver Jellybean Button": {
+    "Name": "Silver Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Silver_Jellybean_Button.png"
+    ],
+    "TemplatePath": "Templates\\Silver_Jellybean_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Cyan Jellybean Button": {
+    "Name": "Cyan Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Cyan_Jellybean_Button.png"
+    ],
+    "TemplatePath": "Templates\\Cyan_Jellybean_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "1129, 491",
+    "LastFoundTime": "2026-02-05T23:18:51.0238089-05:00"
+  },
+  "Friends Button": {
+    "Name": "Friends Button",
+    "VariantPaths": [
+      "Templates\\Friends_Button.png",
+      "Templates\\Friends_Button_v2.png"
+    ],
+    "TemplatePath": "Templates\\Friends_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
   },
   "Jump Trick Option in SpeedChat": {
     "Name": "Jump Trick Option in SpeedChat",
@@ -279,13 +120,22 @@
     "CachedCenter": "538, 100",
     "LastFoundTime": "2026-02-06T01:13:46.1035895-05:00"
   },
-  "Friends Button": {
-    "Name": "Friends Button",
+  "Blue Ok Button": {
+    "Name": "Blue Ok Button",
     "VariantPaths": [
-      "Templates\\Friends_Button.png",
-      "Templates\\Friends_Button_v2.png"
+      "Templates\\Blue_Ok_Button.png"
     ],
-    "TemplatePath": "Templates\\Friends_Button.png",
+    "TemplatePath": "Templates\\Blue_Ok_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "974, 680",
+    "LastFoundTime": "2026-02-05T22:27:05.730667-05:00"
+  },
+  "Yellow Jellybean Button": {
+    "Name": "Yellow Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Yellow_Jellybean_Button.png"
+    ],
+    "TemplatePath": "Templates\\Yellow_Jellybean_Button.png",
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
@@ -299,5 +149,166 @@
     "ManualCoordinates": null,
     "CachedCenter": "966, 577",
     "LastFoundTime": "2026-02-07T23:07:57.8148447-05:00"
+  },
+  "Orange Jellybean Button": {
+    "Name": "Orange Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Orange_Jellybean_Button.png"
+    ],
+    "TemplatePath": "Templates\\Orange_Jellybean_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Tricks Tab in SpeedChat": {
+    "Name": "Tricks Tab in SpeedChat",
+    "VariantPaths": [
+      "Templates\\Tricks_Tab_in_SpeedChat.png"
+    ],
+    "TemplatePath": "Templates\\Tricks_Tab_in_SpeedChat.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "490, 98",
+    "LastFoundTime": "2026-02-06T01:13:33.2004379-05:00"
+  },
+  "Remove Plant Button": {
+    "Name": "Remove Plant Button",
+    "VariantPaths": [
+      "Templates\\Remove_Plant_Button.png"
+    ],
+    "TemplatePath": "Templates\\Remove_Plant_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Golf Pencil Button": {
+    "Name": "Golf Pencil Button",
+    "VariantPaths": [
+      "Templates\\Golf_Pencil_Button.png"
+    ],
+    "TemplatePath": "Templates\\Golf_Pencil_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Plant Flower Button": {
+    "Name": "Plant Flower Button",
+    "VariantPaths": [
+      "Templates\\Plant_Flower_Button.png"
+    ],
+    "TemplatePath": "Templates\\Plant_Flower_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Watering Can Button": {
+    "Name": "Watering Can Button",
+    "VariantPaths": [
+      "Templates\\Watering_Can_Button.png"
+    ],
+    "TemplatePath": "Templates\\Watering_Can_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "80, 365",
+    "LastFoundTime": "2025-12-30T03:40:15.1031089-05:00"
+  },
+  "Pink Jellybean Button": {
+    "Name": "Pink Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Pink_Jellybean_Button.png"
+    ],
+    "TemplatePath": "Templates\\Pink_Jellybean_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "PopupExitButton": {
+    "Name": "PopupExitButton",
+    "VariantPaths": [
+      "Templates\\PopupExitButton.png",
+      "Templates\\PopupExitButton_v2.png"
+    ],
+    "TemplatePath": "Templates\\PopupExitButton.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "970, 732",
+    "LastFoundTime": "2026-03-06T15:32:00.4365628-05:00"
+  },
+  "Red Jellybean Button": {
+    "Name": "Red Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Red_Jellybean_Button.png"
+    ],
+    "TemplatePath": "Templates\\Red_Jellybean_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Blue Jellybean Button": {
+    "Name": "Blue Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Blue_Jellybean_Button.png"
+    ],
+    "TemplatePath": "Templates\\Blue_Jellybean_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Purple Jellybean Button": {
+    "Name": "Purple Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Purple_Jellybean_Button.png"
+    ],
+    "TemplatePath": "Templates\\Purple_Jellybean_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Scratch Doodle Button": {
+    "Name": "Scratch Doodle Button",
+    "VariantPaths": [
+      "Templates\\Scratch_Doodle_Button.png"
+    ],
+    "TemplatePath": "Templates\\Scratch_Doodle_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "1814, 253",
+    "LastFoundTime": "2026-02-06T01:12:42.2775918-05:00"
+  },
+  "Sticker Book": {
+    "Name": "Sticker Book",
+    "VariantPaths": [
+      "Templates\\Sticker_Book.png"
+    ],
+    "TemplatePath": "Templates\\Sticker_Book.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
+  },
+  "Green Jellybean Button": {
+    "Name": "Green Jellybean Button",
+    "VariantPaths": [
+      "Templates\\Green_Jellybean_Button.png"
+    ],
+    "TemplatePath": "Templates\\Green_Jellybean_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "813, 491",
+    "LastFoundTime": "2026-02-05T19:30:45.5250124-05:00"
+  },
+  "Blue Sell All Button": {
+    "Name": "Blue Sell All Button",
+    "VariantPaths": [
+      "Templates\\Blue_Sell_All_Button.png"
+    ],
+    "TemplatePath": "Templates\\Blue_Sell_All_Button.png",
+    "ManualCoordinates": "504, 60",
+    "CachedCenter": "1272, 852",
+    "LastFoundTime": "2026-02-06T14:18:46.4411074-05:00"
+  },
+  "Golf_Turn_Timer": {
+    "Name": "Golf_Turn_Timer",
+    "VariantPaths": [
+      "Templates\\Golf_Turn_Timer.png"
+    ],
+    "TemplatePath": "Templates\\Golf_Turn_Timer.png",
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
   }
 }
