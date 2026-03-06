@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,17 +28,18 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             if (location.HasValue)
             {
-                Debug.WriteLine($"[BucketFull] Popup detected via template at ({location.Value.X}, {location.Value.Y})");
+                Logger.Debug("FishDetect", $"Bucket full popup detected via template at ({location.Value.X}, {location.Value.Y})");
                 return true;
             }
 
-            Debug.WriteLine("[BucketFull] Popup not detected (template didn't match or user cancelled capture)");
+            Logger.Debug("FishDetect", "Bucket full popup not detected");
             return false;
         }
 
         /// <summary>
         /// Gets the position of the Exit button on the bucket full popup.
-        /// The Exit button is at the bottom center of the centered popup.
+        /// The Exit button (red X) is at the bottom center of the centered popup,
+        /// approximately 72% down the game window.
         /// </summary>
         public static Point? GetExitButtonPosition()
         {
@@ -47,8 +47,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
             if (windowRect.IsEmpty) return null;
 
             int exitX = windowRect.X + windowRect.Width / 2;
-            int exitY = windowRect.Y + (int)(windowRect.Height * 0.65);
+            int exitY = windowRect.Y + (int)(windowRect.Height * 0.72);
 
+            Logger.Debug("FishDetect", $"Bucket full Exit button estimated at ({exitX}, {exitY})");
             return new Point(exitX, exitY);
         }
     }

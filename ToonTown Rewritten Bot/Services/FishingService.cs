@@ -55,6 +55,13 @@ namespace ToonTown_Rewritten_Bot.Services
                 await _engine.StartFishingActionsAsync(casts, variance, autoDetectFish, isFirstCycle, cancellationToken).ConfigureAwait(false);
                 isFirstCycle = false;
 
+                // Check if fishing was stopped due to an error (window lost, popup stuck, etc.)
+                if (_engine.ShouldStopFishing)
+                {
+                    Logger.Info("Fishing", "Fishing stopped due to an error — aborting sell loop.");
+                    break;
+                }
+
                 if (locationName == FishingLocationNames.FishAnywhere)
                 {
                     // Fish Anywhere - just exit fishing without selling
@@ -113,7 +120,9 @@ namespace ToonTown_Rewritten_Bot.Services
                 }
             }
 
-            string stopReason = cancellationToken.IsCancellationRequested ? "User stopped" : "Completed all rounds";
+            string stopReason = cancellationToken.IsCancellationRequested ? "User stopped"
+                : _engine.ShouldStopFishing ? "Stopped due to error"
+                : "Completed all rounds";
             Logger.Info("Fishing", $"Session end: reason=\"{stopReason}\", casts completed={SessionCastCount}/{totalExpectedCasts}, fish caught={SessionFishCaught}");
             // Notify MainForm to uncheck the overlay checkbox - fishing is completely done
             FishingStrategyBase.OnFishingEnded?.Invoke();
