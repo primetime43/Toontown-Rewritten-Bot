@@ -104,14 +104,14 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
-        /// Maximum number of scan attempts when waiting for fish before giving up.
-        /// Only used when WaitForFishBeforeCasting is true. Default is 10 attempts.
+        /// Maximum time in seconds to wait for a fish shadow before giving up.
+        /// Only used when WaitForFishBeforeCasting is true. Default is 20 seconds.
         /// </summary>
-        private static volatile int _maxFishWaitAttempts = 10;
-        public static int MaxFishWaitAttempts
+        private static volatile int _maxFishWaitSeconds = 20;
+        public static int MaxFishWaitSeconds
         {
-            get => _maxFishWaitAttempts;
-            set => _maxFishWaitAttempts = value;
+            get => _maxFishWaitSeconds;
+            set => _maxFishWaitSeconds = value;
         }
 
         /// <summary>
@@ -489,6 +489,17 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         }
 
                         UpdateOverlayAction("No bite (timeout)", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
+
+                        // If "Wait for fish" is enabled, wait up to X seconds scanning for a fish
+                        // before casting again. Cast immediately if a fish is detected.
+                        if (WaitForFishBeforeCasting && autoDetectFish && numberOfCasts > 1)
+                        {
+                            bool fishAppeared = await WaitForFishDetectionAsync(cancellationToken);
+                            if (fishAppeared)
+                            {
+                                Logger.Info("Fishing", "Fish appeared during wait — casting now.");
+                            }
+                        }
                     }
 
                     numberOfCasts--;
@@ -525,13 +536,11 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
-        /// Waits for a fish shadow to be detected before casting.
-        /// Returns true if a fish was found, false if gave up after max attempts.
+        /// After a failed cast, waits up to MaxFishWaitSeconds scanning for a fish shadow.
+        /// Returns true if a fish was detected (cast immediately), false if time expired (cast anyway).
         /// </summary>
         protected async Task<bool> WaitForFishDetectionAsync(CancellationToken cancellationToken)
         {
-            if (!WaitForFishBeforeCasting)
-                return true; // Feature disabled, proceed with casting
 
             // Ensure bubble detector is initialized
             if (_bubbleDetector == null)
@@ -539,10 +548,13 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 _bubbleDetector = new FishBubbleDetector(_locationName);
             }
 
-            Logger.Debug("Fishing", $"Waiting for fish detection (max {MaxFishWaitAttempts} attempts)...");
+            int waitSeconds = MaxFishWaitSeconds;
+            Logger.Debug("Fishing", $"Waiting for fish detection (max {waitSeconds}s)...");
             UpdateOverlayAction("Scanning for fish...", "Waiting", "Detecting");
 
-            for (int attempt = 1; attempt <= MaxFishWaitAttempts; attempt++)
+            var stopwatch = Stopwatch.StartNew();
+
+            while (stopwatch.Elapsed.TotalSeconds < waitSeconds)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -553,7 +565,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     await Task.Delay(500, cancellationToken);
                 }
 
-                UpdateOverlayAction($"Scanning for fish... ({attempt}/{MaxFishWaitAttempts})", "Waiting", "Detecting");
+                int remainingSeconds = Math.Max(0, waitSeconds - (int)stopwatch.Elapsed.TotalSeconds);
+                UpdateOverlayAction($"Scanning for fish... ({remainingSeconds}s left)", "Waiting", "Detecting");
 
                 using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
                 {
@@ -566,26 +579,22 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
                         // Update overlay with detection visuals (scan area, blobs, candidates)
                         UpdateOverlay(detectionResult, detectionResult.BestShadowPosition,
-                            fishFound ? "Fish detected!" : $"Scanning... ({attempt}/{MaxFishWaitAttempts})");
+                            fishFound ? "Fish detected!" : $"Scanning... ({remainingSeconds}s left)");
 
                         if (fishFound)
                         {
-                            Logger.Info("Fishing", $"Fish detected on attempt {attempt}!");
+                            Logger.Info("Fishing", $"Fish detected after {stopwatch.Elapsed.TotalSeconds:F1}s!");
                             UpdateOverlayAction("Fish found!", "Casting", "Detected");
                             return true;
                         }
                     }
                 }
 
-                Logger.Debug("Fishing", $"No fish detected, attempt {attempt}/{MaxFishWaitAttempts}");
-
-                if (attempt < MaxFishWaitAttempts)
-                {
-                    await Task.Delay(FishWaitScanDelayMs, cancellationToken);
-                }
+                Logger.Debug("Fishing", $"No fish detected, {remainingSeconds}s remaining");
+                await Task.Delay(FishWaitScanDelayMs, cancellationToken);
             }
 
-            Logger.Warning("Fishing", $"No fish found after {MaxFishWaitAttempts} attempts, giving up on this cast.");
+            Logger.Warning("Fishing", $"No fish found after {waitSeconds}s, giving up on this cast.");
             UpdateOverlayAction("No fish found", "Skipping cast", "No fish");
             return false;
         }
