@@ -77,6 +77,7 @@ namespace ToonTown_Rewritten_Bot
             }
             catch (TaskCanceledException)
             {
+                Logger.Info("Fishing", "Session end: reason=\"User cancelled\", casts completed=" + _fishingService.SessionCastCount);
                 fishingStatusLabel.Text = "Status: Idle";
                 fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
                 SetFishingOverlay(false, null, null);
@@ -84,6 +85,7 @@ namespace ToonTown_Rewritten_Bot
             }
             catch (Exception ex) // Catch any other unforeseen errors
             {
+                Logger.Error("Fishing", $"Session end: reason=\"Error: {ex.Message}\"");
                 fishingStatusLabel.Text = "Status: Idle";
                 fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
                 SetFishingOverlay(false, null, null);
@@ -109,6 +111,7 @@ namespace ToonTown_Rewritten_Bot
             }
 
             // Signal the cancellation
+            Logger.Info("Fishing", "User pressed Stop button");
             _cancellationTokenSource.Cancel();
             fishingStatusLabel.Text = "Status: Idle";
             fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;

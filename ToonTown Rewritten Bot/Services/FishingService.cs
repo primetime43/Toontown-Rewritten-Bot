@@ -37,7 +37,8 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </remarks>
         public async Task StartFishing(string locationName, int casts, int sells, bool variance, CancellationToken cancellationToken, string customFishingFilePath = "", bool autoDetectFish = false)
         {
-            Logger.Info("Fishing", $"Session start: location={locationName}, casts={casts}, sells={sells}, variance={variance}, autoDetect={autoDetectFish}");
+            int totalExpectedCasts = locationName == FishingLocationNames.FishAnywhere ? casts : casts * sells;
+            Logger.Info("Fishing", $"Session start: location={locationName}, casts per round={casts}, sell rounds={sells}, total expected casts={totalExpectedCasts}, variance={variance}, autoDetect={autoDetectFish}");
 
             // Set the fishing location for proper bubble detection configuration
             _engine.SetFishingLocation(locationName);
@@ -112,7 +113,8 @@ namespace ToonTown_Rewritten_Bot.Services
                 }
             }
 
-            Logger.Info("Fishing", $"Session end: fish caught={SessionFishCaught}, casts={SessionCastCount}");
+            string stopReason = cancellationToken.IsCancellationRequested ? "User stopped" : "Completed all rounds";
+            Logger.Info("Fishing", $"Session end: reason=\"{stopReason}\", casts completed={SessionCastCount}/{totalExpectedCasts}, fish caught={SessionFishCaught}");
             // Notify MainForm to uncheck the overlay checkbox - fishing is completely done
             FishingStrategyBase.OnFishingEnded?.Invoke();
         }
