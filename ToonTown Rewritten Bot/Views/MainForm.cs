@@ -97,7 +97,7 @@ namespace ToonTown_Rewritten_Bot
             randomFishingCheckBox.Checked = prefs.RandomVariance;
             autoDetectFishCheckBox.Checked = prefs.AutoDetectFish;
             waitForFishCheckBox.Checked = prefs.WaitForFishBeforeCasting;
-            numericUpDownWaitAttempts.Value = Math.Max(numericUpDownWaitAttempts.Minimum, Math.Min(numericUpDownWaitAttempts.Maximum, prefs.MaxFishWaitAttempts));
+            numericUpDownWaitAttempts.Value = Math.Max(numericUpDownWaitAttempts.Minimum, Math.Min(numericUpDownWaitAttempts.Maximum, prefs.MaxFishWaitSeconds));
             showOverlayCheckBox.Checked = prefs.ShowFishingOverlay;
             quickCastingCheckBox.Checked = prefs.QuickCasting;
 
@@ -183,7 +183,7 @@ namespace ToonTown_Rewritten_Bot
             prefs.RandomVariance = randomFishingCheckBox.Checked;
             prefs.AutoDetectFish = autoDetectFishCheckBox.Checked;
             prefs.WaitForFishBeforeCasting = waitForFishCheckBox.Checked;
-            prefs.MaxFishWaitAttempts = (int)numericUpDownWaitAttempts.Value;
+            prefs.MaxFishWaitSeconds = (int)numericUpDownWaitAttempts.Value;
             prefs.ShowFishingOverlay = showOverlayCheckBox.Checked;
             prefs.QuickCasting = quickCastingCheckBox.Checked;
 

@@ -15,6 +15,18 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
     public abstract class FishingStrategyBase : CoreFunctionality
     {
         protected volatile bool shouldStopFishing = false;
+        protected volatile string stopReasonMessage = null;
+
+        /// <summary>
+        /// True when fishing was stopped due to an error or expected condition (no jellybeans, etc.).
+        /// Checked by FishingService to break out of the sell loop.
+        /// </summary>
+        public bool ShouldStopFishing => shouldStopFishing;
+
+        /// <summary>
+        /// Human-readable reason why fishing was stopped. Null if not stopped.
+        /// </summary>
+        public string StopReasonMessage => stopReasonMessage;
 
         /// <summary>
         /// Set when the bucket-full popup was detected and dismissed.
@@ -104,14 +116,14 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
-        /// Maximum number of scan attempts when waiting for fish before giving up.
-        /// Only used when WaitForFishBeforeCasting is true. Default is 10 attempts.
+        /// Maximum time in seconds to wait for a fish shadow before giving up.
+        /// Only used when WaitForFishBeforeCasting is true. Default is 20 seconds.
         /// </summary>
-        private static volatile int _maxFishWaitAttempts = 10;
-        public static int MaxFishWaitAttempts
+        private static volatile int _maxFishWaitSeconds = 20;
+        public static int MaxFishWaitSeconds
         {
-            get => _maxFishWaitAttempts;
-            set => _maxFishWaitAttempts = value;
+            get => _maxFishWaitSeconds;
+            set => _maxFishWaitSeconds = value;
         }
 
         /// <summary>
@@ -188,6 +200,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         {
             // Reset state from any previous fishing session
             shouldStopFishing = false;
+            stopReasonMessage = null;
             BucketWasFull = false;
             _fishCaught = 0;
             _castCount = 0;
@@ -419,6 +432,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         Logger.Info("Fishing", "NO JELLYBEANS - Out of bait! Stopping fishing.");
                         await HandleNoJellybeansPopup(cancellationToken);
                         shouldStopFishing = true;
+                        stopReasonMessage = "Out of jellybeans";
                         return;
                     }
 
@@ -489,6 +503,17 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         }
 
                         UpdateOverlayAction("No bite (timeout)", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
+
+                        // If "Wait for fish" is enabled, wait up to X seconds scanning for a fish
+                        // before casting again. Cast immediately if a fish is detected.
+                        if (WaitForFishBeforeCasting && autoDetectFish && numberOfCasts > 1)
+                        {
+                            bool fishAppeared = await WaitForFishDetectionAsync(cancellationToken);
+                            if (fishAppeared)
+                            {
+                                Logger.Info("Fishing", "Fish appeared during wait — casting now.");
+                            }
+                        }
                     }
 
                     numberOfCasts--;
@@ -525,13 +550,11 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
-        /// Waits for a fish shadow to be detected before casting.
-        /// Returns true if a fish was found, false if gave up after max attempts.
+        /// After a failed cast, waits up to MaxFishWaitSeconds scanning for a fish shadow.
+        /// Returns true if a fish was detected (cast immediately), false if time expired (cast anyway).
         /// </summary>
         protected async Task<bool> WaitForFishDetectionAsync(CancellationToken cancellationToken)
         {
-            if (!WaitForFishBeforeCasting)
-                return true; // Feature disabled, proceed with casting
 
             // Ensure bubble detector is initialized
             if (_bubbleDetector == null)
@@ -539,10 +562,13 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 _bubbleDetector = new FishBubbleDetector(_locationName);
             }
 
-            Logger.Debug("Fishing", $"Waiting for fish detection (max {MaxFishWaitAttempts} attempts)...");
+            int waitSeconds = MaxFishWaitSeconds;
+            Logger.Debug("Fishing", $"Waiting for fish detection (max {waitSeconds}s)...");
             UpdateOverlayAction("Scanning for fish...", "Waiting", "Detecting");
 
-            for (int attempt = 1; attempt <= MaxFishWaitAttempts; attempt++)
+            var stopwatch = Stopwatch.StartNew();
+
+            while (stopwatch.Elapsed.TotalSeconds < waitSeconds)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -553,7 +579,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     await Task.Delay(500, cancellationToken);
                 }
 
-                UpdateOverlayAction($"Scanning for fish... ({attempt}/{MaxFishWaitAttempts})", "Waiting", "Detecting");
+                int remainingSeconds = Math.Max(0, waitSeconds - (int)stopwatch.Elapsed.TotalSeconds);
+                UpdateOverlayAction($"Scanning for fish... ({remainingSeconds}s left)", "Waiting", "Detecting");
 
                 using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
                 {
@@ -566,26 +593,22 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
                         // Update overlay with detection visuals (scan area, blobs, candidates)
                         UpdateOverlay(detectionResult, detectionResult.BestShadowPosition,
-                            fishFound ? "Fish detected!" : $"Scanning... ({attempt}/{MaxFishWaitAttempts})");
+                            fishFound ? "Fish detected!" : $"Scanning... ({remainingSeconds}s left)");
 
                         if (fishFound)
                         {
-                            Logger.Info("Fishing", $"Fish detected on attempt {attempt}!");
+                            Logger.Info("Fishing", $"Fish detected after {stopwatch.Elapsed.TotalSeconds:F1}s!");
                             UpdateOverlayAction("Fish found!", "Casting", "Detected");
                             return true;
                         }
                     }
                 }
 
-                Logger.Debug("Fishing", $"No fish detected, attempt {attempt}/{MaxFishWaitAttempts}");
-
-                if (attempt < MaxFishWaitAttempts)
-                {
-                    await Task.Delay(FishWaitScanDelayMs, cancellationToken);
-                }
+                Logger.Debug("Fishing", $"No fish detected, {remainingSeconds}s remaining");
+                await Task.Delay(FishWaitScanDelayMs, cancellationToken);
             }
 
-            Logger.Warning("Fishing", $"No fish found after {MaxFishWaitAttempts} attempts, giving up on this cast.");
+            Logger.Warning("Fishing", $"No fish found after {waitSeconds}s, giving up on this cast.");
             UpdateOverlayAction("No fish found", "Skipping cast", "No fish");
             return false;
         }
@@ -619,7 +642,9 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             var windowRect = GetGameWindowRect();
             if (windowRect.IsEmpty)
             {
-                Logger.Warning("Fishing", "Window not found!");
+                Logger.Error("Fishing", "Stopping: game window not found.");
+                shouldStopFishing = true;
+                stopReasonMessage = "Game window not found";
                 return;
             }
 
@@ -957,71 +982,96 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
+        /// Finds the Exit button on a popup using template matching.
+        /// If no template exists, prompts the user to capture one.
+        /// </summary>
+        private async Task<Point?> FindPopupExitButton(CancellationToken cancellationToken)
+        {
+            const string elementName = "PopupExitButton";
+
+            Logger.Debug("Fishing", "Looking for popup Exit button via template matching...");
+
+            // GetElementLocationAsync will prompt user to capture template if none exists
+            var location = await UIElementManager.Instance.GetElementLocationAsync(
+                elementName, "Please click on the Exit button on the popup");
+
+            if (location.HasValue)
+            {
+                // Template includes the red X icon + "Exit" text label below it.
+                // The center lands on the text, so offset upward to hit the actual button.
+                var adjusted = new Point(location.Value.X, location.Value.Y - 15);
+                Logger.Info("Fishing", $"Found popup Exit button at ({adjusted.X}, {adjusted.Y})");
+                return adjusted;
+            }
+
+            Logger.Warning("Fishing", "Could not find popup Exit button via template matching.");
+            return null;
+        }
+
+        /// <summary>
         /// Handles the "no jellybeans" popup by clicking the Exit button.
         /// </summary>
         protected async Task HandleNoJellybeansPopup(CancellationToken cancellationToken)
         {
             Logger.Info("Fishing", "Handling 'no jellybeans' popup - clicking Exit...");
 
-            // Get the Exit button position
-            var exitPos = NoJellybeansDetector.GetExitButtonPosition();
-            if (exitPos.HasValue)
+            var exitPos = await FindPopupExitButton(cancellationToken);
+            if (!exitPos.HasValue)
             {
-                MoveCursor(exitPos.Value.X, exitPos.Value.Y);
-                await Task.Delay(100, cancellationToken);
-                DoMouseClick();
-                await Task.Delay(500, cancellationToken);
-                Logger.Info("Fishing", "Exit button clicked. Fishing stopped due to no jellybeans.");
+                Logger.Error("Fishing", "Stopping: could not find popup Exit button.");
+                shouldStopFishing = true;
+                stopReasonMessage = "Could not find popup Exit button";
+                return;
+            }
+
+            MoveCursor(exitPos.Value.X, exitPos.Value.Y);
+            await Task.Delay(100, cancellationToken);
+            DoMouseClick();
+            await Task.Delay(800, cancellationToken);
+
+            // Verify the popup was dismissed
+            if (NoJellybeansDetector.IsNoJellybeansPopupVisible())
+            {
+                Logger.Warning("Fishing", "No jellybeans popup still visible after clicking Exit — may not have been dismissed.");
             }
             else
             {
-                // Fallback: press ESC to close the popup
-                // Set flag to prevent global keyboard hook from treating this as a user-initiated cancel
-                Logger.Warning("Fishing", "Could not find Exit button, pressing ESC...");
-                IsSimulatedKeyPress = true;
-                try
-                {
-                    SendKeys.SendWait("{ESC}");
-                }
-                finally
-                {
-                    IsSimulatedKeyPress = false;
-                }
-                await Task.Delay(500, cancellationToken);
+                Logger.Info("Fishing", "No jellybeans popup dismissed successfully.");
             }
         }
 
         /// <summary>
         /// Handles the "fish bucket full" popup by clicking the Exit button.
-        /// Does NOT set shouldStopFishing so the outer sell loop continues naturally.
+        /// Sets shouldStopFishing if unable to dismiss the popup.
         /// </summary>
         protected async Task HandleBucketFullPopup(CancellationToken cancellationToken)
         {
             Logger.Info("Fishing", "Handling 'bucket full' popup - clicking Exit...");
 
-            var exitPos = FishBucketFullDetector.GetExitButtonPosition();
-            if (exitPos.HasValue)
+            var exitPos = await FindPopupExitButton(cancellationToken);
+            if (!exitPos.HasValue)
             {
-                MoveCursor(exitPos.Value.X, exitPos.Value.Y);
-                await Task.Delay(100, cancellationToken);
-                DoMouseClick();
-                await Task.Delay(500, cancellationToken);
-                Logger.Info("Fishing", "Exit button clicked. Proceeding to sell fish.");
+                Logger.Error("Fishing", "Stopping: could not find popup Exit button.");
+                shouldStopFishing = true;
+                stopReasonMessage = "Could not find popup Exit button";
+                return;
+            }
+
+            MoveCursor(exitPos.Value.X, exitPos.Value.Y);
+            await Task.Delay(100, cancellationToken);
+            DoMouseClick();
+            await Task.Delay(800, cancellationToken);
+
+            // Verify the popup was dismissed
+            if (await FishBucketFullDetector.CheckForBucketFullPopupAsync(cancellationToken))
+            {
+                Logger.Error("Fishing", "Stopping: bucket full popup still visible after clicking Exit — unable to dismiss it.");
+                shouldStopFishing = true;
+                stopReasonMessage = "Unable to dismiss bucket full popup";
             }
             else
             {
-                // Fallback: press ESC to close the popup
-                Logger.Warning("Fishing", "Could not find Exit button, pressing ESC...");
-                IsSimulatedKeyPress = true;
-                try
-                {
-                    SendKeys.SendWait("{ESC}");
-                }
-                finally
-                {
-                    IsSimulatedKeyPress = false;
-                }
-                await Task.Delay(500, cancellationToken);
+                Logger.Info("Fishing", "Bucket full popup dismissed. Proceeding to sell fish.");
             }
         }
 
