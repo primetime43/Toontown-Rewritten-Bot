@@ -3,8 +3,8 @@
 Table of Contents
 
 - [Toontown-Rewritten-Bot](#toontown-rewritten-bot)
-  - [What's New in v2.0.0](#whats-new-in-v200)
   - [Features](#features)
+  - [Images of 2.2.1](#images-of-221)
   - [Requirements](#requirements)
   - [Previous Releases](#previous-releases)
 
@@ -15,6 +15,23 @@ Table of Contents
 - **Doodle Training** - Automated trick training for your doodle.
 - **Keep Awake** - Prevents AFK timeout when you're away from your PC.
 - **Custom Action Management** - Create and manage custom actions for fishing and golfing directly within the application without modifying source code.
+
+## Images of 2.2.1:
+<details>
+  <summary>Click to view screenshots of version 2.2.1</summary>
+<img width="622" height="452" alt="image" src="https://github.com/user-attachments/assets/8cb1f633-c462-4922-8914-dcde421f7841" />
+<img width="622" height="452" alt="image" src="https://github.com/user-attachments/assets/1a109cb1-8acd-4dcc-a541-663eaae13237" />
+<br> Calibrate the color of the pond & fish shadows for the bot to find
+<img width="886" height="693" alt="Pond_Color_Calibration_v2 0 0" src="https://github.com/user-attachments/assets/e3e00a8a-5919-463e-b46f-20484ec0d6e3" />
+Adjust the bot's scan area for fish in the pond
+<img width="1920" height="1035" alt="Fishing_Scan_Area_v2 0 0" src="https://github.com/user-attachments/assets/f1f19675-0eee-4a07-bbca-b7e16962a956" />
+Bot's scan area for fish
+<img width="1920" height="1033" alt="Fishing_Example_v2 0 0" src="https://github.com/user-attachments/assets/54f076ea-9fb7-46a7-a4ff-4fbf85cbe22a" />
+</details>
+
+## Requirements
+- Windows 10/11 (64-bit)
+- No .NET installation required - the executable is self-contained
 
 ## Images of fishing in 2.0.0:
 <details>
@@ -27,10 +44,6 @@ Adjust the bot's scan area for fish in the pond
 Bot's scan area for fish
 <img width="1920" height="1033" alt="Fishing_Example_v2 0 0" src="https://github.com/user-attachments/assets/54f076ea-9fb7-46a7-a4ff-4fbf85cbe22a" />
 </details>
-
-## Requirements
-- Windows 10/11 (64-bit)
-- No .NET installation required - the executable is self-contained
  
 ## Images of v1.5.0:
 
