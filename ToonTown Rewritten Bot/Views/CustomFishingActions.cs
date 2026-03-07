@@ -726,16 +726,19 @@ namespace ToonTown_Rewritten_Bot.Views
 
             // Use "CUSTOM FISHING ACTION" as the location for custom fishing calibration
             var detector = new FishBubbleDetector("CUSTOM FISHING ACTION");
-            var defaultScanArea = detector.GetDefaultScanArea();
+            var windowRect = CoreFunctionality.GetGameWindowRect();
+            var customScanArea = windowRect.IsEmpty ? null
+                : CustomScanAreaManager.GetCustomScanArea("CUSTOM FISHING ACTION", windowRect.Width, windowRect.Height);
+            var scanArea = customScanArea ?? detector.GetDefaultScanArea();
 
-            if (defaultScanArea.IsEmpty)
+            if (scanArea.IsEmpty)
             {
                 MessageBox.Show("No scan area defined for custom fishing.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            using (var calibrationForm = new ScanAreaCalibrationForm("CUSTOM FISHING ACTION", defaultScanArea))
+            using (var calibrationForm = new ScanAreaCalibrationForm("CUSTOM FISHING ACTION", scanArea))
             {
                 calibrationForm.ShowDialog();
 

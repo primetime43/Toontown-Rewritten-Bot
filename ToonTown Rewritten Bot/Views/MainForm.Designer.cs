@@ -59,6 +59,7 @@
             autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
             waitForFishCheckBox = new System.Windows.Forms.CheckBox();
             labelWaitAttempts = new System.Windows.Forms.Label();
+            labelWaitSec = new System.Windows.Forms.Label();
             numericUpDownWaitAttempts = new System.Windows.Forms.NumericUpDown();
             showOverlayCheckBox = new System.Windows.Forms.CheckBox();
             quickCastingCheckBox = new System.Windows.Forms.CheckBox();
@@ -561,6 +562,7 @@
             fishingDetectionGroup.Controls.Add(waitForFishCheckBox);
             fishingDetectionGroup.Controls.Add(labelWaitAttempts);
             fishingDetectionGroup.Controls.Add(numericUpDownWaitAttempts);
+            fishingDetectionGroup.Controls.Add(labelWaitSec);
             fishingDetectionGroup.Controls.Add(showOverlayCheckBox);
             fishingDetectionGroup.Controls.Add(quickCastingCheckBox);
             fishingDetectionGroup.Controls.Add(fishingSeparator2);
@@ -599,7 +601,7 @@
             waitForFishCheckBox.Size = new System.Drawing.Size(94, 20);
             waitForFishCheckBox.TabIndex = 1;
             waitForFishCheckBox.Text = "Wait for fish";
-            toolTip1.SetToolTip(waitForFishCheckBox, "If enabled, waits for a fish shadow to appear before casting.\nWill scan up to X times before giving up on that cast.\nRequires Auto Detect to be enabled.");
+            toolTip1.SetToolTip(waitForFishCheckBox, "Waits up to the specified seconds for a fish to be caught before and between casts.\nWithout this, the bot casts immediately without waiting.\nRequires Auto Detect to be enabled.");
             waitForFishCheckBox.UseVisualStyleBackColor = true;
             // 
             // labelWaitAttempts
@@ -610,20 +612,30 @@
             labelWaitAttempts.Name = "labelWaitAttempts";
             labelWaitAttempts.Size = new System.Drawing.Size(35, 16);
             labelWaitAttempts.TabIndex = 2;
-            labelWaitAttempts.Text = "tries:";
+            labelWaitAttempts.Text = "wait:";
             // 
             // numericUpDownWaitAttempts
             // 
             numericUpDownWaitAttempts.Location = new System.Drawing.Point(66, 73);
             numericUpDownWaitAttempts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numericUpDownWaitAttempts.Maximum = new decimal(new int[] { 30, 0, 0, 0 });
-            numericUpDownWaitAttempts.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownWaitAttempts.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDownWaitAttempts.Name = "numericUpDownWaitAttempts";
             numericUpDownWaitAttempts.Size = new System.Drawing.Size(50, 22);
             numericUpDownWaitAttempts.TabIndex = 3;
-            toolTip1.SetToolTip(numericUpDownWaitAttempts, "Number of scan attempts before giving up when waiting for fish");
-            numericUpDownWaitAttempts.Value = new decimal(new int[] { 10, 0, 0, 0 });
-            // 
+            toolTip1.SetToolTip(numericUpDownWaitAttempts, "Seconds to wait for a fish shadow after a failed cast before casting again");
+            numericUpDownWaitAttempts.Value = new decimal(new int[] { 20, 0, 0, 0 });
+            //
+            // labelWaitSec
+            //
+            labelWaitSec.AutoSize = true;
+            labelWaitSec.Location = new System.Drawing.Point(118, 75);
+            labelWaitSec.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelWaitSec.Name = "labelWaitSec";
+            labelWaitSec.Size = new System.Drawing.Size(25, 16);
+            labelWaitSec.TabIndex = 30;
+            labelWaitSec.Text = "sec";
+            //
             // showOverlayCheckBox
             // 
             showOverlayCheckBox.AutoSize = true;
@@ -920,7 +932,7 @@
             customWaitForFishCheckBox.Size = new System.Drawing.Size(94, 20);
             customWaitForFishCheckBox.TabIndex = 13;
             customWaitForFishCheckBox.Text = "Wait for fish";
-            toolTip1.SetToolTip(customWaitForFishCheckBox, "If enabled, waits for a fish shadow to appear before casting.\nRequires Auto Detect to be enabled.");
+            toolTip1.SetToolTip(customWaitForFishCheckBox, "Waits up to the specified seconds for a fish to be caught before and between casts.\nWithout this, the bot casts immediately without waiting.\nRequires Auto Detect to be enabled.");
             customWaitForFishCheckBox.UseVisualStyleBackColor = true;
             // 
             // customShowOverlayCheckBox
@@ -2572,6 +2584,7 @@
         private System.Windows.Forms.Label labelSettingsInfo;
         private System.Windows.Forms.CheckBox waitForFishCheckBox;
         private System.Windows.Forms.Label labelWaitAttempts;
+        private System.Windows.Forms.Label labelWaitSec;
         private System.Windows.Forms.NumericUpDown numericUpDownWaitAttempts;
         private System.Windows.Forms.TabPage CustomFishing;
         private System.Windows.Forms.GroupBox groupBoxCustomFishing;

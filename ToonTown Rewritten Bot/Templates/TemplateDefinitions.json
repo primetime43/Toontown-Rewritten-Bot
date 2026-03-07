@@ -168,5 +168,10 @@
     "Key": 35,
     "Name": "Remove Plant Button",
     "Category": "Gardening"
+  },
+  {
+    "Key": 31,
+    "Name": "PopupExitButton",
+    "Category": "Fishing"
   }
 ]

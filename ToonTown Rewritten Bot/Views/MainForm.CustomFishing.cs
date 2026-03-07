@@ -61,7 +61,7 @@ namespace ToonTown_Rewritten_Bot
             // Set the fishing settings from Custom Fishing tab UI controls
             FishingStrategyBase.BiteTimeoutSeconds = Convert.ToInt32(customNumericUpDownBiteTimeout.Value);
             FishingStrategyBase.WaitForFishBeforeCasting = customWaitForFishCheckBox.Checked && customAutoDetectFishCheckBox.Checked;
-            FishingStrategyBase.MaxFishWaitAttempts = 10; // Default value for custom fishing
+            FishingStrategyBase.MaxFishWaitSeconds = 20; // Default value for custom fishing
             FishingStrategyBase.QuickCasting = quickCastingCheckBox.Checked;
 
             try
@@ -102,11 +102,13 @@ namespace ToonTown_Rewritten_Bot
             }
             catch (TaskCanceledException)
             {
+                Logger.Info("Fishing", "Session end: reason=\"User cancelled\", casts completed=" + _fishingService.SessionCastCount);
                 SetFishingOverlay(false, null, null);
                 MessageBox.Show("Custom fishing was cancelled.");
             }
             catch (Exception ex)
             {
+                Logger.Error("Fishing", $"Session end: reason=\"Error: {ex.Message}\"");
                 SetFishingOverlay(false, null, null);
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
@@ -124,6 +126,7 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
+            Logger.Info("Fishing", "User pressed Stop button (custom fishing)");
             _cancellationTokenSource.Cancel();
             MessageBox.Show("Custom fishing stopped!", "Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
