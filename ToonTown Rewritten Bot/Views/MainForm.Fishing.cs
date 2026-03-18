@@ -136,6 +136,11 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
+        private void BackgroundModeCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CoreFunctionality.UseBackgroundInput = backgroundModeCheckBox.Checked;
+        }
+
         private void customShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             // Checkbox is a passive setting — overlay is shown/hidden when custom fishing starts/stops

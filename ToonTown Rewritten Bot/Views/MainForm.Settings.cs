@@ -95,6 +95,7 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Add($"  Auto Detect Fish: {(prefs.AutoDetectFish ? "Yes" : "No")}");
             preferencesListBox.Items.Add($"  Wait For Fish: {(prefs.WaitForFishBeforeCasting ? $"Yes ({prefs.MaxFishWaitSeconds}s)" : "No")}");
             preferencesListBox.Items.Add($"  Quick Casting: {(prefs.QuickCasting ? "Yes" : "No")}");
+            preferencesListBox.Items.Add($"  Background Mode: {(prefs.BackgroundMode ? "Yes" : "No")}");
 
             preferencesListBox.Items.Add("");
             preferencesListBox.Items.Add("═══════ CUSTOM FISHING ═══════");

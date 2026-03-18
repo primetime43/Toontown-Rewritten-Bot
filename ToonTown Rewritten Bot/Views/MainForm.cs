@@ -100,6 +100,8 @@ namespace ToonTown_Rewritten_Bot
             numericUpDownWaitAttempts.Value = Math.Max(numericUpDownWaitAttempts.Minimum, Math.Min(numericUpDownWaitAttempts.Maximum, prefs.MaxFishWaitSeconds));
             showOverlayCheckBox.Checked = prefs.ShowFishingOverlay;
             quickCastingCheckBox.Checked = prefs.QuickCasting;
+            backgroundModeCheckBox.Checked = prefs.BackgroundMode;
+            CoreFunctionality.UseBackgroundInput = prefs.BackgroundMode;
 
             // Custom Fishing preferences
             if (!string.IsNullOrEmpty(prefs.CustomFishingFile))
@@ -186,6 +188,7 @@ namespace ToonTown_Rewritten_Bot
             prefs.MaxFishWaitSeconds = (int)numericUpDownWaitAttempts.Value;
             prefs.ShowFishingOverlay = showOverlayCheckBox.Checked;
             prefs.QuickCasting = quickCastingCheckBox.Checked;
+            prefs.BackgroundMode = backgroundModeCheckBox.Checked;
 
             // Custom Fishing preferences
             prefs.CustomFishingFile = customFishingFilesComboBox.SelectedItem?.ToString() ?? "";

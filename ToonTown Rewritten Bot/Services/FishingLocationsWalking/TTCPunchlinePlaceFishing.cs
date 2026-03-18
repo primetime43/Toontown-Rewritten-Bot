@@ -14,28 +14,28 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public override async Task LeaveDockAndSellAsync(CancellationToken cancellationToken)
         {
             // Simulation of leaving the fishing dock & walking over to the fisherman to sell
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
+            SendKeyDown(VirtualKeyCode.DOWN);
             await Task.Delay(2000, cancellationToken);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.RIGHT);
+            SendKeyUp(VirtualKeyCode.DOWN);
+            SendKeyDown(VirtualKeyCode.RIGHT);
             await Task.Delay(800, cancellationToken);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.RIGHT);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            SendKeyUp(VirtualKeyCode.RIGHT);
+            SendKeyDown(VirtualKeyCode.UP);
             await Task.Delay(700, cancellationToken);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            SendKeyUp(VirtualKeyCode.UP);
 
             await SellFishAsync(cancellationToken); // Call to sell fish asynchronously
 
             // Simulation of going back to the dock
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
+            SendKeyDown(VirtualKeyCode.DOWN);
             await Task.Delay(600, cancellationToken);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.LEFT);
+            SendKeyUp(VirtualKeyCode.DOWN);
+            SendKeyDown(VirtualKeyCode.LEFT);
             await Task.Delay(750, cancellationToken);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.LEFT);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            SendKeyUp(VirtualKeyCode.LEFT);
+            SendKeyDown(VirtualKeyCode.UP);
             await Task.Delay(2000, cancellationToken);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            SendKeyUp(VirtualKeyCode.UP);
         }
     }
 }
