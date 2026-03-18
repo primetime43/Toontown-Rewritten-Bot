@@ -667,7 +667,7 @@
             // backgroundModeCheckBox
             //
             backgroundModeCheckBox.AutoSize = true;
-            backgroundModeCheckBox.Checked = true;
+            backgroundModeCheckBox.Checked = false;
             backgroundModeCheckBox.Location = new System.Drawing.Point(10, 155);
             backgroundModeCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             backgroundModeCheckBox.Name = "backgroundModeCheckBox";

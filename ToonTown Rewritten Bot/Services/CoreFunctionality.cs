@@ -22,7 +22,7 @@ namespace ToonTown_Rewritten_Bot.Services
         // Mouse/keyboard events are sent via PostMessage directly to the game
         // window instead of using SendInput. This avoids moving the real cursor,
         // letting the user browse while the bot runs.
-        public static volatile bool UseBackgroundInput = true;
+        public static volatile bool UseBackgroundInput = false;
 
         // Tracks the intended cursor position in background mode (screen coords).
         private static Point _backgroundTargetPos;
