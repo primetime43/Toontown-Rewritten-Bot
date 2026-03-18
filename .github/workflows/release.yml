@@ -131,7 +131,6 @@ jobs:
           ${{ steps.create_zip.outputs.ZIP_NAME }}
         draft: false
         prerelease: false
-        generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
