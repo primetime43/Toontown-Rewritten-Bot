@@ -51,6 +51,14 @@ namespace ToonTown_Rewritten_Bot
                 int numberOfSells = Convert.ToInt32(numericUpDownSells.Value); // Number of times to sell the caught fish
 
                 FishingLocationMessages.TellFishingLocation(selectedLocation); // Provide location-specific messages
+
+                // Prompt user to calibrate scan area and pond colors if not set
+                if (autoDetectFishCheckBox.Checked)
+                {
+                    if (!PromptCalibrationIfNeeded(selectedLocation))
+                        return;
+                }
+
                 var result = MessageBox.Show("Make sure you're in the fishing dock before pressing OK!",
                     "Ready to Fish?", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 if (result != DialogResult.OK)
@@ -184,6 +192,74 @@ namespace ToonTown_Rewritten_Bot
             }
 
             SetFishingOverlay(false, null, null);
+        }
+
+        /// <summary>
+        /// Checks if scan area and pond colors are calibrated for the selected location.
+        /// If not, prompts the user to calibrate each one before fishing starts.
+        /// </summary>
+        /// <returns>True if calibration is complete (or skipped), false if user cancelled.</returns>
+        private bool PromptCalibrationIfNeeded(string locationName)
+        {
+            bool needsScanArea = !CustomScanAreaManager.HasCustomScanArea(locationName);
+            bool needsPondColors = !PondColorManager.HasCustomColors(locationName);
+
+            if (!needsScanArea && !needsPondColors)
+                return true;
+
+            // Build a message listing what needs calibration
+            string missing = "";
+            if (needsScanArea)
+                missing += "• Scan Area\n";
+            if (needsPondColors)
+                missing += "• Pond Colors\n";
+
+            var result = MessageBox.Show(
+                $"The following haven't been calibrated for '{locationName}':\n\n{missing}\n" +
+                "Auto-detect fishing works best with calibrated settings.\n" +
+                "Would you like to calibrate now?",
+                "Calibration Needed",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Cancel)
+                return false;
+
+            if (result == DialogResult.No)
+                return true; // Skip calibration, use defaults
+
+            // Open scan area calibration if needed
+            if (needsScanArea)
+            {
+                if (!CoreFunctionality.EnsureGameWindowReadyWithMessage())
+                    return false;
+
+                var detector = new FishBubbleDetector(locationName);
+                var windowRect = CoreFunctionality.GetGameWindowRect();
+                var scanArea = detector.GetDefaultScanArea();
+
+                if (!scanArea.IsEmpty)
+                {
+                    using (var calibrationForm = new ScanAreaCalibrationForm(locationName, scanArea))
+                    {
+                        calibrationForm.ShowDialog();
+                    }
+                }
+            }
+
+            // Open pond color calibration if needed
+            if (needsPondColors)
+            {
+                if (!CoreFunctionality.EnsureGameWindowReadyWithMessage())
+                    return false;
+
+                using (var colorForm = new PondColorCalibrationForm(locationName))
+                {
+                    colorForm.ShowDialog();
+                }
+            }
+
+            return true;
         }
 
         private void EditScanAreaBtn_Click(object sender, EventArgs e)
