@@ -26,6 +26,13 @@ namespace ToonTown_Rewritten_Bot.Views
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
 
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        private const uint SWP_NOMOVE = 0x0002;
+        private const uint SWP_NOSIZE = 0x0004;
+        private const uint SWP_NOACTIVATE = 0x0010;
+
         // Detection data to display
         private Rectangle _scanArea;
         private List<FishCandidate> _candidates = new List<FishCandidate>();
@@ -64,7 +71,7 @@ namespace ToonTown_Rewritten_Bot.Views
             // Form settings for transparency
             this.FormBorderStyle = FormBorderStyle.None;
             this.ShowInTaskbar = false;
-            this.TopMost = true;
+            this.TopMost = !CoreFunctionality.UseBackgroundInput;
             this.BackColor = Color.Magenta;
             this.TransparencyKey = Color.Magenta;
             this.StartPosition = FormStartPosition.Manual;
@@ -109,6 +116,18 @@ namespace ToonTown_Rewritten_Bot.Views
                 {
                     this.Location = new Point(gameRect.X, gameRect.Y);
                     this.Size = new Size(gameRect.Width, gameRect.Height);
+                }
+
+                // In background mode, place overlay just above the game window in Z-order
+                // so it doesn't cover other apps. In foreground mode, TopMost handles it.
+                if (CoreFunctionality.UseBackgroundInput)
+                {
+                    IntPtr gameHwnd = CoreFunctionality.FindToontownWindow();
+                    if (gameHwnd != IntPtr.Zero)
+                    {
+                        SetWindowPos(this.Handle, gameHwnd, 0, 0, 0, 0,
+                            SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+                    }
                 }
             }
         }

@@ -18,75 +18,109 @@ namespace ToonTown_Rewritten_Bot.Services
 {
     public class CoreFunctionality
     {
+        // ── Background input mode ──────────────────────────────────────
+        // Mouse/keyboard events are sent via PostMessage directly to the game
+        // window instead of using SendInput. This avoids moving the real cursor,
+        // letting the user browse while the bot runs.
+        public static volatile bool UseBackgroundInput = true;
+
+        // Tracks the intended cursor position in background mode (screen coords).
+        private static Point _backgroundTargetPos;
+
         /// <summary>
         /// Performs a mouse click at the current cursor position using SendInput (modern API).
         /// </summary>
         public static void DoMouseClick()
         {
+            if (UseBackgroundInput)
+            {
+                Logger.Debug("Input", $"DoMouseClick at ({_backgroundTargetPos.X}, {_backgroundTargetPos.Y})");
+                PostBackgroundMouseMessage(WM_LBUTTONDOWN, _backgroundTargetPos.X, _backgroundTargetPos.Y);
+                PostBackgroundMouseMessage(WM_LBUTTONUP, _backgroundTargetPos.X, _backgroundTargetPos.Y);
+                return;
+            }
             Logger.Debug("Input", $"DoMouseClick at {getCursorLocation()}");
             SendInputMouseClick();
         }
 
-        /// <summary>
-        /// Performs a fishing click - drag down from current position.
-        /// Uses SendInput for reliable mouse simulation.
-        /// </summary>
         public static void DoFishingClick()
         {
-            Point startPos = getCursorLocation();
-            Logger.Debug("Input", $"DoFishingClick from ({startPos.X}, {startPos.Y}) drag to ({startPos.X}, {startPos.Y + 150})");
-
+            if (UseBackgroundInput)
+            {
+                var startPos = _backgroundTargetPos;
+                Logger.Debug("Input", $"DoFishingClick from ({startPos.X}, {startPos.Y}) drag to ({startPos.X}, {startPos.Y + 150})");
+                PostBackgroundMouseMessage(WM_LBUTTONDOWN, startPos.X, startPos.Y);
+                Thread.Sleep(500);
+                PostBackgroundMouseMessage(WM_LBUTTONDOWN, startPos.X, startPos.Y + 150);
+                Thread.Sleep(500);
+                PostBackgroundMouseMessage(WM_LBUTTONUP, startPos.X, startPos.Y + 150);
+                _backgroundTargetPos = new Point(startPos.X, startPos.Y + 150);
+                return;
+            }
+            Point pos = getCursorLocation();
+            Logger.Debug("Input", $"DoFishingClick from ({pos.X}, {pos.Y}) drag to ({pos.X}, {pos.Y + 150})");
             SendInputMouseDown();
             Thread.Sleep(500);
-
-            SimulateDragMove(startPos.X, startPos.Y + 150);
+            SimulateDragMove(pos.X, pos.Y + 150);
             Thread.Sleep(500);
-
             SendInputMouseUp();
         }
 
-        /// <summary>
-        /// Performs a fishing click with a custom drag destination for auto-detect fishing.
-        /// Uses SendInput for reliable mouse simulation.
-        /// </summary>
         public static void DoFishingClickWithDestination(int destinationX, int destinationY)
         {
+            if (UseBackgroundInput)
+            {
+                Logger.Debug("Input", $"DoFishingClickWithDestination: ({_backgroundTargetPos.X}, {_backgroundTargetPos.Y}) -> ({destinationX}, {destinationY})");
+                PostBackgroundMouseMessage(WM_LBUTTONDOWN, _backgroundTargetPos.X, _backgroundTargetPos.Y);
+                Thread.Sleep(500);
+                PostBackgroundMouseMessage(WM_LBUTTONDOWN, destinationX, destinationY);
+                Thread.Sleep(500);
+                PostBackgroundMouseMessage(WM_LBUTTONUP, destinationX, destinationY);
+                _backgroundTargetPos = new Point(destinationX, destinationY);
+                return;
+            }
             Point startPos = getCursorLocation();
-
             Logger.Debug("Input", $"DoFishingClickWithDestination: ({startPos.X}, {startPos.Y}) -> ({destinationX}, {destinationY})");
-
             SendInputMouseDown();
             Thread.Sleep(500);
-
             SimulateDragMove(destinationX, destinationY);
             Thread.Sleep(500);
-
             SendInputMouseUp();
         }
 
-        /// <summary>
-        /// Performs a mouse click at the specified location using SendInput (modern API).
-        /// </summary>
         private static void DoMouseClick(Point location)
         {
+            if (UseBackgroundInput)
+            {
+                _backgroundTargetPos = location;
+                PostBackgroundMouseMessage(WM_LBUTTONDOWN, location.X, location.Y);
+                PostBackgroundMouseMessage(WM_LBUTTONUP, location.X, location.Y);
+                return;
+            }
             SimulateDragMove(location.X, location.Y);
             SendInputMouseClick();
         }
 
-        /// <summary>
-        /// Presses the left mouse button down using SendInput (modern API).
-        /// </summary>
         public static void DoMouseClickDown(Point location)
         {
+            if (UseBackgroundInput)
+            {
+                _backgroundTargetPos = location;
+                PostBackgroundMouseMessage(WM_LBUTTONDOWN, location.X, location.Y);
+                return;
+            }
             SimulateDragMove(location.X, location.Y);
             SendInputMouseDown();
         }
 
-        /// <summary>
-        /// Releases the left mouse button using SendInput (modern API).
-        /// </summary>
         public static void DoMouseClickUp(Point location)
         {
+            if (UseBackgroundInput)
+            {
+                _backgroundTargetPos = location;
+                PostBackgroundMouseMessage(WM_LBUTTONUP, location.X, location.Y);
+                return;
+            }
             SimulateDragMove(location.X, location.Y);
             SendInputMouseUp();
         }
@@ -98,6 +132,26 @@ namespace ToonTown_Rewritten_Bot.Services
             int a = (int)GetPixel(dc, x, y);
             ReleaseDC(desk, dc);
             return Color.FromArgb(255, a >> 0 & 0xff, a >> 8 & 0xff, a >> 16 & 0xff);
+        }
+
+        /// <summary>
+        /// Gets pixel color from a pre-captured game window screenshot.
+        /// Converts screen coordinates to window-relative coordinates automatically.
+        /// </summary>
+        /// <param name="screenshot">A bitmap captured via ImageRecognition.GetWindowScreenshot()</param>
+        /// <param name="screenX">Screen X coordinate</param>
+        /// <param name="screenY">Screen Y coordinate</param>
+        /// <param name="windowOffset">The game window's top-left corner in screen coords</param>
+        /// <returns>The color at the specified position, or Color.Empty if out of bounds</returns>
+        public static Color GetColorFromScreenshot(Bitmap screenshot, int screenX, int screenY, Point windowOffset)
+        {
+            int clientX = screenX - windowOffset.X;
+            int clientY = screenY - windowOffset.Y;
+
+            if (clientX < 0 || clientY < 0 || clientX >= screenshot.Width || clientY >= screenshot.Height)
+                return Color.Empty;
+
+            return screenshot.GetPixel(clientX, clientY);
         }
 
         public static Point getCursorLocation()
@@ -115,17 +169,19 @@ namespace ToonTown_Rewritten_Bot.Services
         public static void MoveCursor(int x, int y)
         {
             Logger.Debug("Input", $"MoveCursor to ({x}, {y})");
+            if (UseBackgroundInput)
+            {
+                _backgroundTargetPos = new Point(x, y);
+                return;
+            }
             Cursor.Position = new Point(x, y);
         }
 
-        // Maximizes and Focuses TTR
         public static void MaximizeAndFocusTTRWindow()
         {
+            if (UseBackgroundInput) return;
             nint hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero)
-                return;
-
-            // Restore first if minimized, then maximize - DON'T minimize first as that causes screen shake
+            if (hwnd == IntPtr.Zero) return;
             ShowWindow(hwnd, SW_RESTORE);
             Thread.Sleep(50);
             ShowWindow(hwnd, SW_MAXIMIZE);
@@ -133,17 +189,11 @@ namespace ToonTown_Rewritten_Bot.Services
             SetForegroundWindow(hwnd);
         }
 
-        /// <summary>
-        /// Focuses and maximizes the TTR window without the screen shake.
-        /// Uses restore→maximize (no minimize step which causes shake).
-        /// </summary>
         public static void FocusTTRWindow()
         {
+            if (UseBackgroundInput) return;
             nint hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero)
-                return;
-
-            // Restore first if minimized, then maximize - no minimize step to avoid shake
+            if (hwnd == IntPtr.Zero) return;
             ShowWindow(hwnd, SW_RESTORE);
             Thread.Sleep(50);
             ShowWindow(hwnd, SW_MAXIMIZE);
@@ -158,34 +208,19 @@ namespace ToonTown_Rewritten_Bot.Services
         /// <returns>True if window was found and positioned, false otherwise</returns>
         public static bool ForceGameWindowFullscreen()
         {
+            if (UseBackgroundInput) return IsGameWindowReady();
             nint hwnd = FindToontownWindow();
             if (hwnd == IntPtr.Zero)
             {
                 Logger.Warning("Input", "Toontown window not found");
                 return false;
             }
-
-            // Restore window first if minimized
             ShowWindow(hwnd, SW_RESTORE);
-            System.Threading.Thread.Sleep(100);
-
-            // Maximize the window (same as clicking the maximize button)
+            Thread.Sleep(100);
             ShowWindow(hwnd, SW_MAXIMIZE);
-            System.Threading.Thread.Sleep(100);
-
-            // Bring to foreground
+            Thread.Sleep(100);
             SetForegroundWindow(hwnd);
-
-            // Small delay to let window finish resizing
-            System.Threading.Thread.Sleep(300);
-
-            // Verify the window position
-            RECT rect;
-            if (GetWindowRect(hwnd, out rect))
-            {
-                Logger.Debug("Input", $"Game window maximized at ({rect.Left}, {rect.Top}) size {rect.Right - rect.Left}x{rect.Bottom - rect.Top}");
-            }
-
+            Thread.Sleep(300);
             return true;
         }
 
@@ -433,6 +468,97 @@ namespace ToonTown_Rewritten_Bot.Services
         public static Dictionary<string, string> GetGolfResourceDictionary()
             => GetResourceDictionary("ToonTown_Rewritten_Bot.Services.CustomGolfActions");
 
+        // ── Background input: PostMessage-based mouse/keyboard ─────────
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool PostMessageW(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern bool ScreenToClient(IntPtr hWnd, ref Point lpPoint);
+
+        // Window message constants
+        private const uint WM_LBUTTONDOWN = 0x0201;
+        private const uint WM_LBUTTONUP = 0x0202;
+        private const uint WM_KEYDOWN = 0x0100;
+        private const uint WM_KEYUP = 0x0101;
+        private const int MK_LBUTTON = 0x0001;
+
+        /// <summary>
+        /// Posts a mouse message (WM_LBUTTONDOWN/UP) to the game window using client-relative coordinates.
+        /// Screen coordinates are converted to client coordinates automatically.
+        /// </summary>
+        private static void PostBackgroundMouseMessage(uint msg, int screenX, int screenY)
+        {
+            IntPtr hwnd = FindToontownWindow();
+            if (hwnd == IntPtr.Zero) return;
+
+            Point client = new Point(screenX, screenY);
+            ScreenToClient(hwnd, ref client);
+
+            IntPtr wParam = msg == WM_LBUTTONDOWN ? (IntPtr)MK_LBUTTON : IntPtr.Zero;
+            IntPtr lParam = (IntPtr)((client.Y << 16) | (client.X & 0xFFFF));
+
+            PostMessageW(hwnd, msg, wParam, lParam);
+        }
+
+        /// <summary>
+        /// Sends a key down event to the game window via PostMessage (background mode).
+        /// Handles extended key flag for arrow keys and navigation keys.
+        /// </summary>
+        public static void PostBackgroundKeyDown(int virtualKeyCode)
+        {
+            IntPtr hwnd = FindToontownWindow();
+            if (hwnd == IntPtr.Zero) return;
+
+            int lParam = 1; // repeat count = 1
+            // Extended key flag (bit 24) for arrow keys, Home, End
+            if (virtualKeyCode is 0x25 or 0x26 or 0x27 or 0x28 or 0x23 or 0x24)
+                lParam |= 1 << 24;
+
+            PostMessageW(hwnd, WM_KEYDOWN, (IntPtr)virtualKeyCode, (IntPtr)lParam);
+        }
+
+        /// <summary>
+        /// Sends a key up event to the game window via PostMessage (background mode).
+        /// Sets previous-key-state and transition-state bits as Windows expects.
+        /// </summary>
+        public static void PostBackgroundKeyUp(int virtualKeyCode)
+        {
+            IntPtr hwnd = FindToontownWindow();
+            if (hwnd == IntPtr.Zero) return;
+
+            int lParam = 1; // repeat count = 1
+            lParam |= 3 << 30; // previous key state (bit 30) + transition state (bit 31)
+            // Extended key flag (bit 24) for arrow keys, Home, End
+            if (virtualKeyCode is 0x25 or 0x26 or 0x27 or 0x28 or 0x23 or 0x24)
+                lParam |= 1 << 24;
+
+            PostMessageW(hwnd, WM_KEYUP, (IntPtr)virtualKeyCode, (IntPtr)lParam);
+        }
+
+        /// <summary>
+        /// Sends a key press to the game window. Uses PostMessage in background mode,
+        /// InputSimulator in foreground mode.
+        /// </summary>
+        public static void SendKeyDown(WindowsInput.VirtualKeyCode keyCode)
+        {
+            if (UseBackgroundInput)
+            {
+                PostBackgroundKeyDown((int)keyCode);
+                return;
+            }
+            WindowsInput.InputSimulator.SimulateKeyDown(keyCode);
+        }
+
+        public static void SendKeyUp(WindowsInput.VirtualKeyCode keyCode)
+        {
+            if (UseBackgroundInput)
+            {
+                PostBackgroundKeyUp((int)keyCode);
+                return;
+            }
+            WindowsInput.InputSimulator.SimulateKeyUp(keyCode);
+        }
+
         //ignore .dll imports below
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(ref Point lpPoint);
@@ -518,22 +644,23 @@ namespace ToonTown_Rewritten_Bot.Services
         public static void SimulateDragMove(int x, int y)
         {
             Logger.Debug("Input", $"SimulateDragMove to ({x}, {y})");
+            if (UseBackgroundInput)
+            {
+                _backgroundTargetPos = new Point(x, y);
+                PostBackgroundMouseMessage(WM_LBUTTONDOWN, x, y);
+                return;
+            }
             var (mouseX, mouseY) = GetNormalizedMouseCoordinates(x, y);
-
             var input = new INPUT
             {
                 type = INPUT_MOUSE,
                 mi = new MOUSEINPUT
                 {
-                    dx = mouseX,
-                    dy = mouseY,
-                    mouseData = 0,
+                    dx = mouseX, dy = mouseY, mouseData = 0,
                     dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
-                    time = 0,
-                    dwExtraInfo = IntPtr.Zero
+                    time = 0, dwExtraInfo = IntPtr.Zero
                 }
             };
-
             SendInput(1, new INPUT[] { input }, Marshal.SizeOf(typeof(INPUT)));
         }
 
@@ -542,92 +669,69 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static void SendInputMouseDown()
         {
+            if (UseBackgroundInput)
+            {
+                Logger.Debug("Input", $"SendInputMouseDown at ({_backgroundTargetPos.X}, {_backgroundTargetPos.Y})");
+                PostBackgroundMouseMessage(WM_LBUTTONDOWN, _backgroundTargetPos.X, _backgroundTargetPos.Y);
+                return;
+            }
             var currentPos = getCursorLocation();
             Logger.Debug("Input", $"SendInputMouseDown at ({currentPos.X}, {currentPos.Y})");
             var (mouseX, mouseY) = GetNormalizedMouseCoordinates(currentPos.X, currentPos.Y);
-
             var input = new INPUT
             {
                 type = INPUT_MOUSE,
                 mi = new MOUSEINPUT
                 {
-                    dx = mouseX,
-                    dy = mouseY,
-                    mouseData = 0,
+                    dx = mouseX, dy = mouseY, mouseData = 0,
                     dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
-                    time = 0,
-                    dwExtraInfo = IntPtr.Zero
+                    time = 0, dwExtraInfo = IntPtr.Zero
                 }
             };
-
             SendInput(1, new INPUT[] { input }, Marshal.SizeOf(typeof(INPUT)));
         }
 
-        /// <summary>
-        /// Releases the left mouse button using SendInput.
-        /// </summary>
         public static void SendInputMouseUp()
         {
+            if (UseBackgroundInput)
+            {
+                Logger.Debug("Input", $"SendInputMouseUp at ({_backgroundTargetPos.X}, {_backgroundTargetPos.Y})");
+                PostBackgroundMouseMessage(WM_LBUTTONUP, _backgroundTargetPos.X, _backgroundTargetPos.Y);
+                return;
+            }
             var currentPos = getCursorLocation();
             Logger.Debug("Input", $"SendInputMouseUp at ({currentPos.X}, {currentPos.Y})");
             var (mouseX, mouseY) = GetNormalizedMouseCoordinates(currentPos.X, currentPos.Y);
-
             var input = new INPUT
             {
                 type = INPUT_MOUSE,
                 mi = new MOUSEINPUT
                 {
-                    dx = mouseX,
-                    dy = mouseY,
-                    mouseData = 0,
+                    dx = mouseX, dy = mouseY, mouseData = 0,
                     dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
-                    time = 0,
-                    dwExtraInfo = IntPtr.Zero
+                    time = 0, dwExtraInfo = IntPtr.Zero
                 }
             };
-
             SendInput(1, new INPUT[] { input }, Marshal.SizeOf(typeof(INPUT)));
         }
 
-        /// <summary>
-        /// Performs a complete mouse click (down + up) at the current cursor position using SendInput.
-        /// </summary>
         public static void SendInputMouseClick()
         {
+            if (UseBackgroundInput)
+            {
+                PostBackgroundMouseMessage(WM_LBUTTONDOWN, _backgroundTargetPos.X, _backgroundTargetPos.Y);
+                PostBackgroundMouseMessage(WM_LBUTTONUP, _backgroundTargetPos.X, _backgroundTargetPos.Y);
+                return;
+            }
             var currentPos = getCursorLocation();
             var (mouseX, mouseY) = GetNormalizedMouseCoordinates(currentPos.X, currentPos.Y);
-
-            // Send both down and up events
             var inputs = new INPUT[]
             {
-                new INPUT
-                {
-                    type = INPUT_MOUSE,
-                    mi = new MOUSEINPUT
-                    {
-                        dx = mouseX,
-                        dy = mouseY,
-                        mouseData = 0,
-                        dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
-                        time = 0,
-                        dwExtraInfo = IntPtr.Zero
-                    }
-                },
-                new INPUT
-                {
-                    type = INPUT_MOUSE,
-                    mi = new MOUSEINPUT
-                    {
-                        dx = mouseX,
-                        dy = mouseY,
-                        mouseData = 0,
-                        dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
-                        time = 0,
-                        dwExtraInfo = IntPtr.Zero
-                    }
-                }
+                new INPUT { type = INPUT_MOUSE, mi = new MOUSEINPUT { dx = mouseX, dy = mouseY, mouseData = 0,
+                    dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK, time = 0, dwExtraInfo = IntPtr.Zero } },
+                new INPUT { type = INPUT_MOUSE, mi = new MOUSEINPUT { dx = mouseX, dy = mouseY, mouseData = 0,
+                    dwFlags = MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK, time = 0, dwExtraInfo = IntPtr.Zero } }
             };
-
             SendInput(2, inputs, Marshal.SizeOf(typeof(INPUT)));
         }
     }
