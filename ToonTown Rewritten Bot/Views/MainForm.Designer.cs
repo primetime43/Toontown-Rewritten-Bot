@@ -151,6 +151,7 @@
             doodleSeparator2 = new System.Windows.Forms.Panel();
             startDoodleTrainingBtn = new System.Windows.Forms.Button();
             stopDoodleTrainingBtn = new System.Windows.Forms.Button();
+            showDoodleOverlayCheckBox = new System.Windows.Forms.CheckBox();
             doodleStatusLabel = new System.Windows.Forms.Label();
             doodleInfoGroup = new System.Windows.Forms.GroupBox();
             doodlePictureBox = new System.Windows.Forms.PictureBox();
@@ -1484,6 +1485,7 @@
             doodleTrainingGroup.Controls.Add(unlimitedTrainingCheckBox);
             doodleTrainingGroup.Controls.Add(justFeedDoodleCheckBox);
             doodleTrainingGroup.Controls.Add(justScratchDoodleCheckBox);
+            doodleTrainingGroup.Controls.Add(showDoodleOverlayCheckBox);
             doodleTrainingGroup.Controls.Add(doodleSeparator2);
             doodleTrainingGroup.Controls.Add(startDoodleTrainingBtn);
             doodleTrainingGroup.Controls.Add(stopDoodleTrainingBtn);
@@ -1628,11 +1630,23 @@
             toolTip1.SetToolTip(justScratchDoodleCheckBox, "Select this if you only want to train using scratching");
             justScratchDoodleCheckBox.UseVisualStyleBackColor = true;
             justScratchDoodleCheckBox.CheckedChanged += justScratchDoodleCheckBox_CheckedChanged;
-            // 
+            //
+            // showDoodleOverlayCheckBox
+            //
+            showDoodleOverlayCheckBox.AutoSize = true;
+            showDoodleOverlayCheckBox.Location = new System.Drawing.Point(10, 228);
+            showDoodleOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            showDoodleOverlayCheckBox.Name = "showDoodleOverlayCheckBox";
+            showDoodleOverlayCheckBox.Size = new System.Drawing.Size(109, 20);
+            showDoodleOverlayCheckBox.TabIndex = 16;
+            showDoodleOverlayCheckBox.Text = "Show Overlay";
+            toolTip1.SetToolTip(showDoodleOverlayCheckBox, "Shows a status overlay on the game window during doodle training.");
+            showDoodleOverlayCheckBox.UseVisualStyleBackColor = true;
+            //
             // doodleSeparator2
-            // 
+            //
             doodleSeparator2.BackColor = System.Drawing.Color.LightGray;
-            doodleSeparator2.Location = new System.Drawing.Point(10, 232);
+            doodleSeparator2.Location = new System.Drawing.Point(10, 258);
             doodleSeparator2.Name = "doodleSeparator2";
             doodleSeparator2.Size = new System.Drawing.Size(180, 1);
             doodleSeparator2.TabIndex = 12;
@@ -1640,7 +1654,7 @@
             // startDoodleTrainingBtn
             // 
             startDoodleTrainingBtn.BackColor = System.Drawing.Color.LightGreen;
-            startDoodleTrainingBtn.Location = new System.Drawing.Point(10, 245);
+            startDoodleTrainingBtn.Location = new System.Drawing.Point(10, 271);
             startDoodleTrainingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             startDoodleTrainingBtn.Name = "startDoodleTrainingBtn";
             startDoodleTrainingBtn.Size = new System.Drawing.Size(85, 32);
@@ -1652,7 +1666,7 @@
             // stopDoodleTrainingBtn
             // 
             stopDoodleTrainingBtn.BackColor = System.Drawing.Color.MistyRose;
-            stopDoodleTrainingBtn.Location = new System.Drawing.Point(105, 245);
+            stopDoodleTrainingBtn.Location = new System.Drawing.Point(105, 271);
             stopDoodleTrainingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             stopDoodleTrainingBtn.Name = "stopDoodleTrainingBtn";
             stopDoodleTrainingBtn.Size = new System.Drawing.Size(85, 32);
@@ -1664,7 +1678,7 @@
             // doodleStatusLabel
             // 
             doodleStatusLabel.ForeColor = System.Drawing.Color.Gray;
-            doodleStatusLabel.Location = new System.Drawing.Point(10, 285);
+            doodleStatusLabel.Location = new System.Drawing.Point(10, 311);
             doodleStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             doodleStatusLabel.Name = "doodleStatusLabel";
             doodleStatusLabel.Size = new System.Drawing.Size(180, 16);
@@ -2539,6 +2553,7 @@
         private System.Windows.Forms.CheckBox justScratchDoodleCheckBox;
         private System.Windows.Forms.Button startDoodleTrainingBtn;
         private System.Windows.Forms.Button stopDoodleTrainingBtn;
+        private System.Windows.Forms.CheckBox showDoodleOverlayCheckBox;
         private System.Windows.Forms.Label doodleStatusLabel;
         private System.Windows.Forms.GroupBox doodleInfoGroup;
         private System.Windows.Forms.PictureBox doodlePictureBox;

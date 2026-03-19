@@ -50,14 +50,17 @@ namespace ToonTown_Rewritten_Bot
             doodleStatusLabel.Text = "Status: Training...";
             doodleStatusLabel.ForeColor = System.Drawing.Color.DarkGreen;
 
-            // Show overlay
-            if (_doodleOverlay == null || _doodleOverlay.IsDisposed)
+            // Show overlay if enabled
+            if (showDoodleOverlayCheckBox.Checked)
             {
-                _doodleOverlay = new Views.DoodleOverlayForm();
+                if (_doodleOverlay == null || _doodleOverlay.IsDisposed)
+                {
+                    _doodleOverlay = new Views.DoodleOverlayForm();
+                }
+                DoodleTraining.Overlay = _doodleOverlay;
+                _doodleOverlay.Show();
+                _doodleOverlay.UpdateProgress(numberOfFeeds, numberOfScratches, unlimitedCheckBox, selectedTrick);
             }
-            DoodleTraining.Overlay = _doodleOverlay;
-            _doodleOverlay.Show();
-            _doodleOverlay.UpdateProgress(numberOfFeeds, numberOfScratches, unlimitedCheckBox, selectedTrick);
 
             try
             {
