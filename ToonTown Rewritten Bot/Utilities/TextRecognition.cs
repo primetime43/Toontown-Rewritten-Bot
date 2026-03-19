@@ -380,6 +380,163 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
         }
 
+        /// <summary>
+        /// Finds the position of a specific text string in a screenshot using OCR.
+        /// Returns the center point of the matching text in image coordinates, or null if not found.
+        /// </summary>
+        /// <param name="screenshot">The screenshot to search in</param>
+        /// <param name="targetText">The text to find (case-insensitive partial match)</param>
+        /// <param name="searchRegion">Optional region to limit the search area</param>
+        /// <returns>Center point of the found text in image coordinates, or null</returns>
+        public Point? FindTextPosition(Bitmap screenshot, string targetText, Rectangle? searchRegion = null, bool saveDebugImage = false)
+        {
+            if (screenshot == null || string.IsNullOrEmpty(targetText))
+                return null;
+
+            Bitmap searchImage = screenshot;
+            int offsetX = 0, offsetY = 0;
+
+            if (searchRegion.HasValue)
+            {
+                var region = searchRegion.Value;
+                region.Intersect(new Rectangle(0, 0, screenshot.Width, screenshot.Height));
+                if (region.Width <= 0 || region.Height <= 0)
+                    return null;
+                searchImage = screenshot.Clone(region, screenshot.PixelFormat);
+                offsetX = region.X;
+                offsetY = region.Y;
+            }
+
+            try
+            {
+                // Scale up for better OCR accuracy
+                int scaleFactor = 3;
+                using (var scaled = new Bitmap(searchImage.Width * scaleFactor, searchImage.Height * scaleFactor))
+                {
+                    using (var g = Graphics.FromImage(scaled))
+                    {
+                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                        g.DrawImage(searchImage, 0, 0, scaled.Width, scaled.Height);
+                    }
+
+                    Point? result = null;
+
+                    // For debug image: draw on the original screenshot
+                    Bitmap debugImage = null;
+                    Graphics debugGraphics = null;
+                    Font debugFont = null;
+                    if (saveDebugImage)
+                    {
+                        debugImage = new Bitmap(screenshot);
+                        debugGraphics = Graphics.FromImage(debugImage);
+                        debugFont = new Font("Arial", 12, FontStyle.Bold);
+                    }
+
+                    using (var pix = BitmapToPix(scaled))
+                    using (var page = _engine.Process(pix))
+                    using (var iter = page.GetIterator())
+                    {
+                        iter.Begin();
+                        do
+                        {
+                            string lineText = iter.GetText(PageIteratorLevel.TextLine)?.Trim();
+                            if (string.IsNullOrEmpty(lineText))
+                                continue;
+
+                            bool isMatch = lineText.IndexOf(targetText, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                            if (iter.TryGetBoundingBox(PageIteratorLevel.TextLine, out var bounds))
+                            {
+                                // Convert scaled coordinates back to original
+                                int x1 = bounds.X1 / scaleFactor + offsetX;
+                                int y1 = bounds.Y1 / scaleFactor + offsetY;
+                                int x2 = bounds.X2 / scaleFactor + offsetX;
+                                int y2 = bounds.Y2 / scaleFactor + offsetY;
+
+                                if (saveDebugImage && debugGraphics != null)
+                                {
+                                    var pen = isMatch ? Pens.Green : Pens.Red;
+                                    var textColor = isMatch ? Brushes.Lime : Brushes.OrangeRed;
+                                    debugGraphics.DrawRectangle(pen, x1, y1, x2 - x1, y2 - y1);
+                                    debugGraphics.DrawString(lineText, debugFont, textColor, x1, y1 - 16);
+                                }
+
+                                if (isMatch && !result.HasValue)
+                                {
+                                    int centerY = (y1 + y2) / 2;
+                                    int centerX;
+
+                                    // If the target is found within a longer line (e.g., "TRICKS Jump!"),
+                                    // the target is in a submenu to the right — use the right portion
+                                    int matchIndex = lineText.IndexOf(targetText, StringComparison.OrdinalIgnoreCase);
+                                    int lineWidth = x2 - x1;
+                                    if (lineText.Length > 0 && matchIndex > 0)
+                                    {
+                                        float startRatio = (float)matchIndex / lineText.Length;
+                                        float endRatio = (float)(matchIndex + targetText.Length) / lineText.Length;
+                                        centerX = x1 + (int)(lineWidth * (startRatio + endRatio) / 2);
+                                    }
+                                    else
+                                    {
+                                        centerX = (x1 + x2) / 2;
+                                    }
+
+                                    Logger.Debug("Doodle", $"OCR found '{targetText}' in line '{lineText}' at ({centerX}, {centerY})");
+                                    result = new Point(centerX, centerY);
+                                }
+                            }
+                        } while (iter.Next(PageIteratorLevel.TextLine));
+                    }
+
+                    // Save debug image
+                    if (saveDebugImage && debugImage != null)
+                    {
+                        try
+                        {
+                            string debugDir = Path.Combine(AppPaths.ExeDirectory, "Templates", "debug");
+                            Directory.CreateDirectory(debugDir);
+                            string timestamp = DateTime.Now.ToString("HH-mm-ss-fff");
+                            string status = result.HasValue ? "FOUND" : "NOTFOUND";
+                            string path = Path.Combine(debugDir, $"ocr_{targetText}_{status}_{timestamp}.png");
+
+                            // Draw search target label
+                            debugGraphics.DrawString($"Looking for: \"{targetText}\" — {status}",
+                                debugFont, Brushes.Yellow, 10, screenshot.Height - 30);
+
+                            debugImage.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+                            Logger.Debug("Doodle", $"Debug image saved: {path}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Debug("Doodle", $"Failed to save debug image: {ex.Message}");
+                        }
+                    }
+
+                    debugFont?.Dispose();
+                    debugGraphics?.Dispose();
+                    debugImage?.Dispose();
+
+                    if (!result.HasValue)
+                    {
+                        Logger.Debug("Doodle", $"OCR did not find '{targetText}' in screenshot");
+                    }
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Doodle", $"OCR error finding '{targetText}': {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                if (searchRegion.HasValue && searchImage != screenshot)
+                {
+                    searchImage.Dispose();
+                }
+            }
+        }
+
         #region Helper Methods
 
         private Pix BitmapToPix(Bitmap bitmap)
