@@ -135,6 +135,7 @@ namespace ToonTown_Rewritten_Bot
             unlimitedTrainingCheckBox.Checked = prefs.UnlimitedTraining;
             justFeedDoodleCheckBox.Checked = prefs.JustFeedDoodle;
             justScratchDoodleCheckBox.Checked = prefs.JustScratchDoodle;
+            showDoodleOverlayCheckBox.Checked = prefs.ShowDoodleOverlay;
 
             // Gardening preferences
             waterPlantNumericUpDown.Value = Math.Max(waterPlantNumericUpDown.Minimum, Math.Min(waterPlantNumericUpDown.Maximum, prefs.WaterPlantCount));
@@ -210,6 +211,7 @@ namespace ToonTown_Rewritten_Bot
             prefs.UnlimitedTraining = unlimitedTrainingCheckBox.Checked;
             prefs.JustFeedDoodle = justFeedDoodleCheckBox.Checked;
             prefs.JustScratchDoodle = justScratchDoodleCheckBox.Checked;
+            prefs.ShowDoodleOverlay = showDoodleOverlayCheckBox.Checked;
 
             // Gardening preferences
             prefs.WaterPlantCount = (int)waterPlantNumericUpDown.Value;
