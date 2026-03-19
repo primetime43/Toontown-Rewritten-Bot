@@ -16,6 +16,11 @@ namespace ToonTown_Rewritten_Bot.Services
         private TextRecognition _ocr;
         private Point? _lastTricksPosition;
 
+        // Session counters
+        private int _totalFeedsDone = 0;
+        private int _totalScratchesDone = 0;
+        private int _totalTricksDone = 0;
+
         private static volatile Views.DoodleOverlayForm _overlay;
         public static Views.DoodleOverlayForm Overlay
         {
@@ -59,13 +64,15 @@ namespace ToonTown_Rewritten_Bot.Services
                     {
                         if (!overlay.IsDisposed)
                         {
-                            overlay.UpdateProgress(_numberOfFeeds, _numberOfScratches, _infiniteTime, _selectedTrick);
+                            overlay.UpdateProgress(_numberOfFeeds, _numberOfScratches, _infiniteTime, _selectedTrick,
+                                _totalFeedsDone, _totalScratchesDone, _totalTricksDone);
                         }
                     }));
                 }
                 else
                 {
-                    overlay.UpdateProgress(_numberOfFeeds, _numberOfScratches, _infiniteTime, _selectedTrick);
+                    overlay.UpdateProgress(_numberOfFeeds, _numberOfScratches, _infiniteTime, _selectedTrick,
+                        _totalFeedsDone, _totalScratchesDone, _totalTricksDone);
                 }
             }
             catch { }
@@ -119,6 +126,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     string nextAfterFeed = (!_justFeed && _numberOfScratches > 0) ? "Scratch doodle" : (_selectedTrick != "None" ? "Perform trick" : "Wait");
                     UpdateOverlay("Feeding", "Feeding doodle", nextAfterFeed);
                     await feedDoodle(cancellationToken);
+                    _totalFeedsDone++;
                     if (!_infiniteTime) _numberOfFeeds--;
                     UpdateOverlayProgress();
                 }
@@ -128,6 +136,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     string nextAfterScratch = (_selectedTrick != "None") ? "Perform trick" : "Wait";
                     UpdateOverlay("Scratching", "Scratching doodle", nextAfterScratch);
                     await scratchDoodle(cancellationToken);
+                    _totalScratchesDone++;
                     if (!_infiniteTime) _numberOfScratches--;
                     UpdateOverlayProgress();
                 }
@@ -136,6 +145,8 @@ namespace ToonTown_Rewritten_Bot.Services
                 {
                     UpdateOverlay("Trick", $"Performing {_selectedTrick}", "Wait");
                     await DetermineSelectedTrick(cancellationToken);
+                    _totalTricksDone++;
+                    UpdateOverlayProgress();
                 }
 
                 UpdateOverlay("Training", "Waiting...", "Feed doodle");

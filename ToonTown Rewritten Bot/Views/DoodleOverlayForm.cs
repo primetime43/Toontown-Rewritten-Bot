@@ -26,6 +26,9 @@ namespace ToonTown_Rewritten_Bot.Views
         private int _feedsRemaining = 0;
         private int _scratchesRemaining = 0;
         private bool _unlimited = false;
+        private int _totalFeeds = 0;
+        private int _totalScratches = 0;
+        private int _totalTricks = 0;
 
         private Timer _repositionTimer;
 
@@ -76,12 +79,16 @@ namespace ToonTown_Rewritten_Bot.Views
             Invalidate();
         }
 
-        public void UpdateProgress(int feedsRemaining, int scratchesRemaining, bool unlimited, string trick)
+        public void UpdateProgress(int feedsRemaining, int scratchesRemaining, bool unlimited, string trick,
+            int totalFeeds = 0, int totalScratches = 0, int totalTricks = 0)
         {
             _feedsRemaining = feedsRemaining;
             _scratchesRemaining = scratchesRemaining;
             _unlimited = unlimited;
             _trick = trick ?? "";
+            _totalFeeds = totalFeeds;
+            _totalScratches = totalScratches;
+            _totalTricks = totalTricks;
             Invalidate();
         }
 
@@ -98,7 +105,7 @@ namespace ToonTown_Rewritten_Bot.Views
         private void DrawStatusPanel(Graphics g)
         {
             int panelWidth = 260;
-            int panelHeight = 160;
+            int panelHeight = 200;
             int panelX = this.Width - panelWidth - 15;
             int panelY = this.Height - panelHeight - 15;
 
@@ -167,7 +174,21 @@ namespace ToonTown_Rewritten_Bot.Views
                 g.DrawString(remaining, labelFont, valueBrush, textX, textY);
             }
 
-            textY += 22;
+            textY += 20;
+
+            // Session stats
+            if (_totalFeeds > 0 || _totalScratches > 0 || _totalTricks > 0)
+            {
+                using (var labelFont = new Font("Segoe UI", 8))
+                using (var statsBrush = new SolidBrush(Color.FromArgb(255, 150, 220, 150)))
+                {
+                    string stats = $"Done:  {_totalFeeds} fed  |  {_totalScratches} scratched  |  {_totalTricks} tricks";
+                    g.DrawString(stats, labelFont, statsBrush, textX, textY);
+                }
+                textY += 18;
+            }
+
+            textY += 4;
 
             // Current action
             using (var labelFont = new Font("Segoe UI", 9))
