@@ -12,8 +12,7 @@ namespace ToonTown_Rewritten_Bot
         {
             if (unlimitedTrainingCheckBox.Checked)
             {
-                numberOfDoodleScratchesNumericUpDown.Enabled = false;
-                numberOfDoodleFeedsNumericUpDown.Enabled = false;
+                numericUpDownMaxTricks.Enabled = false;
                 justFeedDoodleCheckBox.Checked = false;
                 justScratchDoodleCheckBox.Checked = false;
                 justFeedDoodleCheckBox.Enabled = false;
@@ -21,8 +20,7 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                numberOfDoodleScratchesNumericUpDown.Enabled = true;
-                numberOfDoodleFeedsNumericUpDown.Enabled = true;
+                numericUpDownMaxTricks.Enabled = true;
                 justFeedDoodleCheckBox.Enabled = true;
                 justScratchDoodleCheckBox.Enabled = true;
             }
@@ -65,9 +63,10 @@ namespace ToonTown_Rewritten_Bot
             try
             {
                 // Run the training task
+                int cycles = Convert.ToInt32(numericUpDownMaxTricks.Value);
                 await Task.Run(() => new DoodleTraining().StartDoodleTraining(
                     numberOfFeeds, numberOfScratches, unlimitedCheckBox,
-                    selectedTrick, justFeed, justScratch, _cancellationTokenSource.Token),
+                    selectedTrick, justFeed, justScratch, _cancellationTokenSource.Token, cycles),
                     _cancellationTokenSource.Token);
 
                 // Training completed successfully

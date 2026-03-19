@@ -29,6 +29,7 @@ namespace ToonTown_Rewritten_Bot.Views
         private int _totalFeeds = 0;
         private int _totalScratches = 0;
         private int _totalTricks = 0;
+        private int _totalCycles = 0;
 
         private Timer _repositionTimer;
 
@@ -79,16 +80,17 @@ namespace ToonTown_Rewritten_Bot.Views
             Invalidate();
         }
 
-        public void UpdateProgress(int feedsRemaining, int scratchesRemaining, bool unlimited, string trick,
-            int totalFeeds = 0, int totalScratches = 0, int totalTricks = 0)
+        public void UpdateProgress(int feedsPerCycle, int scratchesPerCycle, bool unlimited, string trick,
+            int totalFeeds = 0, int totalScratches = 0, int totalTricks = 0, int totalCycles = 0)
         {
-            _feedsRemaining = feedsRemaining;
-            _scratchesRemaining = scratchesRemaining;
+            _feedsRemaining = feedsPerCycle;
+            _scratchesRemaining = scratchesPerCycle;
             _unlimited = unlimited;
             _trick = trick ?? "";
             _totalFeeds = totalFeeds;
             _totalScratches = totalScratches;
             _totalTricks = totalTricks;
+            _totalCycles = totalCycles;
             Invalidate();
         }
 
@@ -166,12 +168,13 @@ namespace ToonTown_Rewritten_Bot.Views
                 textY += 18;
             }
 
-            // Remaining counts
+            // Cycle info
             using (var labelFont = new Font("Segoe UI", 9))
             using (var valueBrush = new SolidBrush(Color.White))
             {
-                string remaining = _unlimited ? "Unlimited" : $"Feeds: {_feedsRemaining}  |  Scratches: {_scratchesRemaining}";
-                g.DrawString(remaining, labelFont, valueBrush, textX, textY);
+                string cycleInfo = _unlimited ? "Unlimited cycles" : $"Cycles: {_totalTricks}/{_totalCycles}";
+                string perCycle = $"  ({_feedsRemaining}F / {_scratchesRemaining}S per cycle)";
+                g.DrawString(cycleInfo + perCycle, labelFont, valueBrush, textX, textY);
             }
 
             textY += 20;

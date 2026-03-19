@@ -152,6 +152,9 @@
             startDoodleTrainingBtn = new System.Windows.Forms.Button();
             stopDoodleTrainingBtn = new System.Windows.Forms.Button();
             showDoodleOverlayCheckBox = new System.Windows.Forms.CheckBox();
+            maxTricksLabel = new System.Windows.Forms.Label();
+            numericUpDownMaxTricks = new System.Windows.Forms.NumericUpDown();
+            maxTricksTimesLabel = new System.Windows.Forms.Label();
             doodleStatusLabel = new System.Windows.Forms.Label();
             doodleInfoGroup = new System.Windows.Forms.GroupBox();
             doodlePictureBox = new System.Windows.Forms.PictureBox();
@@ -1475,6 +1478,9 @@
             // 
             doodleTrainingGroup.Controls.Add(doodleTrickLabel);
             doodleTrainingGroup.Controls.Add(doodleTrickComboBox);
+            doodleTrainingGroup.Controls.Add(maxTricksLabel);
+            doodleTrainingGroup.Controls.Add(numericUpDownMaxTricks);
+            doodleTrainingGroup.Controls.Add(maxTricksTimesLabel);
             doodleTrainingGroup.Controls.Add(doodleFeedsLabel);
             doodleTrainingGroup.Controls.Add(numberOfDoodleFeedsNumericUpDown);
             doodleTrainingGroup.Controls.Add(doodleFeedsTimesLabel);
@@ -1519,11 +1525,43 @@
             doodleTrickComboBox.Size = new System.Drawing.Size(180, 24);
             doodleTrickComboBox.TabIndex = 1;
             toolTip1.SetToolTip(doodleTrickComboBox, "Select the trick you wish to train.");
-            // 
+            //
+            // maxTricksLabel
+            //
+            maxTricksLabel.AutoSize = true;
+            maxTricksLabel.Location = new System.Drawing.Point(10, 72);
+            maxTricksLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            maxTricksLabel.Name = "maxTricksLabel";
+            maxTricksLabel.Size = new System.Drawing.Size(71, 16);
+            maxTricksLabel.TabIndex = 17;
+            maxTricksLabel.Text = "Cycles:";
+            //
+            // numericUpDownMaxTricks
+            //
+            numericUpDownMaxTricks.Location = new System.Drawing.Point(85, 70);
+            numericUpDownMaxTricks.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDownMaxTricks.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownMaxTricks.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
+            numericUpDownMaxTricks.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownMaxTricks.Name = "numericUpDownMaxTricks";
+            numericUpDownMaxTricks.Size = new System.Drawing.Size(55, 22);
+            numericUpDownMaxTricks.TabIndex = 18;
+            toolTip1.SetToolTip(numericUpDownMaxTricks, "Number of training cycles. Each cycle = feed + scratch + trick. Ignored when 'Train until stopped' is checked.");
+            //
+            // maxTricksTimesLabel
+            //
+            maxTricksTimesLabel.AutoSize = true;
+            maxTricksTimesLabel.Location = new System.Drawing.Point(143, 72);
+            maxTricksTimesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            maxTricksTimesLabel.Name = "maxTricksTimesLabel";
+            maxTricksTimesLabel.Size = new System.Drawing.Size(39, 16);
+            maxTricksTimesLabel.TabIndex = 19;
+            maxTricksTimesLabel.Text = "times";
+            //
             // doodleFeedsLabel
-            // 
+            //
             doodleFeedsLabel.AutoSize = true;
-            doodleFeedsLabel.Location = new System.Drawing.Point(10, 78);
+            doodleFeedsLabel.Location = new System.Drawing.Point(10, 106);
             doodleFeedsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             doodleFeedsLabel.Name = "doodleFeedsLabel";
             doodleFeedsLabel.Size = new System.Drawing.Size(49, 16);
@@ -1532,12 +1570,12 @@
             // 
             // numberOfDoodleFeedsNumericUpDown
             // 
-            numberOfDoodleFeedsNumericUpDown.Location = new System.Drawing.Point(60, 76);
+            numberOfDoodleFeedsNumericUpDown.Location = new System.Drawing.Point(85, 104);
             numberOfDoodleFeedsNumericUpDown.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numberOfDoodleFeedsNumericUpDown.Maximum = new decimal(new int[] { 900, 0, 0, 0 });
             numberOfDoodleFeedsNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numberOfDoodleFeedsNumericUpDown.Name = "numberOfDoodleFeedsNumericUpDown";
-            numberOfDoodleFeedsNumericUpDown.Size = new System.Drawing.Size(48, 22);
+            numberOfDoodleFeedsNumericUpDown.Size = new System.Drawing.Size(55, 22);
             numberOfDoodleFeedsNumericUpDown.TabIndex = 3;
             toolTip1.SetToolTip(numberOfDoodleFeedsNumericUpDown, "Number of times to feed your doodle per cycle");
             numberOfDoodleFeedsNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
@@ -1545,7 +1583,7 @@
             // doodleFeedsTimesLabel
             // 
             doodleFeedsTimesLabel.AutoSize = true;
-            doodleFeedsTimesLabel.Location = new System.Drawing.Point(112, 78);
+            doodleFeedsTimesLabel.Location = new System.Drawing.Point(143, 106);
             doodleFeedsTimesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             doodleFeedsTimesLabel.Name = "doodleFeedsTimesLabel";
             doodleFeedsTimesLabel.Size = new System.Drawing.Size(39, 16);
@@ -1555,7 +1593,7 @@
             // doodleScratchesLabel
             // 
             doodleScratchesLabel.AutoSize = true;
-            doodleScratchesLabel.Location = new System.Drawing.Point(10, 108);
+            doodleScratchesLabel.Location = new System.Drawing.Point(10, 136);
             doodleScratchesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             doodleScratchesLabel.Name = "doodleScratchesLabel";
             doodleScratchesLabel.Size = new System.Drawing.Size(70, 16);
@@ -1564,12 +1602,12 @@
             // 
             // numberOfDoodleScratchesNumericUpDown
             // 
-            numberOfDoodleScratchesNumericUpDown.Location = new System.Drawing.Point(80, 106);
+            numberOfDoodleScratchesNumericUpDown.Location = new System.Drawing.Point(85, 134);
             numberOfDoodleScratchesNumericUpDown.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numberOfDoodleScratchesNumericUpDown.Maximum = new decimal(new int[] { 900, 0, 0, 0 });
             numberOfDoodleScratchesNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numberOfDoodleScratchesNumericUpDown.Name = "numberOfDoodleScratchesNumericUpDown";
-            numberOfDoodleScratchesNumericUpDown.Size = new System.Drawing.Size(48, 22);
+            numberOfDoodleScratchesNumericUpDown.Size = new System.Drawing.Size(55, 22);
             numberOfDoodleScratchesNumericUpDown.TabIndex = 6;
             toolTip1.SetToolTip(numberOfDoodleScratchesNumericUpDown, "Number of times to scratch your doodle per cycle");
             numberOfDoodleScratchesNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
@@ -1577,7 +1615,7 @@
             // doodleScratchesTimesLabel
             // 
             doodleScratchesTimesLabel.AutoSize = true;
-            doodleScratchesTimesLabel.Location = new System.Drawing.Point(132, 108);
+            doodleScratchesTimesLabel.Location = new System.Drawing.Point(143, 136);
             doodleScratchesTimesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             doodleScratchesTimesLabel.Name = "doodleScratchesTimesLabel";
             doodleScratchesTimesLabel.Size = new System.Drawing.Size(39, 16);
@@ -1587,7 +1625,7 @@
             // doodleSeparator1
             // 
             doodleSeparator1.BackColor = System.Drawing.Color.LightGray;
-            doodleSeparator1.Location = new System.Drawing.Point(10, 140);
+            doodleSeparator1.Location = new System.Drawing.Point(10, 168);
             doodleSeparator1.Name = "doodleSeparator1";
             doodleSeparator1.Size = new System.Drawing.Size(180, 1);
             doodleSeparator1.TabIndex = 8;
@@ -1595,7 +1633,7 @@
             // unlimitedTrainingCheckBox
             // 
             unlimitedTrainingCheckBox.AutoSize = true;
-            unlimitedTrainingCheckBox.Location = new System.Drawing.Point(10, 152);
+            unlimitedTrainingCheckBox.Location = new System.Drawing.Point(10, 180);
             unlimitedTrainingCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             unlimitedTrainingCheckBox.Name = "unlimitedTrainingCheckBox";
             unlimitedTrainingCheckBox.Size = new System.Drawing.Size(136, 20);
@@ -1608,7 +1646,7 @@
             // justFeedDoodleCheckBox
             // 
             justFeedDoodleCheckBox.AutoSize = true;
-            justFeedDoodleCheckBox.Location = new System.Drawing.Point(10, 178);
+            justFeedDoodleCheckBox.Location = new System.Drawing.Point(10, 206);
             justFeedDoodleCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             justFeedDoodleCheckBox.Name = "justFeedDoodleCheckBox";
             justFeedDoodleCheckBox.Size = new System.Drawing.Size(86, 20);
@@ -1621,7 +1659,7 @@
             // justScratchDoodleCheckBox
             // 
             justScratchDoodleCheckBox.AutoSize = true;
-            justScratchDoodleCheckBox.Location = new System.Drawing.Point(10, 204);
+            justScratchDoodleCheckBox.Location = new System.Drawing.Point(10, 232);
             justScratchDoodleCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             justScratchDoodleCheckBox.Name = "justScratchDoodleCheckBox";
             justScratchDoodleCheckBox.Size = new System.Drawing.Size(99, 20);
@@ -1634,7 +1672,7 @@
             // showDoodleOverlayCheckBox
             //
             showDoodleOverlayCheckBox.AutoSize = true;
-            showDoodleOverlayCheckBox.Location = new System.Drawing.Point(10, 228);
+            showDoodleOverlayCheckBox.Location = new System.Drawing.Point(10, 256);
             showDoodleOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             showDoodleOverlayCheckBox.Name = "showDoodleOverlayCheckBox";
             showDoodleOverlayCheckBox.Size = new System.Drawing.Size(109, 20);
@@ -1646,7 +1684,7 @@
             // doodleSeparator2
             //
             doodleSeparator2.BackColor = System.Drawing.Color.LightGray;
-            doodleSeparator2.Location = new System.Drawing.Point(10, 258);
+            doodleSeparator2.Location = new System.Drawing.Point(10, 286);
             doodleSeparator2.Name = "doodleSeparator2";
             doodleSeparator2.Size = new System.Drawing.Size(180, 1);
             doodleSeparator2.TabIndex = 12;
@@ -1654,7 +1692,7 @@
             // startDoodleTrainingBtn
             // 
             startDoodleTrainingBtn.BackColor = System.Drawing.Color.LightGreen;
-            startDoodleTrainingBtn.Location = new System.Drawing.Point(10, 271);
+            startDoodleTrainingBtn.Location = new System.Drawing.Point(10, 299);
             startDoodleTrainingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             startDoodleTrainingBtn.Name = "startDoodleTrainingBtn";
             startDoodleTrainingBtn.Size = new System.Drawing.Size(85, 32);
@@ -1666,7 +1704,7 @@
             // stopDoodleTrainingBtn
             // 
             stopDoodleTrainingBtn.BackColor = System.Drawing.Color.MistyRose;
-            stopDoodleTrainingBtn.Location = new System.Drawing.Point(105, 271);
+            stopDoodleTrainingBtn.Location = new System.Drawing.Point(105, 299);
             stopDoodleTrainingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             stopDoodleTrainingBtn.Name = "stopDoodleTrainingBtn";
             stopDoodleTrainingBtn.Size = new System.Drawing.Size(85, 32);
@@ -1678,7 +1716,7 @@
             // doodleStatusLabel
             // 
             doodleStatusLabel.ForeColor = System.Drawing.Color.Gray;
-            doodleStatusLabel.Location = new System.Drawing.Point(10, 311);
+            doodleStatusLabel.Location = new System.Drawing.Point(10, 339);
             doodleStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             doodleStatusLabel.Name = "doodleStatusLabel";
             doodleStatusLabel.Size = new System.Drawing.Size(180, 16);
@@ -2554,6 +2592,9 @@
         private System.Windows.Forms.Button startDoodleTrainingBtn;
         private System.Windows.Forms.Button stopDoodleTrainingBtn;
         private System.Windows.Forms.CheckBox showDoodleOverlayCheckBox;
+        private System.Windows.Forms.Label maxTricksLabel;
+        private System.Windows.Forms.NumericUpDown numericUpDownMaxTricks;
+        private System.Windows.Forms.Label maxTricksTimesLabel;
         private System.Windows.Forms.Label doodleStatusLabel;
         private System.Windows.Forms.GroupBox doodleInfoGroup;
         private System.Windows.Forms.PictureBox doodlePictureBox;
