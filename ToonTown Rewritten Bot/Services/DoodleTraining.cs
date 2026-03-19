@@ -15,6 +15,61 @@ namespace ToonTown_Rewritten_Bot.Services
         private bool _infiniteTime, _justFeed, _justScratch;
         private TextRecognition _ocr;
         private Point? _lastTricksPosition;
+
+        private static volatile Views.DoodleOverlayForm _overlay;
+        public static Views.DoodleOverlayForm Overlay
+        {
+            get => _overlay;
+            set => _overlay = value;
+        }
+
+        private void UpdateOverlay(string status, string current, string next)
+        {
+            var overlay = _overlay;
+            if (overlay == null || overlay.IsDisposed) return;
+            try
+            {
+                if (overlay.InvokeRequired)
+                {
+                    overlay.BeginInvoke(new Action(() =>
+                    {
+                        if (!overlay.IsDisposed)
+                        {
+                            overlay.UpdateStatus(status, current, next);
+                        }
+                    }));
+                }
+                else
+                {
+                    overlay.UpdateStatus(status, current, next);
+                }
+            }
+            catch { }
+        }
+
+        private void UpdateOverlayProgress()
+        {
+            var overlay = _overlay;
+            if (overlay == null || overlay.IsDisposed) return;
+            try
+            {
+                if (overlay.InvokeRequired)
+                {
+                    overlay.BeginInvoke(new Action(() =>
+                    {
+                        if (!overlay.IsDisposed)
+                        {
+                            overlay.UpdateProgress(_numberOfFeeds, _numberOfScratches, _infiniteTime, _selectedTrick);
+                        }
+                    }));
+                }
+                else
+                {
+                    overlay.UpdateProgress(_numberOfFeeds, _numberOfScratches, _infiniteTime, _selectedTrick);
+                }
+            }
+            catch { }
+        }
         public async Task StartDoodleTraining(int feeds, int scratches, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch, CancellationToken cancellationToken)
         {
             Logger.Info("Doodle", $"Training start: feeds={feeds}, scratches={scratches}, trick={trick}, unlimited={unlimitedCheckBox}");
@@ -39,8 +94,11 @@ namespace ToonTown_Rewritten_Bot.Services
 
             try
             {
+                UpdateOverlayProgress();
+                UpdateOverlay("Training", "Starting...", "Feed doodle");
                 await Task.Delay(2000, cancellationToken);
                 await feedAndScratch(cancellationToken);
+                UpdateOverlay("Complete", "Done", "-");
             }
             finally
             {
@@ -58,19 +116,29 @@ namespace ToonTown_Rewritten_Bot.Services
 
                 if (!_justScratch && _numberOfFeeds > 0)
                 {
+                    string nextAfterFeed = (!_justFeed && _numberOfScratches > 0) ? "Scratch doodle" : (_selectedTrick != "None" ? "Perform trick" : "Wait");
+                    UpdateOverlay("Feeding", "Feeding doodle", nextAfterFeed);
                     await feedDoodle(cancellationToken);
                     if (!_infiniteTime) _numberOfFeeds--;
+                    UpdateOverlayProgress();
                 }
 
                 if (!_justFeed && _numberOfScratches > 0)
                 {
+                    string nextAfterScratch = (_selectedTrick != "None") ? "Perform trick" : "Wait";
+                    UpdateOverlay("Scratching", "Scratching doodle", nextAfterScratch);
                     await scratchDoodle(cancellationToken);
                     if (!_infiniteTime) _numberOfScratches--;
+                    UpdateOverlayProgress();
                 }
 
                 if (_selectedTrick != "None")
+                {
+                    UpdateOverlay("Trick", $"Performing {_selectedTrick}", "Wait");
                     await DetermineSelectedTrick(cancellationToken);
+                }
 
+                UpdateOverlay("Training", "Waiting...", "Feed doodle");
                 await Task.Delay(5000, cancellationToken);
             }
         }
@@ -113,7 +181,9 @@ namespace ToonTown_Rewritten_Bot.Services
             Logger.Debug("Doodle", $"Performing trick: {_selectedTrick}");
             for (int i = 0; i < 2; i++)
             {
+                UpdateOverlay("Opening Menu", "Opening SpeedChat", $"Select {_selectedTrick}");
                 await OpenSpeedChat(cancellationToken);
+                UpdateOverlay("Trick", $"Clicking {_selectedTrick}", "Wait for response");
                 await trickAction(cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
             }

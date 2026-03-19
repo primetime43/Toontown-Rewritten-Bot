@@ -28,7 +28,8 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
-        private bool isTrainingActive = false;  // Flag to track training status
+        private bool isTrainingActive = false;
+        private Views.DoodleOverlayForm _doodleOverlay;
 
         private async void startDoodleTrainingBtn_Click(object sender, EventArgs e)
         {
@@ -42,12 +43,21 @@ namespace ToonTown_Rewritten_Bot
             // Ensure we have a fresh CancellationTokenSource
             if (_cancellationTokenSource != null)
             {
-                _cancellationTokenSource.Dispose(); // Dispose the old one if it exists
+                _cancellationTokenSource.Dispose();
             }
             _cancellationTokenSource = new CancellationTokenSource();
-            isTrainingActive = true;  // Set the flag to indicate that training has started
+            isTrainingActive = true;
             doodleStatusLabel.Text = "Status: Training...";
             doodleStatusLabel.ForeColor = System.Drawing.Color.DarkGreen;
+
+            // Show overlay
+            if (_doodleOverlay == null || _doodleOverlay.IsDisposed)
+            {
+                _doodleOverlay = new Views.DoodleOverlayForm();
+            }
+            DoodleTraining.Overlay = _doodleOverlay;
+            _doodleOverlay.Show();
+            _doodleOverlay.UpdateProgress(numberOfFeeds, numberOfScratches, unlimitedCheckBox, selectedTrick);
 
             try
             {
@@ -85,6 +95,15 @@ namespace ToonTown_Rewritten_Bot
                 isTrainingActive = false;
                 doodleStatusLabel.Text = "Status: Idle";
                 doodleStatusLabel.ForeColor = System.Drawing.Color.Gray;
+
+                // Close overlay
+                DoodleTraining.Overlay = null;
+                if (_doodleOverlay != null && !_doodleOverlay.IsDisposed)
+                {
+                    _doodleOverlay.Close();
+                    _doodleOverlay.Dispose();
+                    _doodleOverlay = null;
+                }
             }
         }
 
