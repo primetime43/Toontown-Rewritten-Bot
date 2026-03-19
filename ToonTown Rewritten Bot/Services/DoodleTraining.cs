@@ -10,7 +10,7 @@ namespace ToonTown_Rewritten_Bot.Services
 {
     public class DoodleTraining : CoreFunctionality
     {
-        private int _numberOfFeeds, _numberOfScratches;
+        private int _feedsPerCycle, _scratchesPerCycle, _totalCycles;
         private string _selectedTrick;
         private bool _infiniteTime, _justFeed, _justScratch;
         private TextRecognition _ocr;
@@ -64,25 +64,26 @@ namespace ToonTown_Rewritten_Bot.Services
                     {
                         if (!overlay.IsDisposed)
                         {
-                            overlay.UpdateProgress(_numberOfFeeds, _numberOfScratches, _infiniteTime, _selectedTrick,
-                                _totalFeedsDone, _totalScratchesDone, _totalTricksDone);
+                            overlay.UpdateProgress(_feedsPerCycle, _scratchesPerCycle, _infiniteTime, _selectedTrick,
+                                _totalFeedsDone, _totalScratchesDone, _totalTricksDone, _totalCycles);
                         }
                     }));
                 }
                 else
                 {
-                    overlay.UpdateProgress(_numberOfFeeds, _numberOfScratches, _infiniteTime, _selectedTrick,
-                        _totalFeedsDone, _totalScratchesDone, _totalTricksDone);
+                    overlay.UpdateProgress(_feedsPerCycle, _scratchesPerCycle, _infiniteTime, _selectedTrick,
+                        _totalFeedsDone, _totalScratchesDone, _totalTricksDone, _totalCycles);
                 }
             }
             catch { }
         }
-        public async Task StartDoodleTraining(int feeds, int scratches, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch, CancellationToken cancellationToken)
+        public async Task StartDoodleTraining(int feedsPerCycle, int scratchesPerCycle, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch, CancellationToken cancellationToken, int cycles = 1)
         {
-            Logger.Info("Doodle", $"Training start: feeds={feeds}, scratches={scratches}, trick={trick}, unlimited={unlimitedCheckBox}");
+            Logger.Info("Doodle", $"Training start: feedsPerCycle={feedsPerCycle}, scratchesPerCycle={scratchesPerCycle}, trick={trick}, cycles={cycles}, unlimited={unlimitedCheckBox}");
 
-            _numberOfFeeds = feeds;
-            _numberOfScratches = scratches;
+            _feedsPerCycle = feedsPerCycle;
+            _scratchesPerCycle = scratchesPerCycle;
+            _totalCycles = cycles;
             _selectedTrick = trick;
             _infiniteTime = unlimitedCheckBox;
             _justFeed = justFeed;
@@ -117,30 +118,46 @@ namespace ToonTown_Rewritten_Bot.Services
 
         private async Task feedAndScratch(CancellationToken cancellationToken)
         {
-            while (_infiniteTime || _numberOfFeeds > 0 || _numberOfScratches > 0)
+            int cyclesDone = 0;
+
+            while (_infiniteTime || cyclesDone < _totalCycles)
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                cyclesDone++;
+                string cycleLabel = _infiniteTime ? $"Cycle {cyclesDone}" : $"Cycle {cyclesDone}/{_totalCycles}";
+                Logger.Debug("Doodle", $"Starting {cycleLabel}");
 
-                if (!_justScratch && _numberOfFeeds > 0)
+                // Feed phase
+                if (!_justScratch)
                 {
-                    string nextAfterFeed = (!_justFeed && _numberOfScratches > 0) ? "Scratch doodle" : (_selectedTrick != "None" ? "Perform trick" : "Wait");
-                    UpdateOverlay("Feeding", "Feeding doodle", nextAfterFeed);
-                    await feedDoodle(cancellationToken);
-                    _totalFeedsDone++;
-                    if (!_infiniteTime) _numberOfFeeds--;
-                    UpdateOverlayProgress();
+                    for (int i = 0; i < _feedsPerCycle; i++)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        string nextAfterFeed = (i < _feedsPerCycle - 1) ? "Feed again"
+                            : (!_justFeed ? "Scratch doodle" : (_selectedTrick != "None" ? "Perform trick" : "Wait"));
+                        UpdateOverlay("Feeding", $"Feeding ({i + 1}/{_feedsPerCycle})", nextAfterFeed);
+                        await feedDoodle(cancellationToken);
+                        _totalFeedsDone++;
+                        UpdateOverlayProgress();
+                    }
                 }
 
-                if (!_justFeed && _numberOfScratches > 0)
+                // Scratch phase
+                if (!_justFeed)
                 {
-                    string nextAfterScratch = (_selectedTrick != "None") ? "Perform trick" : "Wait";
-                    UpdateOverlay("Scratching", "Scratching doodle", nextAfterScratch);
-                    await scratchDoodle(cancellationToken);
-                    _totalScratchesDone++;
-                    if (!_infiniteTime) _numberOfScratches--;
-                    UpdateOverlayProgress();
+                    for (int i = 0; i < _scratchesPerCycle; i++)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        string nextAfterScratch = (i < _scratchesPerCycle - 1) ? "Scratch again"
+                            : (_selectedTrick != "None" ? "Perform trick" : "Wait");
+                        UpdateOverlay("Scratching", $"Scratching ({i + 1}/{_scratchesPerCycle})", nextAfterScratch);
+                        await scratchDoodle(cancellationToken);
+                        _totalScratchesDone++;
+                        UpdateOverlayProgress();
+                    }
                 }
 
+                // Trick phase
                 if (_selectedTrick != "None")
                 {
                     UpdateOverlay("Trick", $"Performing {_selectedTrick}", "Wait");
@@ -149,7 +166,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     UpdateOverlayProgress();
                 }
 
-                UpdateOverlay("Training", "Waiting...", "Feed doodle");
+                UpdateOverlay("Training", "Waiting...", "Next cycle");
                 await Task.Delay(5000, cancellationToken);
             }
         }
