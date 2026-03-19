@@ -57,13 +57,32 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             int creamColorCount = 0;
 
-            foreach (var pos in positionsToCheck)
+            if (CoreFunctionality.UseBackgroundInput)
             {
-                var color = GetColorAt(pos.X, pos.Y);
-
-                if (IsCreamPopupBackground(color))
+                try
                 {
-                    creamColorCount++;
+                    using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
+                    {
+                        if (screenshot == null) return false;
+                        var windowOffset = new Point(windowRect.X, windowRect.Y);
+
+                        foreach (var pos in positionsToCheck)
+                        {
+                            var color = CoreFunctionality.GetColorFromScreenshot(screenshot, pos.X, pos.Y, windowOffset);
+                            if (color != Color.Empty && IsCreamPopupBackground(color))
+                                creamColorCount++;
+                        }
+                    }
+                }
+                catch { return false; }
+            }
+            else
+            {
+                foreach (var pos in positionsToCheck)
+                {
+                    var color = GetColorAt(pos.X, pos.Y);
+                    if (IsCreamPopupBackground(color))
+                        creamColorCount++;
                 }
             }
 

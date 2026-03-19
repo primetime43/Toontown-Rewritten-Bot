@@ -26,6 +26,7 @@ namespace ToonTown_Rewritten_Bot.Views
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
 
+
         // Detection data to display
         private Rectangle _scanArea;
         private List<FishCandidate> _candidates = new List<FishCandidate>();
@@ -110,6 +111,7 @@ namespace ToonTown_Rewritten_Bot.Views
                     this.Location = new Point(gameRect.X, gameRect.Y);
                     this.Size = new Size(gameRect.Width, gameRect.Height);
                 }
+
             }
         }
 

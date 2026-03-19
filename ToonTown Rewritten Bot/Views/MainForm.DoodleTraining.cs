@@ -12,8 +12,7 @@ namespace ToonTown_Rewritten_Bot
         {
             if (unlimitedTrainingCheckBox.Checked)
             {
-                numberOfDoodleScratchesNumericUpDown.Enabled = false;
-                numberOfDoodleFeedsNumericUpDown.Enabled = false;
+                numericUpDownMaxTricks.Enabled = false;
                 justFeedDoodleCheckBox.Checked = false;
                 justScratchDoodleCheckBox.Checked = false;
                 justFeedDoodleCheckBox.Enabled = false;
@@ -21,14 +20,14 @@ namespace ToonTown_Rewritten_Bot
             }
             else
             {
-                numberOfDoodleScratchesNumericUpDown.Enabled = true;
-                numberOfDoodleFeedsNumericUpDown.Enabled = true;
+                numericUpDownMaxTricks.Enabled = true;
                 justFeedDoodleCheckBox.Enabled = true;
                 justScratchDoodleCheckBox.Enabled = true;
             }
         }
 
-        private bool isTrainingActive = false;  // Flag to track training status
+        private bool isTrainingActive = false;
+        private Views.DoodleOverlayForm _doodleOverlay;
 
         private async void startDoodleTrainingBtn_Click(object sender, EventArgs e)
         {
@@ -42,19 +41,32 @@ namespace ToonTown_Rewritten_Bot
             // Ensure we have a fresh CancellationTokenSource
             if (_cancellationTokenSource != null)
             {
-                _cancellationTokenSource.Dispose(); // Dispose the old one if it exists
+                _cancellationTokenSource.Dispose();
             }
             _cancellationTokenSource = new CancellationTokenSource();
-            isTrainingActive = true;  // Set the flag to indicate that training has started
+            isTrainingActive = true;
             doodleStatusLabel.Text = "Status: Training...";
             doodleStatusLabel.ForeColor = System.Drawing.Color.DarkGreen;
+
+            // Show overlay if enabled
+            if (showDoodleOverlayCheckBox.Checked)
+            {
+                if (_doodleOverlay == null || _doodleOverlay.IsDisposed)
+                {
+                    _doodleOverlay = new Views.DoodleOverlayForm();
+                }
+                DoodleTraining.Overlay = _doodleOverlay;
+                _doodleOverlay.Show();
+                _doodleOverlay.UpdateProgress(numberOfFeeds, numberOfScratches, unlimitedCheckBox, selectedTrick);
+            }
 
             try
             {
                 // Run the training task
+                int cycles = Convert.ToInt32(numericUpDownMaxTricks.Value);
                 await Task.Run(() => new DoodleTraining().StartDoodleTraining(
                     numberOfFeeds, numberOfScratches, unlimitedCheckBox,
-                    selectedTrick, justFeed, justScratch, _cancellationTokenSource.Token),
+                    selectedTrick, justFeed, justScratch, _cancellationTokenSource.Token, cycles),
                     _cancellationTokenSource.Token);
 
                 // Training completed successfully
@@ -67,6 +79,10 @@ namespace ToonTown_Rewritten_Bot
             catch (OperationCanceledException)
             {
                 isTrainingActive = false;
+                doodleStatusLabel.Text = "Status: Stopped";
+                doodleStatusLabel.ForeColor = System.Drawing.Color.DarkRed;
+                CoreFunctionality.BringBotWindowToFront();
+                MessageBox.Show("Doodle Training stopped!", "Training Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -81,6 +97,15 @@ namespace ToonTown_Rewritten_Bot
                 isTrainingActive = false;
                 doodleStatusLabel.Text = "Status: Idle";
                 doodleStatusLabel.ForeColor = System.Drawing.Color.Gray;
+
+                // Close overlay
+                DoodleTraining.Overlay = null;
+                if (_doodleOverlay != null && !_doodleOverlay.IsDisposed)
+                {
+                    _doodleOverlay.Close();
+                    _doodleOverlay.Dispose();
+                    _doodleOverlay = null;
+                }
             }
         }
 

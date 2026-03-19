@@ -100,6 +100,8 @@ namespace ToonTown_Rewritten_Bot
             numericUpDownWaitAttempts.Value = Math.Max(numericUpDownWaitAttempts.Minimum, Math.Min(numericUpDownWaitAttempts.Maximum, prefs.MaxFishWaitSeconds));
             showOverlayCheckBox.Checked = prefs.ShowFishingOverlay;
             quickCastingCheckBox.Checked = prefs.QuickCasting;
+            backgroundModeCheckBox.Checked = prefs.BackgroundMode;
+            CoreFunctionality.UseBackgroundInput = prefs.BackgroundMode;
 
             // Custom Fishing preferences
             if (!string.IsNullOrEmpty(prefs.CustomFishingFile))
@@ -133,6 +135,8 @@ namespace ToonTown_Rewritten_Bot
             unlimitedTrainingCheckBox.Checked = prefs.UnlimitedTraining;
             justFeedDoodleCheckBox.Checked = prefs.JustFeedDoodle;
             justScratchDoodleCheckBox.Checked = prefs.JustScratchDoodle;
+            showDoodleOverlayCheckBox.Checked = prefs.ShowDoodleOverlay;
+            numericUpDownMaxTricks.Value = Math.Max(numericUpDownMaxTricks.Minimum, Math.Min(numericUpDownMaxTricks.Maximum, prefs.TrainingCycles));
 
             // Gardening preferences
             waterPlantNumericUpDown.Value = Math.Max(waterPlantNumericUpDown.Minimum, Math.Min(waterPlantNumericUpDown.Maximum, prefs.WaterPlantCount));
@@ -186,6 +190,7 @@ namespace ToonTown_Rewritten_Bot
             prefs.MaxFishWaitSeconds = (int)numericUpDownWaitAttempts.Value;
             prefs.ShowFishingOverlay = showOverlayCheckBox.Checked;
             prefs.QuickCasting = quickCastingCheckBox.Checked;
+            prefs.BackgroundMode = backgroundModeCheckBox.Checked;
 
             // Custom Fishing preferences
             prefs.CustomFishingFile = customFishingFilesComboBox.SelectedItem?.ToString() ?? "";
@@ -207,6 +212,8 @@ namespace ToonTown_Rewritten_Bot
             prefs.UnlimitedTraining = unlimitedTrainingCheckBox.Checked;
             prefs.JustFeedDoodle = justFeedDoodleCheckBox.Checked;
             prefs.JustScratchDoodle = justScratchDoodleCheckBox.Checked;
+            prefs.ShowDoodleOverlay = showDoodleOverlayCheckBox.Checked;
+            prefs.TrainingCycles = (int)numericUpDownMaxTricks.Value;
 
             // Gardening preferences
             prefs.WaterPlantCount = (int)waterPlantNumericUpDown.Value;
@@ -247,6 +254,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
+
         /// <summary>
         /// Global keyboard hook handler - works even when game has focus.
         /// </summary>
@@ -261,7 +269,10 @@ namespace ToonTown_Rewritten_Bot
                     return;
                 }
 
-                // Stop all active tasks
+                // Suppress the key so it doesn't reach the game
+                _globalKeyboardHook.SuppressKey = true;
+
+                // Stop all active tasks — catch blocks in start handlers show the feedback
                 if (this.InvokeRequired)
                 {
                     this.BeginInvoke(new Action(StopAllActiveTasks));

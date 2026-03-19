@@ -12,13 +12,13 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
     {
         public override async Task LeaveDockAndSellAsync(CancellationToken cancellationToken)
         {
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            SendKeyDown(VirtualKeyCode.UP);
             await Task.Delay(4000, cancellationToken);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            SendKeyUp(VirtualKeyCode.UP);
             await SellFishAsync(cancellationToken);
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.DOWN);
+            SendKeyDown(VirtualKeyCode.DOWN);
             await Task.Delay(6500, cancellationToken);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.DOWN);
+            SendKeyUp(VirtualKeyCode.DOWN);
         }
     }
 }
