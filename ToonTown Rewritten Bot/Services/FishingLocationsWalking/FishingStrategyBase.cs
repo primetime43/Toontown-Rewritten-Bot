@@ -824,6 +824,33 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             var windowRect = CoreFunctionality.GetGameWindowRect();
             if (windowRect.IsEmpty) return Task.FromResult(false);
 
+            if (UseBackgroundInput)
+            {
+                // Capture one screenshot and sample pixels from it (works even when window is obscured)
+                try
+                {
+                    using var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot();
+                    var windowOffset = new Point(windowRect.X, windowRect.Y);
+                    return Task.FromResult(CheckIfFishCaughtCore(windowRect, screenshot, windowOffset));
+                }
+                catch
+                {
+                    return Task.FromResult(false);
+                }
+            }
+
+            return Task.FromResult(CheckIfFishCaughtCore(windowRect, null, Point.Empty));
+        }
+
+        private bool CheckIfFishCaughtCore(Rectangle windowRect, Bitmap screenshot, Point windowOffset)
+        {
+            Color SampleColor(int x, int y)
+            {
+                if (screenshot != null)
+                    return GetColorFromScreenshot(screenshot, x, y, windowOffset);
+                return GetColorAt(x, y);
+            }
+
             // --- Primary: Pond occlusion detection ---
             // When a catch popup appears it covers most of the pond area.
             // Sample a grid across the pond region and count how many points
@@ -845,8 +872,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     double xFrac = 0.20 + (0.60 * (c + 0.5) / cols);
                     int x = windowRect.X + (int)(windowRect.Width * xFrac);
 
-                    var color = GetColorAt(x, y);
-                    if (!IsWaterColor(color))
+                    var color = SampleColor(x, y);
+                    if (color != Color.Empty && !IsWaterColor(color))
                         nonWaterCount++;
                 }
             }
@@ -857,7 +884,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             if (occlusionRatio >= PondOcclusionThreshold)
             {
                 Logger.Info("Fishing", $"Popup confirmed via pond occlusion ({occlusionRatio:P0} >= {PondOcclusionThreshold:P0})");
-                return Task.FromResult(true);
+                return true;
             }
 
             // --- Secondary: Centered cream/green color-spot check ---
@@ -880,7 +907,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
             foreach (var pos in positionsToCheck)
             {
-                var color = GetColorAt(pos.X, pos.Y);
+                var color = SampleColor(pos.X, pos.Y);
+                if (color == Color.Empty) continue;
 
                 if (IsCreamColor(color))
                 {
@@ -896,11 +924,11 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 if (matchCount >= MinPopupMatchCount)
                 {
                     Logger.Info("Fishing", $"Popup confirmed via color-spot ({matchCount} matches)");
-                    return Task.FromResult(true);
+                    return true;
                 }
             }
 
-            return Task.FromResult(false);
+            return false;
         }
 
         /// <summary>
@@ -1095,7 +1123,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
             // Drag straight down (this makes the toon face forward/center)
             int straightY = btnY + 150; // Drag down 150 pixels
-            MoveCursor(btnX, straightY);
+            SimulateDragMove(btnX, straightY);
             await Task.Delay(300, cancellationToken);
 
             // Press ESC to cancel the cast WHILE still holding the mouse button
@@ -1103,7 +1131,15 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             IsSimulatedKeyPress = true;
             try
             {
-                SendKeys.SendWait("{ESC}");
+                if (UseBackgroundInput)
+                {
+                    PostBackgroundKeyDown(0x1B); // VK_ESCAPE
+                    PostBackgroundKeyUp(0x1B);
+                }
+                else
+                {
+                    SendKeys.SendWait("{ESC}");
+                }
             }
             finally
             {

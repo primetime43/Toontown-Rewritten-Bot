@@ -80,7 +80,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         var keyCode = _actionKeys.GetKeyCodeFromString(actionCommand.Command);
                         if (keyCode.HasValue)
                         {
-                            InputSimulator.SimulateKeyDown(keyCode.Value);
+                            SendKeyDown(keyCode.Value);
                             Debug.WriteLine($"Key down: {keyCode.Value} (from command '{actionCommand.Command}')");
 
                             // Find the next action to determine hold duration
@@ -100,7 +100,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                             }
 
                             await Task.Delay(delayMs, cancellationToken).ConfigureAwait(false);
-                            InputSimulator.SimulateKeyUp(keyCode.Value);
+                            SendKeyUp(keyCode.Value);
                             Debug.WriteLine($"Key up: {keyCode.Value}");
                         }
                         else

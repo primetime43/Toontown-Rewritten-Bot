@@ -77,6 +77,13 @@ namespace ToonTown_Rewritten_Bot
                 int numberOfCasts = Convert.ToInt32(numericUpDownCustomCasts.Value);
                 int numberOfSells = Convert.ToInt32(numericUpDownCustomSells.Value);
 
+                // Prompt user to calibrate scan area and pond colors if not set
+                if (customAutoDetectFishCheckBox.Checked)
+                {
+                    if (!PromptCalibrationIfNeeded("CUSTOM FISHING ACTION"))
+                        return;
+                }
+
                 var result = MessageBox.Show("Make sure you're at the fishing dock before pressing OK!",
                     "Ready to Fish?", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 if (result != DialogResult.OK)

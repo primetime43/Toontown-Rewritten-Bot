@@ -118,10 +118,29 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
             }
 
-            // Image rec failed - check if we have manual coordinates as fallback
+            // Image rec failed - offer to recapture or add variant
+            if (HasTemplate(elementName))
+            {
+                Logger.Info("TemplateMatch", $"Template exists for '{elementName}' but could not find it on screen");
+                bool recaptured = PromptForVariantOrRecapture(elementName, description ?? $"Please select the '{elementName}' on screen");
+                if (recaptured)
+                {
+                    // Try again with the new/updated template
+                    var retryResult = await FindElementAsync(elementName);
+                    if (retryResult.HasValue)
+                    {
+                        element.CachedCenter = retryResult.Value;
+                        element.LastFoundTime = DateTime.Now;
+                        SaveElementData();
+                        return retryResult;
+                    }
+                }
+            }
+
+            // Check if we have manual coordinates as fallback
             if (element.ManualCoordinates.HasValue)
             {
-                Logger.Info("TemplateMatch", $"Image rec failed, using manual coordinates for '{elementName}'");
+                Logger.Info("TemplateMatch", $"Using manual coordinates for '{elementName}'");
                 return element.ManualCoordinates;
             }
 
@@ -151,6 +170,91 @@ namespace ToonTown_Rewritten_Bot.Utilities
             // Bring bot window to front first so the capture dialog is visible
             ToonTown_Rewritten_Bot.Services.CoreFunctionality.BringBotWindowToFront();
             return TemplateCaptureForm.CaptureTemplate(elementName, description);
+        }
+
+        /// <summary>
+        /// Prompts user to replace the existing template or add a new variant when
+        /// a template exists but can't be found on screen.
+        /// </summary>
+        /// <returns>True if a template was captured</returns>
+        private bool PromptForVariantOrRecapture(string elementName, string description)
+        {
+            bool result = false;
+
+            void ShowPrompt()
+            {
+                ToonTown_Rewritten_Bot.Services.CoreFunctionality.BringBotWindowToFront();
+
+                int variantCount = GetVariantCount(elementName);
+
+                using (var dialog = new Form())
+                {
+                    dialog.Text = "Element Not Found";
+                    dialog.ClientSize = new System.Drawing.Size(400, 150);
+                    dialog.FormBorderStyle = FormBorderStyle.FixedDialog;
+                    dialog.StartPosition = FormStartPosition.CenterScreen;
+                    dialog.MaximizeBox = false;
+                    dialog.MinimizeBox = false;
+
+                    var label = new Label
+                    {
+                        Text = $"Could not find '{elementName}' on screen.\n\n" +
+                               $"Current template has {variantCount} variant{(variantCount != 1 ? "s" : "")}.",
+                        Location = new System.Drawing.Point(15, 15),
+                        Size = new System.Drawing.Size(370, 60),
+                        AutoSize = false
+                    };
+
+                    var btnReplace = new Button
+                    {
+                        Text = "Replace Template",
+                        Location = new System.Drawing.Point(15, 100),
+                        Size = new System.Drawing.Size(120, 30)
+                    };
+                    btnReplace.Click += (s, e) => { dialog.Tag = "replace"; dialog.Close(); };
+
+                    var btnVariant = new Button
+                    {
+                        Text = "Add Variant",
+                        Location = new System.Drawing.Point(145, 100),
+                        Size = new System.Drawing.Size(120, 30)
+                    };
+                    btnVariant.Click += (s, e) => { dialog.Tag = "variant"; dialog.Close(); };
+
+                    var btnSkip = new Button
+                    {
+                        Text = "Skip",
+                        Location = new System.Drawing.Point(305, 100),
+                        Size = new System.Drawing.Size(80, 30),
+                        DialogResult = DialogResult.Cancel
+                    };
+
+                    dialog.Controls.AddRange(new Control[] { label, btnReplace, btnVariant, btnSkip });
+                    dialog.CancelButton = btnSkip;
+                    dialog.ShowDialog();
+
+                    string choice = dialog.Tag as string;
+                    if (choice == "replace")
+                    {
+                        result = TemplateCaptureForm.CaptureTemplate(elementName, description);
+                    }
+                    else if (choice == "variant")
+                    {
+                        result = TemplateCaptureForm.CaptureVariant(elementName, description);
+                    }
+                }
+            }
+
+            if (Application.OpenForms.Count > 0 && Application.OpenForms[0].InvokeRequired)
+            {
+                Application.OpenForms[0].Invoke(new Action(ShowPrompt));
+            }
+            else
+            {
+                ShowPrompt();
+            }
+
+            return result;
         }
 
         /// <summary>

@@ -58,6 +58,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public bool WaitForFishBeforeCasting { get; set; } = false;
         public int MaxFishWaitSeconds { get; set; } = 20;
         public bool QuickCasting { get; set; } = false;
+        public bool BackgroundMode { get; set; } = false;
 
         // Golf preferences
         public string GolfCourse { get; set; } = "";
@@ -70,6 +71,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public bool UnlimitedTraining { get; set; } = false;
         public bool JustFeedDoodle { get; set; } = false;
         public bool JustScratchDoodle { get; set; } = false;
+        public bool ShowDoodleOverlay { get; set; } = false;
+        public int TrainingCycles { get; set; } = 1;
 
         // Gardening preferences
         public int WaterPlantCount { get; set; } = 2;
@@ -144,6 +147,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             WaitForFishBeforeCasting = false;
             MaxFishWaitSeconds = 20;
             QuickCasting = false;
+            BackgroundMode = false;
 
             GolfCourse = "";
             ShowGolfOverlay = true;
@@ -154,6 +158,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
             UnlimitedTraining = false;
             JustFeedDoodle = false;
             JustScratchDoodle = false;
+            ShowDoodleOverlay = false;
+            TrainingCycles = 1;
 
             WaterPlantCount = 2;
             FlowerBeanAmount = "";
