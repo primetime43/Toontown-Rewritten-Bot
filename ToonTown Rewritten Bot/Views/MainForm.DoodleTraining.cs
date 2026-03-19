@@ -67,6 +67,10 @@ namespace ToonTown_Rewritten_Bot
             catch (OperationCanceledException)
             {
                 isTrainingActive = false;
+                doodleStatusLabel.Text = "Status: Stopped";
+                doodleStatusLabel.ForeColor = System.Drawing.Color.DarkRed;
+                CoreFunctionality.BringBotWindowToFront();
+                MessageBox.Show("Doodle Training stopped!", "Training Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
