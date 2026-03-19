@@ -250,6 +250,7 @@ namespace ToonTown_Rewritten_Bot
             }
         }
 
+
         /// <summary>
         /// Global keyboard hook handler - works even when game has focus.
         /// </summary>
@@ -264,7 +265,10 @@ namespace ToonTown_Rewritten_Bot
                     return;
                 }
 
-                // Stop all active tasks
+                // Suppress the key so it doesn't reach the game
+                _globalKeyboardHook.SuppressKey = true;
+
+                // Stop all active tasks — catch blocks in start handlers show the feedback
                 if (this.InvokeRequired)
                 {
                     this.BeginInvoke(new Action(StopAllActiveTasks));

@@ -23,6 +23,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private bool _disposed = false;
 
         /// <summary>
+        /// When true, the next handled key press will be suppressed (not passed to the game).
+        /// Set by the event handler to consume the key.
+        /// </summary>
+        public bool SuppressKey { get; set; }
+
+        /// <summary>
         /// Event raised when a key is pressed globally.
         /// </summary>
         public event EventHandler<Keys> KeyPressed;
@@ -102,6 +108,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
                 try
                 {
+                    SuppressKey = false;
+
                     if (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
                     {
                         KeyPressed?.Invoke(this, key);
@@ -109,6 +117,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     else if (wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP)
                     {
                         KeyReleased?.Invoke(this, key);
+                    }
+
+                    // If the event handler set SuppressKey, don't pass the key to the game
+                    if (SuppressKey)
+                    {
+                        return (IntPtr)1;
                     }
                 }
                 catch (Exception ex)
