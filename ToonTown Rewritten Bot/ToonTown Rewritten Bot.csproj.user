@@ -39,6 +39,9 @@
     <Compile Update="Views\CustomGolfWizardForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Views\DoodleOverlayForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Views\FishCalibrationForm.cs">
       <SubType>Form</SubType>
     </Compile>
