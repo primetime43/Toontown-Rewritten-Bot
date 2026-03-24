@@ -90,22 +90,19 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
             }
 
+            // If we have cached coordinates, trust them without re-verifying.
+            // UI elements like buttons don't move during a session, and re-verifying
+            // via template matching on every call is unreliable (PrintWindow can return
+            // partial frames from 3D-rendered games).
+            if (!forceSearch && element.HasCachedCoordinates)
+            {
+                Logger.Debug("TemplateMatch", $"'{elementName}' using cached location");
+                return element.CachedCenter;
+            }
+
             // Now we have a template, try image recognition
             if (HasTemplate(elementName))
             {
-                // If we have cached coordinates and not forcing search, verify first
-                if (!forceSearch && element.HasCachedCoordinates)
-                {
-                    // Quick verify at cached location
-                    bool stillThere = await VerifyElementAtLocationAsync(elementName, element.CachedCenter.Value);
-                    if (stillThere)
-                    {
-                        Logger.Debug("TemplateMatch", $"'{elementName}' found at cached location");
-                        return element.CachedCenter;
-                    }
-                    Logger.Debug("TemplateMatch", $"'{elementName}' not at cached location, searching...");
-                }
-
                 // Search for the element
                 var result = await FindElementAsync(elementName);
                 if (result.HasValue)
@@ -118,7 +115,15 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
             }
 
-            // Image rec failed - offer to recapture or add variant
+            // Image rec failed — fall back to manual/cached coordinates silently
+            // before interrupting the user with a recapture dialog
+            if (element.ManualCoordinates.HasValue)
+            {
+                Logger.Info("TemplateMatch", $"Image rec failed, using manual coordinates for '{elementName}'");
+                return element.ManualCoordinates;
+            }
+
+            // No fallback available — offer to recapture or add variant
             if (HasTemplate(elementName))
             {
                 Logger.Info("TemplateMatch", $"Template exists for '{elementName}' but could not find it on screen");
@@ -135,13 +140,6 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         return retryResult;
                     }
                 }
-            }
-
-            // Check if we have manual coordinates as fallback
-            if (element.ManualCoordinates.HasValue)
-            {
-                Logger.Info("TemplateMatch", $"Using manual coordinates for '{elementName}'");
-                return element.ManualCoordinates;
             }
 
             Logger.Warning("TemplateMatch", $"Could not find '{elementName}'");
