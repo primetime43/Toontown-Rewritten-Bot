@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Tesseract;
@@ -561,23 +562,26 @@ namespace ToonTown_Rewritten_Bot.Utilities
         #region Helper Methods
 
         /// <summary>
-        /// Checks that native Tesseract DLLs exist before attempting to load them.
-        /// Throws a clear error message if missing.
+        /// Verifies native Tesseract DLLs exist and pre-loads them into the process.
+        /// In single-file published executables, Assembly.Location returns empty string,
+        /// causing Tesseract's internal path resolver to pass null to Path.Combine and crash
+        /// with "Value cannot be null (Parameter 'path1')". By loading the DLLs ourselves
+        /// before TesseractEngine is created, the P/Invoke calls find them already loaded.
         /// </summary>
         private static void VerifyNativeDlls()
         {
             string x64Dir = Path.Combine(AppPaths.ExeDirectory, "x64");
-            string tesseractDll = Path.Combine(x64Dir, "tesseract50.dll");
             string leptonicaDll = Path.Combine(x64Dir, "leptonica-1.82.0.dll");
+            string tesseractDll = Path.Combine(x64Dir, "tesseract50.dll");
 
             var missing = new System.Collections.Generic.List<string>();
-            if (!File.Exists(tesseractDll))
-            {
-                missing.Add("x64/tesseract50.dll");
-            }
             if (!File.Exists(leptonicaDll))
             {
                 missing.Add("x64/leptonica-1.82.0.dll");
+            }
+            if (!File.Exists(tesseractDll))
+            {
+                missing.Add("x64/tesseract50.dll");
             }
 
             if (missing.Count > 0)
@@ -587,6 +591,23 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     $"Expected location: {x64Dir}\n\n" +
                     "These files are required for OCR features (doodle tricks, auto golf).\n" +
                     "Please re-download the bot or copy the x64 folder next to the executable.");
+            }
+
+            // Pre-load native DLLs so Tesseract's P/Invoke finds them already in the process.
+            // Leptonica must be loaded first since tesseract50.dll depends on it.
+            if (!NativeLibrary.TryLoad(leptonicaDll, out _))
+            {
+                throw new InvalidOperationException(
+                    $"Failed to load native library: {leptonicaDll}\n\n" +
+                    "This may indicate a missing Visual C++ Redistributable.\n" +
+                    "Download it from: https://aka.ms/vs/17/release/vc_redist.x64.exe");
+            }
+            if (!NativeLibrary.TryLoad(tesseractDll, out _))
+            {
+                throw new InvalidOperationException(
+                    $"Failed to load native library: {tesseractDll}\n\n" +
+                    "This may indicate a missing Visual C++ Redistributable.\n" +
+                    "Download it from: https://aka.ms/vs/17/release/vc_redist.x64.exe");
             }
         }
 
