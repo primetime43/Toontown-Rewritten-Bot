@@ -89,8 +89,23 @@ namespace ToonTown_Rewritten_Bot.Services
             _justFeed = justFeed;
             _justScratch = justScratch;
 
-            // Initialize OCR for SpeedChat menu reading
-            _ocr = new TextRecognition();
+            // Only initialize OCR if tricks are selected (feed/scratch don't need it)
+            if (_selectedTrick != "None")
+            {
+                try
+                {
+                    _ocr = new TextRecognition();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("Doodle", $"OCR initialization failed: {ex.Message}");
+                    throw new InvalidOperationException(
+                        "OCR initialization failed. Trick training requires OCR.\n\n" +
+                        "Try clicking 'Download OCR Data' on the Dev tab, then restart the app.\n\n" +
+                        "Feed and scratch training can still be used without OCR by selecting trick 'None'.",
+                        ex);
+                }
+            }
 
             // Doodle training always uses foreground mode (background mode is for fishing only)
             bool savedBackgroundMode = UseBackgroundInput;
