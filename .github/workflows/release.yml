@@ -15,6 +15,7 @@ env:
   DOTNET_VERSION: '10.0.x'
   PROJECT_PATH: 'ToonTown Rewritten Bot/ToonTown Rewritten Bot.csproj'
   OUTPUT_NAME: 'ToonTown-Rewritten-Bot'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
