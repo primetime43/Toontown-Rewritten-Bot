@@ -44,16 +44,32 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
             }
 
+            // Log diagnostic info for debugging OCR init issues
+            string x64Dir = Path.Combine(AppPaths.ExeDirectory, "x64");
+            Logger.Info("OCR", $"Initializing Tesseract OCR...");
+            Logger.Info("OCR", $"ExeDirectory: {AppPaths.ExeDirectory}");
+            Logger.Info("OCR", $"TessData path: {dataPath}");
+            Logger.Info("OCR", $"tessdata exists: {Directory.Exists(dataPath)}");
+            Logger.Info("OCR", $"eng.traineddata exists: {File.Exists(Path.Combine(dataPath, "eng.traineddata"))}");
+            Logger.Info("OCR", $"x64 dir exists: {Directory.Exists(x64Dir)}");
+            Logger.Info("OCR", $"tesseract50.dll exists: {File.Exists(Path.Combine(x64Dir, "tesseract50.dll"))}");
+            Logger.Info("OCR", $"leptonica-1.82.0.dll exists: {File.Exists(Path.Combine(x64Dir, "leptonica-1.82.0.dll"))}");
+#pragma warning disable IL3000 // Intentionally logging Assembly.Location for diagnostics
+            Logger.Info("OCR", $"Assembly.Location: '{typeof(TesseractEngine).Assembly.Location}'");
+#pragma warning restore IL3000
+
             // Tell Tesseract where to find its native DLLs.
             // In single-file published executables, Assembly.Location returns empty string,
             // causing Tesseract's internal path resolver to pass null to Path.Combine.
             // Setting CustomSearchPath bypasses that broken resolution entirely.
             // Note: Tesseract auto-appends the platform folder (x64) to this path.
             TesseractEnviornment.CustomSearchPath = AppPaths.ExeDirectory;
+            Logger.Info("OCR", $"Set CustomSearchPath to: {AppPaths.ExeDirectory}");
 
             try
             {
                 _engine = new TesseractEngine(dataPath, language, EngineMode.Default);
+                Logger.Info("OCR", "Tesseract engine initialized successfully");
             }
             catch (Exception ex)
             {
@@ -63,6 +79,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 {
                     innerEx = innerEx.InnerException;
                 }
+
+                Logger.Error("OCR", $"Tesseract init failed: {innerEx.GetType().Name}: {innerEx.Message}");
+                Logger.Error("OCR", $"Stack trace: {innerEx.StackTrace}");
 
                 throw new InvalidOperationException(
                     $"Failed to initialize Tesseract OCR engine: {innerEx.Message}\n\n" +
