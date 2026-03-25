@@ -15,6 +15,7 @@ env:
   DOTNET_VERSION: '10.0.x'
   PROJECT_PATH: 'ToonTown Rewritten Bot/ToonTown Rewritten Bot.csproj'
   OUTPUT_NAME: 'ToonTown-Rewritten-Bot'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
@@ -22,10 +23,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
@@ -135,7 +136,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload build artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ env.OUTPUT_NAME }}-${{ steps.get_version.outputs.VERSION }}
         path: ./release/
