@@ -34,7 +34,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 // Check if game window is available and focus it
                 if (!EnsureGameWindowReadyWithMessage())
                 {
-                    HideOverlay();
+                    CloseOverlay();
                     return;
                 }
                 FocusTTRWindow();
@@ -144,7 +144,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
             finally
             {
-                HideOverlay();
+                CloseOverlay();
             }
         }
 
@@ -247,7 +247,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 var mainForm = Application.OpenForms[0];
                 if (mainForm.InvokeRequired)
                 {
-                    mainForm.BeginInvoke(new Action(ShowOverlayInternal));
+                    mainForm.Invoke(new Action(ShowOverlayInternal));
                     return;
                 }
             }
@@ -261,10 +261,16 @@ namespace ToonTown_Rewritten_Bot.Services
                 _overlay = new GardeningOverlayForm();
                 _overlay.Show();
             }
+            else if (!_overlay.Visible)
+            {
+                _overlay.Show();
+            }
         }
 
         /// <summary>
-        /// Hides and disposes the gardening overlay. Thread-safe.
+        /// Hides the gardening overlay without disposing it, so the next ShowOverlay
+        /// brings it back with all state intact. Used around template lookups to keep
+        /// the overlay out of any template capture prompts. Thread-safe.
         /// </summary>
         public static void HideOverlay()
         {
@@ -273,7 +279,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 var mainForm = Application.OpenForms[0];
                 if (mainForm.InvokeRequired)
                 {
-                    mainForm.BeginInvoke(new Action(HideOverlayInternal));
+                    mainForm.Invoke(new Action(HideOverlayInternal));
                     return;
                 }
             }
@@ -281,6 +287,33 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         private static void HideOverlayInternal()
+        {
+            if (_overlay != null && !_overlay.IsDisposed && _overlay.Visible)
+            {
+                _overlay.Hide();
+            }
+        }
+
+        /// <summary>
+        /// Closes and disposes the gardening overlay. Use at the end of a planting
+        /// session — for in-session hiding, prefer HideOverlay so state is preserved.
+        /// Thread-safe.
+        /// </summary>
+        public static void CloseOverlay()
+        {
+            if (Application.OpenForms.Count > 0)
+            {
+                var mainForm = Application.OpenForms[0];
+                if (mainForm.InvokeRequired)
+                {
+                    mainForm.Invoke(new Action(CloseOverlayInternal));
+                    return;
+                }
+            }
+            CloseOverlayInternal();
+        }
+
+        private static void CloseOverlayInternal()
         {
             if (_overlay != null && !_overlay.IsDisposed)
             {
