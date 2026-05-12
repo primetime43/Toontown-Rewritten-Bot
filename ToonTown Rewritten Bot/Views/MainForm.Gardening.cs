@@ -128,6 +128,8 @@ namespace ToonTown_Rewritten_Bot
             // applies this many waters at the end of the routine.
             int waterCount = (int)waterPlantNumericUpDown.Value;
 
+            SetPlantStatus($"Planting {selectedFlower}...", Color.DimGray);
+
             try
             {
                 if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
@@ -137,17 +139,25 @@ namespace ToonTown_Rewritten_Bot
                 }
 
                 await Task.Run(() => Services.Gardening.PlantFlowerAsync(beanCombo, selectedFlower, waterCount, _cancellationTokenSource.Token));
+                SetPlantStatus($"✓ {selectedFlower} planted ({DateTime.Now:HH:mm:ss})", Color.ForestGreen);
             }
             catch (OperationCanceledException)
             {
-                MessageBox.Show("Planting was canceled.", "Gardening", MessageBoxButtons.OK, MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                SetPlantStatus($"⚠ Planting cancelled ({DateTime.Now:HH:mm:ss})", Color.DarkOrange);
             }
             catch (Exception ex)
             {
+                SetPlantStatus($"✗ Error ({DateTime.Now:HH:mm:ss})", Color.Firebrick);
                 MessageBox.Show($"An error occurred: {ex.Message}", "Gardening Error", MessageBoxButtons.OK, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
+        }
+
+        private void SetPlantStatus(string text, Color color)
+        {
+            plantStatusLabel.Text = text;
+            plantStatusLabel.ForeColor = color;
+            toolTip1.SetToolTip(plantStatusLabel, text);
         }
 
         private void stopPlantingBtn_Click(object sender, EventArgs e)

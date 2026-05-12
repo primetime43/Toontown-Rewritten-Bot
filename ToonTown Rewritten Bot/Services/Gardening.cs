@@ -122,25 +122,10 @@ namespace ToonTown_Rewritten_Bot.Services
                     }
                 }
 
-                InvokeOverlay(() => _overlay?.SetStatus("Completed"));
-
-                MessageBox.Show(
-                    "Done!",
-                    "Gardening Complete",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.None,
-                    MessageBoxDefaultButton.Button1,
-                    MessageBoxOptions.DefaultDesktopOnly);
-            }
-            catch (OperationCanceledException)
-            {
-                InvokeOverlay(() => _overlay?.SetStatus("Cancelled"));
-                throw;
-            }
-            catch
-            {
-                InvokeOverlay(() => _overlay?.SetStatus("Cancelled"));
-                throw;
+                // Audible cue — the bot UI's plantStatusLabel handles the visible
+                // "done" indicator, so we don't bother updating the overlay before
+                // CloseOverlay tears it down.
+                System.Media.SystemSounds.Asterisk.Play();
             }
             finally
             {
