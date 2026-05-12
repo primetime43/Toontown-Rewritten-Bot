@@ -1051,8 +1051,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
             // Clean up the text
             text = text.Replace("\n", " ").Replace("\r", " ").Trim();
 
-            // First, try exact match
-            foreach (var kvp in CourseNameToFile)
+            // Iterate longest-name-first so more specific entries claim the match
+            // before shorter substrings of them can. Without this, "Whole in Won"
+            // wins when the OCR text is actually "Whole in Won-2" because the
+            // shorter key is a substring of the longer.
+            var candidates = CourseNameToFile.OrderByDescending(kvp => kvp.Key.Length);
+
+            // First, try exact match (substring containment)
+            foreach (var kvp in candidates)
             {
                 if (text.IndexOf(kvp.Key, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
@@ -1062,7 +1068,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
 
             // Second, try fuzzy matching with keywords
-            foreach (var kvp in CourseNameToFile)
+            foreach (var kvp in candidates)
             {
                 // Split course name into words and check if most words match
                 string[] courseWords = kvp.Key.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries);
