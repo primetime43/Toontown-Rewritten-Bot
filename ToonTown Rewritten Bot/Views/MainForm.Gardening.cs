@@ -124,6 +124,9 @@ namespace ToonTown_Rewritten_Bot
                 return;
 
             string beanCombo = _plantComboDictionary[selectedFlower];
+            // Read the spinner on the UI thread before going async — the planting service
+            // applies this many waters at the end of the routine.
+            int waterCount = (int)waterPlantNumericUpDown.Value;
 
             try
             {
@@ -133,7 +136,7 @@ namespace ToonTown_Rewritten_Bot
                     _cancellationTokenSource = new CancellationTokenSource();
                 }
 
-                await Task.Run(() => Services.Gardening.PlantFlowerAsync(beanCombo, selectedFlower, _cancellationTokenSource.Token));
+                await Task.Run(() => Services.Gardening.PlantFlowerAsync(beanCombo, selectedFlower, waterCount, _cancellationTokenSource.Token));
             }
             catch (OperationCanceledException)
             {
@@ -267,6 +270,9 @@ namespace ToonTown_Rewritten_Bot
             }
 
             var gardeningKeys = new Models.GardeningActionKeys();
+            // Capture the post-plant water count from the UI now — we won't be on the UI
+            // thread once we start awaiting.
+            int plantWaterCount = (int)waterPlantNumericUpDown.Value;
 
             try
             {
@@ -309,7 +315,10 @@ namespace ToonTown_Rewritten_Bot
                             if (!string.IsNullOrEmpty(action.BeanSequence))
                             {
                                 string flowerName = !string.IsNullOrEmpty(action.FlowerName) ? action.FlowerName : "Custom Flower";
-                                await Services.Gardening.PlantFlowerAsync(action.BeanSequence, flowerName, _cancellationTokenSource.Token);
+                                // Per-action WaterCount on PLANT FLOWER overrides the UI setting
+                                // when authored explicitly; otherwise fall back to the user's spinner.
+                                int plantWaters = action.WaterCount > 0 ? action.WaterCount : plantWaterCount;
+                                await Services.Gardening.PlantFlowerAsync(action.BeanSequence, flowerName, plantWaters, _cancellationTokenSource.Token);
                             }
                             break;
 

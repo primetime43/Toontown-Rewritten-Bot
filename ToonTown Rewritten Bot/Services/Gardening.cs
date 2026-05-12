@@ -12,10 +12,12 @@ namespace ToonTown_Rewritten_Bot.Services
     {
         private static GardeningOverlayForm _overlay;
 
-        public static async Task PlantFlowerAsync(string flowerCombo, string flowerName, CancellationToken cancellationToken)
+        public static async Task PlantFlowerAsync(string flowerCombo, string flowerName, int waterCount, CancellationToken cancellationToken)
         {
+            if (waterCount < 0)
+                waterCount = 0;
+
             int beanCount = flowerCombo.Length;
-            int waterCount = 3;
             // Total steps: beans + plant button + OK + waterings
             int totalSteps = beanCount + 1 + 1 + waterCount;
             int step = 0;
@@ -90,30 +92,34 @@ namespace ToonTown_Rewritten_Bot.Services
                 // OK button
                 step++;
                 int okStep = step;
-                InvokeOverlay(() => _overlay?.UpdateAction("Confirming plant", "Watering (1/3)", okStep, totalSteps, 2000));
+                string okNextText = waterCount > 0 ? $"Watering (1/{waterCount})" : "Done";
+                InvokeOverlay(() => _overlay?.UpdateAction("Confirming plant", okNextText, okStep, totalSteps, 2000));
 
                 var (ox, oy) = await FindElementWithOverlayPause(GardeningCoordinatesEnum.BlueOkButton);
                 MoveCursor(ox, oy);
                 DoMouseClick();
                 await Task.Delay(2000, cancellationToken);
 
-                // Watering
-                var (wx, wy) = await FindElementWithOverlayPause(GardeningCoordinatesEnum.WateringCanButton);
-                for (int i = 0; i < waterCount; i++)
+                // Watering — skip the button lookup entirely if the user chose 0 waters
+                if (waterCount > 0)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    step++;
+                    var (wx, wy) = await FindElementWithOverlayPause(GardeningCoordinatesEnum.WateringCanButton);
+                    for (int i = 0; i < waterCount; i++)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        step++;
 
-                    int waterNum = i + 1;
-                    string nextWaterText = waterNum < waterCount
-                        ? $"Watering ({waterNum + 1}/{waterCount})"
-                        : "Done";
-                    int waterStep = step;
-                    InvokeOverlay(() => _overlay?.UpdateAction($"Watering ({waterNum}/{waterCount})", nextWaterText, waterStep, totalSteps, 4000));
+                        int waterNum = i + 1;
+                        string nextWaterText = waterNum < waterCount
+                            ? $"Watering ({waterNum + 1}/{waterCount})"
+                            : "Done";
+                        int waterStep = step;
+                        InvokeOverlay(() => _overlay?.UpdateAction($"Watering ({waterNum}/{waterCount})", nextWaterText, waterStep, totalSteps, 4000));
 
-                    MoveCursor(wx, wy);
-                    DoMouseClick();
-                    await Task.Delay(4000, cancellationToken);
+                        MoveCursor(wx, wy);
+                        DoMouseClick();
+                        await Task.Delay(4000, cancellationToken);
+                    }
                 }
 
                 InvokeOverlay(() => _overlay?.SetStatus("Completed"));
@@ -185,6 +191,9 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static async Task WaterPlantAsync(int waterPlantCount, CancellationToken cancellationToken)
         {
+            if (waterPlantCount <= 0)
+                return;
+
             // Use image recognition to find button (will prompt for template capture if needed)
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(GardeningCoordinatesEnum.WateringCanButton);
 
