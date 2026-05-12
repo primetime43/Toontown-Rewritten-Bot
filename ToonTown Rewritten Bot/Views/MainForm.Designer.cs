@@ -59,8 +59,8 @@
             autoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
             waitForFishCheckBox = new System.Windows.Forms.CheckBox();
             labelWaitAttempts = new System.Windows.Forms.Label();
-            labelWaitSec = new System.Windows.Forms.Label();
             numericUpDownWaitAttempts = new System.Windows.Forms.NumericUpDown();
+            labelWaitSec = new System.Windows.Forms.Label();
             showOverlayCheckBox = new System.Windows.Forms.CheckBox();
             quickCastingCheckBox = new System.Windows.Forms.CheckBox();
             backgroundModeCheckBox = new System.Windows.Forms.CheckBox();
@@ -138,6 +138,9 @@
             doodleTrainingGroup = new System.Windows.Forms.GroupBox();
             doodleTrickLabel = new System.Windows.Forms.Label();
             doodleTrickComboBox = new System.Windows.Forms.ComboBox();
+            maxTricksLabel = new System.Windows.Forms.Label();
+            numericUpDownMaxTricks = new System.Windows.Forms.NumericUpDown();
+            maxTricksTimesLabel = new System.Windows.Forms.Label();
             doodleFeedsLabel = new System.Windows.Forms.Label();
             numberOfDoodleFeedsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             doodleFeedsTimesLabel = new System.Windows.Forms.Label();
@@ -148,13 +151,10 @@
             unlimitedTrainingCheckBox = new System.Windows.Forms.CheckBox();
             justFeedDoodleCheckBox = new System.Windows.Forms.CheckBox();
             justScratchDoodleCheckBox = new System.Windows.Forms.CheckBox();
+            showDoodleOverlayCheckBox = new System.Windows.Forms.CheckBox();
             doodleSeparator2 = new System.Windows.Forms.Panel();
             startDoodleTrainingBtn = new System.Windows.Forms.Button();
             stopDoodleTrainingBtn = new System.Windows.Forms.Button();
-            showDoodleOverlayCheckBox = new System.Windows.Forms.CheckBox();
-            maxTricksLabel = new System.Windows.Forms.Label();
-            numericUpDownMaxTricks = new System.Windows.Forms.NumericUpDown();
-            maxTricksTimesLabel = new System.Windows.Forms.Label();
             doodleStatusLabel = new System.Windows.Forms.Label();
             doodleInfoGroup = new System.Windows.Forms.GroupBox();
             doodlePictureBox = new System.Windows.Forms.PictureBox();
@@ -208,11 +208,11 @@
             devOpenDebugBtn = new System.Windows.Forms.Button();
             devOpenLogViewerBtn = new System.Windows.Forms.Button();
             devDownloadOcrBtn = new System.Windows.Forms.Button();
+            devResetCoordinatesBtn = new System.Windows.Forms.Button();
             devCoordinatesGroup = new System.Windows.Forms.GroupBox();
             devCoordinatesComboBox = new System.Windows.Forms.ComboBox();
             devCoordSeparator = new System.Windows.Forms.Panel();
             devUpdateCoordinateBtn = new System.Windows.Forms.Button();
-            devResetCoordinatesBtn = new System.Windows.Forms.Button();
             devOpenConfigBtn = new System.Windows.Forms.Button();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
             timer1 = new System.Windows.Forms.Timer(components);
@@ -245,6 +245,7 @@
             golfHelpGroupBox.SuspendLayout();
             Doodles.SuspendLayout();
             doodleTrainingGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownMaxTricks).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numberOfDoodleFeedsNumericUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numberOfDoodleScratchesNumericUpDown).BeginInit();
             doodleInfoGroup.SuspendLayout();
@@ -616,7 +617,7 @@
             labelWaitAttempts.Location = new System.Drawing.Point(26, 75);
             labelWaitAttempts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             labelWaitAttempts.Name = "labelWaitAttempts";
-            labelWaitAttempts.Size = new System.Drawing.Size(35, 16);
+            labelWaitAttempts.Size = new System.Drawing.Size(33, 16);
             labelWaitAttempts.TabIndex = 2;
             labelWaitAttempts.Text = "wait:";
             // 
@@ -631,17 +632,17 @@
             numericUpDownWaitAttempts.TabIndex = 3;
             toolTip1.SetToolTip(numericUpDownWaitAttempts, "Seconds to wait for a fish shadow after a failed cast before casting again");
             numericUpDownWaitAttempts.Value = new decimal(new int[] { 20, 0, 0, 0 });
-            //
+            // 
             // labelWaitSec
-            //
+            // 
             labelWaitSec.AutoSize = true;
             labelWaitSec.Location = new System.Drawing.Point(118, 75);
             labelWaitSec.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             labelWaitSec.Name = "labelWaitSec";
-            labelWaitSec.Size = new System.Drawing.Size(25, 16);
+            labelWaitSec.Size = new System.Drawing.Size(29, 16);
             labelWaitSec.TabIndex = 30;
             labelWaitSec.Text = "sec";
-            //
+            // 
             // showOverlayCheckBox
             // 
             showOverlayCheckBox.AutoSize = true;
@@ -654,24 +655,23 @@
             toolTip1.SetToolTip(showOverlayCheckBox, "Shows a transparent overlay on the game window displaying detected fish shadows and targeting info.");
             showOverlayCheckBox.UseVisualStyleBackColor = true;
             showOverlayCheckBox.CheckedChanged += ShowOverlayCheckBox_CheckedChanged;
-            //
+            // 
             // quickCastingCheckBox
-            //
+            // 
             quickCastingCheckBox.AutoSize = true;
             quickCastingCheckBox.Location = new System.Drawing.Point(10, 129);
             quickCastingCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             quickCastingCheckBox.Name = "quickCastingCheckBox";
-            quickCastingCheckBox.Size = new System.Drawing.Size(109, 20);
+            quickCastingCheckBox.Size = new System.Drawing.Size(108, 20);
             quickCastingCheckBox.TabIndex = 5;
             quickCastingCheckBox.Text = "Quick Casting";
             toolTip1.SetToolTip(quickCastingCheckBox, "Casts quickly without waiting for the animation to finish. Faster but may occasionally misdetect fish caught.");
             quickCastingCheckBox.UseVisualStyleBackColor = true;
             quickCastingCheckBox.CheckedChanged += QuickCastingCheckBox_CheckedChanged;
-            //
+            // 
             // backgroundModeCheckBox
-            //
+            // 
             backgroundModeCheckBox.AutoSize = true;
-            backgroundModeCheckBox.Checked = false;
             backgroundModeCheckBox.Location = new System.Drawing.Point(10, 155);
             backgroundModeCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             backgroundModeCheckBox.Name = "backgroundModeCheckBox";
@@ -681,9 +681,9 @@
             toolTip1.SetToolTip(backgroundModeCheckBox, "Sends input directly to the game window so you can use your mouse freely while the bot runs. Disable if you have issues with detection or input.");
             backgroundModeCheckBox.UseVisualStyleBackColor = true;
             backgroundModeCheckBox.CheckedChanged += BackgroundModeCheckBox_CheckedChanged;
-            //
+            // 
             // fishingSeparator2
-            //
+            // 
             fishingSeparator2.BackColor = System.Drawing.Color.LightGray;
             fishingSeparator2.Location = new System.Drawing.Point(10, 185);
             fishingSeparator2.Name = "fishingSeparator2";
@@ -1525,31 +1525,31 @@
             doodleTrickComboBox.Size = new System.Drawing.Size(180, 24);
             doodleTrickComboBox.TabIndex = 1;
             toolTip1.SetToolTip(doodleTrickComboBox, "Select the trick you wish to train.");
-            //
+            // 
             // maxTricksLabel
-            //
+            // 
             maxTricksLabel.AutoSize = true;
             maxTricksLabel.Location = new System.Drawing.Point(10, 72);
             maxTricksLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             maxTricksLabel.Name = "maxTricksLabel";
-            maxTricksLabel.Size = new System.Drawing.Size(71, 16);
+            maxTricksLabel.Size = new System.Drawing.Size(51, 16);
             maxTricksLabel.TabIndex = 17;
             maxTricksLabel.Text = "Cycles:";
-            //
+            // 
             // numericUpDownMaxTricks
-            //
+            // 
             numericUpDownMaxTricks.Location = new System.Drawing.Point(85, 70);
             numericUpDownMaxTricks.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            numericUpDownMaxTricks.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDownMaxTricks.Maximum = new decimal(new int[] { 9999, 0, 0, 0 });
-            numericUpDownMaxTricks.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownMaxTricks.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDownMaxTricks.Name = "numericUpDownMaxTricks";
             numericUpDownMaxTricks.Size = new System.Drawing.Size(55, 22);
             numericUpDownMaxTricks.TabIndex = 18;
             toolTip1.SetToolTip(numericUpDownMaxTricks, "Number of training cycles. Each cycle = feed + scratch + trick. Ignored when 'Train until stopped' is checked.");
-            //
+            numericUpDownMaxTricks.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            // 
             // maxTricksTimesLabel
-            //
+            // 
             maxTricksTimesLabel.AutoSize = true;
             maxTricksTimesLabel.Location = new System.Drawing.Point(143, 72);
             maxTricksTimesLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1557,9 +1557,9 @@
             maxTricksTimesLabel.Size = new System.Drawing.Size(39, 16);
             maxTricksTimesLabel.TabIndex = 19;
             maxTricksTimesLabel.Text = "times";
-            //
+            // 
             // doodleFeedsLabel
-            //
+            // 
             doodleFeedsLabel.AutoSize = true;
             doodleFeedsLabel.Location = new System.Drawing.Point(10, 106);
             doodleFeedsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1668,9 +1668,9 @@
             toolTip1.SetToolTip(justScratchDoodleCheckBox, "Select this if you only want to train using scratching");
             justScratchDoodleCheckBox.UseVisualStyleBackColor = true;
             justScratchDoodleCheckBox.CheckedChanged += justScratchDoodleCheckBox_CheckedChanged;
-            //
+            // 
             // showDoodleOverlayCheckBox
-            //
+            // 
             showDoodleOverlayCheckBox.AutoSize = true;
             showDoodleOverlayCheckBox.Location = new System.Drawing.Point(10, 256);
             showDoodleOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -1680,9 +1680,9 @@
             showDoodleOverlayCheckBox.Text = "Show Overlay";
             toolTip1.SetToolTip(showDoodleOverlayCheckBox, "Shows a status overlay on the game window during doodle training.");
             showDoodleOverlayCheckBox.UseVisualStyleBackColor = true;
-            //
+            // 
             // doodleSeparator2
-            //
+            // 
             doodleSeparator2.BackColor = System.Drawing.Color.LightGray;
             doodleSeparator2.Location = new System.Drawing.Point(10, 286);
             doodleSeparator2.Name = "doodleSeparator2";
@@ -2257,9 +2257,9 @@
             toolTip1.SetToolTip(btnOpenTemplateDefinitions, "Open the TemplateDefinitions.json file to manually edit");
             btnOpenTemplateDefinitions.UseVisualStyleBackColor = true;
             btnOpenTemplateDefinitions.Click += btnOpenTemplateDefinitions_Click;
-            //
+            // 
             // btnManageVariants
-            //
+            // 
             btnManageVariants.Location = new System.Drawing.Point(10, 150);
             btnManageVariants.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnManageVariants.Name = "btnManageVariants";
@@ -2269,7 +2269,7 @@
             toolTip1.SetToolTip(btnManageVariants, "Open the variant manager for the selected template");
             btnManageVariants.UseVisualStyleBackColor = true;
             btnManageVariants.Click += btnManageVariants_Click;
-            //
+            // 
             // devDebugGroup
             // 
             devDebugGroup.Controls.Add(devDebugDescLabel);
@@ -2277,6 +2277,7 @@
             devDebugGroup.Controls.Add(devOpenDebugBtn);
             devDebugGroup.Controls.Add(devOpenLogViewerBtn);
             devDebugGroup.Controls.Add(devDownloadOcrBtn);
+            devDebugGroup.Controls.Add(devResetCoordinatesBtn);
             devDebugGroup.Location = new System.Drawing.Point(10, 10);
             devDebugGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             devDebugGroup.Name = "devDebugGroup";
@@ -2317,9 +2318,9 @@
             devOpenDebugBtn.Text = "Debug Window";
             devOpenDebugBtn.UseVisualStyleBackColor = false;
             devOpenDebugBtn.Click += devOpenDebugBtn_Click;
-            //
+            // 
             // devOpenLogViewerBtn
-            //
+            // 
             devOpenLogViewerBtn.BackColor = System.Drawing.Color.LightBlue;
             devOpenLogViewerBtn.Location = new System.Drawing.Point(150, 70);
             devOpenLogViewerBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -2329,25 +2330,37 @@
             devOpenLogViewerBtn.Text = "Log Viewer";
             devOpenLogViewerBtn.UseVisualStyleBackColor = false;
             devOpenLogViewerBtn.Click += devOpenLogViewerBtn_Click;
-            //
+            // 
             // devDownloadOcrBtn
-            //
+            // 
             devDownloadOcrBtn.Location = new System.Drawing.Point(10, 113);
             devDownloadOcrBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             devDownloadOcrBtn.Name = "devDownloadOcrBtn";
-            devDownloadOcrBtn.Size = new System.Drawing.Size(270, 35);
+            devDownloadOcrBtn.Size = new System.Drawing.Size(130, 35);
             devDownloadOcrBtn.TabIndex = 3;
-            devDownloadOcrBtn.Text = "Download OCR Data";
+            devDownloadOcrBtn.Text = "Download OCR";
             toolTip1.SetToolTip(devDownloadOcrBtn, "Download OCR language data for text recognition (runs automatically if needed)");
             devDownloadOcrBtn.UseVisualStyleBackColor = true;
             devDownloadOcrBtn.Click += devDownloadOcrBtn_Click;
+            // 
+            // devResetCoordinatesBtn
+            // 
+            devResetCoordinatesBtn.BackColor = System.Drawing.Color.MistyRose;
+            devResetCoordinatesBtn.Location = new System.Drawing.Point(150, 113);
+            devResetCoordinatesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            devResetCoordinatesBtn.Name = "devResetCoordinatesBtn";
+            devResetCoordinatesBtn.Size = new System.Drawing.Size(130, 35);
+            devResetCoordinatesBtn.TabIndex = 5;
+            devResetCoordinatesBtn.Text = "Reset State";
+            toolTip1.SetToolTip(devResetCoordinatesBtn, resources.GetString("devResetCoordinatesBtn.ToolTip"));
+            devResetCoordinatesBtn.UseVisualStyleBackColor = false;
+            devResetCoordinatesBtn.Click += devResetCoordinatesBtn_Click;
             // 
             // devCoordinatesGroup
             // 
             devCoordinatesGroup.Controls.Add(devCoordinatesComboBox);
             devCoordinatesGroup.Controls.Add(devCoordSeparator);
             devCoordinatesGroup.Controls.Add(devUpdateCoordinateBtn);
-            devCoordinatesGroup.Controls.Add(devResetCoordinatesBtn);
             devCoordinatesGroup.Controls.Add(devOpenConfigBtn);
             devCoordinatesGroup.Location = new System.Drawing.Point(310, 10);
             devCoordinatesGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -2388,26 +2401,13 @@
             devUpdateCoordinateBtn.UseVisualStyleBackColor = true;
             devUpdateCoordinateBtn.Click += devUpdateCoordinateBtn_Click;
             // 
-            // devResetCoordinatesBtn
-            // 
-            devResetCoordinatesBtn.BackColor = System.Drawing.Color.MistyRose;
-            devResetCoordinatesBtn.Location = new System.Drawing.Point(10, 113);
-            devResetCoordinatesBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            devResetCoordinatesBtn.Name = "devResetCoordinatesBtn";
-            devResetCoordinatesBtn.Size = new System.Drawing.Size(130, 35);
-            devResetCoordinatesBtn.TabIndex = 3;
-            devResetCoordinatesBtn.Text = "Reset All";
-            toolTip1.SetToolTip(devResetCoordinatesBtn, "Reset all coordinates to default values");
-            devResetCoordinatesBtn.UseVisualStyleBackColor = false;
-            devResetCoordinatesBtn.Click += devResetCoordinatesBtn_Click;
-            // 
             // devOpenConfigBtn
             // 
-            devOpenConfigBtn.Location = new System.Drawing.Point(150, 113);
+            devOpenConfigBtn.Location = new System.Drawing.Point(10, 113);
             devOpenConfigBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             devOpenConfigBtn.Name = "devOpenConfigBtn";
-            devOpenConfigBtn.Size = new System.Drawing.Size(130, 35);
-            devOpenConfigBtn.TabIndex = 4;
+            devOpenConfigBtn.Size = new System.Drawing.Size(270, 35);
+            devOpenConfigBtn.TabIndex = 3;
             devOpenConfigBtn.Text = "Open Config";
             toolTip1.SetToolTip(devOpenConfigBtn, "Open the coordinates configuration file");
             devOpenConfigBtn.UseVisualStyleBackColor = true;
@@ -2473,6 +2473,7 @@
             Doodles.ResumeLayout(false);
             doodleTrainingGroup.ResumeLayout(false);
             doodleTrainingGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownMaxTricks).EndInit();
             ((System.ComponentModel.ISupportInitialize)numberOfDoodleFeedsNumericUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)numberOfDoodleScratchesNumericUpDown).EndInit();
             doodleInfoGroup.ResumeLayout(false);

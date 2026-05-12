@@ -19,7 +19,7 @@ namespace ToonTown_Rewritten_Bot
             // Also clear the image-recognition cache — otherwise stale cached centers
             // from previous runs keep getting returned and "reset" feels broken.
             UIElementManager.Instance.ClearAllCache();
-            MessageBox.Show("All coordinates reset and detection cache cleared!");
+            MessageBox.Show("Manual coordinates reset and image-recognition cache cleared.", "Reset State", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void LoadCoordinatesIntoResetBox()

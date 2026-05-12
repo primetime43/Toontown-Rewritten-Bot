@@ -120,9 +120,6 @@
   <metadata name="tabControl1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="Misc.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -3278,7 +3275,7 @@ The preview tells you where to stand - you must move there yourself.</value>
   <data name="doodlePictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAQIAAADDCAIAAADm7oiiAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vgAADr4B6kKxwAAAeSJJREFUeF7tvQV8lFfa/33N3OOTiSdjmclM3F2IO8Hd3SmaECACxN0FggQJEAIR
+        vQAADr0BR/uQrQAAeSJJREFUeF7tvQV8lFfa/33N3OOTiSdjmclM3F2IO8Hd3SmaECACxN0FggQJEAIR
         Etzdra67bXfb7VYpJMQm4+f9nBlKKe0+3ad/3qfC/PYUkjAsM/d9vve5zmUHkEEGvfKCF39gkEGvngwY
         GGSQAQODDDJgYJBBBgwMMgjLgIFBBhkwMMggAwYGGWTAwCCDsAwYGGSQAQODDDJgYJBBBgwMMgjLgIFB
         BhkwMMggAwYGGWTAwCCDsAwYGGSQAQODDDJgYJBBBgwMMgjLgIFBBhkwMMggAwa/XY9V/UijREokRwMI
@@ -3804,10 +3801,7 @@ that shows the feed, scratch &amp; call option etc.
 Also, the bot will say the trick two times, incase the doodle gets confused the first time.
 </value>
   </data>
-  <metadata name="messageToType.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="startSpamButton.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="Misc.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="messageToType.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -3816,9 +3810,10 @@ Also, the bot will say the trick two times, incase the doodle gets confused the 
   <metadata name="startSpamButton.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
+  <data name="devResetCoordinatesBtn.ToolTip" xml:space="preserve">
+    <value>Wipes manual coordinates back to defaults AND clears the cached image-recognition results. 
+Use this if the bot is clicking the wrong locations even after recapturing templates or recalibrating coords.</value>
+  </data>
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>278, 17</value>
   </metadata>
