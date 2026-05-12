@@ -72,12 +72,16 @@
   "Green SpeedChat Button": {
     "Name": "Green SpeedChat Button",
     "VariantPaths": [
-      "Templates\\Green_SpeedChat_Button.png"
+      "Templates\\Green_SpeedChat_Button.png",
+      "Templates\\Green_SpeedChat_Button_v2.png",
+      "Templates\\Green_SpeedChat_Button_v3.png",
+      "Templates\\Green_SpeedChat_Button_v4.png",
+      "Templates\\Green_SpeedChat_Button_v5.png"
     ],
     "TemplatePath": "Templates\\Green_SpeedChat_Button.png",
     "ManualCoordinates": null,
-    "CachedCenter": "109, 68",
-    "LastFoundTime": "2026-03-19T02:19:31.1458902-04:00"
+    "CachedCenter": "115, 66",
+    "LastFoundTime": "2026-03-19T17:22:31.6651846-04:00"
   },
   "Silver Jellybean Button": {
     "Name": "Silver Jellybean Button",
