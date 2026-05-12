@@ -63,11 +63,18 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// Gets the location of a UI element, using image recognition to find or verify.
         /// Will prompt user to capture template if none exists.
         /// </summary>
-        /// <param name="elementName">Unique name for the UI element</param>
-        /// <param name="description">Description to show user when capturing template</param>
-        /// <param name="forceSearch">If true, always search instead of using cache</param>
-        /// <returns>The center point of the element, or null if not found</returns>
         public async Task<Point?> GetElementLocationAsync(string elementName, string description = null, bool forceSearch = false)
+        {
+            var (location, _) = await GetElementLocationWithSourceAsync(elementName, description, forceSearch);
+            return location;
+        }
+
+        /// <summary>
+        /// Same as GetElementLocationAsync, but also tells the caller where the value
+        /// came from (cache hit, fresh template match, manual fallback) so logs and
+        /// diagnostics can reflect what actually happened.
+        /// </summary>
+        public async Task<(Point? location, UIElementSource source)> GetElementLocationWithSourceAsync(string elementName, string description = null, bool forceSearch = false)
         {
             var element = GetOrCreateElement(elementName);
 
@@ -84,9 +91,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     if (element.ManualCoordinates.HasValue)
                     {
                         Logger.Info("TemplateMatch", $"Using manual coordinates for '{elementName}'");
-                        return element.ManualCoordinates;
+                        return (element.ManualCoordinates, UIElementSource.Manual);
                     }
-                    return null;
+                    return (null, UIElementSource.None);
                 }
             }
 
@@ -97,7 +104,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             if (!forceSearch && element.HasCachedCoordinates)
             {
                 Logger.Debug("TemplateMatch", $"'{elementName}' using cached location");
-                return element.CachedCenter;
+                return (element.CachedCenter, UIElementSource.Cache);
             }
 
             // Now we have a template, try image recognition
@@ -111,7 +118,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     element.CachedCenter = result.Value;
                     element.LastFoundTime = DateTime.Now;
                     SaveElementData();
-                    return result;
+                    return (result, UIElementSource.ImageRec);
                 }
             }
 
@@ -120,7 +127,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             if (element.ManualCoordinates.HasValue)
             {
                 Logger.Info("TemplateMatch", $"Image rec failed, using manual coordinates for '{elementName}'");
-                return element.ManualCoordinates;
+                return (element.ManualCoordinates, UIElementSource.Manual);
             }
 
             // No fallback available — offer to recapture or add variant
@@ -137,13 +144,13 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         element.CachedCenter = retryResult.Value;
                         element.LastFoundTime = DateTime.Now;
                         SaveElementData();
-                        return retryResult;
+                        return (retryResult, UIElementSource.ImageRec);
                     }
                 }
             }
 
             Logger.Warning("TemplateMatch", $"Could not find '{elementName}'");
-            return null;
+            return (null, UIElementSource.None);
         }
 
         /// <summary>
@@ -767,5 +774,17 @@ namespace ToonTown_Rewritten_Bot.Utilities
     {
         public string ElementName { get; set; }
         public string Description { get; set; }
+    }
+
+    /// <summary>
+    /// Where a resolved UI element location actually came from. Surfaced in logs so
+    /// "image rec returned 958, 774" doesn't get blamed when the cache was the source.
+    /// </summary>
+    public enum UIElementSource
+    {
+        None,
+        Cache,
+        ImageRec,
+        Manual,
     }
 }
