@@ -113,6 +113,7 @@
             waterPlantBtn = new System.Windows.Forms.Button();
             separatorPanel2 = new System.Windows.Forms.Panel();
             removePlantBtn = new System.Windows.Forms.Button();
+            plantStatusLabel = new System.Windows.Forms.Label();
             groupBoxCustomGardening = new System.Windows.Forms.GroupBox();
             labelSelectGardeningFile = new System.Windows.Forms.Label();
             customGardeningFilesComboBox = new System.Windows.Forms.ComboBox();
@@ -1085,6 +1086,7 @@
             gardeningActionsGroup.Controls.Add(waterPlantBtn);
             gardeningActionsGroup.Controls.Add(separatorPanel2);
             gardeningActionsGroup.Controls.Add(removePlantBtn);
+            gardeningActionsGroup.Controls.Add(plantStatusLabel);
             gardeningActionsGroup.Location = new System.Drawing.Point(9, 3);
             gardeningActionsGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             gardeningActionsGroup.Name = "gardeningActionsGroup";
@@ -1234,7 +1236,21 @@
             removePlantBtn.Text = "Remove Plant";
             removePlantBtn.UseVisualStyleBackColor = false;
             removePlantBtn.Click += removePlantBtn_Click;
-            // 
+            //
+            // plantStatusLabel
+            //
+            plantStatusLabel.AutoEllipsis = true;
+            plantStatusLabel.AutoSize = false;
+            plantStatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            plantStatusLabel.ForeColor = System.Drawing.Color.Gray;
+            plantStatusLabel.Location = new System.Drawing.Point(10, 333);
+            plantStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            plantStatusLabel.Name = "plantStatusLabel";
+            plantStatusLabel.Size = new System.Drawing.Size(180, 38);
+            plantStatusLabel.TabIndex = 14;
+            plantStatusLabel.Text = "";
+            plantStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
             // groupBoxCustomGardening
             // 
             groupBoxCustomGardening.Controls.Add(labelSelectGardeningFile);
@@ -2528,6 +2544,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownSpamCount;
         private System.Windows.Forms.CheckBox spamMessageCheckBox;
         private System.Windows.Forms.Button removePlantBtn;
+        private System.Windows.Forms.Label plantStatusLabel;
         private System.Windows.Forms.Button waterPlantBtn;
         private System.Windows.Forms.Label awakeCountdownLabel;
         private System.Windows.Forms.Label miscMessageLabel;
