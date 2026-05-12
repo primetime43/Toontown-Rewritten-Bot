@@ -431,11 +431,16 @@ namespace ToonTown_Rewritten_Bot.Utilities
             var element = GetOrCreateElement(elementName);
             element.TemplatePath = Path.Combine("Templates", $"{safeName}.png");
 
+            // A newly captured template may match a different on-screen location
+            // than the existing cache — drop the cache so the next lookup re-searches.
+            element.CachedCenter = null;
+            element.LastFoundTime = null;
+
             // Rebuild VariantPaths from disk
             RebuildVariantPaths(elementName);
             SaveElementData();
 
-            Logger.Info("TemplateMatch", $"Saved template for '{elementName}'");
+            Logger.Info("TemplateMatch", $"Saved template for '{elementName}' (cache cleared)");
         }
 
         /// <summary>
@@ -454,11 +459,17 @@ namespace ToonTown_Rewritten_Bot.Utilities
             string variantPath = GetVariantPath(elementName, variantIndex);
             templateImage.Save(variantPath, System.Drawing.Imaging.ImageFormat.Png);
 
+            // Drop the cache so the next lookup actually tries the new variant —
+            // otherwise the cached center short-circuits the template search.
+            var element = GetOrCreateElement(elementName);
+            element.CachedCenter = null;
+            element.LastFoundTime = null;
+
             // Rebuild VariantPaths from disk
             RebuildVariantPaths(elementName);
             SaveElementData();
 
-            Logger.Info("TemplateMatch", $"Saved variant {variantIndex} for '{elementName}'");
+            Logger.Info("TemplateMatch", $"Saved variant {variantIndex} for '{elementName}' (cache cleared)");
             return variantIndex;
         }
 
@@ -486,8 +497,18 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public void SetManualCoordinates(string elementName, Point coordinates)
         {
             var element = GetOrCreateElement(elementName);
-            element.ManualCoordinates = coordinates;
-            SaveElementData();
+
+            // CoordinatesManager calls this every lookup with the same value, so only
+            // invalidate the cache when the user actually changed something — otherwise
+            // we'd defeat caching entirely.
+            if (element.ManualCoordinates != coordinates)
+            {
+                element.ManualCoordinates = coordinates;
+                element.CachedCenter = null;
+                element.LastFoundTime = null;
+                Logger.Info("TemplateMatch", $"Manual coordinates updated for '{elementName}' (cache cleared)");
+                SaveElementData();
+            }
         }
 
         /// <summary>
