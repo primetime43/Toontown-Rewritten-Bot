@@ -123,7 +123,7 @@ namespace ToonTown_Rewritten_Bot.Services
             }
 
             // Try to find using image recognition (will prompt for template capture if needed)
-            var location = await UIElementManager.Instance.GetElementLocationAsync(elementName, description);
+            var (location, source) = await UIElementManager.Instance.GetElementLocationWithSourceAsync(elementName, description);
 
             if (location.HasValue)
             {
@@ -132,7 +132,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 int screenX = location.Value.X + windowOffset.X;
                 int screenY = location.Value.Y + windowOffset.Y;
 
-                Logger.Info("Coordinates", $"'{elementName}': screen ({screenX}, {screenY}) [source=ImageRec]");
+                Logger.Info("Coordinates", $"'{elementName}': screen ({screenX}, {screenY}) [source={source}]");
 
                 return (screenX, screenY);
             }
