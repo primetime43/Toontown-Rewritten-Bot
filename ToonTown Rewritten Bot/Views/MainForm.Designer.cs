@@ -1187,10 +1187,10 @@
             // waterPlantNumericUpDown
             // 
             waterPlantNumericUpDown.Location = new System.Drawing.Point(60, 206);
-            waterPlantNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             waterPlantNumericUpDown.Name = "waterPlantNumericUpDown";
             waterPlantNumericUpDown.Size = new System.Drawing.Size(40, 22);
             waterPlantNumericUpDown.TabIndex = 9;
+            toolTip1.SetToolTip(waterPlantNumericUpDown, "Number of waters per cycle. \r\nUsed both by the Water button and automatically after each Plant action. \r\nSet to 0 to skip auto-watering after planting.");
             waterPlantNumericUpDown.Value = new decimal(new int[] { 2, 0, 0, 0 });
             // 
             // waterTimesLabel
