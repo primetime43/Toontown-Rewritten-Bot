@@ -16,7 +16,10 @@ namespace ToonTown_Rewritten_Bot
         private void devResetCoordinatesBtn_Click(object sender, EventArgs e)
         {
             CoordinatesManager.CreateFreshCoordinatesFile();
-            MessageBox.Show("All coordinates reset!");
+            // Also clear the image-recognition cache — otherwise stale cached centers
+            // from previous runs keep getting returned and "reset" feels broken.
+            UIElementManager.Instance.ClearAllCache();
+            MessageBox.Show("Manual coordinates reset and image-recognition cache cleared.", "Reset State", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void LoadCoordinatesIntoResetBox()

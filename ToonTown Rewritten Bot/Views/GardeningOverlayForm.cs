@@ -225,12 +225,12 @@ namespace ToonTown_Rewritten_Bot.Views
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
 
-            // Draw panel background (semi-transparent) - positioned on middle right
-            // (gardening UI is on the left side of the game window)
+            // Draw panel background (semi-transparent) - bottom-right corner
+            // (gardening UI is on the left side of the game window).
             int panelWidth = 340;
             int panelHeight = 260;
             int panelX = this.Width - panelWidth - 15;
-            int panelY = (this.Height - panelHeight) / 2;
+            int panelY = this.Height - panelHeight - 15;
 
             using (var bgBrush = new SolidBrush(Color.FromArgb(200, 20, 20, 20)))
             using (var borderPen = new Pen(Color.FromArgb(200, 100, 100, 100), 2))

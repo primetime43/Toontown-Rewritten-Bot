@@ -72,12 +72,16 @@
   "Green SpeedChat Button": {
     "Name": "Green SpeedChat Button",
     "VariantPaths": [
-      "Templates\\Green_SpeedChat_Button.png"
+      "Templates\\Green_SpeedChat_Button.png",
+      "Templates\\Green_SpeedChat_Button_v2.png",
+      "Templates\\Green_SpeedChat_Button_v3.png",
+      "Templates\\Green_SpeedChat_Button_v4.png",
+      "Templates\\Green_SpeedChat_Button_v5.png"
     ],
     "TemplatePath": "Templates\\Green_SpeedChat_Button.png",
     "ManualCoordinates": null,
-    "CachedCenter": "109, 68",
-    "LastFoundTime": "2026-03-19T02:19:31.1458902-04:00"
+    "CachedCenter": "115, 66",
+    "LastFoundTime": "2026-03-19T17:22:31.6651846-04:00"
   },
   "Silver Jellybean Button": {
     "Name": "Silver Jellybean Button",
@@ -137,8 +141,8 @@
     ],
     "TemplatePath": "Templates\\Yellow_Jellybean_Button.png",
     "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
+    "CachedCenter": "1076, 490",
+    "LastFoundTime": "2026-05-12T03:47:22.4630149-04:00"
   },
   "FishBucketFullPopup": {
     "Name": "FishBucketFullPopup",
@@ -157,6 +161,16 @@
     ],
     "TemplatePath": "Templates\\Orange_Jellybean_Button.png",
     "ManualCoordinates": null,
+    "CachedCenter": "864, 488",
+    "LastFoundTime": "2026-05-12T03:43:58.5859285-04:00"
+  },
+  "Remove Plant Button": {
+    "Name": "Remove Plant Button",
+    "VariantPaths": [
+      "Templates\\Remove_Plant_Button.png"
+    ],
+    "TemplatePath": "Templates\\Remove_Plant_Button.png",
+    "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
   },
@@ -169,16 +183,6 @@
     "ManualCoordinates": null,
     "CachedCenter": "490, 98",
     "LastFoundTime": "2026-02-06T01:13:33.2004379-05:00"
-  },
-  "Remove Plant Button": {
-    "Name": "Remove Plant Button",
-    "VariantPaths": [
-      "Templates\\Remove_Plant_Button.png"
-    ],
-    "TemplatePath": "Templates\\Remove_Plant_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
   },
   "Golf Pencil Button": {
     "Name": "Golf Pencil Button",
@@ -197,8 +201,8 @@
     ],
     "TemplatePath": "Templates\\Plant_Flower_Button.png",
     "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
+    "CachedCenter": "72, 271",
+    "LastFoundTime": "2026-05-12T03:37:27.0923473-04:00"
   },
   "Watering Can Button": {
     "Name": "Watering Can Button",
@@ -217,8 +221,8 @@
     ],
     "TemplatePath": "Templates\\Pink_Jellybean_Button.png",
     "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
+    "CachedCenter": "1025, 488",
+    "LastFoundTime": "2026-05-12T03:47:19.9804785-04:00"
   },
   "PopupExitButton": {
     "Name": "PopupExitButton",
@@ -238,8 +242,8 @@
     ],
     "TemplatePath": "Templates\\Red_Jellybean_Button.png",
     "ManualCoordinates": null,
-    "CachedCenter": null,
-    "LastFoundTime": null
+    "CachedCenter": "758, 480",
+    "LastFoundTime": "2026-05-12T03:47:58.0673207-04:00"
   },
   "Blue Jellybean Button": {
     "Name": "Blue Jellybean Button",
@@ -261,16 +265,6 @@
     "CachedCenter": null,
     "LastFoundTime": null
   },
-  "Scratch Doodle Button": {
-    "Name": "Scratch Doodle Button",
-    "VariantPaths": [
-      "Templates\\Scratch_Doodle_Button.png"
-    ],
-    "TemplatePath": "Templates\\Scratch_Doodle_Button.png",
-    "ManualCoordinates": null,
-    "CachedCenter": "1814, 253",
-    "LastFoundTime": "2026-02-06T01:12:42.2775918-05:00"
-  },
   "Sticker Book": {
     "Name": "Sticker Book",
     "VariantPaths": [
@@ -280,6 +274,16 @@
     "ManualCoordinates": null,
     "CachedCenter": null,
     "LastFoundTime": null
+  },
+  "Scratch Doodle Button": {
+    "Name": "Scratch Doodle Button",
+    "VariantPaths": [
+      "Templates\\Scratch_Doodle_Button.png"
+    ],
+    "TemplatePath": "Templates\\Scratch_Doodle_Button.png",
+    "ManualCoordinates": null,
+    "CachedCenter": "1814, 253",
+    "LastFoundTime": "2026-02-06T01:12:42.2775918-05:00"
   },
   "Green Jellybean Button": {
     "Name": "Green Jellybean Button",
