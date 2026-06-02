@@ -193,18 +193,25 @@ namespace ToonTown_Rewritten_Bot.Views
 
             textY += 4;
 
-            // Current action
+            // Current action (wraps within the panel so long status text isn't clipped)
             using (var labelFont = new Font("Segoe UI", 9))
             using (var actionFont = new Font("Segoe UI", 10, FontStyle.Bold))
             using (var labelBrush = new SolidBrush(Color.LightGray))
             using (var actionBrush = new SolidBrush(Color.Yellow))
+            using (var wrapFormat = new StringFormat())
             {
                 g.DrawString("Current:", labelFont, labelBrush, textX, textY);
                 string actionDisplay = string.IsNullOrEmpty(_currentAction) ? "-" : _currentAction;
-                g.DrawString(actionDisplay, actionFont, actionBrush, textX + 58, textY - 1);
-            }
 
-            textY += 20;
+                int actionX = textX + 58;
+                int actionWidth = panelX + panelWidth - 12 - actionX;
+                var actionSize = g.MeasureString(actionDisplay, actionFont, actionWidth, wrapFormat);
+                var actionRect = new RectangleF(actionX, textY - 1, actionWidth, actionSize.Height);
+                g.DrawString(actionDisplay, actionFont, actionBrush, actionRect, wrapFormat);
+
+                // Advance past however many lines the action wrapped to (at least the original spacing).
+                textY += Math.Max(20, (int)Math.Ceiling(actionSize.Height));
+            }
 
             // Next action
             using (var labelFont = new Font("Segoe UI", 9))
