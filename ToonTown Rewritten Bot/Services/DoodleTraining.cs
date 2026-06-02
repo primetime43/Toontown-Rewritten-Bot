@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,14 @@ namespace ToonTown_Rewritten_Bot.Services
         private bool _infiniteTime, _justFeed, _justScratch;
         private TextRecognition _ocr;
         private Point? _lastTricksPosition;
+
+        // Per-session cache of SpeedChat menu item positions (window-relative), keyed by text
+        // ("PETS", "TRICKS", "Jump", ...). The first OCR pass that locates an item populates this;
+        // later cycles reuse the position and skip the slow full-screen OCR. Stored window-relative
+        // so the cache survives the game window being moved (we re-add the current offset on use).
+        private readonly Dictionary<string, Point> _menuTextCache = new Dictionary<string, Point>(StringComparer.OrdinalIgnoreCase);
+        // Window size the cache was built for; if the window is resized the menu layout shifts, so the cache is dropped.
+        private Size _menuCacheWindowSize = Size.Empty;
 
         // Session counters
         private int _totalFeedsDone = 0;
@@ -305,6 +314,30 @@ namespace ToonTown_Rewritten_Bot.Services
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            var windowOffset = GetGameWindowOffset();
+
+            // Drop the cache if the game window was resized — the menu lays out differently then.
+            var windowRect = GetGameWindowRect();
+            if (!windowRect.IsEmpty && _menuCacheWindowSize != windowRect.Size)
+            {
+                if (_menuTextCache.Count > 0)
+                {
+                    Logger.Debug("Doodle", "Game window resized — clearing SpeedChat menu position cache");
+                }
+                _menuTextCache.Clear();
+                _menuCacheWindowSize = windowRect.Size;
+            }
+
+            // Fast path: reuse the position located on a previous cycle, skipping OCR entirely.
+            if (_menuTextCache.TryGetValue(text, out var cachedRel))
+            {
+                int cachedX = cachedRel.X + windowOffset.X;
+                int cachedY = cachedRel.Y + windowOffset.Y;
+                Logger.Debug("Doodle", $"Using cached position for '{text}' at screen ({cachedX}, {cachedY})");
+                await ClickMenuPoint(cachedX, cachedY, cancellationToken);
+                return true;
+            }
+
             using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
             {
                 if (screenshot == null)
@@ -315,24 +348,37 @@ namespace ToonTown_Rewritten_Bot.Services
                 var pos = _ocr.FindTextPosition(screenshot, text, searchRegion: searchRegion);
                 if (!pos.HasValue)
                 {
+                    // A miss means our menu-state assumptions may be stale; drop the cache so the
+                    // retry re-discovers positions from scratch rather than clicking blind.
+                    _menuTextCache.Clear();
                     return false;
                 }
 
-                var windowOffset = GetGameWindowOffset();
+                // Cache the window-relative position so subsequent cycles skip the slow OCR pass.
+                _menuTextCache[text] = pos.Value;
+
                 int screenX = pos.Value.X + windowOffset.X;
                 int screenY = pos.Value.Y + windowOffset.Y;
 
                 Logger.Debug("Doodle", $"Clicking '{text}' at screen ({screenX}, {screenY})");
-                CoreFunctionality.MoveCursor(screenX, screenY);
-                await Task.Delay(500, cancellationToken);
-                SimulateDragMove(screenX, screenY);
-                await Task.Delay(100, cancellationToken);
-                SendInputMouseDown();
-                await Task.Delay(100, cancellationToken);
-                SendInputMouseUp();
-                await Task.Delay(1000, cancellationToken);
+                await ClickMenuPoint(screenX, screenY, cancellationToken);
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Moves the cursor to a screen point and performs a SpeedChat menu click.
+        /// </summary>
+        private async Task ClickMenuPoint(int screenX, int screenY, CancellationToken cancellationToken)
+        {
+            CoreFunctionality.MoveCursor(screenX, screenY);
+            await Task.Delay(500, cancellationToken);
+            SimulateDragMove(screenX, screenY);
+            await Task.Delay(100, cancellationToken);
+            SendInputMouseDown();
+            await Task.Delay(100, cancellationToken);
+            SendInputMouseUp();
+            await Task.Delay(1000, cancellationToken);
         }
 
         /// <summary>

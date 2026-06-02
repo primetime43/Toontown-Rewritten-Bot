@@ -453,16 +453,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             try
             {
-                // Scale up for better OCR accuracy
+                // Scale up AND binarize for better OCR accuracy. SpeedChat menu text is
+                // light text on a darker panel, which raw (un-thresholded) Tesseract reads
+                // poorly — PreprocessForGameOCR upscales 3x and adaptively binarizes
+                // (inverting light-on-dark to black-on-white). scaleFactor must match the
+                // 3x scaling done inside PreprocessForGameOCR for the bounding-box math below.
                 int scaleFactor = 3;
-                using (var scaled = new Bitmap(searchImage.Width * scaleFactor, searchImage.Height * scaleFactor))
+                using (var scaled = PreprocessForGameOCR(searchImage))
                 {
-                    using (var g = Graphics.FromImage(scaled))
-                    {
-                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                        g.DrawImage(searchImage, 0, 0, scaled.Width, scaled.Height);
-                    }
-
                     Point? result = null;
 
                     // For debug image: draw on the original screenshot
