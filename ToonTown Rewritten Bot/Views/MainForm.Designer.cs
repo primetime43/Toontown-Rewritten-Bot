@@ -1912,6 +1912,7 @@
             // 
             numericUpDownAwakeMinutes.Location = new System.Drawing.Point(80, 25);
             numericUpDownAwakeMinutes.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDownAwakeMinutes.Maximum = new decimal(new int[] { 1440, 0, 0, 0 });
             numericUpDownAwakeMinutes.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDownAwakeMinutes.Name = "numericUpDownAwakeMinutes";
             numericUpDownAwakeMinutes.Size = new System.Drawing.Size(54, 22);
