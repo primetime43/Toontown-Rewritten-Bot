@@ -233,7 +233,11 @@ namespace ToonTown_Rewritten_Bot.Services
             Logger.Debug("Doodle", $"Performing trick: {_selectedTrick}");
             for (int i = 0; i < 2; i++)
             {
-                UpdateOverlay("Opening Menu", "Opening SpeedChat", $"Select {_selectedTrick}");
+                // Until the menu positions are cached, navigation runs a full-screen OCR pass and is
+                // noticeably slower — tell the user so the first cycle doesn't read as a freeze.
+                bool willUseOcr = !(_menuTextCache.ContainsKey("PETS") && _menuTextCache.ContainsKey("TRICKS"));
+                string menuStatus = willUseOcr ? "Locating menu (first run is slower)…" : "Opening SpeedChat";
+                UpdateOverlay("Opening Menu", menuStatus, $"Select {_selectedTrick}");
                 await OpenSpeedChat(cancellationToken);
                 UpdateOverlay("Trick", $"Clicking {_selectedTrick}", "Wait for response");
                 await trickAction(cancellationToken);
