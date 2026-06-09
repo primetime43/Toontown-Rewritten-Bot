@@ -75,47 +75,56 @@ namespace ToonTown_Rewritten_Bot.Services
                 else if (locationName == FishingLocationNames.CustomFishingAction && customFishingFilePath != "")
                 {
                     // Custom fishing action - sell using custom action file
-                    if (!_engine.BucketWasFull)
+                    await RunSellTripAsync(async () =>
                     {
-                        await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
-                        await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
-                    }
-                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
+                        if (!_engine.BucketWasFull)
+                        {
+                            await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
+                            await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
+                        }
+                        await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
-                    CustomActionsFishing customFishing = new CustomActionsFishing(customFishingFilePath);
-                    await customFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
+                        CustomActionsFishing customFishing = new CustomActionsFishing(customFishingFilePath);
+                        await customFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
+                    }).ConfigureAwait(false);
                     sells--;
                 }
                 else if (locationName == FishingLocationNames.EstateLeftDock)
                 {
                     // Estate - sell using built-in estate action file
                     Logger.Info("Fishing", "Estate sell: starting sell trip.");
-                    if (!_engine.BucketWasFull)
+                    await RunSellTripAsync(async () =>
                     {
-                        await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
-                        await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
-                    }
-                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
+                        if (!_engine.BucketWasFull)
+                        {
+                            await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
+                            await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
+                        }
+                        await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
-                    string estateSellPath = Path.Combine(AppPaths.ExeDirectory, "Custom Fishing Actions", "EstateFishing Far Left Dock.json");
-                    Logger.Debug("Fishing", $"Estate sell path: {estateSellPath}, exists: {System.IO.File.Exists(estateSellPath)}");
-                    CustomActionsFishing estateFishing = new CustomActionsFishing(estateSellPath);
-                    await estateFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
+                        string estateSellPath = Path.Combine(AppPaths.ExeDirectory, "Custom Fishing Actions", "EstateFishing Far Left Dock.json");
+                        Logger.Debug("Fishing", $"Estate sell path: {estateSellPath}, exists: {System.IO.File.Exists(estateSellPath)}");
+                        CustomActionsFishing estateFishing = new CustomActionsFishing(estateSellPath);
+                        await estateFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
+                    }).ConfigureAwait(false);
                     Logger.Info("Fishing", "Estate sell: sell trip complete.");
                     sells--;
                 }
                 else
                 {
                     // Hardcoded fishing locations - sell using strategy pattern
-                    if (!_engine.BucketWasFull)
+                    await RunSellTripAsync(async () =>
                     {
-                        await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
-                        await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
-                    }
-                    await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
+                        if (!_engine.BucketWasFull)
+                        {
+                            await _engine.StraightenToonAsync(cancellationToken).ConfigureAwait(false);
+                            await _engine.ExitFishing(cancellationToken).ConfigureAwait(false);
+                        }
+                        await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
-                    FishingStrategyBase fishingStrategy = DetermineFishingStrategy(locationName);
-                    await fishingStrategy.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
+                        FishingStrategyBase fishingStrategy = DetermineFishingStrategy(locationName);
+                        await fishingStrategy.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
+                    }).ConfigureAwait(false);
                     sells--;
                 }
             }
@@ -126,6 +135,39 @@ namespace ToonTown_Rewritten_Bot.Services
             Logger.Info("Fishing", $"Session end: reason=\"{stopReason}\", casts completed={SessionCastCount}/{totalExpectedCasts}, fish caught={SessionFishCaught}");
             // Notify MainForm to uncheck the overlay checkbox - fishing is completely done
             FishingStrategyBase.OnFishingEnded?.Invoke();
+        }
+
+        /// <summary>
+        /// Runs a sell trip (walk to the fisherman, sell, walk back) with foreground input.
+        /// Walking relies on held movement keys, which Toontown's engine only registers from a
+        /// focused window via real input — background mode's PostMessage keystrokes are ignored,
+        /// leaving the toon standing still on the dock. When background mode is on, this temporarily
+        /// focuses the game window and switches to foreground input for the duration of the sell
+        /// trip, then restores background mode so the next fishing round stays hands-free.
+        /// </summary>
+        private static async Task RunSellTripAsync(Func<Task> sellTrip)
+        {
+            bool wasBackground = CoreFunctionality.UseBackgroundInput;
+            if (wasBackground)
+            {
+                Logger.Info("Fishing", "Background mode: switching to foreground input for sell trip (walking needs a focused game window).");
+                CoreFunctionality.UseBackgroundInput = false;
+                CoreFunctionality.FocusTTRWindow();
+                await Task.Delay(500).ConfigureAwait(false);
+            }
+
+            try
+            {
+                await sellTrip().ConfigureAwait(false);
+            }
+            finally
+            {
+                if (wasBackground)
+                {
+                    CoreFunctionality.UseBackgroundInput = true;
+                    Logger.Info("Fishing", "Sell trip complete: restored background input mode.");
+                }
+            }
         }
 
         /// <summary>

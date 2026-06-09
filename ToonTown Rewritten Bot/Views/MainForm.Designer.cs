@@ -187,6 +187,7 @@
             btnResetPreferences = new System.Windows.Forms.Button();
             btnOpenPreferencesFile = new System.Windows.Forms.Button();
             btnSavePreferencesNow = new System.Windows.Forms.Button();
+            btnGameControls = new System.Windows.Forms.Button();
             groupBoxKeyboardShortcuts = new System.Windows.Forms.GroupBox();
             labelKeyboardShortcuts = new System.Windows.Forms.Label();
             groupBoxAboutSettings = new System.Windows.Forms.GroupBox();
@@ -680,7 +681,7 @@
             backgroundModeCheckBox.Size = new System.Drawing.Size(137, 20);
             backgroundModeCheckBox.TabIndex = 11;
             backgroundModeCheckBox.Text = "Background Mode";
-            toolTip1.SetToolTip(backgroundModeCheckBox, "Sends input directly to the game window so you can use your mouse freely while the bot runs. Disable if you have issues with detection or input.");
+            toolTip1.SetToolTip(backgroundModeCheckBox, "Sends input directly to the game window so you can use your mouse freely while the bot runs. The sell trip briefly focuses the game to walk to the fisherman, since walking requires a focused window. Disable if you have issues with detection or input.");
             backgroundModeCheckBox.UseVisualStyleBackColor = true;
             backgroundModeCheckBox.CheckedChanged += BackgroundModeCheckBox_CheckedChanged;
             // 
@@ -2011,6 +2012,7 @@
             // Settings
             // 
             Settings.Controls.Add(groupBoxPreferences);
+            Settings.Controls.Add(btnGameControls);
             Settings.Controls.Add(groupBoxKeyboardShortcuts);
             Settings.Controls.Add(groupBoxAboutSettings);
             Settings.Location = new System.Drawing.Point(4, 25);
@@ -2095,9 +2097,21 @@
             toolTip1.SetToolTip(btnSavePreferencesNow, "Save current settings to preferences file immediately");
             btnSavePreferencesNow.UseVisualStyleBackColor = true;
             btnSavePreferencesNow.Click += btnSavePreferencesNow_Click;
-            // 
+            //
+            // btnGameControls
+            //
+            btnGameControls.Location = new System.Drawing.Point(9, 300);
+            btnGameControls.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnGameControls.Name = "btnGameControls";
+            btnGameControls.Size = new System.Drawing.Size(350, 35);
+            btnGameControls.TabIndex = 3;
+            btnGameControls.Text = "Configure Game Controls...";
+            toolTip1.SetToolTip(btnGameControls, "Tell the bot which movement keys you have bound in TTR's Controls screen");
+            btnGameControls.UseVisualStyleBackColor = true;
+            btnGameControls.Click += btnGameControls_Click;
+            //
             // groupBoxKeyboardShortcuts
-            // 
+            //
             groupBoxKeyboardShortcuts.Controls.Add(labelKeyboardShortcuts);
             groupBoxKeyboardShortcuts.Location = new System.Drawing.Point(370, 10);
             groupBoxKeyboardShortcuts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -2685,6 +2699,7 @@
         private System.Windows.Forms.Button btnResetPreferences;
         private System.Windows.Forms.Button btnOpenPreferencesFile;
         private System.Windows.Forms.Button btnSavePreferencesNow;
+        private System.Windows.Forms.Button btnGameControls;
         private System.Windows.Forms.GroupBox groupBoxKeyboardShortcuts;
         private System.Windows.Forms.Label labelKeyboardShortcuts;
         private System.Windows.Forms.GroupBox groupBoxAboutSettings;
