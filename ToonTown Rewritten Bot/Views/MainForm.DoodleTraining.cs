@@ -31,6 +31,14 @@ namespace ToonTown_Rewritten_Bot
 
         private async void startDoodleTrainingBtn_Click(object sender, EventArgs e)
         {
+            // Guard against re-entry: this is an async void handler, so a second click before the
+            // first session finishes would launch a parallel training run (two threads posting
+            // interleaved clicks). Ignore clicks while a session is already active.
+            if (isTrainingActive)
+            {
+                return;
+            }
+
             string selectedTrick = (string)doodleTrickComboBox.SelectedItem;
             int numberOfFeeds = Convert.ToInt32(numberOfDoodleFeedsNumericUpDown.Value);
             int numberOfScratches = Convert.ToInt32(numberOfDoodleScratchesNumericUpDown.Value);
@@ -46,6 +54,7 @@ namespace ToonTown_Rewritten_Bot
             }
             _cancellationTokenSource = new CancellationTokenSource();
             isTrainingActive = true;
+            startDoodleTrainingBtn.Enabled = false;
             doodleStatusLabel.Text = "Status: Training...";
             doodleStatusLabel.ForeColor = System.Drawing.Color.DarkGreen;
 
@@ -96,6 +105,7 @@ namespace ToonTown_Rewritten_Bot
             finally
             {
                 isTrainingActive = false;
+                startDoodleTrainingBtn.Enabled = true;
                 doodleStatusLabel.Text = "Status: Idle";
                 doodleStatusLabel.ForeColor = System.Drawing.Color.Gray;
 
