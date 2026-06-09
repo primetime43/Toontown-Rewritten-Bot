@@ -522,8 +522,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
             bool posted = PostMessageW(hwnd, msg, wParam, lParam);
             string msgName = msg == WM_LBUTTONDOWN ? "LBUTTONDOWN" : msg == WM_LBUTTONUP ? "LBUTTONUP" : msg.ToString("X");
-            // Temporary diagnostic verbosity (Info) — only fires in background mode. Revert to Debug once resolved.
-            Logger.Info("Input", $"Post {msgName} hwnd=0x{hwnd.ToInt64():X} screen=({screenX},{screenY}) client=({client.X},{client.Y}) posted={posted}");
+            Logger.Debug("Input", $"Post {msgName} hwnd=0x{hwnd.ToInt64():X} screen=({screenX},{screenY}) client=({client.X},{client.Y}) posted={posted}");
         }
 
         /// <summary>
@@ -545,8 +544,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
             IntPtr lParam = (IntPtr)((client.Y << 16) | (client.X & 0xFFFF));
             bool posted = PostMessageW(hwnd, WM_MOUSEMOVE, IntPtr.Zero, lParam);
-            // Temporary diagnostic verbosity (Info) — only fires in background mode. Revert to Debug once resolved.
-            Logger.Info("Input", $"Post MOUSEMOVE hwnd=0x{hwnd.ToInt64():X} screen=({screenX},{screenY}) client=({client.X},{client.Y}) posted={posted}");
+            Logger.Debug("Input", $"Post MOUSEMOVE hwnd=0x{hwnd.ToInt64():X} screen=({screenX},{screenY}) client=({client.X},{client.Y}) posted={posted}");
         }
 
         /// <summary>
