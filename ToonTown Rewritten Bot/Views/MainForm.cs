@@ -171,6 +171,9 @@ namespace ToonTown_Rewritten_Bot
             // Misc preferences
             keepOnTopCheckBox.Checked = prefs.KeepProgramOnTop;
             numericUpDownAwakeMinutes.Value = Math.Max(numericUpDownAwakeMinutes.Minimum, Math.Min(numericUpDownAwakeMinutes.Maximum, prefs.KeepToonAwakeMinutes));
+
+            // Game control bindings — apply saved key bindings to the input layer.
+            Models.GameControls.LoadFrom(prefs);
         }
 
         /// <summary>
@@ -226,6 +229,9 @@ namespace ToonTown_Rewritten_Bot
             // Misc preferences
             prefs.KeepProgramOnTop = keepOnTopCheckBox.Checked;
             prefs.KeepToonAwakeMinutes = (int)numericUpDownAwakeMinutes.Value;
+
+            // Game control bindings — persist the current key bindings.
+            Models.GameControls.SaveTo(prefs);
 
             prefs.Save();
         }

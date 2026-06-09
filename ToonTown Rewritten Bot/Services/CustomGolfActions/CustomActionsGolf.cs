@@ -59,9 +59,10 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
 
         private async Task PrepareToHitBall()
         {
-            InputSimulator.SimulateKeyDown(VirtualKeyCode.UP);
+            var up = GameControls.Remap(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyDown(up);
             await Task.Delay(50);
-            InputSimulator.SimulateKeyUp(VirtualKeyCode.UP);
+            InputSimulator.SimulateKeyUp(up);
         }
 
         private void ReportProgress(int currentStep, string currentAction, string nextAction, int durationMs)
@@ -133,6 +134,8 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
                     // Process other actions that should correspond to actual key presses
                     if (keys.ActionKeyMap.TryGetValue(actionCommand.Action, out VirtualKeyCode keyCode))
                     {
+                        // Translate the default control key into whatever the user has bound in TTR.
+                        keyCode = GameControls.Remap(keyCode);
                         InputSimulator.SimulateKeyDown(keyCode);
                         await Task.Delay(actionCommand.Duration, cancellationToken);
                         InputSimulator.SimulateKeyUp(keyCode);

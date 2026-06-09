@@ -85,6 +85,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public bool KeepProgramOnTop { get; set; } = false;
         public int KeepToonAwakeMinutes { get; set; } = 1;
 
+        // Game control bindings (the keys the user has bound in TTR's Controls screen).
+        // Stored as VirtualKeyCode enum names; defaults match TTR's default controls.
+        public string ControlForward { get; set; } = "UP";
+        public string ControlReverse { get; set; } = "DOWN";
+        public string ControlLeft { get; set; } = "LEFT";
+        public string ControlRight { get; set; } = "RIGHT";
+        public string ControlJump { get; set; } = "CONTROL";
+
         /// <summary>
         /// Saves current preferences to file.
         /// </summary>
@@ -170,6 +178,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             KeepProgramOnTop = false;
             KeepToonAwakeMinutes = 1;
+
+            ControlForward = "UP";
+            ControlReverse = "DOWN";
+            ControlLeft = "LEFT";
+            ControlRight = "RIGHT";
+            ControlJump = "CONTROL";
 
             Save();
         }

@@ -588,6 +588,8 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static void SendKeyDown(WindowsInput.VirtualKeyCode keyCode)
         {
+            // Translate the bot's default control key into whatever the user has bound in TTR.
+            keyCode = Models.GameControls.Remap(keyCode);
             if (UseBackgroundInput)
             {
                 PostBackgroundKeyDown((int)keyCode);
@@ -598,6 +600,8 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static void SendKeyUp(WindowsInput.VirtualKeyCode keyCode)
         {
+            // Translate the bot's default control key into whatever the user has bound in TTR.
+            keyCode = Models.GameControls.Remap(keyCode);
             if (UseBackgroundInput)
             {
                 PostBackgroundKeyUp((int)keyCode);
