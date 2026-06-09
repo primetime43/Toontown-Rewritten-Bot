@@ -117,6 +117,7 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Add($"  Trick: {prefs.DoodleTrick}");
             preferencesListBox.Items.Add($"  Feeds: {prefs.NumberOfFeeds}");
             preferencesListBox.Items.Add($"  Scratches: {prefs.NumberOfScratches}");
+            preferencesListBox.Items.Add($"  Background Mode: {(prefs.DoodleBackgroundMode ? "Yes" : "No")}");
 
             preferencesListBox.Items.Add("");
             preferencesListBox.Items.Add("═══════ GARDENING ═══════");

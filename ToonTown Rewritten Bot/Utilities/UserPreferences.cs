@@ -72,6 +72,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public bool JustFeedDoodle { get; set; } = false;
         public bool JustScratchDoodle { get; set; } = false;
         public bool ShowDoodleOverlay { get; set; } = false;
+        public bool DoodleBackgroundMode { get; set; } = false;
         public int TrainingCycles { get; set; } = 1;
 
         // Gardening preferences
@@ -159,6 +160,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             JustFeedDoodle = false;
             JustScratchDoodle = false;
             ShowDoodleOverlay = false;
+            DoodleBackgroundMode = false;
             TrainingCycles = 1;
 
             WaterPlantCount = 2;

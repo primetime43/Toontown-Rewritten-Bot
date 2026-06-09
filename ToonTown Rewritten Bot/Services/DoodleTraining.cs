@@ -11,6 +11,10 @@ namespace ToonTown_Rewritten_Bot.Services
 {
     public class DoodleTraining : CoreFunctionality
     {
+        // Delay between posting a cursor move and the click, so the move lands first. The unfocused
+        // game renders at a reduced frame rate, so this is generous relative to fishing's foreground 100ms.
+        private const int MoveSettleMs = 300;
+
         private int _feedsPerCycle, _scratchesPerCycle, _totalCycles;
         private string _selectedTrick;
         private bool _infiniteTime, _justFeed, _justScratch;
@@ -86,9 +90,9 @@ namespace ToonTown_Rewritten_Bot.Services
             }
             catch { }
         }
-        public async Task StartDoodleTraining(int feedsPerCycle, int scratchesPerCycle, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch, CancellationToken cancellationToken, int cycles = 1)
+        public async Task StartDoodleTraining(int feedsPerCycle, int scratchesPerCycle, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch, bool backgroundMode, CancellationToken cancellationToken, int cycles = 1)
         {
-            Logger.Info("Doodle", $"Training start: feedsPerCycle={feedsPerCycle}, scratchesPerCycle={scratchesPerCycle}, trick={trick}, cycles={cycles}, unlimited={unlimitedCheckBox}");
+            Logger.Info("Doodle", $"Training start: feedsPerCycle={feedsPerCycle}, scratchesPerCycle={scratchesPerCycle}, trick={trick}, cycles={cycles}, unlimited={unlimitedCheckBox}, background={backgroundMode}");
 
             _feedsPerCycle = feedsPerCycle;
             _scratchesPerCycle = scratchesPerCycle;
@@ -116,9 +120,11 @@ namespace ToonTown_Rewritten_Bot.Services
                 }
             }
 
-            // Doodle training always uses foreground mode (background mode is for fishing only)
+            // Apply the requested input mode for this session, restoring the previous global on exit
+            // (the flag is shared with fishing). Background mode posts clicks/mouse-moves to the
+            // game window and captures via PrintWindow, so training can run while unfocused.
             bool savedBackgroundMode = UseBackgroundInput;
-            UseBackgroundInput = false;
+            UseBackgroundInput = backgroundMode;
 
             // Check if game window is available and focus it
             EnsureGameWindowReady();
@@ -259,6 +265,8 @@ namespace ToonTown_Rewritten_Bot.Services
                 // Click the green SpeedChat button (template matching works well for this unique element)
                 var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(DoodleTrainingCoordinatesEnum.GreenSpeedChatButton);
                 CoreFunctionality.MoveCursor(x, y);
+                // Settle the move before clicking so background mode opens the menu (see feedDoodle).
+                await Task.Delay(MoveSettleMs, cancellationToken);
                 CoreFunctionality.DoMouseClick();
                 await Task.Delay(1000, cancellationToken);
 
@@ -280,8 +288,9 @@ namespace ToonTown_Rewritten_Bot.Services
                 }
                 await Task.Delay(500, cancellationToken);
 
-                // Store where TRICKS was found (cursor is there now) for trick search region
-                _lastTricksPosition = getCursorLocation();
+                // Store where TRICKS was found (cursor is there now) for trick search region.
+                // In background mode the real cursor never moves, so use the effective position.
+                _lastTricksPosition = GetEffectiveCursorLocation();
 
                 // Move cursor to the right into the tricks submenu so it stays open
                 MoveCursor(_lastTricksPosition.Value.X + 150, _lastTricksPosition.Value.Y);
@@ -304,6 +313,8 @@ namespace ToonTown_Rewritten_Bot.Services
                 int closeX = windowRect.X + (int)(windowRect.Width * 0.75);
                 int closeY = windowRect.Y + (int)(windowRect.Height * 0.5);
                 CoreFunctionality.MoveCursor(closeX, closeY);
+                // Settle the move before clicking (see feedDoodle).
+                await Task.Delay(MoveSettleMs, cancellationToken);
                 CoreFunctionality.DoMouseClick();
             }
             await Task.Delay(500, cancellationToken);
@@ -380,7 +391,9 @@ namespace ToonTown_Rewritten_Bot.Services
             SimulateDragMove(screenX, screenY);
             await Task.Delay(100, cancellationToken);
             SendInputMouseDown();
-            await Task.Delay(100, cancellationToken);
+            // Hold before releasing so the click is sampled even when the unfocused game
+            // runs at a reduced frame rate (see BackgroundClickHoldMs in CoreFunctionality).
+            await Task.Delay(300, cancellationToken);
             SendInputMouseUp();
             await Task.Delay(1000, cancellationToken);
         }
@@ -425,6 +438,11 @@ namespace ToonTown_Rewritten_Bot.Services
             // Use image recognition (will prompt for template capture if needed)
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(DoodleTrainingCoordinatesEnum.FeedDoodleButton);
             MoveCursor(x, y);
+            // Let the posted move land before the click. In background mode the unfocused game
+            // updates its mouse-region (Panda's MouseWatcher) a frame after the move; clicking in
+            // the same frame misses the button. This mirrors the move→delay→click pattern that
+            // makes fishing's button clicks work unfocused.
+            await Task.Delay(MoveSettleMs, cancellationToken);
             DoMouseClick();
             await Task.Delay(11500, cancellationToken);
         }
@@ -436,6 +454,8 @@ namespace ToonTown_Rewritten_Bot.Services
             // Use image recognition (will prompt for template capture if needed)
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(DoodleTrainingCoordinatesEnum.ScratchDoodleButton);
             CoreFunctionality.MoveCursor(x, y);
+            // See feedDoodle: settle the posted move before clicking so background mode registers.
+            await Task.Delay(MoveSettleMs, cancellationToken);
             CoreFunctionality.DoMouseClick();
             await Task.Delay(10000, cancellationToken);
         }
