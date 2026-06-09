@@ -37,6 +37,7 @@ namespace ToonTown_Rewritten_Bot
             bool unlimitedCheckBox = unlimitedTrainingCheckBox.Checked;
             bool justFeed = justFeedDoodleCheckBox.Checked;
             bool justScratch = justScratchDoodleCheckBox.Checked;
+            bool backgroundMode = doodleBackgroundModeCheckBox.Checked;
 
             // Ensure we have a fresh CancellationTokenSource
             if (_cancellationTokenSource != null)
@@ -66,7 +67,7 @@ namespace ToonTown_Rewritten_Bot
                 int cycles = Convert.ToInt32(numericUpDownMaxTricks.Value);
                 await Task.Run(() => new DoodleTraining().StartDoodleTraining(
                     numberOfFeeds, numberOfScratches, unlimitedCheckBox,
-                    selectedTrick, justFeed, justScratch, _cancellationTokenSource.Token, cycles),
+                    selectedTrick, justFeed, justScratch, backgroundMode, _cancellationTokenSource.Token, cycles),
                     _cancellationTokenSource.Token);
 
                 // Training completed successfully
