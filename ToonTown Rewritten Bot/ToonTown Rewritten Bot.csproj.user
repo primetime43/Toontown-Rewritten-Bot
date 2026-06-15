@@ -48,6 +48,9 @@
     <Compile Update="Views\FishingOverlayForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Views\GameControlsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Views\GardeningCalibrationForm.cs">
       <SubType>Form</SubType>
     </Compile>
