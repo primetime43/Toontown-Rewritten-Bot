@@ -153,6 +153,7 @@
             justFeedDoodleCheckBox = new System.Windows.Forms.CheckBox();
             justScratchDoodleCheckBox = new System.Windows.Forms.CheckBox();
             showDoodleOverlayCheckBox = new System.Windows.Forms.CheckBox();
+            doodleBackgroundModeCheckBox = new System.Windows.Forms.CheckBox();
             doodleSeparator2 = new System.Windows.Forms.Panel();
             startDoodleTrainingBtn = new System.Windows.Forms.Button();
             stopDoodleTrainingBtn = new System.Windows.Forms.Button();
@@ -186,6 +187,7 @@
             btnResetPreferences = new System.Windows.Forms.Button();
             btnOpenPreferencesFile = new System.Windows.Forms.Button();
             btnSavePreferencesNow = new System.Windows.Forms.Button();
+            btnGameControls = new System.Windows.Forms.Button();
             groupBoxKeyboardShortcuts = new System.Windows.Forms.GroupBox();
             labelKeyboardShortcuts = new System.Windows.Forms.Label();
             groupBoxAboutSettings = new System.Windows.Forms.GroupBox();
@@ -679,7 +681,7 @@
             backgroundModeCheckBox.Size = new System.Drawing.Size(137, 20);
             backgroundModeCheckBox.TabIndex = 11;
             backgroundModeCheckBox.Text = "Background Mode";
-            toolTip1.SetToolTip(backgroundModeCheckBox, "Sends input directly to the game window so you can use your mouse freely while the bot runs. Disable if you have issues with detection or input.");
+            toolTip1.SetToolTip(backgroundModeCheckBox, "Sends input directly to the game window so you can use your mouse freely while the bot runs. The sell trip briefly focuses the game to walk to the fisherman, since walking requires a focused window. Disable if you have issues with detection or input.");
             backgroundModeCheckBox.UseVisualStyleBackColor = true;
             backgroundModeCheckBox.CheckedChanged += BackgroundModeCheckBox_CheckedChanged;
             // 
@@ -1508,6 +1510,7 @@
             doodleTrainingGroup.Controls.Add(justFeedDoodleCheckBox);
             doodleTrainingGroup.Controls.Add(justScratchDoodleCheckBox);
             doodleTrainingGroup.Controls.Add(showDoodleOverlayCheckBox);
+            doodleTrainingGroup.Controls.Add(doodleBackgroundModeCheckBox);
             doodleTrainingGroup.Controls.Add(doodleSeparator2);
             doodleTrainingGroup.Controls.Add(startDoodleTrainingBtn);
             doodleTrainingGroup.Controls.Add(stopDoodleTrainingBtn);
@@ -1516,7 +1519,7 @@
             doodleTrainingGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             doodleTrainingGroup.Name = "doodleTrainingGroup";
             doodleTrainingGroup.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            doodleTrainingGroup.Size = new System.Drawing.Size(200, 380);
+            doodleTrainingGroup.Size = new System.Drawing.Size(200, 406);
             doodleTrainingGroup.TabIndex = 9;
             doodleTrainingGroup.TabStop = false;
             doodleTrainingGroup.Text = "Training Actions";
@@ -1696,11 +1699,23 @@
             showDoodleOverlayCheckBox.Text = "Show Overlay";
             toolTip1.SetToolTip(showDoodleOverlayCheckBox, "Shows a status overlay on the game window during doodle training.");
             showDoodleOverlayCheckBox.UseVisualStyleBackColor = true;
-            // 
+            //
+            // doodleBackgroundModeCheckBox
+            //
+            doodleBackgroundModeCheckBox.AutoSize = true;
+            doodleBackgroundModeCheckBox.Location = new System.Drawing.Point(10, 282);
+            doodleBackgroundModeCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            doodleBackgroundModeCheckBox.Name = "doodleBackgroundModeCheckBox";
+            doodleBackgroundModeCheckBox.Size = new System.Drawing.Size(120, 20);
+            doodleBackgroundModeCheckBox.TabIndex = 17;
+            doodleBackgroundModeCheckBox.Text = "Background Mode";
+            toolTip1.SetToolTip(doodleBackgroundModeCheckBox, "Runs training by sending input to the game window without moving your real cursor, so you can use the computer while it runs. Experimental for tricks.");
+            doodleBackgroundModeCheckBox.UseVisualStyleBackColor = true;
+            //
             // doodleSeparator2
-            // 
+            //
             doodleSeparator2.BackColor = System.Drawing.Color.LightGray;
-            doodleSeparator2.Location = new System.Drawing.Point(10, 286);
+            doodleSeparator2.Location = new System.Drawing.Point(10, 312);
             doodleSeparator2.Name = "doodleSeparator2";
             doodleSeparator2.Size = new System.Drawing.Size(180, 1);
             doodleSeparator2.TabIndex = 12;
@@ -1708,7 +1723,7 @@
             // startDoodleTrainingBtn
             // 
             startDoodleTrainingBtn.BackColor = System.Drawing.Color.LightGreen;
-            startDoodleTrainingBtn.Location = new System.Drawing.Point(10, 299);
+            startDoodleTrainingBtn.Location = new System.Drawing.Point(10, 325);
             startDoodleTrainingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             startDoodleTrainingBtn.Name = "startDoodleTrainingBtn";
             startDoodleTrainingBtn.Size = new System.Drawing.Size(85, 32);
@@ -1720,7 +1735,7 @@
             // stopDoodleTrainingBtn
             // 
             stopDoodleTrainingBtn.BackColor = System.Drawing.Color.MistyRose;
-            stopDoodleTrainingBtn.Location = new System.Drawing.Point(105, 299);
+            stopDoodleTrainingBtn.Location = new System.Drawing.Point(105, 325);
             stopDoodleTrainingBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             stopDoodleTrainingBtn.Name = "stopDoodleTrainingBtn";
             stopDoodleTrainingBtn.Size = new System.Drawing.Size(85, 32);
@@ -1732,7 +1747,7 @@
             // doodleStatusLabel
             // 
             doodleStatusLabel.ForeColor = System.Drawing.Color.Gray;
-            doodleStatusLabel.Location = new System.Drawing.Point(10, 339);
+            doodleStatusLabel.Location = new System.Drawing.Point(10, 365);
             doodleStatusLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             doodleStatusLabel.Name = "doodleStatusLabel";
             doodleStatusLabel.Size = new System.Drawing.Size(180, 16);
@@ -1912,6 +1927,7 @@
             // 
             numericUpDownAwakeMinutes.Location = new System.Drawing.Point(80, 25);
             numericUpDownAwakeMinutes.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            numericUpDownAwakeMinutes.Maximum = new decimal(new int[] { 1440, 0, 0, 0 });
             numericUpDownAwakeMinutes.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDownAwakeMinutes.Name = "numericUpDownAwakeMinutes";
             numericUpDownAwakeMinutes.Size = new System.Drawing.Size(54, 22);
@@ -1996,6 +2012,7 @@
             // Settings
             // 
             Settings.Controls.Add(groupBoxPreferences);
+            Settings.Controls.Add(btnGameControls);
             Settings.Controls.Add(groupBoxKeyboardShortcuts);
             Settings.Controls.Add(groupBoxAboutSettings);
             Settings.Location = new System.Drawing.Point(4, 25);
@@ -2080,9 +2097,21 @@
             toolTip1.SetToolTip(btnSavePreferencesNow, "Save current settings to preferences file immediately");
             btnSavePreferencesNow.UseVisualStyleBackColor = true;
             btnSavePreferencesNow.Click += btnSavePreferencesNow_Click;
-            // 
+            //
+            // btnGameControls
+            //
+            btnGameControls.Location = new System.Drawing.Point(9, 300);
+            btnGameControls.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnGameControls.Name = "btnGameControls";
+            btnGameControls.Size = new System.Drawing.Size(350, 35);
+            btnGameControls.TabIndex = 3;
+            btnGameControls.Text = "Configure Game Controls...";
+            toolTip1.SetToolTip(btnGameControls, "Tell the bot which movement keys you have bound in TTR's Controls screen");
+            btnGameControls.UseVisualStyleBackColor = true;
+            btnGameControls.Click += btnGameControls_Click;
+            //
             // groupBoxKeyboardShortcuts
-            // 
+            //
             groupBoxKeyboardShortcuts.Controls.Add(labelKeyboardShortcuts);
             groupBoxKeyboardShortcuts.Location = new System.Drawing.Point(370, 10);
             groupBoxKeyboardShortcuts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -2610,6 +2639,7 @@
         private System.Windows.Forms.Button startDoodleTrainingBtn;
         private System.Windows.Forms.Button stopDoodleTrainingBtn;
         private System.Windows.Forms.CheckBox showDoodleOverlayCheckBox;
+        private System.Windows.Forms.CheckBox doodleBackgroundModeCheckBox;
         private System.Windows.Forms.Label maxTricksLabel;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxTricks;
         private System.Windows.Forms.Label maxTricksTimesLabel;
@@ -2669,6 +2699,7 @@
         private System.Windows.Forms.Button btnResetPreferences;
         private System.Windows.Forms.Button btnOpenPreferencesFile;
         private System.Windows.Forms.Button btnSavePreferencesNow;
+        private System.Windows.Forms.Button btnGameControls;
         private System.Windows.Forms.GroupBox groupBoxKeyboardShortcuts;
         private System.Windows.Forms.Label labelKeyboardShortcuts;
         private System.Windows.Forms.GroupBox groupBoxAboutSettings;

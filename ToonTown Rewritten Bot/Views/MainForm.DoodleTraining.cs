@@ -31,12 +31,21 @@ namespace ToonTown_Rewritten_Bot
 
         private async void startDoodleTrainingBtn_Click(object sender, EventArgs e)
         {
+            // Guard against re-entry: this is an async void handler, so a second click before the
+            // first session finishes would launch a parallel training run (two threads posting
+            // interleaved clicks). Ignore clicks while a session is already active.
+            if (isTrainingActive)
+            {
+                return;
+            }
+
             string selectedTrick = (string)doodleTrickComboBox.SelectedItem;
             int numberOfFeeds = Convert.ToInt32(numberOfDoodleFeedsNumericUpDown.Value);
             int numberOfScratches = Convert.ToInt32(numberOfDoodleScratchesNumericUpDown.Value);
             bool unlimitedCheckBox = unlimitedTrainingCheckBox.Checked;
             bool justFeed = justFeedDoodleCheckBox.Checked;
             bool justScratch = justScratchDoodleCheckBox.Checked;
+            bool backgroundMode = doodleBackgroundModeCheckBox.Checked;
 
             // Ensure we have a fresh CancellationTokenSource
             if (_cancellationTokenSource != null)
@@ -45,6 +54,7 @@ namespace ToonTown_Rewritten_Bot
             }
             _cancellationTokenSource = new CancellationTokenSource();
             isTrainingActive = true;
+            startDoodleTrainingBtn.Enabled = false;
             doodleStatusLabel.Text = "Status: Training...";
             doodleStatusLabel.ForeColor = System.Drawing.Color.DarkGreen;
 
@@ -66,7 +76,7 @@ namespace ToonTown_Rewritten_Bot
                 int cycles = Convert.ToInt32(numericUpDownMaxTricks.Value);
                 await Task.Run(() => new DoodleTraining().StartDoodleTraining(
                     numberOfFeeds, numberOfScratches, unlimitedCheckBox,
-                    selectedTrick, justFeed, justScratch, _cancellationTokenSource.Token, cycles),
+                    selectedTrick, justFeed, justScratch, backgroundMode, _cancellationTokenSource.Token, cycles),
                     _cancellationTokenSource.Token);
 
                 // Training completed successfully
@@ -95,6 +105,7 @@ namespace ToonTown_Rewritten_Bot
             finally
             {
                 isTrainingActive = false;
+                startDoodleTrainingBtn.Enabled = true;
                 doodleStatusLabel.Text = "Status: Idle";
                 doodleStatusLabel.ForeColor = System.Drawing.Color.Gray;
 

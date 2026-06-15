@@ -78,6 +78,20 @@ namespace ToonTown_Rewritten_Bot
         }
 
         /// <summary>
+        /// Opens the Game Controls dialog so the user can match the bot's keys to their TTR bindings.
+        /// </summary>
+        private void btnGameControls_Click(object sender, EventArgs e)
+        {
+            using (var form = new Views.GameControlsForm())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    RefreshPreferencesDisplay();
+                }
+            }
+        }
+
+        /// <summary>
         /// Refreshes the preferences list box with current saved values.
         /// </summary>
         private void RefreshPreferencesDisplay()
@@ -117,6 +131,7 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Add($"  Trick: {prefs.DoodleTrick}");
             preferencesListBox.Items.Add($"  Feeds: {prefs.NumberOfFeeds}");
             preferencesListBox.Items.Add($"  Scratches: {prefs.NumberOfScratches}");
+            preferencesListBox.Items.Add($"  Background Mode: {(prefs.DoodleBackgroundMode ? "Yes" : "No")}");
 
             preferencesListBox.Items.Add("");
             preferencesListBox.Items.Add("═══════ GARDENING ═══════");
@@ -124,6 +139,14 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Add($"  Selected Flower: {(string.IsNullOrEmpty(prefs.SelectedFlower) ? "(not set)" : prefs.SelectedFlower)}");
             preferencesListBox.Items.Add($"  Water Count: {prefs.WaterPlantCount}");
             preferencesListBox.Items.Add($"  Custom File: {(string.IsNullOrEmpty(prefs.CustomGardeningFile) ? "(not set)" : prefs.CustomGardeningFile)}");
+
+            preferencesListBox.Items.Add("");
+            preferencesListBox.Items.Add("═══════ GAME CONTROLS ═══════");
+            preferencesListBox.Items.Add($"  Forward/Up: {Models.GameControls.GetDisplayName(Models.GameControls.Forward)}");
+            preferencesListBox.Items.Add($"  Reverse/Down: {Models.GameControls.GetDisplayName(Models.GameControls.Reverse)}");
+            preferencesListBox.Items.Add($"  Left: {Models.GameControls.GetDisplayName(Models.GameControls.Left)}");
+            preferencesListBox.Items.Add($"  Right: {Models.GameControls.GetDisplayName(Models.GameControls.Right)}");
+            preferencesListBox.Items.Add($"  Jump: {Models.GameControls.GetDisplayName(Models.GameControls.Jump)}");
 
             preferencesListBox.Items.Add("");
             preferencesListBox.Items.Add("═══════ MISC ═══════");

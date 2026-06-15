@@ -311,6 +311,8 @@ namespace ToonTown_Rewritten_Bot
                         case "TURN RIGHT":
                             if (gardeningKeys.ActionKeyMap.TryGetValue(action.Action, out var keyCode))
                             {
+                                // Translate the default control key into whatever the user has bound in TTR.
+                                keyCode = Models.GameControls.Remap(keyCode);
                                 WindowsInput.InputSimulator.SimulateKeyDown(keyCode);
                                 await Task.Delay(action.Duration, _cancellationTokenSource.Token);
                                 WindowsInput.InputSimulator.SimulateKeyUp(keyCode);

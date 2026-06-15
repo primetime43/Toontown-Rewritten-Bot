@@ -27,6 +27,12 @@ namespace ToonTown_Rewritten_Bot.Services
         // Tracks the intended cursor position in background mode (screen coords).
         private static Point _backgroundTargetPos;
 
+        // In background mode the unfocused game samples mouse-button state at a reduced rate,
+        // so an instant press+release can fall entirely between frames and never register.
+        // Holding the button briefly guarantees the down and up straddle a sampling frame —
+        // this is why fishing (whose cast already holds the button) works unfocused.
+        private const int BackgroundClickHoldMs = 300;
+
         /// <summary>
         /// Performs a mouse click at the current cursor position using SendInput (modern API).
         /// </summary>
@@ -36,6 +42,7 @@ namespace ToonTown_Rewritten_Bot.Services
             {
                 Logger.Debug("Input", $"DoMouseClick at ({_backgroundTargetPos.X}, {_backgroundTargetPos.Y})");
                 PostBackgroundMouseMessage(WM_LBUTTONDOWN, _backgroundTargetPos.X, _backgroundTargetPos.Y);
+                Thread.Sleep(BackgroundClickHoldMs);
                 PostBackgroundMouseMessage(WM_LBUTTONUP, _backgroundTargetPos.X, _backgroundTargetPos.Y);
                 return;
             }
@@ -94,6 +101,7 @@ namespace ToonTown_Rewritten_Bot.Services
             {
                 _backgroundTargetPos = location;
                 PostBackgroundMouseMessage(WM_LBUTTONDOWN, location.X, location.Y);
+                Thread.Sleep(BackgroundClickHoldMs);
                 PostBackgroundMouseMessage(WM_LBUTTONUP, location.X, location.Y);
                 return;
             }
@@ -172,9 +180,19 @@ namespace ToonTown_Rewritten_Bot.Services
             if (UseBackgroundInput)
             {
                 _backgroundTargetPos = new Point(x, y);
+                PostBackgroundMouseMove(x, y);
                 return;
             }
             Cursor.Position = new Point(x, y);
+        }
+
+        /// <summary>
+        /// The bot's effective cursor position: the real cursor in foreground mode, or the last
+        /// background target point in background mode (where the real cursor is never moved).
+        /// </summary>
+        public static Point GetEffectiveCursorLocation()
+        {
+            return UseBackgroundInput ? _backgroundTargetPos : getCursorLocation();
         }
 
         public static void MaximizeAndFocusTTRWindow()
@@ -476,6 +494,7 @@ namespace ToonTown_Rewritten_Bot.Services
         private static extern bool ScreenToClient(IntPtr hWnd, ref Point lpPoint);
 
         // Window message constants
+        private const uint WM_MOUSEMOVE = 0x0200;
         private const uint WM_LBUTTONDOWN = 0x0201;
         private const uint WM_LBUTTONUP = 0x0202;
         private const uint WM_KEYDOWN = 0x0100;
@@ -489,7 +508,11 @@ namespace ToonTown_Rewritten_Bot.Services
         private static void PostBackgroundMouseMessage(uint msg, int screenX, int screenY)
         {
             IntPtr hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero) return;
+            if (hwnd == IntPtr.Zero)
+            {
+                Logger.Warning("Input", "PostBackgroundMouseMessage: Toontown window not found — message dropped");
+                return;
+            }
 
             Point client = new Point(screenX, screenY);
             ScreenToClient(hwnd, ref client);
@@ -497,7 +520,31 @@ namespace ToonTown_Rewritten_Bot.Services
             IntPtr wParam = msg == WM_LBUTTONDOWN ? (IntPtr)MK_LBUTTON : IntPtr.Zero;
             IntPtr lParam = (IntPtr)((client.Y << 16) | (client.X & 0xFFFF));
 
-            PostMessageW(hwnd, msg, wParam, lParam);
+            bool posted = PostMessageW(hwnd, msg, wParam, lParam);
+            string msgName = msg == WM_LBUTTONDOWN ? "LBUTTONDOWN" : msg == WM_LBUTTONUP ? "LBUTTONUP" : msg.ToString("X");
+            Logger.Debug("Input", $"Post {msgName} hwnd=0x{hwnd.ToInt64():X} screen=({screenX},{screenY}) client=({client.X},{client.Y}) posted={posted}");
+        }
+
+        /// <summary>
+        /// Posts a mouse-move (WM_MOUSEMOVE) to the game window in client-relative coordinates.
+        /// Lets background mode drive hover-activated UI (e.g. SpeedChat submenus) that would
+        /// otherwise need the real cursor to physically move over the menu.
+        /// </summary>
+        private static void PostBackgroundMouseMove(int screenX, int screenY)
+        {
+            IntPtr hwnd = FindToontownWindow();
+            if (hwnd == IntPtr.Zero)
+            {
+                Logger.Warning("Input", "PostBackgroundMouseMove: Toontown window not found — move dropped");
+                return;
+            }
+
+            Point client = new Point(screenX, screenY);
+            ScreenToClient(hwnd, ref client);
+
+            IntPtr lParam = (IntPtr)((client.Y << 16) | (client.X & 0xFFFF));
+            bool posted = PostMessageW(hwnd, WM_MOUSEMOVE, IntPtr.Zero, lParam);
+            Logger.Debug("Input", $"Post MOUSEMOVE hwnd=0x{hwnd.ToInt64():X} screen=({screenX},{screenY}) client=({client.X},{client.Y}) posted={posted}");
         }
 
         /// <summary>
@@ -541,6 +588,8 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static void SendKeyDown(WindowsInput.VirtualKeyCode keyCode)
         {
+            // Translate the bot's default control key into whatever the user has bound in TTR.
+            keyCode = Models.GameControls.Remap(keyCode);
             if (UseBackgroundInput)
             {
                 PostBackgroundKeyDown((int)keyCode);
@@ -551,6 +600,8 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static void SendKeyUp(WindowsInput.VirtualKeyCode keyCode)
         {
+            // Translate the bot's default control key into whatever the user has bound in TTR.
+            keyCode = Models.GameControls.Remap(keyCode);
             if (UseBackgroundInput)
             {
                 PostBackgroundKeyUp((int)keyCode);
@@ -720,6 +771,7 @@ namespace ToonTown_Rewritten_Bot.Services
             if (UseBackgroundInput)
             {
                 PostBackgroundMouseMessage(WM_LBUTTONDOWN, _backgroundTargetPos.X, _backgroundTargetPos.Y);
+                Thread.Sleep(BackgroundClickHoldMs);
                 PostBackgroundMouseMessage(WM_LBUTTONUP, _backgroundTargetPos.X, _backgroundTargetPos.Y);
                 return;
             }

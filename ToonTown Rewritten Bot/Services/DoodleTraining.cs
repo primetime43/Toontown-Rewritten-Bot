@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,11 +11,23 @@ namespace ToonTown_Rewritten_Bot.Services
 {
     public class DoodleTraining : CoreFunctionality
     {
+        // Delay between posting a cursor move and the click, so the move lands first. The unfocused
+        // game renders at a reduced frame rate, so this is generous relative to fishing's foreground 100ms.
+        private const int MoveSettleMs = 300;
+
         private int _feedsPerCycle, _scratchesPerCycle, _totalCycles;
         private string _selectedTrick;
         private bool _infiniteTime, _justFeed, _justScratch;
         private TextRecognition _ocr;
         private Point? _lastTricksPosition;
+
+        // Per-session cache of SpeedChat menu item positions (window-relative), keyed by text
+        // ("PETS", "TRICKS", "Jump", ...). The first OCR pass that locates an item populates this;
+        // later cycles reuse the position and skip the slow full-screen OCR. Stored window-relative
+        // so the cache survives the game window being moved (we re-add the current offset on use).
+        private readonly Dictionary<string, Point> _menuTextCache = new Dictionary<string, Point>(StringComparer.OrdinalIgnoreCase);
+        // Window size the cache was built for; if the window is resized the menu layout shifts, so the cache is dropped.
+        private Size _menuCacheWindowSize = Size.Empty;
 
         // Session counters
         private int _totalFeedsDone = 0;
@@ -77,9 +90,9 @@ namespace ToonTown_Rewritten_Bot.Services
             }
             catch { }
         }
-        public async Task StartDoodleTraining(int feedsPerCycle, int scratchesPerCycle, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch, CancellationToken cancellationToken, int cycles = 1)
+        public async Task StartDoodleTraining(int feedsPerCycle, int scratchesPerCycle, bool unlimitedCheckBox, string trick, bool justFeed, bool justScratch, bool backgroundMode, CancellationToken cancellationToken, int cycles = 1)
         {
-            Logger.Info("Doodle", $"Training start: feedsPerCycle={feedsPerCycle}, scratchesPerCycle={scratchesPerCycle}, trick={trick}, cycles={cycles}, unlimited={unlimitedCheckBox}");
+            Logger.Info("Doodle", $"Training start: feedsPerCycle={feedsPerCycle}, scratchesPerCycle={scratchesPerCycle}, trick={trick}, cycles={cycles}, unlimited={unlimitedCheckBox}, background={backgroundMode}");
 
             _feedsPerCycle = feedsPerCycle;
             _scratchesPerCycle = scratchesPerCycle;
@@ -107,9 +120,11 @@ namespace ToonTown_Rewritten_Bot.Services
                 }
             }
 
-            // Doodle training always uses foreground mode (background mode is for fishing only)
+            // Apply the requested input mode for this session, restoring the previous global on exit
+            // (the flag is shared with fishing). Background mode posts clicks/mouse-moves to the
+            // game window and captures via PrintWindow, so training can run while unfocused.
             bool savedBackgroundMode = UseBackgroundInput;
-            UseBackgroundInput = false;
+            UseBackgroundInput = backgroundMode;
 
             // Check if game window is available and focus it
             EnsureGameWindowReady();
@@ -224,7 +239,11 @@ namespace ToonTown_Rewritten_Bot.Services
             Logger.Debug("Doodle", $"Performing trick: {_selectedTrick}");
             for (int i = 0; i < 2; i++)
             {
-                UpdateOverlay("Opening Menu", "Opening SpeedChat", $"Select {_selectedTrick}");
+                // Until the menu positions are cached, navigation runs a full-screen OCR pass and is
+                // noticeably slower — tell the user so the first cycle doesn't read as a freeze.
+                bool willUseOcr = !(_menuTextCache.ContainsKey("PETS") && _menuTextCache.ContainsKey("TRICKS"));
+                string menuStatus = willUseOcr ? "Locating menu (first run is slower)…" : "Opening SpeedChat";
+                UpdateOverlay("Opening Menu", menuStatus, $"Select {_selectedTrick}");
                 await OpenSpeedChat(cancellationToken);
                 UpdateOverlay("Trick", $"Clicking {_selectedTrick}", "Wait for response");
                 await trickAction(cancellationToken);
@@ -246,6 +265,8 @@ namespace ToonTown_Rewritten_Bot.Services
                 // Click the green SpeedChat button (template matching works well for this unique element)
                 var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(DoodleTrainingCoordinatesEnum.GreenSpeedChatButton);
                 CoreFunctionality.MoveCursor(x, y);
+                // Settle the move before clicking so background mode opens the menu (see feedDoodle).
+                await Task.Delay(MoveSettleMs, cancellationToken);
                 CoreFunctionality.DoMouseClick();
                 await Task.Delay(1000, cancellationToken);
 
@@ -267,8 +288,9 @@ namespace ToonTown_Rewritten_Bot.Services
                 }
                 await Task.Delay(500, cancellationToken);
 
-                // Store where TRICKS was found (cursor is there now) for trick search region
-                _lastTricksPosition = getCursorLocation();
+                // Store where TRICKS was found (cursor is there now) for trick search region.
+                // In background mode the real cursor never moves, so use the effective position.
+                _lastTricksPosition = GetEffectiveCursorLocation();
 
                 // Move cursor to the right into the tricks submenu so it stays open
                 MoveCursor(_lastTricksPosition.Value.X + 150, _lastTricksPosition.Value.Y);
@@ -291,6 +313,8 @@ namespace ToonTown_Rewritten_Bot.Services
                 int closeX = windowRect.X + (int)(windowRect.Width * 0.75);
                 int closeY = windowRect.Y + (int)(windowRect.Height * 0.5);
                 CoreFunctionality.MoveCursor(closeX, closeY);
+                // Settle the move before clicking (see feedDoodle).
+                await Task.Delay(MoveSettleMs, cancellationToken);
                 CoreFunctionality.DoMouseClick();
             }
             await Task.Delay(500, cancellationToken);
@@ -305,6 +329,30 @@ namespace ToonTown_Rewritten_Bot.Services
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            var windowOffset = GetGameWindowOffset();
+
+            // Drop the cache if the game window was resized — the menu lays out differently then.
+            var windowRect = GetGameWindowRect();
+            if (!windowRect.IsEmpty && _menuCacheWindowSize != windowRect.Size)
+            {
+                if (_menuTextCache.Count > 0)
+                {
+                    Logger.Debug("Doodle", "Game window resized — clearing SpeedChat menu position cache");
+                }
+                _menuTextCache.Clear();
+                _menuCacheWindowSize = windowRect.Size;
+            }
+
+            // Fast path: reuse the position located on a previous cycle, skipping OCR entirely.
+            if (_menuTextCache.TryGetValue(text, out var cachedRel))
+            {
+                int cachedX = cachedRel.X + windowOffset.X;
+                int cachedY = cachedRel.Y + windowOffset.Y;
+                Logger.Debug("Doodle", $"Using cached position for '{text}' at screen ({cachedX}, {cachedY})");
+                await ClickMenuPoint(cachedX, cachedY, cancellationToken);
+                return true;
+            }
+
             using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
             {
                 if (screenshot == null)
@@ -315,24 +363,39 @@ namespace ToonTown_Rewritten_Bot.Services
                 var pos = _ocr.FindTextPosition(screenshot, text, searchRegion: searchRegion);
                 if (!pos.HasValue)
                 {
+                    // A miss means our menu-state assumptions may be stale; drop the cache so the
+                    // retry re-discovers positions from scratch rather than clicking blind.
+                    _menuTextCache.Clear();
                     return false;
                 }
 
-                var windowOffset = GetGameWindowOffset();
+                // Cache the window-relative position so subsequent cycles skip the slow OCR pass.
+                _menuTextCache[text] = pos.Value;
+
                 int screenX = pos.Value.X + windowOffset.X;
                 int screenY = pos.Value.Y + windowOffset.Y;
 
                 Logger.Debug("Doodle", $"Clicking '{text}' at screen ({screenX}, {screenY})");
-                CoreFunctionality.MoveCursor(screenX, screenY);
-                await Task.Delay(500, cancellationToken);
-                SimulateDragMove(screenX, screenY);
-                await Task.Delay(100, cancellationToken);
-                SendInputMouseDown();
-                await Task.Delay(100, cancellationToken);
-                SendInputMouseUp();
-                await Task.Delay(1000, cancellationToken);
+                await ClickMenuPoint(screenX, screenY, cancellationToken);
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Moves the cursor to a screen point and performs a SpeedChat menu click.
+        /// </summary>
+        private async Task ClickMenuPoint(int screenX, int screenY, CancellationToken cancellationToken)
+        {
+            CoreFunctionality.MoveCursor(screenX, screenY);
+            await Task.Delay(500, cancellationToken);
+            SimulateDragMove(screenX, screenY);
+            await Task.Delay(100, cancellationToken);
+            SendInputMouseDown();
+            // Hold before releasing so the click is sampled even when the unfocused game
+            // runs at a reduced frame rate (see BackgroundClickHoldMs in CoreFunctionality).
+            await Task.Delay(300, cancellationToken);
+            SendInputMouseUp();
+            await Task.Delay(1000, cancellationToken);
         }
 
         /// <summary>
@@ -375,6 +438,11 @@ namespace ToonTown_Rewritten_Bot.Services
             // Use image recognition (will prompt for template capture if needed)
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(DoodleTrainingCoordinatesEnum.FeedDoodleButton);
             MoveCursor(x, y);
+            // Let the posted move land before the click. In background mode the unfocused game
+            // updates its mouse-region (Panda's MouseWatcher) a frame after the move; clicking in
+            // the same frame misses the button. This mirrors the move→delay→click pattern that
+            // makes fishing's button clicks work unfocused.
+            await Task.Delay(MoveSettleMs, cancellationToken);
             DoMouseClick();
             await Task.Delay(11500, cancellationToken);
         }
@@ -386,6 +454,8 @@ namespace ToonTown_Rewritten_Bot.Services
             // Use image recognition (will prompt for template capture if needed)
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(DoodleTrainingCoordinatesEnum.ScratchDoodleButton);
             CoreFunctionality.MoveCursor(x, y);
+            // See feedDoodle: settle the posted move before clicking so background mode registers.
+            await Task.Delay(MoveSettleMs, cancellationToken);
             CoreFunctionality.DoMouseClick();
             await Task.Delay(10000, cancellationToken);
         }

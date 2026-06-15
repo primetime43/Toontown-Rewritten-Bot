@@ -72,6 +72,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public bool JustFeedDoodle { get; set; } = false;
         public bool JustScratchDoodle { get; set; } = false;
         public bool ShowDoodleOverlay { get; set; } = false;
+        public bool DoodleBackgroundMode { get; set; } = false;
         public int TrainingCycles { get; set; } = 1;
 
         // Gardening preferences
@@ -83,6 +84,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
         // Misc preferences
         public bool KeepProgramOnTop { get; set; } = false;
         public int KeepToonAwakeMinutes { get; set; } = 1;
+
+        // Game control bindings (the keys the user has bound in TTR's Controls screen).
+        // Stored as VirtualKeyCode enum names; defaults match TTR's default controls.
+        public string ControlForward { get; set; } = "UP";
+        public string ControlReverse { get; set; } = "DOWN";
+        public string ControlLeft { get; set; } = "LEFT";
+        public string ControlRight { get; set; } = "RIGHT";
+        public string ControlJump { get; set; } = "CONTROL";
 
         /// <summary>
         /// Saves current preferences to file.
@@ -159,6 +168,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             JustFeedDoodle = false;
             JustScratchDoodle = false;
             ShowDoodleOverlay = false;
+            DoodleBackgroundMode = false;
             TrainingCycles = 1;
 
             WaterPlantCount = 2;
@@ -168,6 +178,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             KeepProgramOnTop = false;
             KeepToonAwakeMinutes = 1;
+
+            ControlForward = "UP";
+            ControlReverse = "DOWN";
+            ControlLeft = "LEFT";
+            ControlRight = "RIGHT";
+            ControlJump = "CONTROL";
 
             Save();
         }

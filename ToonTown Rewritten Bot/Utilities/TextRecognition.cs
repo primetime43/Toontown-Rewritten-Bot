@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Tesseract;
@@ -286,38 +287,36 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 g.DrawImage(image, 0, 0, newWidth, newHeight);
             }
 
-            // Create result bitmap
-            Bitmap result = new Bitmap(newWidth, newHeight);
-
-            // Calculate average brightness to determine if we have light or dark text
-            long totalBrightness = 0;
-            for (int y = 0; y < scaled.Height; y++)
+            // Process pixels via LockBits rather than GetPixel/SetPixel. Per-pixel GDI+ calls are
+            // orders of magnitude slower; on a full-screen capture they block for seconds, which
+            // (a) makes the first OCR pass sluggish and (b) stalls cancellation, since a stop
+            // request can only take effect at the next await. LockBits keeps it to ~tens of ms.
+            var rect = new Rectangle(0, 0, newWidth, newHeight);
+            BitmapData data = scaled.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            try
             {
-                for (int x = 0; x < scaled.Width; x++)
+                int byteCount = Math.Abs(data.Stride) * newHeight;
+                byte[] buffer = new byte[byteCount];
+                Marshal.Copy(data.Scan0, buffer, 0, byteCount);
+
+                int pixelCount = byteCount / 4;
+
+                // First pass: average brightness to decide light-on-dark vs dark-on-light. (BGRA order)
+                long totalBrightness = 0;
+                for (int i = 0; i < byteCount; i += 4)
                 {
-                    Color pixel = scaled.GetPixel(x, y);
-                    totalBrightness += (pixel.R + pixel.G + pixel.B) / 3;
+                    totalBrightness += (buffer[i] + buffer[i + 1] + buffer[i + 2]) / 3;
                 }
-            }
-            int avgBrightness = (int)(totalBrightness / (scaled.Width * scaled.Height));
+                int avgBrightness = (int)(totalBrightness / pixelCount);
 
-            // Use adaptive threshold based on image brightness
-            // If mostly dark background, look for light text (invert)
-            // If mostly light background, look for dark text
-            bool invertForLightText = avgBrightness < 128;
+                // If mostly dark background, look for light text (invert); otherwise look for dark text.
+                bool invertForLightText = avgBrightness < 128;
+                int threshold = avgBrightness;
 
-            for (int y = 0; y < scaled.Height; y++)
-            {
-                for (int x = 0; x < scaled.Width; x++)
+                // Second pass: binarize in place.
+                for (int i = 0; i < byteCount; i += 4)
                 {
-                    Color pixel = scaled.GetPixel(x, y);
-
-                    // Convert to grayscale using luminance formula
-                    int gray = (int)(pixel.R * 0.299 + pixel.G * 0.587 + pixel.B * 0.114);
-
-                    // Apply Otsu-like adaptive threshold
-                    // Use multiple thresholds and pick based on context
-                    int threshold = avgBrightness;
+                    int gray = (int)(buffer[i + 2] * 0.299 + buffer[i + 1] * 0.587 + buffer[i] * 0.114);
 
                     int newValue;
                     if (invertForLightText)
@@ -331,12 +330,21 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         newValue = gray > threshold ? 255 : 0;
                     }
 
-                    result.SetPixel(x, y, Color.FromArgb(newValue, newValue, newValue));
+                    byte v = (byte)newValue;
+                    buffer[i] = v;
+                    buffer[i + 1] = v;
+                    buffer[i + 2] = v;
+                    buffer[i + 3] = 255;
                 }
+
+                Marshal.Copy(buffer, 0, data.Scan0, byteCount);
+            }
+            finally
+            {
+                scaled.UnlockBits(data);
             }
 
-            scaled.Dispose();
-            return result;
+            return scaled;
         }
 
         /// <summary>
@@ -453,16 +461,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             try
             {
-                // Scale up for better OCR accuracy
+                // Scale up AND binarize for better OCR accuracy. SpeedChat menu text is
+                // light text on a darker panel, which raw (un-thresholded) Tesseract reads
+                // poorly — PreprocessForGameOCR upscales 3x and adaptively binarizes
+                // (inverting light-on-dark to black-on-white). scaleFactor must match the
+                // 3x scaling done inside PreprocessForGameOCR for the bounding-box math below.
                 int scaleFactor = 3;
-                using (var scaled = new Bitmap(searchImage.Width * scaleFactor, searchImage.Height * scaleFactor))
+                using (var scaled = PreprocessForGameOCR(searchImage))
                 {
-                    using (var g = Graphics.FromImage(scaled))
-                    {
-                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                        g.DrawImage(searchImage, 0, 0, scaled.Width, scaled.Height);
-                    }
-
                     Point? result = null;
 
                     // For debug image: draw on the original screenshot
