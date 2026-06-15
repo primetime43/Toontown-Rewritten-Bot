@@ -14,7 +14,12 @@ Table of Contents
 - **Gardening** - Watering, planting, and removing plants.
 - **Doodle Training** - Automated trick training for your doodle.
 - **Keep Awake** - Prevents AFK timeout when you're away from your PC.
-- **Custom Action Management** - Create and manage custom actions for fishing and golfing directly within the application without modifying source code.
+- **Custom Action Management** - Create and manage custom actions for fishing, golfing, and gardening directly within the application without modifying source code.
+- **Configurable Game Controls** - Remap the movement and jump keys (forward, reverse, left, right, jump) to match your in-game TTR bindings so automation works with custom keyboard layouts.
+- **Background Mode** - Run fishing and doodle training while the game window is unfocused, so you can use your PC for other things while the bot works.
+- **Hotkey Controls** - Global hotkeys to pause (F11) and stop (F12/Esc) the bot from anywhere, even when the game window is focused.
+- **Settings & Preferences** - Persistent user preferences that restore your last-used settings on startup, with an in-app Settings tab to view, save, reset, and edit them.
+- **Logging & Log Viewer** - Per-session log files with a built-in live log viewer (level and category filtering) for monitoring and troubleshooting.
 
 ## Images of 2.2.1:
 <details>
