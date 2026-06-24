@@ -174,6 +174,29 @@ namespace ToonTown_Rewritten_Bot
 
             // Game control bindings — apply saved key bindings to the input layer.
             Models.GameControls.LoadFrom(prefs);
+
+            // Global stop/pause hotkeys — apply saved bindings, then reflect them in the UI hints.
+            Models.Hotkeys.LoadFrom(prefs);
+            UpdateShortcutLabels();
+        }
+
+        /// <summary>
+        /// Updates the on-screen "Keyboard Shortcuts" hint labels to reflect the currently
+        /// configured stop/pause hotkeys (so they stay correct after the user rebinds them).
+        /// </summary>
+        private void UpdateShortcutLabels()
+        {
+            string pause = Models.Hotkeys.GetDisplayName(Models.Hotkeys.Pause);
+            string stop = Models.Hotkeys.GetDisplayName(Models.Hotkeys.Stop);
+            string stopKeys = Models.Hotkeys.AllowEscToStop ? $"{stop} or Esc" : stop;
+
+            shortcutsLabel.Text = $"{pause,-10} Pause / Resume\r\n{stopKeys,-10} Stop task";
+            fishingShortcutsLabel.Text = $"Keyboard Shortcuts:\n{pause} - Pause/Resume\n{stopKeys} - Stop";
+            labelKeyboardShortcuts.Text =
+                "Global shortcuts (work in-game):\n\n" +
+                $"{pause} - Pause/Resume fishing\n" +
+                $"{stopKeys} - Stop current task\n\n" +
+                "These work even when TTR\nhas focus.";
         }
 
         /// <summary>
@@ -233,17 +256,20 @@ namespace ToonTown_Rewritten_Bot
             // Game control bindings — persist the current key bindings.
             Models.GameControls.SaveTo(prefs);
 
+            // Global stop/pause hotkeys — persist the current bindings.
+            Models.Hotkeys.SaveTo(prefs);
+
             prefs.Save();
         }
 
         /// <summary>
         /// Global keyboard shortcut handler.
-        /// Press Escape or F12 to stop fishing/other active tasks.
+        /// Press the configured stop hotkey (default F12, plus Esc when enabled) to stop tasks.
         /// </summary>
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            // Escape or F12 stops fishing and other active tasks
-            if (e.KeyCode == Keys.Escape || e.KeyCode == Keys.F12)
+            // Configured stop hotkey stops fishing and other active tasks
+            if (Models.Hotkeys.IsStop(e.KeyCode))
             {
                 StopAllActiveTasks();
                 e.Handled = true;
@@ -268,7 +294,7 @@ namespace ToonTown_Rewritten_Bot
         /// </summary>
         private void GlobalKeyboardHook_KeyPressed(object sender, Keys key)
         {
-            if (key == Keys.Escape || key == Keys.F12)
+            if (Models.Hotkeys.IsStop(key))
             {
                 // Ignore simulated key presses (e.g., from StraightenToonAsync sending ESC to cancel a cast)
                 if (FishingStrategyBase.IsSimulatedKeyPress)
@@ -277,7 +303,15 @@ namespace ToonTown_Rewritten_Bot
                     return;
                 }
 
-                // Suppress the key so it doesn't reach the game
+                // Only swallow the key (so it doesn't reach the game/other apps) when there is
+                // actually a task to stop. Otherwise a stop key rebound to a normal character
+                // would be eaten globally even while the bot is idle.
+                bool taskActive = _cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested;
+                if (!taskActive)
+                {
+                    return;
+                }
+
                 _globalKeyboardHook.SuppressKey = true;
 
                 // Stop all active tasks — catch blocks in start handlers show the feedback
@@ -290,7 +324,7 @@ namespace ToonTown_Rewritten_Bot
                     StopAllActiveTasks();
                 }
             }
-            else if (key == Keys.F11)
+            else if (Models.Hotkeys.IsPause(key))
             {
                 // Toggle pause for fishing
                 FishingStrategyBase.TogglePause();

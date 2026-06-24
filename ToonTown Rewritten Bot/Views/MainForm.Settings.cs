@@ -92,6 +92,22 @@ namespace ToonTown_Rewritten_Bot
         }
 
         /// <summary>
+        /// Opens the Hotkeys dialog so the user can rebind the global stop/pause keys.
+        /// </summary>
+        private void btnHotkeys_Click(object sender, EventArgs e)
+        {
+            using (var form = new Views.HotkeysForm())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    // Reflect the new bindings in the on-screen shortcut hints and the list.
+                    UpdateShortcutLabels();
+                    RefreshPreferencesDisplay();
+                }
+            }
+        }
+
+        /// <summary>
         /// Refreshes the preferences list box with current saved values.
         /// </summary>
         private void RefreshPreferencesDisplay()
@@ -147,6 +163,12 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Add($"  Left: {Models.GameControls.GetDisplayName(Models.GameControls.Left)}");
             preferencesListBox.Items.Add($"  Right: {Models.GameControls.GetDisplayName(Models.GameControls.Right)}");
             preferencesListBox.Items.Add($"  Jump: {Models.GameControls.GetDisplayName(Models.GameControls.Jump)}");
+
+            preferencesListBox.Items.Add("");
+            preferencesListBox.Items.Add("═══════ HOTKEYS ═══════");
+            preferencesListBox.Items.Add($"  Stop: {Models.Hotkeys.GetDisplayName(Models.Hotkeys.Stop)}");
+            preferencesListBox.Items.Add($"  Pause/Resume: {Models.Hotkeys.GetDisplayName(Models.Hotkeys.Pause)}");
+            preferencesListBox.Items.Add($"  Esc also stops: {(Models.Hotkeys.AllowEscToStop ? "Yes" : "No")}");
 
             preferencesListBox.Items.Add("");
             preferencesListBox.Items.Add("═══════ MISC ═══════");
