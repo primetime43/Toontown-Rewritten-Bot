@@ -47,6 +47,21 @@ namespace ToonTown_Rewritten_Bot
             bool justScratch = justScratchDoodleCheckBox.Checked;
             bool backgroundMode = doodleBackgroundModeCheckBox.Checked;
 
+            // Feeds/scratches of 0 are allowed (e.g. to just spam a trick), but each cycle must do
+            // something — otherwise the loop just waits forever doing nothing. The feed phase is
+            // skipped when justScratch is set, and the scratch phase when justFeed is set.
+            int effectiveFeeds = justScratch ? 0 : numberOfFeeds;
+            int effectiveScratches = justFeed ? 0 : numberOfScratches;
+            bool hasTrick = selectedTrick != "None";
+            if (effectiveFeeds == 0 && effectiveScratches == 0 && !hasTrick)
+            {
+                MessageBox.Show(
+                    "Nothing to do: feeds and scratches are both 0 and no trick is selected.\n\n" +
+                    "Set feeds or scratches above 0, or pick a trick to perform.",
+                    "Invalid Settings", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             // Ensure we have a fresh CancellationTokenSource
             if (_cancellationTokenSource != null)
             {
