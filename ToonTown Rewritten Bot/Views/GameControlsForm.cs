@@ -168,9 +168,13 @@ namespace ToonTown_Rewritten_Bot.Views
                     return true;
                 }
 
-                if (Enum.IsDefined(typeof(VirtualKeyCode), (int)keyCode))
+                // VirtualKeyCode's underlying type is ushort, so Enum.IsDefined must be given a
+                // ushort — passing an int throws ArgumentException ("underlying type was UInt16").
+                // WinForms Keys values share the same virtual-key numbering, so the cast is safe.
+                ushort vk = (ushort)keyCode;
+                if (Enum.IsDefined(typeof(VirtualKeyCode), vk))
                 {
-                    AssignKey(_capturing.Value, (VirtualKeyCode)(int)keyCode);
+                    AssignKey(_capturing.Value, (VirtualKeyCode)vk);
                     _capturing = null;
                     RefreshButtonLabels();
                     return true;

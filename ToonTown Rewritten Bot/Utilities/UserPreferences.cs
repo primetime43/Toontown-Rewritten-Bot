@@ -93,6 +93,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public string ControlRight { get; set; } = "RIGHT";
         public string ControlJump { get; set; } = "CONTROL";
 
+        // Global hotkeys (stop/pause). Stored as WinForms Keys enum names.
+        public string HotkeyStop { get; set; } = "F12";
+        public string HotkeyPause { get; set; } = "F11";
+        public bool HotkeyAllowEscToStop { get; set; } = true;
+
         /// <summary>
         /// Saves current preferences to file.
         /// </summary>
@@ -184,6 +189,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
             ControlLeft = "LEFT";
             ControlRight = "RIGHT";
             ControlJump = "CONTROL";
+
+            HotkeyStop = "F12";
+            HotkeyPause = "F11";
+            HotkeyAllowEscToStop = true;
 
             Save();
         }

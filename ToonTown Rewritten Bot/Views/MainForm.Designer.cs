@@ -188,6 +188,7 @@
             btnOpenPreferencesFile = new System.Windows.Forms.Button();
             btnSavePreferencesNow = new System.Windows.Forms.Button();
             btnGameControls = new System.Windows.Forms.Button();
+            btnHotkeys = new System.Windows.Forms.Button();
             groupBoxKeyboardShortcuts = new System.Windows.Forms.GroupBox();
             labelKeyboardShortcuts = new System.Windows.Forms.Label();
             groupBoxAboutSettings = new System.Windows.Forms.GroupBox();
@@ -2013,6 +2014,7 @@
             // 
             Settings.Controls.Add(groupBoxPreferences);
             Settings.Controls.Add(btnGameControls);
+            Settings.Controls.Add(btnHotkeys);
             Settings.Controls.Add(groupBoxKeyboardShortcuts);
             Settings.Controls.Add(groupBoxAboutSettings);
             Settings.Location = new System.Drawing.Point(4, 25);
@@ -2109,6 +2111,18 @@
             toolTip1.SetToolTip(btnGameControls, "Tell the bot which movement keys you have bound in TTR's Controls screen");
             btnGameControls.UseVisualStyleBackColor = true;
             btnGameControls.Click += btnGameControls_Click;
+            //
+            // btnHotkeys
+            //
+            btnHotkeys.Location = new System.Drawing.Point(9, 340);
+            btnHotkeys.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnHotkeys.Name = "btnHotkeys";
+            btnHotkeys.Size = new System.Drawing.Size(350, 35);
+            btnHotkeys.TabIndex = 4;
+            btnHotkeys.Text = "Configure Hotkeys...";
+            toolTip1.SetToolTip(btnHotkeys, "Rebind the global stop/pause keys (and toggle whether Esc also stops)");
+            btnHotkeys.UseVisualStyleBackColor = true;
+            btnHotkeys.Click += btnHotkeys_Click;
             //
             // groupBoxKeyboardShortcuts
             //
@@ -2700,6 +2714,7 @@
         private System.Windows.Forms.Button btnOpenPreferencesFile;
         private System.Windows.Forms.Button btnSavePreferencesNow;
         private System.Windows.Forms.Button btnGameControls;
+        private System.Windows.Forms.Button btnHotkeys;
         private System.Windows.Forms.GroupBox groupBoxKeyboardShortcuts;
         private System.Windows.Forms.Label labelKeyboardShortcuts;
         private System.Windows.Forms.GroupBox groupBoxAboutSettings;
