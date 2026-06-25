@@ -188,6 +188,7 @@
             btnOpenPreferencesFile = new System.Windows.Forms.Button();
             btnSavePreferencesNow = new System.Windows.Forms.Button();
             btnGameControls = new System.Windows.Forms.Button();
+            btnHotkeys = new System.Windows.Forms.Button();
             groupBoxKeyboardShortcuts = new System.Windows.Forms.GroupBox();
             labelKeyboardShortcuts = new System.Windows.Forms.Label();
             groupBoxAboutSettings = new System.Windows.Forms.GroupBox();
@@ -502,7 +503,7 @@
             // 
             numericUpDownSells.Location = new System.Drawing.Point(60, 96);
             numericUpDownSells.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            numericUpDownSells.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
+            numericUpDownSells.Maximum = new decimal(new int[] { 999, 0, 0, 0 });
             numericUpDownSells.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDownSells.Name = "numericUpDownSells";
             numericUpDownSells.Size = new System.Drawing.Size(48, 22);
@@ -880,7 +881,7 @@
             // 
             numericUpDownCustomSells.Location = new System.Drawing.Point(145, 113);
             numericUpDownCustomSells.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            numericUpDownCustomSells.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
+            numericUpDownCustomSells.Maximum = new decimal(new int[] { 999, 0, 0, 0 });
             numericUpDownCustomSells.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDownCustomSells.Name = "numericUpDownCustomSells";
             numericUpDownCustomSells.Size = new System.Drawing.Size(55, 22);
@@ -1592,11 +1593,11 @@
             numberOfDoodleFeedsNumericUpDown.Location = new System.Drawing.Point(85, 104);
             numberOfDoodleFeedsNumericUpDown.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numberOfDoodleFeedsNumericUpDown.Maximum = new decimal(new int[] { 900, 0, 0, 0 });
-            numberOfDoodleFeedsNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numberOfDoodleFeedsNumericUpDown.Minimum = new decimal(new int[] { 0, 0, 0, 0 });
             numberOfDoodleFeedsNumericUpDown.Name = "numberOfDoodleFeedsNumericUpDown";
             numberOfDoodleFeedsNumericUpDown.Size = new System.Drawing.Size(55, 22);
             numberOfDoodleFeedsNumericUpDown.TabIndex = 3;
-            toolTip1.SetToolTip(numberOfDoodleFeedsNumericUpDown, "Number of times to feed your doodle per cycle");
+            toolTip1.SetToolTip(numberOfDoodleFeedsNumericUpDown, "Number of times to feed your doodle per cycle (0 = skip feeding)");
             numberOfDoodleFeedsNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // doodleFeedsTimesLabel
@@ -1624,11 +1625,11 @@
             numberOfDoodleScratchesNumericUpDown.Location = new System.Drawing.Point(85, 134);
             numberOfDoodleScratchesNumericUpDown.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numberOfDoodleScratchesNumericUpDown.Maximum = new decimal(new int[] { 900, 0, 0, 0 });
-            numberOfDoodleScratchesNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numberOfDoodleScratchesNumericUpDown.Minimum = new decimal(new int[] { 0, 0, 0, 0 });
             numberOfDoodleScratchesNumericUpDown.Name = "numberOfDoodleScratchesNumericUpDown";
             numberOfDoodleScratchesNumericUpDown.Size = new System.Drawing.Size(55, 22);
             numberOfDoodleScratchesNumericUpDown.TabIndex = 6;
-            toolTip1.SetToolTip(numberOfDoodleScratchesNumericUpDown, "Number of times to scratch your doodle per cycle");
+            toolTip1.SetToolTip(numberOfDoodleScratchesNumericUpDown, "Number of times to scratch your doodle per cycle (0 = skip scratching)");
             numberOfDoodleScratchesNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // doodleScratchesTimesLabel
@@ -2013,6 +2014,7 @@
             // 
             Settings.Controls.Add(groupBoxPreferences);
             Settings.Controls.Add(btnGameControls);
+            Settings.Controls.Add(btnHotkeys);
             Settings.Controls.Add(groupBoxKeyboardShortcuts);
             Settings.Controls.Add(groupBoxAboutSettings);
             Settings.Location = new System.Drawing.Point(4, 25);
@@ -2109,6 +2111,18 @@
             toolTip1.SetToolTip(btnGameControls, "Tell the bot which movement keys you have bound in TTR's Controls screen");
             btnGameControls.UseVisualStyleBackColor = true;
             btnGameControls.Click += btnGameControls_Click;
+            //
+            // btnHotkeys
+            //
+            btnHotkeys.Location = new System.Drawing.Point(9, 340);
+            btnHotkeys.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnHotkeys.Name = "btnHotkeys";
+            btnHotkeys.Size = new System.Drawing.Size(350, 35);
+            btnHotkeys.TabIndex = 4;
+            btnHotkeys.Text = "Configure Hotkeys...";
+            toolTip1.SetToolTip(btnHotkeys, "Rebind the global stop/pause keys (and toggle whether Esc also stops)");
+            btnHotkeys.UseVisualStyleBackColor = true;
+            btnHotkeys.Click += btnHotkeys_Click;
             //
             // groupBoxKeyboardShortcuts
             //
@@ -2700,6 +2714,7 @@
         private System.Windows.Forms.Button btnOpenPreferencesFile;
         private System.Windows.Forms.Button btnSavePreferencesNow;
         private System.Windows.Forms.Button btnGameControls;
+        private System.Windows.Forms.Button btnHotkeys;
         private System.Windows.Forms.GroupBox groupBoxKeyboardShortcuts;
         private System.Windows.Forms.Label labelKeyboardShortcuts;
         private System.Windows.Forms.GroupBox groupBoxAboutSettings;
