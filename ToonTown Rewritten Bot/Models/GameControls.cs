@@ -45,6 +45,25 @@ namespace ToonTown_Rewritten_Bot.Models
         }
 
         /// <summary>
+        /// Maps a raw Windows virtual-key code from the global recorder to a movement action.
+        /// This keeps custom-action recording aligned with the bindings configured in the app.
+        /// </summary>
+        public static string GetMovementAction(int virtualKeyCode)
+        {
+            if (virtualKeyCode == (int)Forward) return "WALK FORWARDS";
+            if (virtualKeyCode == (int)Reverse) return "WALK BACKWARDS";
+            if (virtualKeyCode == (int)Left) return "TURN LEFT";
+            if (virtualKeyCode == (int)Right) return "TURN RIGHT";
+            return null;
+        }
+
+        public static string GetMovementBindingSummary()
+        {
+            return $"{GetDisplayName(Forward)}, {GetDisplayName(Reverse)}, " +
+                   $"{GetDisplayName(Left)}, {GetDisplayName(Right)}";
+        }
+
+        /// <summary>
         /// Applies the saved bindings from <see cref="UserPreferences"/> to the runtime fields.
         /// Unparseable or empty values fall back to the TTR default for that control.
         /// </summary>

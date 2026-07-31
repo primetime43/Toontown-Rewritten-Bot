@@ -332,7 +332,7 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 case 1:
                     lblStepTitle.Text = "Step 1: Record Walk to Fisherman";
-                    lblStepDescription.Text = "Stand on your fishing dock in TTR. Click 'Start Recording', then walk to the fisherman using arrow keys. Stop when you reach the sell bucket.";
+                    lblStepDescription.Text = $"Stand on your fishing dock in TTR. Click 'Start Recording', then walk to the fisherman using your configured keys ({GameControls.GetMovementBindingSummary()}).";
                     groupBoxContent.Text = "Record Path to Fisherman";
                     btnStartRecording.Visible = true;
                     btnStopRecording.Visible = true;
@@ -354,7 +354,7 @@ namespace ToonTown_Rewritten_Bot.Views
 
                 case 3:
                     lblStepTitle.Text = "Step 3: Record Walk Back to Dock";
-                    lblStepDescription.Text = "After selling, you need to walk back to the dock. Click 'Start Recording', then walk back to your fishing dock.";
+                    lblStepDescription.Text = $"After selling, click 'Start Recording' and walk back using your configured keys ({GameControls.GetMovementBindingSummary()}).";
                     groupBoxContent.Text = "Record Path Back to Dock";
                     btnStartRecording.Visible = true;
                     btnStopRecording.Visible = true;
@@ -455,6 +455,22 @@ namespace ToonTown_Rewritten_Bot.Views
                 return;
             }
 
+            if (!_keyboardHook.Start())
+            {
+                this.WindowState = FormWindowState.Normal;
+                this.BringToFront();
+                lblRecordingStatus.Text = "Status: Could not start keyboard recording";
+                lblRecordingStatus.ForeColor = Color.Red;
+                MessageBox.Show(
+                    this,
+                    $"The keyboard recorder could not start (Windows error {_keyboardHook.LastErrorCode}).\n\n" +
+                    "Restart the bot and make sure the bot and Toontown are running at the same administrator level.",
+                    "Recording Unavailable",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
             // Clear previous recording
             _recordedKeys.Clear();
             _currentKeyHeld = null;
@@ -463,13 +479,12 @@ namespace ToonTown_Rewritten_Bot.Views
             // Update UI
             btnStartRecording.Enabled = false;
             btnStopRecording.Enabled = true;
-            lblRecordingStatus.Text = "Status: Recording... Press arrow keys in TTR";
+            lblRecordingStatus.Text = $"Status: Recording... Use {GameControls.GetMovementBindingSummary()}";
             lblRecordingStatus.ForeColor = Color.Green;
 
             // Start recording
             _isRecording = true;
             _recordingStopwatch.Restart();
-            _keyboardHook.Start();
         }
 
         private void BtnStopRecording_Click(object sender, EventArgs e)
@@ -491,12 +506,27 @@ namespace ToonTown_Rewritten_Bot.Views
 
             UpdatePathPreviewLabel(actions);
 
-            // Update UI
-            lblRecordingStatus.Text = $"Status: Recorded {_recordedKeys.Count} movements";
-            lblRecordingStatus.ForeColor = Color.Blue;
-
             this.WindowState = FormWindowState.Normal;
             this.BringToFront();
+
+            // Update UI
+            if (_recordedKeys.Count == 0)
+            {
+                lblRecordingStatus.Text = "Status: No movements recorded";
+                lblRecordingStatus.ForeColor = Color.Red;
+                MessageBox.Show(
+                    this,
+                    $"No movement keys were recorded. Use the configured keys ({GameControls.GetMovementBindingSummary()}) and make sure the bot and Toontown run at the same administrator level.",
+                    "Nothing Recorded",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+            else
+            {
+                lblRecordingStatus.Text = $"Status: Recorded {_recordedKeys.Count} movements";
+                lblRecordingStatus.ForeColor = Color.Blue;
+            }
+
         }
 
         private void OnGlobalKeyPressed(object sender, Keys key)
@@ -561,14 +591,7 @@ namespace ToonTown_Rewritten_Bot.Views
 
         private string GetActionFromKey(Keys key)
         {
-            return key switch
-            {
-                Keys.Up => "WALK FORWARDS",
-                Keys.Down => "WALK BACKWARDS",
-                Keys.Left => "TURN LEFT",
-                Keys.Right => "TURN RIGHT",
-                _ => null
-            };
+            return GameControls.GetMovementAction((int)(key & Keys.KeyCode));
         }
 
         private void StopRecordingCleanup()

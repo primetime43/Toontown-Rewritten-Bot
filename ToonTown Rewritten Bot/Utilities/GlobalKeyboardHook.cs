@@ -22,6 +22,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private LowLevelKeyboardProc _proc;
         private bool _disposed = false;
 
+        public bool IsRunning => _hookId != IntPtr.Zero;
+        public int LastErrorCode { get; private set; }
+
         /// <summary>
         /// When true, the next handled key press will be suppressed (not passed to the game).
         /// Set by the event handler to consume the key.
@@ -64,10 +67,15 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// <summary>
         /// Starts listening for global keyboard events.
         /// </summary>
-        public void Start()
+        public bool Start()
         {
             if (_hookId != IntPtr.Zero)
-                return; // Already hooked
+                return true; // Already hooked
+
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(nameof(GlobalKeyboardHook));
+            }
 
             using (Process curProcess = Process.GetCurrentProcess())
             using (ProcessModule curModule = curProcess.MainModule)
@@ -77,13 +85,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             if (_hookId == IntPtr.Zero)
             {
-                int errorCode = Marshal.GetLastWin32Error();
-                Logger.Error("Input", $"Failed to install keyboard hook (error {errorCode}). F12/Esc hotkeys will not work.");
+                LastErrorCode = Marshal.GetLastWin32Error();
+                Logger.Error("Input", $"Failed to install global keyboard hook (Windows error {LastErrorCode}).");
+                return false;
             }
-            else
-            {
-                Logger.Debug("Input", "Global keyboard hook installed successfully");
-            }
+
+            LastErrorCode = 0;
+            Logger.Debug("Input", "Global keyboard hook installed successfully");
+            return true;
         }
 
         /// <summary>

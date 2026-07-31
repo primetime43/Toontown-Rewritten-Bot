@@ -45,7 +45,16 @@ namespace ToonTown_Rewritten_Bot
             // Enable global keyboard hook (works even when game has focus)
             _globalKeyboardHook = new GlobalKeyboardHook();
             _globalKeyboardHook.KeyPressed += GlobalKeyboardHook_KeyPressed;
-            _globalKeyboardHook.Start();
+            if (!_globalKeyboardHook.Start())
+            {
+                MessageBox.Show(
+                    $"Global keyboard shortcuts could not start (Windows error {_globalKeyboardHook.LastErrorCode}).\n\n" +
+                    "F11/F12/Esc shortcuts and custom path recording may not work. Restart the bot and make " +
+                    "sure the bot and Toontown are running at the same administrator level.",
+                    "Keyboard Shortcuts Unavailable",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
 
             // Clean up hook when form closes
             this.FormClosing += MainForm_FormClosing;

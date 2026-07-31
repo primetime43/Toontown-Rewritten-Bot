@@ -1,5 +1,10 @@
 # Toontown-Rewritten-Bot
 
+> [!WARNING]
+> Toontown Rewritten prohibits third-party programs that automate gameplay. Using this bot can
+> result in penalties, including account or Toon stat action. Randomized timing or cursor movement
+> does not make automation undetectable or safe. Use is entirely at your own risk.
+
 Table of Contents
 
 - [Toontown-Rewritten-Bot](#toontown-rewritten-bot)

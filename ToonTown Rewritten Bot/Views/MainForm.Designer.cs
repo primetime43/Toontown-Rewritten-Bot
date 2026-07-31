@@ -520,7 +520,7 @@
             randomFishingCheckBox.Size = new System.Drawing.Size(135, 20);
             randomFishingCheckBox.TabIndex = 6;
             randomFishingCheckBox.Text = "Random Variance";
-            toolTip1.SetToolTip(randomFishingCheckBox, "Adds randomness so you won't cast your line at the same spot every time.");
+            toolTip1.SetToolTip(randomFishingCheckBox, "Varies the cast position only. This does not provide ban protection or make automation safe.");
             randomFishingCheckBox.UseVisualStyleBackColor = true;
             randomFishingCheckBox.CheckedChanged += randomFishing_CheckedChanged;
             // 
