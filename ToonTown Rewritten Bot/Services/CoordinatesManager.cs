@@ -121,12 +121,61 @@ namespace ToonTown_Rewritten_Bot.Services
                 Logger.Debug("Coordinates", $"Manual coords available for '{elementName}': ({manualCoords.x}, {manualCoords.y})");
                 UIElementManager.Instance.SetManualCoordinates(elementName, new Point(manualCoords.x, manualCoords.y));
             }
+            else
+            {
+                // Keep UIElementManager's separate fallback store synchronized with the legacy
+                // coordinate file. Reset State previously zeroed this file but left a stale manual
+                // value (notably Red Fishing Button at 960,765) active in UIElementManager.
+                UIElementManager.Instance.ClearManualCoordinates(elementName);
+            }
 
             // Try to find using image recognition (will prompt for template capture if needed)
             var (location, source) = await UIElementManager.Instance.GetElementLocationWithSourceAsync(elementName, description);
 
             if (location.HasValue)
             {
+                if (source == UIElementSource.Manual)
+                {
+                    // Manual updates are captured from the OS cursor, so they are already absolute
+                    // screen coordinates. Adding the window offset again breaks moved/multi-monitor
+                    // game windows.
+                    var windowRect = CoreFunctionality.GetGameWindowRect();
+                    if (windowRect.IsEmpty)
+                    {
+                        throw new InvalidOperationException("Could not use manual coordinates because the Toontown window was not found.");
+                    }
+
+                    if (!windowRect.Contains(location.Value))
+                    {
+                        Logger.Warning(
+                            "Coordinates",
+                            $"Ignoring manual coordinates for '{elementName}' at ({location.Value.X}, {location.Value.Y}); " +
+                            $"they are outside the game window {windowRect}.");
+
+                        // Remove the invalid value from both stores, then force a real search. If it
+                        // still fails, UIElementManager will guide the user through recapture.
+                        UpdateCoordinateByKey(keyAsString, 0, 0);
+                        UIElementManager.Instance.ClearManualCoordinates(elementName);
+                        (location, source) = await UIElementManager.Instance.GetElementLocationWithSourceAsync(
+                            elementName,
+                            description,
+                            forceSearch: true);
+                    }
+                    else
+                    {
+                        Logger.Info(
+                            "Coordinates",
+                            $"'{elementName}': screen ({location.Value.X}, {location.Value.Y}) [source=Manual]");
+                        return (location.Value.X, location.Value.Y);
+                    }
+                }
+
+                if (!location.HasValue)
+                {
+                    throw new InvalidOperationException(
+                        $"Could not locate '{elementName}'. Recapture its template before retrying.");
+                }
+
                 // Convert window-relative coordinates to screen coordinates
                 var windowOffset = CoreFunctionality.GetGameWindowOffset();
                 int screenX = location.Value.X + windowOffset.X;
@@ -137,60 +186,9 @@ namespace ToonTown_Rewritten_Bot.Services
                 return (screenX, screenY);
             }
 
-            // If still not found, fall back to manual coordinates from the old system
-            // Manual coordinates are already screen coordinates
-            if (manualCoords.x != 0 || manualCoords.y != 0)
-            {
-                Logger.Info("Coordinates", $"'{elementName}': screen ({manualCoords.x}, {manualCoords.y}) [source=ManualFallback]");
-                return manualCoords;
-            }
-
-            // Offer the user a chance to recapture the template before giving up
-            // Bring bot window to front so the dialog is visible over TTR
-            DialogResult recaptureChoice = DialogResult.No;
-            if (Application.OpenForms.Count > 0 && Application.OpenForms[0].InvokeRequired)
-            {
-                Application.OpenForms[0].Invoke(new Action(() =>
-                {
-                    CoreFunctionality.BringBotWindowToFront();
-                    recaptureChoice = MessageBox.Show(
-                        $"Could not find '{elementName}' on screen. Would you like to capture the template for this element?",
-                        "Element Not Found",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question);
-                }));
-            }
-            else
-            {
-                CoreFunctionality.BringBotWindowToFront();
-                recaptureChoice = MessageBox.Show(
-                    $"Could not find '{elementName}' on screen. Would you like to capture the template for this element?",
-                    "Element Not Found",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question);
-            }
-
-            if (recaptureChoice == DialogResult.Yes)
-            {
-                Logger.Info("Coordinates", $"User chose to recapture template for '{elementName}'");
-                bool captured = UIElementManager.Instance.PromptForTemplateCapture(elementName, description ?? $"Please select the '{elementName}' on screen");
-                if (captured)
-                {
-                    // Retry with the newly captured template
-                    var retryLocation = await UIElementManager.Instance.GetElementLocationAsync(elementName, description, forceSearch: true);
-                    if (retryLocation.HasValue)
-                    {
-                        var windowOffset = CoreFunctionality.GetGameWindowOffset();
-                        int screenX = retryLocation.Value.X + windowOffset.X;
-                        int screenY = retryLocation.Value.Y + windowOffset.Y;
-                        Logger.Info("Coordinates", $"'{elementName}': screen ({screenX}, {screenY}) [source=Recapture]");
-                        return (screenX, screenY);
-                    }
-                }
-            }
-
             Logger.Error("Coordinates", $"Could not find '{elementName}' via image recognition or manual coordinates");
-            throw new Exception($"Could not find element '{elementName}' via image recognition or manual coordinates.");
+            throw new InvalidOperationException(
+                $"Could not locate '{elementName}'. Recapture its template from the prompt or Dev tab before retrying.");
         }
 
         /// <summary>
