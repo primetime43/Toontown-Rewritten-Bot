@@ -47,7 +47,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             if (captureBackground)
             {
-                // Some GPU/driver combinations report PrintWindow success but return black pixels.
+                // Some GPU/driver combinations report PrintWindow success but return blank pixels.
                 // Once that is detected, avoid repeatedly calling the broken path for this session.
                 if (_printWindowUnavailable)
                 {
@@ -65,7 +65,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// <summary>
         /// Captures a window using PrintWindow API, which works even when the window is obscured.
         /// Retries with the legacy flag and falls back to visible screen capture when Windows
-        /// reports success but returns a black frame.
+        /// reports success but returns a black or uniform blank frame.
         /// </summary>
         private static Bitmap CaptureWindowWithPrintWindow(nint windowHandle, int width, int height)
         {
@@ -91,7 +91,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             {
                 Logger.Warning(
                     "Capture",
-                    "PrintWindow returned unusable black frames. Using visible screen capture for this session; " +
+                    "PrintWindow returned unusable blank frames. Using visible screen capture for this session; " +
                     "keep the Toontown window visible and unobscured.");
             }
 
@@ -128,13 +128,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
             }
 
-            if (success && !IsBitmapEffectivelyBlack(bitmap))
+            string unusableReason = success ? GetPrintWindowFrameFailureReason(bitmap) : null;
+            if (success && unusableReason == null)
             {
                 return bitmap;
             }
 
             Debug.WriteLine(success
-                ? $"PrintWindow returned a black frame (flags=0x{flags:X})"
+                ? $"PrintWindow returned an unusable {unusableReason} (flags=0x{flags:X})"
                 : $"PrintWindow failed (flags=0x{flags:X})");
             bitmap.Dispose();
             return null;
@@ -225,6 +226,59 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
 
             return totalSamples == 0 || (double)blackSamples / totalSamples >= requiredBlackRatio;
+        }
+
+        /// <summary>
+        /// Identifies frames where PrintWindow rendered the non-client title bar but filled the
+        /// game client area with one flat gray/white color. The interior-only grid deliberately
+        /// excludes the title bar and borders that can otherwise make a blank frame look valid.
+        /// </summary>
+        private static string GetPrintWindowFrameFailureReason(Bitmap bitmap)
+        {
+            if (IsBitmapEffectivelyBlack(bitmap))
+            {
+                return "black frame";
+            }
+
+            const int columns = 9;
+            const int rows = 7;
+            const int uniformChannelRange = 8;
+
+            int marginX = bitmap.Width / 10;
+            int marginY = bitmap.Height / 10;
+            int sampleWidth = Math.Max(1, bitmap.Width - (marginX * 2));
+            int sampleHeight = Math.Max(1, bitmap.Height - (marginY * 2));
+            int minR = 255;
+            int minG = 255;
+            int minB = 255;
+            int maxR = 0;
+            int maxG = 0;
+            int maxB = 0;
+
+            for (int row = 0; row < rows; row++)
+            {
+                int y = marginY + (sampleHeight - 1) * row / (rows - 1);
+                y = Math.Min(y, bitmap.Height - 1);
+
+                for (int column = 0; column < columns; column++)
+                {
+                    int x = marginX + (sampleWidth - 1) * column / (columns - 1);
+                    x = Math.Min(x, bitmap.Width - 1);
+
+                    Color pixel = bitmap.GetPixel(x, y);
+                    minR = Math.Min(minR, pixel.R);
+                    minG = Math.Min(minG, pixel.G);
+                    minB = Math.Min(minB, pixel.B);
+                    maxR = Math.Max(maxR, pixel.R);
+                    maxG = Math.Max(maxG, pixel.G);
+                    maxB = Math.Max(maxB, pixel.B);
+                }
+            }
+
+            bool isUniform = maxR - minR <= uniformChannelRange &&
+                             maxG - minG <= uniformChannelRange &&
+                             maxB - minB <= uniformChannelRange;
+            return isUniform ? "uniform/blank frame" : null;
         }
 
         /// <summary>
