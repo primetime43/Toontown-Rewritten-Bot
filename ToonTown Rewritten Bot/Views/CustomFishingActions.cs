@@ -279,11 +279,9 @@ namespace ToonTown_Rewritten_Bot.Views
                     // Select "TIME" in comboBox1 if available
                     comboBox1.SelectedItem = "TIME";
 
-                    // Extract the numeric value (time in seconds)
-                    string timeValue = new String(selectedItem.Where(char.IsDigit).ToArray());
-
-                    // Set the extracted time into textBox1
-                    actionTimeTxtBox.Text = timeValue;
+                    // The editor accepts milliseconds, so convert the formatted display
+                    // value back to milliseconds before populating the input.
+                    actionTimeTxtBox.Text = ExtractMillisecondsFromDisplay(selectedItem).ToString();
                 }
                 else
                 {
