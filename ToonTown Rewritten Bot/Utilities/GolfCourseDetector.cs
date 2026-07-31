@@ -20,6 +20,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private TextRecognition _ocr;
         private bool _disposed = false;
         private string _pencilButtonTemplatePath;
+        private bool _turnTimerTemplateMismatch;
 
         /// <summary>
         /// Event raised when detection status changes.
@@ -836,6 +837,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
         }
 
         private const string TurnTimerTemplateName = "Golf_Turn_Timer";
+        private const double TurnTimerTemplateThreshold = 0.80;
+        private const int RequiredConsecutiveTurnDetections = 2;
+        private const int MissingTemplatePromptDelayMs = 15000;
+        private const int ExistingTemplatePromptDelayMs = 30000;
+        private const int WaitingStatusIntervalMs = 10000;
 
         /// <summary>
         /// Checks if the game is ready for the player to swing.
@@ -843,32 +849,74 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// </summary>
         public bool IsReadyToSwing()
         {
+            _turnTimerTemplateMismatch = false;
+
             try
             {
                 using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
                 {
                     if (screenshot == null) return false;
 
-                    // Method 1: Template matching for the turn timer (most reliable if captured)
-                    if (UIElementManager.Instance.HasTemplate(TurnTimerTemplateName))
+                    Rectangle timerRegion = GetTurnTimerSearchRegion(screenshot.Size);
+
+                    // Search only where the timer can appear. Full-window matching was both slow and
+                    // susceptible to finding a similar orange graphic elsewhere on the course.
+                    using (var timerImage = screenshot.Clone(timerRegion, screenshot.PixelFormat))
                     {
-                        string templatePath = UIElementManager.Instance.GetTemplatePath(TurnTimerTemplateName);
-                        using (var template = new Bitmap(templatePath))
+                        bool checkedUsableTemplate = false;
+
+                        // Try every captured variant so users can save timer appearances from
+                        // different resolutions or countdown frames.
+                        foreach (string templatePath in UIElementManager.Instance.GetAllTemplatePaths(TurnTimerTemplateName))
                         {
-                            var result = ImageTemplateMatcher.FindTemplate(screenshot, template, 0.7);
-                            if (result.Found)
+                            try
                             {
-                                Debug.WriteLine($"[GolfDetector] Ready to swing - timer template found (confidence: {result.Confidence:P0})");
-                                return true;
+                                using (var template = new Bitmap(templatePath))
+                                {
+                                    if (template.Width > timerImage.Width || template.Height > timerImage.Height)
+                                    {
+                                        Debug.WriteLine($"[GolfDetector] Skipping oversized timer template: {Path.GetFileName(templatePath)}");
+                                        continue;
+                                    }
+
+                                    checkedUsableTemplate = true;
+                                    var result = ImageTemplateMatcher.FindTemplate(
+                                        timerImage,
+                                        template,
+                                        TurnTimerTemplateThreshold);
+                                    if (result.Found)
+                                    {
+                                        Debug.WriteLine(
+                                            $"[GolfDetector] Timer template found in expected region " +
+                                            $"({Path.GetFileName(templatePath)}, confidence: {result.Confidence:P0})");
+                                        return true;
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                // A corrupt or obsolete variant should not disable the color fallback
+                                // or prevent another valid variant from being checked.
+                                Debug.WriteLine($"[GolfDetector] Could not check timer template '{templatePath}': {ex.Message}");
                             }
                         }
-                    }
 
-                    // Method 2: Detect the orange countdown timer by color in the top-right corner
-                    if (DetectTurnTimerByColor(screenshot))
-                    {
-                        Debug.WriteLine("[GolfDetector] Ready to swing - timer detected by color");
-                        return true;
+                        bool colorDetected = DetectTurnTimerByColor(timerImage);
+
+                        // Once the user has a usable template, treat it as authoritative. Falling
+                        // through to the looser color heuristic after a template miss caused random
+                        // starts on orange course graphics. If color suggests the real timer is now
+                        // visible, use that moment to offer recapture instead of starting the shot.
+                        if (checkedUsableTemplate && colorDetected)
+                        {
+                            _turnTimerTemplateMismatch = true;
+                            Debug.WriteLine("[GolfDetector] Orange timer candidate found, but saved templates did not match");
+                        }
+                        else if (colorDetected)
+                        {
+                            Debug.WriteLine("[GolfDetector] Timer detected by color in expected region");
+                            return true;
+                        }
                     }
 
                     return false;
@@ -881,20 +929,29 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
         }
 
+        private static Rectangle GetTurnTimerSearchRegion(Size screenshotSize)
+        {
+            // The countdown clock is near the upper-right corner. Keep enough padding for
+            // different window sizes while excluding most course graphics from consideration.
+            int width = Math.Max(1, (int)Math.Ceiling(screenshotSize.Width * 0.25));
+            int height = Math.Max(1, (int)Math.Ceiling(screenshotSize.Height * 0.22));
+            return new Rectangle(screenshotSize.Width - width, 0, width, height);
+        }
+
         /// <summary>
         /// Detects the orange countdown timer in the top-right corner.
         /// The timer is an orange/yellow circular clock that appears when it's your turn.
         /// </summary>
-        private bool DetectTurnTimerByColor(Bitmap screenshot)
+        private bool DetectTurnTimerByColor(Bitmap timerImage)
         {
             try
             {
-                // The timer is in the top-right corner of the screen
-                // Sample the area where the orange clock appears
-                int timerCenterX = screenshot.Width - (int)(screenshot.Width * 0.05); // ~5% from right edge
-                int timerCenterY = (int)(screenshot.Height * 0.07); // ~7% from top
+                // Coordinates are relative to the cropped top-right search region. The clock's
+                // expected full-window position (~95% across, ~7% down) lands near here.
+                int timerCenterX = (int)(timerImage.Width * 0.80);
+                int timerCenterY = (int)(timerImage.Height * 0.32);
 
-                int searchRadius = Math.Min(screenshot.Width, screenshot.Height) / 15;
+                int searchRadius = Math.Max(4, (int)(timerImage.Height * 0.30));
                 int orangePixelCount = 0;
                 int totalSamples = 0;
 
@@ -906,10 +963,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         int x = timerCenterX + xOffset;
                         int y = timerCenterY + yOffset;
 
-                        if (x < 0 || x >= screenshot.Width || y < 0 || y >= screenshot.Height)
+                        if (x < 0 || x >= timerImage.Width || y < 0 || y >= timerImage.Height)
                             continue;
 
-                        Color pixel = screenshot.GetPixel(x, y);
+                        Color pixel = timerImage.GetPixel(x, y);
                         totalSamples++;
 
                         // Orange color: high R, medium-high G, low B
@@ -984,23 +1041,72 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// </summary>
         public async Task WaitUntilReadyToSwingAsync(CancellationToken cancellationToken, int scanIntervalMs = 500)
         {
-            int attempts = 0;
-            const int promptAfterAttempts = 30; // Prompt for template after ~15 seconds of not detecting
+            if (scanIntervalMs <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(scanIntervalMs), "Scan interval must be greater than zero.");
+            }
+
+            int consecutiveDetections = 0;
+            int nextStatusAtMs = WaitingStatusIntervalMs;
+            bool recoveryOffered = false;
+            var waitTimer = Stopwatch.StartNew();
+
+            ReportStatus("Waiting for your turn - watching for the orange timer...");
 
             while (!cancellationToken.IsCancellationRequested)
             {
                 if (IsReadyToSwing())
                 {
-                    return;
+                    consecutiveDetections++;
+                    if (consecutiveDetections >= RequiredConsecutiveTurnDetections)
+                    {
+                        ReportStatus("Turn confirmed - starting shot...");
+                        return;
+                    }
+
+                    ReportStatus("Turn timer found - confirming...");
+                }
+                else
+                {
+                    // A single-frame result can be a transient course graphic. Require the timer
+                    // to survive the next scan before allowing the macro to start.
+                    if (consecutiveDetections > 0)
+                    {
+                        ReportStatus("Timer signal was brief - still waiting for your turn...");
+                    }
+                    consecutiveDetections = 0;
                 }
 
-                attempts++;
+                int elapsedMs = (int)Math.Min(int.MaxValue, waitTimer.ElapsedMilliseconds);
 
-                // If we've been waiting a while and don't have a timer template, offer to capture one
-                if (attempts == promptAfterAttempts && !UIElementManager.Instance.HasTemplate(TurnTimerTemplateName))
+                if (elapsedMs >= nextStatusAtMs)
                 {
-                    ReportStatus("Having trouble detecting turn - capture template?");
-                    PromptForTurnTimerTemplate();
+                    int elapsedSeconds = elapsedMs / 1000;
+                    ReportStatus($"Still waiting for your turn ({elapsedSeconds}s) - looking for the orange timer...");
+                    nextStatusAtMs += WaitingStatusIntervalMs;
+                }
+
+                bool hasTemplate = UIElementManager.Instance.HasTemplate(TurnTimerTemplateName);
+                int recoveryDelayMs = hasTemplate ? ExistingTemplatePromptDelayMs : MissingTemplatePromptDelayMs;
+                bool templateMismatchNowVisible = hasTemplate && _turnTimerTemplateMismatch;
+                if (!recoveryOffered && (templateMismatchNowVisible || elapsedMs >= recoveryDelayMs))
+                {
+                    recoveryOffered = true;
+                    ReportStatus(templateMismatchNowVisible
+                        ? "Orange timer found, but the saved template is outdated - recapture help opened"
+                        : hasTemplate
+                            ? "Turn timer not detected - recapture help opened"
+                            : "Turn timer template needed - capture help opened");
+
+                    bool captured = PromptForTurnTimerTemplate(
+                        allowRecapture: hasTemplate,
+                        timerCandidateVisible: templateMismatchNowVisible);
+                    ReportStatus(captured
+                        ? "Timer template saved - resuming turn detection..."
+                        : "Continuing to wait for the orange turn timer...");
+
+                    // Do not count a frame from before a modal capture dialog toward confirmation.
+                    consecutiveDetections = 0;
                 }
 
                 await Task.Delay(scanIntervalMs, cancellationToken);
@@ -1010,35 +1116,52 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// <summary>
         /// Prompts the user to capture the turn timer template.
         /// </summary>
-        private void PromptForTurnTimerTemplate()
+        private bool PromptForTurnTimerTemplate(bool allowRecapture, bool timerCandidateVisible)
         {
-            if (UIElementManager.Instance.HasTemplate(TurnTimerTemplateName))
+            bool hasTemplate = UIElementManager.Instance.HasTemplate(TurnTimerTemplateName);
+            if (hasTemplate && !allowRecapture)
             {
-                return;
+                return false;
             }
 
             // Need to invoke on UI thread
             if (Application.OpenForms.Count > 0)
             {
                 var mainForm = Application.OpenForms[0];
+                Func<bool> showCapture = () =>
+                {
+                    if (hasTemplate)
+                    {
+                        var choice = MessageBox.Show(
+                            (timerCandidateVisible
+                                ? "Auto Golf can see the orange timer, but your saved template did not match.\n\n"
+                                : "Auto Golf has not detected your turn timer for 30 seconds.\n\n") +
+                            "If the orange countdown clock is visible now, choose Yes and capture only the clock.\n" +
+                            "If another player is taking a turn, choose No and Auto Golf will keep waiting.",
+                            "Turn Timer Not Detected",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Information);
+                        if (choice != DialogResult.Yes)
+                        {
+                            return false;
+                        }
+                    }
+
+                    return TemplateCaptureForm.CaptureTemplate(
+                        TurnTimerTemplateName,
+                        "Wait until the orange countdown clock is visible, then capture only the clock.\n" +
+                        "Avoid including the course background or other UI so turn detection stays reliable.");
+                };
+
                 if (mainForm.InvokeRequired)
                 {
-                    mainForm.Invoke(new Action(() =>
-                    {
-                        TemplateCaptureForm.CaptureTemplate(
-                            TurnTimerTemplateName,
-                            "Capture the orange countdown timer (clock) in the top-right corner.\n" +
-                            "This appears when it's your turn to swing.");
-                    }));
+                    return (bool)mainForm.Invoke(showCapture);
                 }
-                else
-                {
-                    TemplateCaptureForm.CaptureTemplate(
-                        TurnTimerTemplateName,
-                        "Capture the orange countdown timer (clock) in the top-right corner.\n" +
-                        "This appears when it's your turn to swing.");
-                }
+
+                return showCapture();
             }
+
+            return false;
         }
 
         /// <summary>
