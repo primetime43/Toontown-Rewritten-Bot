@@ -178,10 +178,15 @@ namespace ToonTown_Rewritten_Bot.Services
             {
                 await detector.InitializeAsync();
 
-                // Subscribe to detector status changes for overlay updates
+                int holesPlayed = 0;
+                string lastPlayedCourse = null;
+
+                // Keep both the overlay and the main status label informative while the detector
+                // is waiting, confirming the timer, or guiding a recapture.
                 detector.StatusChanged += (status) =>
                 {
                     UpdateOverlayStatus(status);
+                    RaiseStatusChanged(status, null, holesPlayed, holesPerRound);
                 };
 
                 RaiseStatusChanged("Auto-golf started - waiting for course...", null, 0, holesPerRound);
@@ -191,9 +196,6 @@ namespace ToonTown_Rewritten_Bot.Services
                     ShowOverlay();
                     UpdateOverlayStatus("Auto-golf active");
                 }
-
-                int holesPlayed = 0;
-                string lastPlayedCourse = null;
 
                 while (!cancellationToken.IsCancellationRequested && holesPlayed < holesPerRound)
                 {
