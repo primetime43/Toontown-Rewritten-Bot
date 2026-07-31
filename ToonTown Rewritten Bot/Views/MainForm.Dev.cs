@@ -16,9 +16,9 @@ namespace ToonTown_Rewritten_Bot
         private void devResetCoordinatesBtn_Click(object sender, EventArgs e)
         {
             CoordinatesManager.CreateFreshCoordinatesFile();
-            // Also clear the image-recognition cache — otherwise stale cached centers
-            // from previous runs keep getting returned and "reset" feels broken.
-            UIElementManager.Instance.ClearAllCache();
+            // Clear both image-recognition caches and its separate manual fallback store.
+            // Previously Reset State left stale manual coordinates behind there.
+            UIElementManager.Instance.ClearAllPositionData();
             MessageBox.Show("Manual coordinates reset and image-recognition cache cleared.", "Reset State", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
