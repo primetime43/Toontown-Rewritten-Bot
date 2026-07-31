@@ -3257,7 +3257,7 @@
 Use 'Edit Selected' to manually modify existing files.</value>
   </data>
   <data name="golfInstructionsLabel.Text" xml:space="preserve">
-    <value>IMPORTANT: Your golf swing key in TTR must be set to CTRL (default).
+    <value>IMPORTANT: Your configured Jump key must match TTR.
 
 1. Select a golf course from the dropdown
 
@@ -3265,12 +3265,12 @@ Use 'Edit Selected' to manually modify existing files.</value>
 
 3. In TTR, move to the correct tee position if required
 
-4. Click 'Start Golf' and switch to TTR within 15 seconds
+4. Click 'Start Golf'
 
-5. Bot waits 15 sec (for position lock), then aims and swings!
+5. Keep TTR focused until the bot aims and swings
 
 Note: Some courses require LEFT or RIGHT tee position.
-The preview tells you where to stand - you must move there yourself.</value>
+Change keys under Settings → Configure Game Controls.</value>
   </data>
   <data name="doodlePictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

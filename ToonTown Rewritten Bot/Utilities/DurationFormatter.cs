@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
-using System.Text;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace ToonTown_Rewritten_Bot.Utilities
 {
@@ -17,17 +17,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public static string FormatSeconds(long milliseconds)
         {
             double seconds = milliseconds / 1000.0;
-
-            if (seconds < 10)
-            {
-                // Show one decimal place for shorter durations
-                return $"{seconds:0.#}s";
-            }
-            else
-            {
-                // Show as whole seconds for longer durations
-                return $"{Math.Round(seconds)}s";
-            }
+            return seconds.ToString("0.###", CultureInfo.InvariantCulture) + "s";
         }
 
         /// <summary>
@@ -65,58 +55,33 @@ namespace ToonTown_Rewritten_Bot.Utilities
             if (string.IsNullOrWhiteSpace(input))
                 return 0;
 
-            // First, try to extract just digits (handles "TIME (500 milliseconds)" format)
-            string digitsOnly = new string(input.Where(char.IsDigit).ToArray());
-            if (int.TryParse(digitsOnly, out int msValue))
+            Match numericMatch = Regex.Match(input, @"[+-]?(?:\d+(?:[.,]\d+)?|[.,]\d+)");
+            if (!numericMatch.Success)
+                return 0;
+
+            string numericValue = numericMatch.Value.Replace(',', '.');
+            if (!double.TryParse(numericValue,
+                NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint,
+                CultureInfo.InvariantCulture,
+                out double value))
             {
-                // If the input contains "s" or "sec" but NOT "ms" or "milliseconds",
-                // treat the number as seconds
-                string lower = input.ToLowerInvariant();
-                bool hasSeconds = lower.Contains("sec") || (lower.Contains("s") && !lower.Contains("ms") && !lower.Contains("millisec"));
-
-                if (hasSeconds)
-                {
-                    // Number is in seconds, convert to milliseconds
-                    // But first check if there's a decimal point we might have missed
-                    return msValue * 1000;
-                }
-
-                return msValue;
+                return 0;
             }
 
-            // Try parsing as a decimal for formats like "0.5s"
-            // Extract the numeric part including decimal point
-            var numericPart = new StringBuilder();
-            bool foundDecimal = false;
-            foreach (char c in input)
+            string lower = input.ToLowerInvariant();
+            bool hasMilliseconds = Regex.IsMatch(lower,
+                @"(?<![a-z])(?:ms|msec|msecs|millisecond|milliseconds)(?![a-z])");
+            bool hasSeconds = !hasMilliseconds && Regex.IsMatch(lower,
+                @"(?<![a-z])(?:s|sec|secs|second|seconds)(?![a-z])");
+
+            double milliseconds = hasSeconds ? value * 1000.0 : value;
+            if (milliseconds < 0 || milliseconds > int.MaxValue ||
+                double.IsNaN(milliseconds) || double.IsInfinity(milliseconds))
             {
-                if (char.IsDigit(c))
-                {
-                    numericPart.Append(c);
-                }
-                else if (c == '.' && !foundDecimal)
-                {
-                    numericPart.Append(c);
-                    foundDecimal = true;
-                }
+                return 0;
             }
 
-            if (double.TryParse(numericPart.ToString(), out double value))
-            {
-                string lower = input.ToLowerInvariant();
-                if (lower.Contains("s") && !lower.Contains("ms"))
-                {
-                    // Seconds - convert to milliseconds
-                    return (int)(value * 1000);
-                }
-                else
-                {
-                    // Assume milliseconds
-                    return (int)value;
-                }
-            }
-
-            return 0;
+            return (int)Math.Round(milliseconds, MidpointRounding.AwayFromZero);
         }
 
         /// <summary>

@@ -4,7 +4,7 @@
     {
         public static class ApplicationInfo
         {
-            public static string Version { get; } = "2.6.0";
+            public static string Version { get; } = "2.7.0";
             public static string Author { get; } = "primetime43";
         }
     }

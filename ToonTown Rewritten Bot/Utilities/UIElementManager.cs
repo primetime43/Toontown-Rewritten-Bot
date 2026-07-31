@@ -519,6 +519,23 @@ namespace ToonTown_Rewritten_Bot.Utilities
         }
 
         /// <summary>
+        /// Clears a manual fallback for an element. Also clears any location cached while that
+        /// fallback was active so the next lookup performs a real template search.
+        /// </summary>
+        public void ClearManualCoordinates(string elementName)
+        {
+            var element = GetOrCreateElement(elementName);
+            if (element.ManualCoordinates.HasValue)
+            {
+                element.ManualCoordinates = null;
+                element.CachedCenter = null;
+                element.LastFoundTime = null;
+                Logger.Info("TemplateMatch", $"Manual coordinates cleared for '{elementName}' (cache cleared)");
+                SaveElementData();
+            }
+        }
+
+        /// <summary>
         /// Gets manual fallback coordinates for an element.
         /// </summary>
         public Point? GetManualCoordinates(string elementName)
@@ -550,6 +567,21 @@ namespace ToonTown_Rewritten_Bot.Utilities
         {
             foreach (var element in _elements.Values)
             {
+                element.CachedCenter = null;
+                element.LastFoundTime = null;
+            }
+            SaveElementData();
+        }
+
+        /// <summary>
+        /// Clears all manual fallbacks and cached locations. Used by Reset State so both the
+        /// legacy coordinate file and image-recognition state are actually reset together.
+        /// </summary>
+        public void ClearAllPositionData()
+        {
+            foreach (var element in _elements.Values)
+            {
+                element.ManualCoordinates = null;
                 element.CachedCenter = null;
                 element.LastFoundTime = null;
             }

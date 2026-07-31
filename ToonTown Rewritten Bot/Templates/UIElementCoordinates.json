@@ -65,9 +65,9 @@
       "Templates\\Red_Fishing_Button.png"
     ],
     "TemplatePath": "Templates\\Red_Fishing_Button.png",
-    "ManualCoordinates": "960, 765",
-    "CachedCenter": "966, 782",
-    "LastFoundTime": "2026-03-03T15:35:57.4550924-05:00"
+    "ManualCoordinates": null,
+    "CachedCenter": null,
+    "LastFoundTime": null
   },
   "Green SpeedChat Button": {
     "Name": "Green SpeedChat Button",

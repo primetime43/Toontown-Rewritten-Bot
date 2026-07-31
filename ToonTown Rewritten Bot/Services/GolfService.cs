@@ -1,7 +1,7 @@
-using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -81,10 +81,6 @@ namespace ToonTown_Rewritten_Bot.Services
             {
                 Debug.WriteLine("Golf operation was canceled by the user.");
                 throw;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
 
@@ -182,10 +178,15 @@ namespace ToonTown_Rewritten_Bot.Services
             {
                 await detector.InitializeAsync();
 
-                // Subscribe to detector status changes for overlay updates
+                int holesPlayed = 0;
+                string lastPlayedCourse = null;
+
+                // Keep both the overlay and the main status label informative while the detector
+                // is waiting, confirming the timer, or guiding a recapture.
                 detector.StatusChanged += (status) =>
                 {
                     UpdateOverlayStatus(status);
+                    RaiseStatusChanged(status, null, holesPlayed, holesPerRound);
                 };
 
                 RaiseStatusChanged("Auto-golf started - waiting for course...", null, 0, holesPerRound);
@@ -195,9 +196,6 @@ namespace ToonTown_Rewritten_Bot.Services
                     ShowOverlay();
                     UpdateOverlayStatus("Auto-golf active");
                 }
-
-                int holesPlayed = 0;
-                string lastPlayedCourse = null;
 
                 while (!cancellationToken.IsCancellationRequested && holesPlayed < holesPerRound)
                 {
@@ -377,14 +375,14 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static GolfActionCommand[] GetCustomGolfActions(string filePath)
         {
-            if (!File.Exists(filePath))
+            var result = CustomGolfActionFileManager.Load(filePath);
+            if (!result.Success)
             {
-                Debug.WriteLine("File does not exist: " + filePath);
+                Debug.WriteLine($"Could not load golf action file: {result.ErrorMessage}");
                 return Array.Empty<GolfActionCommand>();
             }
 
-            string json = File.ReadAllText(filePath);
-            return JsonConvert.DeserializeObject<GolfActionCommand[]>(json);
+            return result.File?.Actions?.ToArray() ?? Array.Empty<GolfActionCommand>();
         }
 
         public static string GetCustomGolfActionFilePath(string fileName)
