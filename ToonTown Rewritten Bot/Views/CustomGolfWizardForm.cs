@@ -467,6 +467,8 @@ namespace ToonTown_Rewritten_Bot.Views
 
             lblTestStatus.Text = "Testing sequence... (Press ESC to cancel)";
             btnTest.Enabled = false;
+            bool previousBackgroundMode = CoreFunctionality.UseBackgroundInput;
+            CoreFunctionality.UseBackgroundInput = false;
 
             try
             {
@@ -488,9 +490,15 @@ namespace ToonTown_Rewritten_Bot.Views
                     }
                     else if (golfKeys.ActionKeyMap.TryGetValue(action.Action, out var keyCode))
                     {
-                        WindowsInput.InputSimulator.SimulateKeyDown(keyCode);
-                        await Task.Delay(action.Duration, _testCts.Token);
-                        WindowsInput.InputSimulator.SimulateKeyUp(keyCode);
+                        CoreFunctionality.SendKeyDown(keyCode);
+                        try
+                        {
+                            await Task.Delay(action.Duration, _testCts.Token);
+                        }
+                        finally
+                        {
+                            CoreFunctionality.SendKeyUp(keyCode);
+                        }
                     }
                 }
 
@@ -506,6 +514,7 @@ namespace ToonTown_Rewritten_Bot.Views
             }
             finally
             {
+                CoreFunctionality.UseBackgroundInput = previousBackgroundMode;
                 btnTest.Enabled = true;
                 _testCts?.Dispose();
                 _testCts = null;

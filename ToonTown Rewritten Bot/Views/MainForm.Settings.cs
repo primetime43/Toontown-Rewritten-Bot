@@ -87,6 +87,7 @@ namespace ToonTown_Rewritten_Bot
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     RefreshPreferencesDisplay();
+                    UpdateGolfInstructionsLabel();
                 }
             }
         }

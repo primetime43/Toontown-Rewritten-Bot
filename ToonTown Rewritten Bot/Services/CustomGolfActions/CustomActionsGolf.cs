@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +5,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using WindowsInput;
 using ToonTown_Rewritten_Bot.Models;
+using ToonTown_Rewritten_Bot.Utilities;
 using System.Windows.Forms;
 
 namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
@@ -50,19 +50,30 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
 
         private void LoadActionsFromJson(string filePath)
         {
-            if (File.Exists(filePath))
+            var result = CustomGolfActionFileManager.Load(filePath);
+            if (!result.Success)
             {
-                string json = File.ReadAllText(filePath);
-                actions = JsonConvert.DeserializeObject<List<GolfActionCommand>>(json);
+                throw new InvalidDataException(
+                    $"Could not load golf action file: {result.ErrorMessage}");
             }
-        }
 
-        private async Task PrepareToHitBall()
-        {
-            var up = GameControls.Remap(VirtualKeyCode.UP);
-            InputSimulator.SimulateKeyDown(up);
-            await Task.Delay(50);
-            InputSimulator.SimulateKeyUp(up);
+            actions = result.File?.Actions ?? new List<GolfActionCommand>();
+            if (actions.Count == 0)
+            {
+                throw new InvalidDataException("The selected golf action file contains no actions.");
+            }
+
+            if (actions.Exists(action => action.Duration <= 0))
+            {
+                throw new InvalidDataException(
+                    "Every golf action must have a duration greater than zero.");
+            }
+
+            if (!actions.Exists(action => action.Action == "SWING POWER"))
+            {
+                throw new InvalidDataException(
+                    "The selected golf action file has no SWING POWER action, so it cannot shoot.");
+            }
         }
 
         private void ReportProgress(int currentStep, string currentAction, string nextAction, int durationMs)
@@ -84,17 +95,21 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
 
         public async Task PerformGolfActions(CancellationToken cancellationToken)
         {
-            CoreFunctionality.FocusTTRWindow();
-            ReportStatus("Starting");
-            await Task.Delay(1000, cancellationToken);
-            GolfActionKeys keys = new GolfActionKeys();
+            // Background mode is a fishing preference. Golf relies on foreground SendInput,
+            // so temporarily disable it to ensure FocusTTRWindow and key delivery agree.
+            bool previousBackgroundMode = CoreFunctionality.UseBackgroundInput;
+            CoreFunctionality.UseBackgroundInput = false;
 
             try
             {
+                CoreFunctionality.FocusTTRWindow();
+                ReportStatus("Starting");
+                await Task.Delay(1000, cancellationToken);
+                GolfActionKeys keys = new GolfActionKeys();
+
                 ReportStatus("Running");
 
                 int executedStep = 0;
-                int totalExecutableActions = TotalActions;
 
                 for (int i = 0; i < actions.Count; i++)
                 {
@@ -134,11 +149,16 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
                     // Process other actions that should correspond to actual key presses
                     if (keys.ActionKeyMap.TryGetValue(actionCommand.Action, out VirtualKeyCode keyCode))
                     {
-                        // Translate the default control key into whatever the user has bound in TTR.
-                        keyCode = GameControls.Remap(keyCode);
-                        InputSimulator.SimulateKeyDown(keyCode);
-                        await Task.Delay(actionCommand.Duration, cancellationToken);
-                        InputSimulator.SimulateKeyUp(keyCode);
+                        CoreFunctionality.SendKeyDown(keyCode);
+                        try
+                        {
+                            await Task.Delay(actionCommand.Duration, cancellationToken);
+                        }
+                        finally
+                        {
+                            // Always release held keys, including when the user cancels mid-swing.
+                            CoreFunctionality.SendKeyUp(keyCode);
+                        }
                     }
                     else
                     {
@@ -153,6 +173,10 @@ namespace ToonTown_Rewritten_Bot.Services.CustomGolfActions
             {
                 ReportStatus("Cancelled");
                 throw;
+            }
+            finally
+            {
+                CoreFunctionality.UseBackgroundInput = previousBackgroundMode;
             }
         }
     }

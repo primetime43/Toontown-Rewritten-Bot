@@ -174,6 +174,7 @@ namespace ToonTown_Rewritten_Bot
 
             // Game control bindings — apply saved key bindings to the input layer.
             Models.GameControls.LoadFrom(prefs);
+            UpdateGolfInstructionsLabel();
 
             // Global stop/pause hotkeys — apply saved bindings, then reflect them in the UI hints.
             Models.Hotkeys.LoadFrom(prefs);

@@ -10,6 +10,22 @@ namespace ToonTown_Rewritten_Bot
 {
     public partial class MainForm
     {
+        private string ConfiguredGolfSwingKey =>
+            Models.GameControls.GetDisplayName(Models.GameControls.Jump);
+
+        private void UpdateGolfInstructionsLabel()
+        {
+            golfInstructionsLabel.Text =
+                $"Golf uses your configured Jump key: {ConfiguredGolfSwingKey}.\n" +
+                "It must match TTR (Options & Codes → Controls).\n\n" +
+                "1. Select a golf course\n" +
+                "2. Check the required tee position\n" +
+                "3. Move to that position in TTR\n" +
+                "4. Click Start Golf\n" +
+                "5. Keep TTR focused until the shot finishes\n\n" +
+                "Change the key under Settings → Configure Game Controls.";
+        }
+
         private void createCustomGolfActionsBtn_Click(object sender, EventArgs e)
         {
             using (var form = new CustomGolfActions())
@@ -42,8 +58,44 @@ namespace ToonTown_Rewritten_Bot
             // Get the full path to the selected golf action file.
             string filePath = GolfService.GetCustomGolfActionFilePath(selectedFileName);
 
+            if (CoreFunctionality.FindToontownWindow() == IntPtr.Zero)
+            {
+                MessageBox.Show(
+                    "The Toontown Rewritten window was not found.\n\n" +
+                    "Start TTR and log in before starting golf.",
+                    "TTR Not Found",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            var actions = GolfService.GetCustomGolfActions(filePath);
+            if (actions.Length == 0)
+            {
+                MessageBox.Show(
+                    "The selected golf action file is empty, missing, or invalid.\n\n" +
+                    "Choose another course or recreate the action file.",
+                    "Invalid Golf Actions",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            var swingAction = Array.Find(actions,
+                action => action.Action == "SWING POWER" && action.Duration > 0);
+            if (swingAction == null)
+            {
+                MessageBox.Show(
+                    "The selected action file has no valid SWING POWER action, so the bot cannot shoot.\n\n" +
+                    "Edit or recreate the action file and add a Swing Power step.",
+                    "No Swing Action",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
             // Get shot summary to show helpful instructions
-            var summary = GolfService.GetShotSummaryFromFile(filePath);
+            var summary = GolfService.GetShotSummary(actions);
 
             // Build instruction message
             string positionInstruction = summary.RequiresPositionChange
@@ -54,11 +106,14 @@ namespace ToonTown_Rewritten_Bot
                 $"Course: {selectedFileName}\n\n" +
                 $"━━━ YOU DO (before clicking OK) ━━━\n" +
                 $"1. {positionInstruction}\n" +
-                $"2. Make sure your swing key is set to CTRL\n\n" +
+                $"2. Bot swing key: {ConfiguredGolfSwingKey}\n" +
+                $"3. Make sure TTR's Jump control uses the same key\n" +
+                $"   (Bot Settings → Configure Game Controls)\n\n" +
                 $"━━━ BOT WILL DO ━━━\n" +
                 $"• Aim: {summary.Aim}\n" +
                 $"• Power: ~{summary.Power}%\n\n" +
-                $"After clicking OK, switch to TTR within {summary.DelaySeconds} seconds.\n\n" +
+                $"After clicking OK, TTR will be focused automatically.\n" +
+                $"The shot starts after {summary.DelaySeconds} seconds—keep TTR focused.\n\n" +
                 "Ready to start?",
                 "Golf Setup - " + selectedFileName,
                 MessageBoxButtons.OKCancel,
@@ -109,6 +164,17 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
+            if (CoreFunctionality.FindToontownWindow() == IntPtr.Zero)
+            {
+                MessageBox.Show(
+                    "The Toontown Rewritten window was not found.\n\n" +
+                    "Start TTR and log in before starting auto golf.",
+                    "TTR Not Found",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
             // Remind user about auto-golf setup
             var result = MessageBox.Show(
                 "━━━ AUTO GOLF MODE ━━━\n\n" +
@@ -118,7 +184,8 @@ namespace ToonTown_Rewritten_Bot
                 "3. Aim and swing with the right power\n" +
                 "4. Repeat for all 3 holes\n\n" +
                 "━━━ YOU MUST DO ━━━\n" +
-                "• Set swing key to CTRL (default)\n" +
+                $"• TTR's Jump/swing key must match: {ConfiguredGolfSwingKey}\n" +
+                "  (Bot Settings → Configure Game Controls)\n" +
                 "• Keep TTR visible on screen\n" +
                 "• ⚠️ Move to LEFT or RIGHT tee when instructed!\n" +
                 "  (Watch the overlay for position instructions)\n\n" +
