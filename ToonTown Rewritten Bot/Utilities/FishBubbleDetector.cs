@@ -585,6 +585,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         return ScanForBubbleByColor(screenshot, sStartX, sStartY, sEndX, sEndY, windowOffset, cancellationToken);
                     }
                 }
+                catch (WindowCaptureException)
+                {
+                    throw;
+                }
                 catch (Exception ex)
                 {
                     Logger.Warning("FishDetect", $"Scan error: {ex.Message}");

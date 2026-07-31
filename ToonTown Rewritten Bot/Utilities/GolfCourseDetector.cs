@@ -161,6 +161,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     }
                 }
             }
+            catch (WindowCaptureException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[GolfDetector] Error detecting course: {ex.Message}");
@@ -267,6 +271,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     Debug.WriteLine($"[GolfDetector] IsScoreboardOpen: {scoreboardColorCount}/5 points matched = {isOpen}");
                     return isOpen;
                 }
+            }
+            catch (WindowCaptureException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -391,6 +399,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                         Debug.WriteLine("[GolfDetector] Scoreboard closed successfully");
                         return;
                     }
+                }
+                catch (WindowCaptureException)
+                {
+                    throw;
                 }
                 catch (Exception ex)
                 {
@@ -583,6 +595,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     }
                 }
             }
+            catch (WindowCaptureException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 Debug.WriteLine($"[GolfDetector] Error finding pencil button: {ex.Message}");
@@ -622,6 +638,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
                 Debug.WriteLine($"[GolfDetector] Clicked pencil button at ({clickX}, {clickY})");
                 return true;
+            }
+            catch (WindowCaptureException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -664,6 +684,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
 
                 return course;
+            }
+            catch (WindowCaptureException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -922,6 +946,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     return false;
                 }
             }
+            catch (WindowCaptureException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 Debug.WriteLine($"[GolfDetector] Error checking ready state: {ex.Message}");
@@ -1029,6 +1057,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                            lowerText.Contains("position") ||
                            lowerText.Contains("left") && lowerText.Contains("right");
                 }
+            }
+            catch (WindowCaptureException)
+            {
+                throw;
             }
             catch
             {
