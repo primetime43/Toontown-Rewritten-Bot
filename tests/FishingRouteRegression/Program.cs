@@ -57,6 +57,7 @@ internal static class Program
             Check(recorder.Steps.SequenceEqual(new[] { new FishingRouteStep("UP", 200), new FishingRouteStep("UP+LEFT", 500), new FishingRouteStep("UP", 100), new FishingRouteStep("DOWN", 300) }), "Recording keeps simultaneous movement, ignores repeats and omits idle pauses");
             ReplayChecks().GetAwaiter().GetResult();
             EditorChecks();
+            RouteNameChecks();
             Console.WriteLine($"{passed} custom fishing route checks passed.");
             return 0;
         }
@@ -82,6 +83,42 @@ internal static class Program
         }
         catch (OperationCanceledException) { }
         Check(events.SequenceEqual(new[] { "down:UP", "down:LEFT", "up:UP", "up:LEFT" }), "Cancelling playback releases every held key");
+    }
+
+    private static void RouteNameChecks()
+    {
+        string folder = Path.Combine(AppContext.BaseDirectory, "route-name-fixtures");
+        Directory.CreateDirectory(folder);
+        string namedPath = Path.Combine(folder, "Custom_20260923_0917.json");
+        var route = new CustomFishingActionFile { Name = "Carnival Fishing" };
+        Check(CustomFishingActionFileManager.Save(route, namedPath), "Create named route fixture");
+        string legacyPath = Path.Combine(folder, "Legacy Dock.json");
+        File.WriteAllText(legacyPath, "[]");
+        string unnamedPath = Path.Combine(folder, "Unnamed Dock.json");
+        CustomFishingActionFileManager.Save(new CustomFishingActionFile { Name = "  " }, unnamedPath);
+        string brokenPath = Path.Combine(folder, "Repair Me.json");
+        File.WriteAllText(brokenPath, "invalid JSON");
+        var paths = new[] { namedPath, legacyPath, unnamedPath, brokenPath };
+        var items = CustomFishingActionFileManager.GetRouteListItems(paths);
+        using var combo = new ComboBox();
+        combo.Items.AddRange(items.ToArray());
+        combo.SelectedItem = items.Single(item => item.FilePath == namedPath);
+        var selected = (CustomFishingRouteItem)combo.SelectedItem;
+        Check(combo.GetItemText(selected) == "Carnival Fishing" && selected.FileName == "Custom_20260923_0917" && selected.FilePath == namedPath,
+            "Dropdown displays the route name while retaining the original file for editing and execution");
+        Check(items.Single(i => i.FilePath == legacyPath).DisplayName == "Legacy Dock" && items.Single(i => i.FilePath == unnamedPath).DisplayName == "Unnamed Dock",
+            "Legacy and unnamed routes fall back to their filenames");
+        Check(items.Single(i => i.FilePath == brokenPath).DisplayName == "Repair Me", "An unreadable route does not break the dropdown");
+        route.Name = "Carnival — left dock";
+        CustomFishingActionFileManager.Save(route, namedPath);
+        var refreshed = CustomFishingActionFileManager.GetRouteListItems(paths);
+        Check(refreshed.Single(i => i.FileName == selected.FileName).DisplayName == route.Name,
+            "Renaming refreshes the displayed name without losing the saved file selection");
+        string duplicatePath = Path.Combine(folder, "Other Dock.json");
+        CustomFishingActionFileManager.Save(route, duplicatePath);
+        var duplicates = CustomFishingActionFileManager.GetRouteListItems(new[] { namedPath, duplicatePath });
+        Check(duplicates.Select(i => i.DisplayName).Distinct().Count() == 2 && duplicates.All(i => i.DisplayName.StartsWith(route.Name)),
+            "Duplicate route names are distinguished by filename without changing file identity");
     }
 
     private static void EditorChecks()

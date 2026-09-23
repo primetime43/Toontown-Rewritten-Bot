@@ -1,8 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ToonTown_Rewritten_Bot.Models;
 using ToonTown_Rewritten_Bot.Services;
 using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
 using ToonTown_Rewritten_Bot.Utilities;
@@ -12,12 +12,13 @@ namespace ToonTown_Rewritten_Bot
 {
     public partial class MainForm
     {
+        private CustomFishingRouteItem SelectedFishingRoute => customFishingFilesComboBox.SelectedItem as CustomFishingRouteItem;
+
         private void createCustomFishingActionsBtn_Click(object sender, EventArgs e)
         {
             if (_fishingSessionActive) return;
-            string selected = customFishingFilesComboBox.SelectedItem?.ToString();
-            using var form = new CustomFishingActions(string.IsNullOrEmpty(selected) ? null :
-                Path.Combine(CustomFishingActionFileManager.GetCustomActionsFolder(), selected + ".json"));
+            string selected = SelectedFishingRoute?.FileName;
+            using var form = new CustomFishingActions(SelectedFishingRoute?.FilePath);
             form.ShowDialog(this);
             RefreshFishingRouteSelection(form.SavedFileName ?? selected);
         }
@@ -30,15 +31,27 @@ namespace ToonTown_Rewritten_Bot
             if (_fishingSessionActive) return;
             using var wizard = new CustomFishingWizardForm();
             wizard.ShowDialog(this);
-            RefreshFishingRouteSelection(wizard.SavedFileName ?? customFishingFilesComboBox.SelectedItem?.ToString());
+            RefreshFishingRouteSelection(wizard.SavedFileName ?? SelectedFishingRoute?.FileName);
         }
 
-        private void RefreshFishingRouteSelection(string name)
+        private void RefreshFishingRouteSelection(string fileName)
         {
             LoadCustomActions("Fishing", customFishingFilesComboBox);
-            if (name == null) return;
-            int index = customFishingFilesComboBox.FindStringExact(name);
-            if (index >= 0) customFishingFilesComboBox.SelectedIndex = index;
+            SelectFishingRouteFile(fileName);
+        }
+
+        private void SelectFishingRouteFile(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) return;
+            for (int index = 0; index < customFishingFilesComboBox.Items.Count; index++)
+            {
+                if (customFishingFilesComboBox.Items[index] is CustomFishingRouteItem route &&
+                    string.Equals(route.FileName, fileName, StringComparison.OrdinalIgnoreCase))
+                {
+                    customFishingFilesComboBox.SelectedIndex = index;
+                    return;
+                }
+            }
         }
 
         /// <summary>
@@ -65,8 +78,8 @@ namespace ToonTown_Rewritten_Bot
             try
             {
                 SetFishingSessionActive(true);
-                string selectedFileName = customFishingFilesComboBox.SelectedItem?.ToString();
-                if (string.IsNullOrEmpty(selectedFileName))
+                var selectedRoute = SelectedFishingRoute;
+                if (selectedRoute == null)
                 {
                     MessageBox.Show("Please select a custom fishing action file.", "No File Selected",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -88,22 +101,19 @@ namespace ToonTown_Rewritten_Bot
                 if (result != DialogResult.OK)
                     return;
 
-                string exePath = AppPaths.ExeDirectory;
-                string filePath = Path.Combine(exePath, "Custom Fishing Actions", selectedFileName);
-
                 // Show overlay if the checkbox is checked
                 if (customShowOverlayCheckBox.Checked)
                     SetFishingOverlay(true, "Custom fishing...", OnCustomFishingEndedCallback);
 
                 await _fishingService.StartFishing("CUSTOM FISHING ACTION", numberOfCasts, numberOfSells,
-                    randomFishingCheckBox.Checked, token, filePath + ".json", customAutoDetectFishCheckBox.Checked);
+                    randomFishingCheckBox.Checked, token, selectedRoute.FilePath, customAutoDetectFishCheckBox.Checked);
 
                 // These run on the UI thread (await resumes on UI context)
                 SetFishingOverlay(false, null, null);
                 CoreFunctionality.BringBotWindowToFront();
                 int casts = _fishingService.SessionCastCount;
                 MessageBox.Show(
-                    $"Done Fishing with custom action '{selectedFileName}'.\n\nTotal Casts: {casts}",
+                    $"Done Fishing with custom route '{selectedRoute.Name}'.\n\nTotal Casts: {casts}",
                     "Fishing Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (OperationCanceledException) when (token.IsCancellationRequested)
