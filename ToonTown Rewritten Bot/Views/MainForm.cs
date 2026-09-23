@@ -36,6 +36,7 @@ namespace ToonTown_Rewritten_Bot
             InitializeFishingLayout();
             InitializeHomeLayout();
             InitializeGardeningLayout();
+            InitializeActivityLayouts();
             UiTheme.ApplyButtonColors(devOpenLogViewerBtn, true);
 
             // Set version and author from global settings
@@ -214,6 +215,9 @@ namespace ToonTown_Rewritten_Bot
             fishingShortcutsLabel.Text = $"{pause}  Pause / Resume\n{stopKeys}  Stop";
             customFishingShortcutsLabel.Text = fishingShortcutsLabel.Text;
             gardeningShortcutsLabel.Text = $"{stopKeys}  Stop gardening";
+            golfShortcutsLabel.Text = $"{stopKeys}  Stop";
+            doodleShortcutsLabel.Text = $"{stopKeys}  Stop";
+            awakeShortcutsLabel.Text = $"{stopKeys}  Stop keeping awake";
             labelKeyboardShortcuts.Text =
                 "Global shortcuts (work in-game):\n\n" +
                 $"{pause} - Pause/Resume fishing\n" +

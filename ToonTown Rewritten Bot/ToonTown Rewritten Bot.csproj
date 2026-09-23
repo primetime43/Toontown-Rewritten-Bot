@@ -111,6 +111,9 @@
     <Compile Update="Views\MainForm.HomeLayout.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Update="Views\MainForm.ActivityLayouts.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
     <Compile Update="Views\MainForm.GardeningLayout.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
