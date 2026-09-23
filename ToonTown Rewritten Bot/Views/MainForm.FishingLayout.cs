@@ -129,6 +129,9 @@ namespace ToonTown_Rewritten_Bot
             Label sellsLabel = custom ? labelCustomFishingSells : labelSells;
             castsLabel.Text = "Casts:";
             sellsLabel.Text = "Sells:";
+            int countLabelWidth = Math.Max(castsLabel.PreferredSize.Width, sellsLabel.PreferredSize.Width);
+            castsLabel.MinimumSize = new Size(countLabelWidth, 0);
+            sellsLabel.MinimumSize = new Size(countLabelWidth, 0);
             var casts = custom ? numericUpDownCustomCasts : numericUpDownCasts;
             var sells = custom ? numericUpDownCustomSells : numericUpDownSells;
             var setup = FishingSection(custom ? "Route & session" : "Location & session", location,
