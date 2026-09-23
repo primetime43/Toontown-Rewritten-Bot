@@ -1183,6 +1183,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             await Task.Delay(2100, cancellationToken);
             // Use image recognition to find sell button (will prompt for template capture if needed)
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.BlueSellAllButton);
+            cancellationToken.ThrowIfCancellationRequested();
             MoveCursor(x, y);
             DoMouseClick();
             await Task.Delay(2000, cancellationToken);

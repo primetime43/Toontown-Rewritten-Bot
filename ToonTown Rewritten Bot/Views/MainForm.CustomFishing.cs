@@ -14,11 +14,12 @@ namespace ToonTown_Rewritten_Bot
     {
         private void createCustomFishingActionsBtn_Click(object sender, EventArgs e)
         {
-            using (var form = new CustomFishingActions())
-            {
-                form.ShowDialog(); // This will block until the form is closed
-            }
-            LoadCustomActions("Fishing", customFishingFilesComboBox); // load fishing actions after the form is closed
+            if (_fishingSessionActive) return;
+            string selected = customFishingFilesComboBox.SelectedItem?.ToString();
+            using var form = new CustomFishingActions(string.IsNullOrEmpty(selected) ? null :
+                Path.Combine(CustomFishingActionFileManager.GetCustomActionsFolder(), selected + ".json"));
+            form.ShowDialog(this);
+            RefreshFishingRouteSelection(form.SavedFileName ?? selected);
         }
 
         /// <summary>
@@ -26,22 +27,18 @@ namespace ToonTown_Rewritten_Bot
         /// </summary>
         private void wizardCustomFishingBtn_Click(object sender, EventArgs e)
         {
-            using (var wizard = new CustomFishingWizardForm())
-            {
-                var result = wizard.ShowDialog();
-                if (result == DialogResult.OK && !string.IsNullOrEmpty(wizard.SavedFileName))
-                {
-                    // Reload the combo box and select the new file
-                    LoadCustomActions("Fishing", customFishingFilesComboBox);
+            if (_fishingSessionActive) return;
+            using var wizard = new CustomFishingWizardForm();
+            wizard.ShowDialog(this);
+            RefreshFishingRouteSelection(wizard.SavedFileName ?? customFishingFilesComboBox.SelectedItem?.ToString());
+        }
 
-                    // Try to select the newly created file
-                    int index = customFishingFilesComboBox.FindStringExact(wizard.SavedFileName);
-                    if (index >= 0)
-                    {
-                        customFishingFilesComboBox.SelectedIndex = index;
-                    }
-                }
-            }
+        private void RefreshFishingRouteSelection(string name)
+        {
+            LoadCustomActions("Fishing", customFishingFilesComboBox);
+            if (name == null) return;
+            int index = customFishingFilesComboBox.FindStringExact(name);
+            if (index >= 0) customFishingFilesComboBox.SelectedIndex = index;
         }
 
         /// <summary>
