@@ -115,8 +115,7 @@ namespace ToonTown_Rewritten_Bot
             // Custom Fishing preferences
             if (!string.IsNullOrEmpty(prefs.CustomFishingFile))
             {
-                int customFishingIndex = customFishingFilesComboBox.FindStringExact(prefs.CustomFishingFile);
-                if (customFishingIndex >= 0) customFishingFilesComboBox.SelectedIndex = customFishingIndex;
+                SelectFishingRouteFile(prefs.CustomFishingFile);
             }
             numericUpDownCustomCasts.Value = Math.Max(numericUpDownCustomCasts.Minimum, Math.Min(numericUpDownCustomCasts.Maximum, prefs.CustomFishingCasts));
             numericUpDownCustomSells.Value = Math.Max(numericUpDownCustomSells.Minimum, Math.Min(numericUpDownCustomSells.Maximum, prefs.CustomFishingSells));
@@ -230,7 +229,7 @@ namespace ToonTown_Rewritten_Bot
             prefs.BackgroundMode = backgroundModeCheckBox.Checked;
 
             // Custom Fishing preferences
-            prefs.CustomFishingFile = customFishingFilesComboBox.SelectedItem?.ToString() ?? "";
+            prefs.CustomFishingFile = SelectedFishingRoute?.FileName ?? "";
             prefs.CustomFishingCasts = (int)numericUpDownCustomCasts.Value;
             prefs.CustomFishingSells = (int)numericUpDownCustomSells.Value;
             prefs.CustomAutoDetectFish = customAutoDetectFishCheckBox.Checked;
@@ -361,6 +360,12 @@ namespace ToonTown_Rewritten_Bot
 
             // Clear the items from the ComboBox passed as a parameter.
             comboBox.Items.Clear();
+
+            if (actionType == "Fishing")
+            {
+                comboBox.Items.AddRange(CustomFishingActionFileManager.GetRouteListItems(files).ToArray());
+                return;
+            }
 
             // Iterate through the files, adding them to the ComboBox if they are JSON files.
             foreach (string file in files)

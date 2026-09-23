@@ -451,7 +451,7 @@ namespace ToonTown_Rewritten_Bot.Views
                 undo.Clear();
                 dirty = false;
                 RefreshRoute();
-                Text = "Custom fishing route — " + Path.GetFileNameWithoutExtension(path);
+                Text = "Custom fishing route — " + routeName.Text;
                 return true;
             }
             catch (Exception ex) { status.Text = "Could not open route: " + ex.Message; return false; }
@@ -477,7 +477,7 @@ namespace ToonTown_Rewritten_Bot.Views
             SavedFileName = Path.GetFileNameWithoutExtension(target);
             dirty = false;
             status.Text = (FishingRoute.Validate(steps) == null ? "Saved: " : "Saved partial route (you can finish it later): ") + Path.GetFileName(target);
-            Text = "Custom fishing route — " + SavedFileName;
+            Text = "Custom fishing route — " + file.Name;
         }
 
         private void UpdateCalibrationStatus()
