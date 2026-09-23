@@ -7,24 +7,23 @@ namespace ToonTown_Rewritten_Bot.Utilities
 {
     /// <summary>
     /// Detects the "Your fish bucket is full" popup using template matching.
-    /// If no template has been captured yet, prompts the user to capture one
-    /// when the red fishing button disappears (suggesting a popup appeared).
+    /// A missing cast button alone is not evidence that this popup is visible.
     /// </summary>
     public static class FishBucketFullDetector
     {
         private const string PopupElementName = "FishBucketFullPopup";
-        private const string PopupDescription = "Your fish bucket appears to be full. Please select the 'Your fish bucket is full' popup dialog on screen.";
 
         /// <summary>
         /// Checks if the "bucket full" popup is currently visible on screen using template matching.
-        /// If no template exists, prompts the user to capture one first.
+        /// Searches silently so an ordinary bite timeout cannot trigger a capture dialog.
         /// </summary>
         /// <returns>True if the popup is detected on screen.</returns>
         public static async Task<bool> CheckForBucketFullPopupAsync(CancellationToken cancellationToken = default)
         {
-            // GetElementLocationAsync will prompt for template capture if none exists
-            var location = await UIElementManager.Instance.GetElementLocationAsync(
-                PopupElementName, PopupDescription, forceSearch: true);
+            cancellationToken.ThrowIfCancellationRequested();
+            // Only a fresh match proves visibility; manual/cached coordinates do not.
+            var location = await UIElementManager.Instance.FindElementAsync(PopupElementName, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (location.HasValue)
             {

@@ -49,6 +49,7 @@ namespace ToonTown_Rewritten_Bot
         /// </summary>
         private async void startCustomFishingBtn_Click(object sender, EventArgs e)
         {
+            if (_fishingSessionActive) return;
             // Reset the CancellationTokenSource if it's null or was previously cancelled
             if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
             {
@@ -66,6 +67,7 @@ namespace ToonTown_Rewritten_Bot
 
             try
             {
+                SetFishingSessionActive(true);
                 string selectedFileName = customFishingFilesComboBox.SelectedItem?.ToString();
                 if (string.IsNullOrEmpty(selectedFileName))
                 {
@@ -107,7 +109,7 @@ namespace ToonTown_Rewritten_Bot
                     $"Done Fishing with custom action '{selectedFileName}'.\n\nTotal Casts: {casts}",
                     "Fishing Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
             {
                 Logger.Info("Fishing", "Session end: reason=\"User cancelled\", casts completed=" + _fishingService.SessionCastCount);
                 SetFishingOverlay(false, null, null);
@@ -119,6 +121,10 @@ namespace ToonTown_Rewritten_Bot
                 SetFishingOverlay(false, null, null);
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
+            finally
+            {
+                SetFishingSessionActive(false);
+            }
         }
 
         /// <summary>
@@ -126,7 +132,7 @@ namespace ToonTown_Rewritten_Bot
         /// </summary>
         private void stopCustomFishingBtn_Click(object sender, EventArgs e)
         {
-            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+            if (!_fishingSessionActive || _cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
             {
                 MessageBox.Show("Custom fishing is not currently in progress.", "Not Running",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -135,7 +141,6 @@ namespace ToonTown_Rewritten_Bot
 
             Logger.Info("Fishing", "User pressed Stop button (custom fishing)");
             _cancellationTokenSource.Cancel();
-            MessageBox.Show("Custom fishing stopped!", "Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
