@@ -108,8 +108,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// Detects fish in a provided screenshot (for debug UI use).
         /// Returns detailed results for visualization.
         /// </summary>
-        public FishDetectionDebugResult DetectFromScreenshot(Bitmap screenshot)
+        public FishDetectionDebugResult DetectFromScreenshot(Bitmap screenshot, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             // Check for custom user-defined colors first
             var customColors = PondColorManager.GetPondColors(_currentLocationName);
 
@@ -172,6 +173,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             for (int y = startY; y < endY; y += step * 2)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 for (int x = startX; x < endX; x += step * 2)
                 {
                     if (x >= 0 && x < screenshot.Width && y >= 0 && y < screenshot.Height)
@@ -209,6 +211,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             for (int y = startY; y < endY; y += step)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 for (int x = startX; x < endX; x += step)
                 {
                     if (x >= 0 && x < screenshot.Width && y >= 0 && y < screenshot.Height)
@@ -229,7 +232,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 return result;
 
             // Find blobs from fish shadow colored pixels only
-            var allBlobs = _shadowAnalyzer.FindBlobs(fishShadowPixels, step * 3);
+            var allBlobs = _shadowAnalyzer.FindBlobs(fishShadowPixels, step * 3, cancellationToken);
             result.Blobs = allBlobs;
 
             // Find best blob (fish shadow) - prefer ones with bubbles above
@@ -243,6 +246,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             foreach (var blob in allBlobs)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 int blobSize = blob.Count * step * step;
 
                 if (blobSize < minBlobSize || blobSize > maxBlobSize)
@@ -316,6 +320,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             foreach (var candidate in candidates.OrderBy(c => c.castPower))
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 double score = candidate.castPower - candidate.size * 0.1;
                 bool hasBubbles = _shadowAnalyzer.HasBubblesAbove(screenshot, candidate.center, result.AvgBrightness);
 

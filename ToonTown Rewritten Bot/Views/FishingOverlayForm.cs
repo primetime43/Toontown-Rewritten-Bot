@@ -60,6 +60,14 @@ namespace ToonTown_Rewritten_Bot.Views
             InitializeOverlay();
         }
 
+        protected override bool ShowWithoutActivation => true;
+
+        protected override void OnShown(EventArgs e)
+        {
+            RepositionOverGameWindow();
+            base.OnShown(e);
+        }
+
         private void InitializeOverlay()
         {
             // Form settings for transparency
@@ -262,12 +270,19 @@ namespace ToonTown_Rewritten_Bot.Views
             }
 
             // Draw all raw detection blobs as green dots (like debug view)
+            // Broad color matches can contain an entire pond. Bound drawing work so
+            // the overlay's UI thread stays responsive even with a bad calibration.
+            int rawPointCount = 0;
+            foreach (var blob in _blobs) rawPointCount += blob.Count;
+            int drawStride = Math.Max(1, (int)Math.Ceiling(rawPointCount / 4000.0));
+            int pointIndex = 0;
             using (var brush = new SolidBrush(Color.FromArgb(150, Color.LimeGreen)))
             {
                 foreach (var blob in _blobs)
                 {
                     foreach (var point in blob)
                     {
+                        if (pointIndex++ % drawStride != 0) continue;
                         // Draw small rectangles for each detected pixel
                         g.FillRectangle(brush, point.X - 1, point.Y - 1, 3, 3);
                     }

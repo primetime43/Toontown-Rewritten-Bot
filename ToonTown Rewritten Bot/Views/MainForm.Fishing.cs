@@ -176,8 +176,10 @@ namespace ToonTown_Rewritten_Bot
                 {
                     _fishingOverlay = new FishingOverlayForm();
                 }
-                _fishingOverlay.Show();
                 _fishingOverlay.SetStatus(statusMessage);
+                _fishingOverlay.Show();
+                _fishingOverlay.Update();
+                Logger.Info("Fishing", $"Overlay shown: visible={_fishingOverlay.Visible}, bounds={_fishingOverlay.Bounds}");
 
                 Services.FishingLocationsWalking.FishingStrategyBase.Overlay = _fishingOverlay;
                 Services.FishingLocationsWalking.FishingStrategyBase.OnFishingEnded = onEndedCallback;
@@ -269,7 +271,7 @@ namespace ToonTown_Rewritten_Bot
 
                 using (var colorForm = new PondColorCalibrationForm(locationName))
                 {
-                    colorForm.ShowDialog();
+                    colorForm.ShowDialog(this);
                 }
             }
 
@@ -340,26 +342,10 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
-            // Show explanation before opening
-            var result = MessageBox.Show(
-                "This will open a calibration window to set the pond water and fish shadow colors.\n\n" +
-                "How to use:\n" +
-                "• Click on the pond water to sample the water color\n" +
-                "• Click on a fish shadow to sample the shadow color\n" +
-                "• Use the sliders to adjust color tolerance\n" +
-                "• Click 'Save' when done, or 'Cancel' to exit\n\n" +
-                "Make sure Toontown is running and you can see the pond.",
-                "Pond Color Calibration",
-                MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Information);
-
-            if (result != DialogResult.OK)
-                return;
-
-            // Open the color calibration form
+            // Sampling instructions and capture recovery are provided inside the dialog.
             using (var colorForm = new PondColorCalibrationForm(selectedLocation))
             {
-                colorForm.ShowDialog();
+                colorForm.ShowDialog(this);
             }
         }
 

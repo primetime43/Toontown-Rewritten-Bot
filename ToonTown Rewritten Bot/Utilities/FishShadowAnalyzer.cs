@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 
 namespace ToonTown_Rewritten_Bot.Utilities
 {
@@ -113,39 +114,67 @@ namespace ToonTown_Rewritten_Bot.Utilities
         }
 
         /// <summary>
-        /// Groups nearby points into blobs using simple clustering.
+        /// Groups nearby points by searching neighboring spatial cells, not the entire image.
         /// </summary>
-        public List<List<Point>> FindBlobs(List<Point> points, int maxDistance)
+        public List<List<Point>> FindBlobs(List<Point> points, int maxDistance, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (maxDistance < 0) throw new ArgumentOutOfRangeException(nameof(maxDistance));
             var blobs = new List<List<Point>>();
-            var visited = new HashSet<int>();
+            var visited = new bool[points.Count];
+            int cellSize = Math.Max(1, maxDistance);
+            double radiusSquared = (double)maxDistance * maxDistance;
+            var cells = new Dictionary<(int x, int y), List<int>>();
+            (int x, int y) Cell(Point point) => ((int)Math.Floor((double)point.X / cellSize),
+                (int)Math.Floor((double)point.Y / cellSize));
 
             for (int i = 0; i < points.Count; i++)
             {
-                if (visited.Contains(i)) continue;
+                if ((i & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+                var cell = Cell(points[i]);
+                if (!cells.TryGetValue(cell, out var members)) cells[cell] = members = new List<int>();
+                members.Add(i);
+            }
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (visited[i]) continue;
 
                 var blob = new List<Point>();
                 var queue = new Queue<int>();
                 queue.Enqueue(i);
-                visited.Add(i);
+                visited[i] = true;
 
                 while (queue.Count > 0)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     int current = queue.Dequeue();
-                    blob.Add(points[current]);
+                    var point = points[current];
+                    blob.Add(point);
+                    var cell = Cell(point);
 
-                    // Find neighbors
-                    for (int j = 0; j < points.Count; j++)
+                    for (int cy = cell.y - 1; cy <= cell.y + 1; cy++)
+                    for (int cx = cell.x - 1; cx <= cell.x + 1; cx++)
                     {
-                        if (visited.Contains(j)) continue;
-
-                        double dist = Math.Sqrt(Math.Pow(points[current].X - points[j].X, 2) +
-                                                Math.Pow(points[current].Y - points[j].Y, 2));
-                        if (dist <= maxDistance)
+                        if (!cells.TryGetValue((cx, cy), out var members)) continue;
+                        for (int k = members.Count - 1; k >= 0; k--)
                         {
-                            queue.Enqueue(j);
-                            visited.Add(j);
+                            if ((k & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
+                            int neighbor = members[k];
+                            double dx = (double)point.X - points[neighbor].X;
+                            double dy = (double)point.Y - points[neighbor].Y;
+                            if (!visited[neighbor] && dx * dx + dy * dy > radiusSquared) continue;
+                            if (!visited[neighbor])
+                            {
+                                queue.Enqueue(neighbor);
+                                visited[neighbor] = true;
+                            }
+                            // Remove discovered points so dense regions are not repeatedly scanned.
+                            members[k] = members[members.Count - 1];
+                            members.RemoveAt(members.Count - 1);
                         }
+                        if (members.Count == 0) cells.Remove((cx, cy));
                     }
                 }
 
