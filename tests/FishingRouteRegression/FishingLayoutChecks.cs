@@ -177,6 +177,38 @@ internal static class FishingLayoutChecks
                 "Minimum window keeps gardening session control visible: " + name);
         }
         Render(form, "gardening-tab-compact.png");
+        foreach (var tabName in new[] { "Golf", "Doodles", "Misc" })
+        {
+            form.Size = defaultSize;
+            tabs.SelectedTab = Field<TabPage>(form, tabName);
+            Layout(form);
+            string[] settings = tabName switch
+            {
+                "Golf" => new[] { "customGolfFilesComboBox", "golfActionsListBox", "showGolfOverlayCheckBox", "golfInstructionsLabel", "createCustomGolfActionsBtn" },
+                "Doodles" => new[] { "doodleTrickComboBox", "numberOfDoodleScratchesNumericUpDown", "justScratchDoodleCheckBox", "doodlePictureBox", "doodleHelpRichTextBox", "doodleBackgroundModeCheckBox" },
+                _ => new[] { "messageToType", "startSpamButton", "startKeepToonAwakeButton", "stopKeepToonAwakeButton", "keepOnTopCheckBox" }
+            };
+            foreach (string name in settings) CheckVisibleInSettings(Field<Control>(form, name));
+            if (tabName == "Doodles")
+                Check(Field<PictureBox>(form, "doodlePictureBox").Image != null, "Doodle image is preserved");
+            if (tabName == "Misc")
+            {
+                Field<CheckBox>(form, "spamMessageCheckBox").Checked = true;
+                Layout(form);
+                CheckVisibleInSettings(Field<NumericUpDown>(form, "numericUpDownSpamCount"));
+                CheckVisibleInSettings(Field<Label>(form, "miscSpamTimesLabel"));
+            }
+            Render(form, tabName.ToLowerInvariant() + "-tab.png");
+            form.Size = form.MinimumSize;
+            Layout(form);
+            if (tabName != "Misc")
+            {
+                var button = Field<Button>(form, tabName == "Golf" ? "startAutoGolfBtn" : "stopDoodleTrainingBtn");
+                Check(form.ClientRectangle.Contains(form.RectangleToClient(button.RectangleToScreen(button.ClientRectangle))),
+                    tabName + " session controls stay visible at minimum size");
+            }
+            Render(form, tabName.ToLowerInvariant() + "-tab-compact.png");
+        }
         Console.WriteLine($"{passed} layout checks passed.");
     }
 
@@ -188,7 +220,7 @@ internal static class FishingLayoutChecks
         Check(parent.ClientRectangle.Contains(parent.RectangleToClient(control.RectangleToScreen(control.ClientRectangle))),
             "Default window shows setting without scrolling: " + control.Text);
     }
-    private static T Field<T>(object obj, string name) => (T)obj.GetType().GetField(name, Private).GetValue(obj);
+    private static T Field<T>(object obj, string name) => (T)obj.GetType().GetField(name, Private | BindingFlags.Public).GetValue(obj);
     private static object Call(object obj, string name, params object[] args) => obj.GetType().GetMethod(name, Private).Invoke(obj, args);
     private static void Render(Form form, string filename) { using var image = new Bitmap(form.Width, form.Height); form.DrawToBitmap(image, new Rectangle(Point.Empty, form.Size)); image.Save(Path.Combine(AppContext.BaseDirectory, filename)); }
     private static void Check(bool condition, string message) { if (!condition) throw new Exception(message); passed++; Console.WriteLine("PASS " + message); }
