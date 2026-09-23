@@ -72,7 +72,7 @@ namespace ToonTown_Rewritten_Bot
             // Set the fishing settings from Custom Fishing tab UI controls
             FishingStrategyBase.BiteTimeoutSeconds = Convert.ToInt32(customNumericUpDownBiteTimeout.Value);
             FishingStrategyBase.WaitForFishBeforeCasting = customWaitForFishCheckBox.Checked && customAutoDetectFishCheckBox.Checked;
-            FishingStrategyBase.MaxFishWaitSeconds = 20; // Default value for custom fishing
+            FishingStrategyBase.MaxFishWaitSeconds = (int)customNumericUpDownWait.Value;
             FishingStrategyBase.QuickCasting = quickCastingCheckBox.Checked;
 
             try

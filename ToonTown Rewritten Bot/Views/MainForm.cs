@@ -121,6 +121,7 @@ namespace ToonTown_Rewritten_Bot
             numericUpDownCustomSells.Value = Math.Max(numericUpDownCustomSells.Minimum, Math.Min(numericUpDownCustomSells.Maximum, prefs.CustomFishingSells));
             customAutoDetectFishCheckBox.Checked = prefs.CustomAutoDetectFish;
             customWaitForFishCheckBox.Checked = prefs.CustomWaitForFish;
+            customNumericUpDownWait.Value = Math.Max(customNumericUpDownWait.Minimum, Math.Min(customNumericUpDownWait.Maximum, prefs.CustomMaxFishWaitSeconds));
             customShowOverlayCheckBox.Checked = prefs.CustomShowOverlay;
             customNumericUpDownBiteTimeout.Value = Math.Max(customNumericUpDownBiteTimeout.Minimum, Math.Min(customNumericUpDownBiteTimeout.Maximum, prefs.CustomBiteTimeoutSeconds));
 
@@ -234,6 +235,7 @@ namespace ToonTown_Rewritten_Bot
             prefs.CustomFishingSells = (int)numericUpDownCustomSells.Value;
             prefs.CustomAutoDetectFish = customAutoDetectFishCheckBox.Checked;
             prefs.CustomWaitForFish = customWaitForFishCheckBox.Checked;
+            prefs.CustomMaxFishWaitSeconds = (int)customNumericUpDownWait.Value;
             prefs.CustomShowOverlay = customShowOverlayCheckBox.Checked;
             prefs.CustomBiteTimeoutSeconds = (int)customNumericUpDownBiteTimeout.Value;
 
