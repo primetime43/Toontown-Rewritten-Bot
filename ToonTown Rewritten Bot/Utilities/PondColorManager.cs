@@ -90,8 +90,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// <summary>
         /// Saves all pond colors to disk.
         /// </summary>
-        private static void Save()
+        private static bool Save()
         {
+            string temporaryFile = Path.Combine(TemplatesFolder, Path.GetRandomFileName());
             try
             {
                 if (!Directory.Exists(TemplatesFolder))
@@ -100,12 +101,21 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
 
                 string json = JsonConvert.SerializeObject(_pondColors, Formatting.Indented);
-                File.WriteAllText(PondColorsFile, json);
+                File.WriteAllText(temporaryFile, json);
+                File.Move(temporaryFile, PondColorsFile, overwrite: true);
                 System.Diagnostics.Debug.WriteLine($"[PondColorManager] Saved {_pondColors.Count} pond colors");
+                return true;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[PondColorManager] Error saving: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                try { if (File.Exists(temporaryFile)) File.Delete(temporaryFile); }
+                catch (IOException) { }
+                catch (UnauthorizedAccessException) { }
             }
         }
 
@@ -136,16 +146,22 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// <summary>
         /// Saves custom pond colors for a fishing location.
         /// </summary>
-        public static void SetPondColors(string locationName, Color waterColor, Color shadowColor,
+        public static bool SetPondColors(string locationName, Color waterColor, Color shadowColor,
             int toleranceR = 15, int toleranceG = 15, int toleranceB = 15)
         {
             EnsureLoaded();
 
+            _pondColors.TryGetValue(locationName, out var previous);
             _pondColors[locationName] = new PondColorData(waterColor, shadowColor, toleranceR, toleranceG, toleranceB);
-            Save();
-
+            if (!Save())
+            {
+                if (previous == null) _pondColors.Remove(locationName);
+                else _pondColors[locationName] = previous;
+                return false;
+            }
             System.Diagnostics.Debug.WriteLine($"[PondColorManager] Saved colors for '{locationName}': " +
                 $"Water=({waterColor.R},{waterColor.G},{waterColor.B}), Shadow=({shadowColor.R},{shadowColor.G},{shadowColor.B})");
+            return true;
         }
 
         /// <summary>
@@ -155,9 +171,13 @@ namespace ToonTown_Rewritten_Bot.Utilities
         {
             EnsureLoaded();
 
-            if (_pondColors.Remove(locationName))
+            if (_pondColors.TryGetValue(locationName, out var previous) && _pondColors.Remove(locationName))
             {
-                Save();
+                if (!Save())
+                {
+                    _pondColors[locationName] = previous;
+                    return;
+                }
                 System.Diagnostics.Debug.WriteLine($"[PondColorManager] Removed custom colors for '{locationName}'");
             }
         }
