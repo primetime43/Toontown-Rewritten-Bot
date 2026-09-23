@@ -21,6 +21,7 @@ internal static class Program
     {
         try
         {
+            Directory.SetCurrentDirectory(AppContext.BaseDirectory);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../ToonTown Rewritten Bot"));
@@ -58,6 +59,7 @@ internal static class Program
             ReplayChecks().GetAwaiter().GetResult();
             EditorChecks();
             RouteNameChecks();
+            FishingLayoutChecks.Run();
             Console.WriteLine($"{passed} custom fishing route checks passed.");
             return 0;
         }
