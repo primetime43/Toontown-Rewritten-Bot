@@ -209,6 +209,16 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             _locationName = locationName;
             _bubbleDetector = new FishBubbleDetector(locationName);
 
+            var colors = PondColorManager.GetPondColors(locationName);
+            if (colors != null && Math.Abs(colors.WaterR - colors.ShadowR) <= colors.ToleranceR &&
+                Math.Abs(colors.WaterG - colors.ShadowG) <= colors.ToleranceG &&
+                Math.Abs(colors.WaterB - colors.ShadowB) <= colors.ToleranceB)
+            {
+                Logger.Warning("Fishing", $"Pond calibration overlaps: water RGB({colors.WaterR},{colors.WaterG},{colors.WaterB}) " +
+                    $"also matches shadow RGB({colors.ShadowR},{colors.ShadowG},{colors.ShadowB}) at tolerance " +
+                    $"({colors.ToleranceR},{colors.ToleranceG},{colors.ToleranceB}). Lower tolerance or resample the shadow.");
+            }
+
             // Update overlay with location
             UpdateOverlayLocation(locationName);
 
@@ -228,7 +238,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             {
                 if (overlay.InvokeRequired)
                 {
-                    overlay.Invoke(new Action(() =>
+                    overlay.BeginInvoke(new Action(() =>
                     {
                         if (overlay != null && !overlay.IsDisposed)
                             action(overlay);
@@ -294,19 +304,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
             try
             {
-                using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
-                {
-                    if (screenshot != null)
-                    {
-                        var result = _bubbleDetector.DetectFromScreenshot(screenshot);
-                        Logger.Debug("Fishing", $"Initial scan area for '{_locationName}': {result.ScanArea} (IsEmpty={result.ScanArea.IsEmpty})");
-                        UpdateOverlay(result, null, "");
-                    }
-                    else
-                    {
-                        Logger.Warning("Fishing", $"Initial scan area: screenshot was null for '{_locationName}'");
-                    }
-                }
+                // Drawing the scan rectangle must not wait for screenshot capture or fish analysis.
+                var windowRect = GetGameWindowRect();
+                var scanArea = CustomScanAreaManager.GetCustomScanArea(_locationName, windowRect.Width, windowRect.Height)
+                    ?? _bubbleDetector.GetDefaultScanArea();
+                UpdateOverlay(new FishDetectionDebugResult { ScanArea = scanArea }, null, "Ready to cast");
+                Logger.Info("Fishing", $"Overlay scan area ready: {scanArea}");
             }
             catch (Exception ex)
             {
@@ -370,6 +373,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public async Task StartFishingActionsAsync(int numberOfCasts, bool fishVariance, bool autoDetectFish, bool isFirstCycle, CancellationToken cancellationToken)
         {
             // Reset cycle counts for this fishing round (session totals keep accumulating)
+            cancellationToken.ThrowIfCancellationRequested();
             _fishCaught = 0;
             _castCount = 0;
 
@@ -567,7 +571,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             }
 
             int waitSeconds = MaxFishWaitSeconds;
-            Logger.Debug("Fishing", $"Waiting for fish detection (max {waitSeconds}s)...");
+            Logger.Info("Fishing", $"Waiting for fish detection (max {waitSeconds}s)...");
             UpdateOverlayAction("Scanning for fish...", "Waiting", "Detecting");
 
             var stopwatch = Stopwatch.StartNew();
@@ -590,7 +594,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 {
                     if (screenshot != null)
                     {
-                        var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot);
+                        var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot, cancellationToken);
 
                         bool fishFound = detectionResult.AllCandidates.Count > 0 ||
                                         detectionResult.BestShadowPosition.HasValue;
@@ -680,6 +684,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 Point? oldFishPosition = null;
                 int coordsMatchCounter = 0;
                 var startTime = DateTime.Now;
+                bool firstScan = true;
 
                 while (true)
                 {
@@ -688,11 +693,14 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     Point? newFishPosition = null;
                     Point castDestination;
 
+                    if (firstScan) Logger.Info("Fishing", "Capturing initial aiming frame...");
                     using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
                     {
                         if (screenshot != null)
                         {
-                            var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot);
+                            if (firstScan) Logger.Info("Fishing", $"Analyzing initial aiming frame ({screenshot.Width}x{screenshot.Height})...");
+                            var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot, cancellationToken);
+                            if (firstScan) Logger.Info("Fishing", $"Initial aiming scan complete: matched pixels={detectionResult.DarkPixelCount}, candidates={detectionResult.AllCandidates.Count}");
 
                             // Find fish position
                             if (detectionResult.AllCandidates.Count > 0)
@@ -718,6 +726,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                             }
                         }
                     }
+                    firstScan = false;
 
                     // Check if fish position is stable (same as last scan within tolerance)
                     if (newFishPosition.HasValue && oldFishPosition.HasValue &&

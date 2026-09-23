@@ -38,7 +38,7 @@ namespace ToonTown_Rewritten_Bot.Services
         public async Task StartFishing(string locationName, int casts, int sells, bool variance, CancellationToken cancellationToken, string customFishingFilePath = "", bool autoDetectFish = false)
         {
             int totalExpectedCasts = locationName == FishingLocationNames.FishAnywhere ? casts : casts * sells;
-            Logger.Info("Fishing", $"Session start: location={locationName}, casts per round={casts}, sell rounds={sells}, total expected casts={totalExpectedCasts}, variance={variance}, autoDetect={autoDetectFish}");
+            Logger.Info("Fishing", $"Session start: location={locationName}, casts per round={casts}, sell rounds={sells}, total expected casts={totalExpectedCasts}, variance={variance}, autoDetect={autoDetectFish}, background={CoreFunctionality.UseBackgroundInput}, overlay={FishingStrategyBase.Overlay != null}");
 
             // Set the fishing location for proper bubble detection configuration
             _engine.SetFishingLocation(locationName);
@@ -52,6 +52,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 _engine.UpdateOverlayRoundProgress(currentRound, totalRounds);
 
                 await _engine.PrepareForFishing(cancellationToken).ConfigureAwait(false);
+                Logger.Info("Fishing", $"Game preparation complete; starting fishing round {currentRound}/{totalRounds}.");
                 await _engine.StartFishingActionsAsync(casts, variance, autoDetectFish, isFirstCycle, cancellationToken).ConfigureAwait(false);
                 isFirstCycle = false;
 
@@ -221,6 +222,8 @@ namespace ToonTown_Rewritten_Bot.Services
 
             public async Task PrepareForFishing(CancellationToken cancellationToken)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+                Logger.Info("Fishing", "Preparing game window for fishing...");
                 FocusTTRWindow();
                 await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
             }
