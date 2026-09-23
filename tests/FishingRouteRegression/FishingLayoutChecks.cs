@@ -177,7 +177,7 @@ internal static class FishingLayoutChecks
                 "Minimum window keeps gardening session control visible: " + name);
         }
         Render(form, "gardening-tab-compact.png");
-        foreach (var tabName in new[] { "Golf", "Doodles", "Misc" })
+        foreach (var tabName in new[] { "Golf", "Doodles", "Misc", "Settings", "Dev" })
         {
             form.Size = defaultSize;
             tabs.SelectedTab = Field<TabPage>(form, tabName);
@@ -186,6 +186,8 @@ internal static class FishingLayoutChecks
             {
                 "Golf" => new[] { "customGolfFilesComboBox", "golfActionsListBox", "showGolfOverlayCheckBox", "golfInstructionsLabel", "createCustomGolfActionsBtn" },
                 "Doodles" => new[] { "doodleTrickComboBox", "numberOfDoodleScratchesNumericUpDown", "justScratchDoodleCheckBox", "doodlePictureBox", "doodleHelpRichTextBox", "doodleBackgroundModeCheckBox" },
+                "Settings" => new[] { "preferencesListBox", "btnSavePreferencesNow", "btnResetPreferences", "btnGameControls", "btnHotkeys", "labelSettingsInfo", "labelKeyboardShortcuts" },
+                "Dev" => new[] { "comboBoxTemplateItems", "labelTemplateStatus", "btnCaptureTemplate", "btnViewTemplate", "btnAddTemplateItem", "btnEditTemplate", "btnManageVariants", "btnDeleteTemplate", "btnOpenTemplateDefinitions", "devOpenDebugBtn", "devOpenLogViewerBtn", "devDownloadOcrBtn", "devResetCoordinatesBtn", "devCoordinatesComboBox", "devUpdateCoordinateBtn", "devOpenConfigBtn" },
                 _ => new[] { "messageToType", "startSpamButton", "startKeepToonAwakeButton", "stopKeepToonAwakeButton", "keepOnTopCheckBox" }
             };
             foreach (string name in settings) CheckVisibleInSettings(Field<Control>(form, name));
@@ -201,7 +203,7 @@ internal static class FishingLayoutChecks
             Render(form, tabName.ToLowerInvariant() + "-tab.png");
             form.Size = form.MinimumSize;
             Layout(form);
-            if (tabName != "Misc")
+            if (tabName == "Golf" || tabName == "Doodles")
             {
                 var button = Field<Button>(form, tabName == "Golf" ? "startAutoGolfBtn" : "stopDoodleTrainingBtn");
                 Check(form.ClientRectangle.Contains(form.RectangleToClient(button.RectangleToScreen(button.ClientRectangle))),

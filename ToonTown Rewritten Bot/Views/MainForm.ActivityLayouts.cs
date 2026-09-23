@@ -47,7 +47,13 @@ namespace ToonTown_Rewritten_Bot
         {
             tab.Padding = Padding.Empty;
             tab.Controls.Add(root);
-            foreach (var group in oldGroups) { tab.Controls.Remove(group); group.Dispose(); }
+            foreach (var group in oldGroups)
+            {
+                // Standalone controls may have been moved into a new section.
+                if (group.Parent != tab) continue;
+                tab.Controls.Remove(group);
+                group.Dispose();
+            }
             tab.ResumeLayout(true);
         }
 
