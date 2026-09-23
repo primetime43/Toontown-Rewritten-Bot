@@ -71,7 +71,7 @@ namespace ToonTown_Rewritten_Bot
 
             // Set the fishing settings from Custom Fishing tab UI controls
             FishingStrategyBase.BiteTimeoutSeconds = Convert.ToInt32(customNumericUpDownBiteTimeout.Value);
-            FishingStrategyBase.WaitForFishBeforeCasting = customWaitForFishCheckBox.Checked && customAutoDetectFishCheckBox.Checked;
+            FishingStrategyBase.WaitForFishBeforeCasting = customWaitForFishCheckBox.Checked && customAutoDetectFishCheckBox.Checked && !quickCastingCheckBox.Checked;
             FishingStrategyBase.MaxFishWaitSeconds = (int)customNumericUpDownWait.Value;
             FishingStrategyBase.QuickCasting = quickCastingCheckBox.Checked;
 
@@ -148,6 +148,10 @@ namespace ToonTown_Rewritten_Bot
 
             Logger.Info("Fishing", "User pressed Stop button (custom fishing)");
             _cancellationTokenSource.Cancel();
+            customFishingStatusLabel.Text = "Status: Stopping...";
+            customFishingStatusLabel.ForeColor = System.Drawing.Color.DarkOrange;
+            fishingStatusLabel.Text = customFishingStatusLabel.Text;
+            fishingStatusLabel.ForeColor = customFishingStatusLabel.ForeColor;
         }
     }
 }
