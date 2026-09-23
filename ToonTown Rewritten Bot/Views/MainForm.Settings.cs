@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
@@ -121,10 +121,10 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Add($"  Location: {(string.IsNullOrEmpty(prefs.FishingLocation) ? "(not set)" : prefs.FishingLocation)}");
             preferencesListBox.Items.Add($"  Number of Casts: {prefs.NumberOfCasts}");
             preferencesListBox.Items.Add($"  Number of Sells: {prefs.NumberOfSells}");
-            preferencesListBox.Items.Add($"  Bite Timeout: {prefs.BiteTimeoutSeconds} seconds");
+            preferencesListBox.Items.Add($"  Catch timeout after casting: {prefs.BiteTimeoutSeconds} seconds");
             preferencesListBox.Items.Add($"  Random Variance: {(prefs.RandomVariance ? "Yes" : "No")}");
             preferencesListBox.Items.Add($"  Auto Detect Fish: {(prefs.AutoDetectFish ? "Yes" : "No")}");
-            preferencesListBox.Items.Add($"  Wait For Fish: {(prefs.WaitForFishBeforeCasting ? $"Yes ({prefs.MaxFishWaitSeconds}s)" : "No")}");
+            preferencesListBox.Items.Add($"  Wait for shadow before casting: {(prefs.WaitForFishBeforeCasting ? $"Yes ({prefs.MaxFishWaitSeconds}s)" : "No")}");
             preferencesListBox.Items.Add($"  Quick Casting: {(prefs.QuickCasting ? "Yes" : "No")}");
             preferencesListBox.Items.Add($"  Background Mode: {(prefs.BackgroundMode ? "Yes" : "No")}");
 
@@ -133,9 +133,9 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Add($"  Action File: {(string.IsNullOrEmpty(prefs.CustomFishingFile) ? "(not set)" : prefs.CustomFishingFile)}");
             preferencesListBox.Items.Add($"  Number of Casts: {prefs.CustomFishingCasts}");
             preferencesListBox.Items.Add($"  Number of Sells: {prefs.CustomFishingSells}");
-            preferencesListBox.Items.Add($"  Bite Timeout: {prefs.CustomBiteTimeoutSeconds} seconds");
+            preferencesListBox.Items.Add($"  Catch timeout after casting: {prefs.CustomBiteTimeoutSeconds} seconds");
             preferencesListBox.Items.Add($"  Auto Detect Fish: {(prefs.CustomAutoDetectFish ? "Yes" : "No")}");
-            preferencesListBox.Items.Add($"  Wait For Fish: {(prefs.CustomWaitForFish ? "Yes" : "No")}");
+            preferencesListBox.Items.Add($"  Wait for shadow before casting: {(prefs.CustomWaitForFish ? $"Yes ({prefs.CustomMaxFishWaitSeconds}s)" : "No")}");
             preferencesListBox.Items.Add($"  Show Overlay: {(prefs.CustomShowOverlay ? "Yes" : "No")}");
 
             preferencesListBox.Items.Add("");

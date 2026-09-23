@@ -53,6 +53,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public int CustomFishingSells { get; set; } = 1;
         public bool CustomAutoDetectFish { get; set; } = false;
         public bool CustomWaitForFish { get; set; } = false;
+        public int CustomMaxFishWaitSeconds { get; set; } = 20;
         public bool CustomShowOverlay { get; set; } = false;
         public int CustomBiteTimeoutSeconds { get; set; } = 30;
         public bool WaitForFishBeforeCasting { get; set; } = false;
@@ -156,6 +157,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             CustomFishingSells = 1;
             CustomAutoDetectFish = false;
             CustomWaitForFish = false;
+            CustomMaxFishWaitSeconds = 20;
             CustomShowOverlay = false;
             CustomBiteTimeoutSeconds = 30;
             WaitForFishBeforeCasting = false;
