@@ -1,4 +1,4 @@
-﻿namespace ToonTown_Rewritten_Bot
+namespace ToonTown_Rewritten_Bot
 {
     partial class MainForm
     {
@@ -88,6 +88,9 @@
             createCustomFishingActionsBtn = new System.Windows.Forms.Button();
             customAutoDetectFishCheckBox = new System.Windows.Forms.CheckBox();
             customWaitForFishCheckBox = new System.Windows.Forms.CheckBox();
+            customLabelWait = new System.Windows.Forms.Label();
+            customNumericUpDownWait = new System.Windows.Forms.NumericUpDown();
+            customLabelWaitSec = new System.Windows.Forms.Label();
             customShowOverlayCheckBox = new System.Windows.Forms.CheckBox();
             customLabelBiteTimeout = new System.Windows.Forms.Label();
             customNumericUpDownBiteTimeout = new System.Windows.Forms.NumericUpDown();
@@ -238,6 +241,7 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDownCustomCasts).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownCustomSells).BeginInit();
             ((System.ComponentModel.ISupportInitialize)customNumericUpDownBiteTimeout).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)customNumericUpDownWait).BeginInit();
             groupBoxCustomFishingHelp.SuspendLayout();
             Racing.SuspendLayout();
             Gardening.SuspendLayout();
@@ -605,20 +609,20 @@
             // 
             // waitForFishCheckBox
             // 
-            waitForFishCheckBox.AutoSize = true;
+            waitForFishCheckBox.AutoSize = false;
             waitForFishCheckBox.Location = new System.Drawing.Point(10, 51);
             waitForFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             waitForFishCheckBox.Name = "waitForFishCheckBox";
-            waitForFishCheckBox.Size = new System.Drawing.Size(94, 20);
+            waitForFishCheckBox.Size = new System.Drawing.Size(180, 36);
             waitForFishCheckBox.TabIndex = 1;
-            waitForFishCheckBox.Text = "Wait for fish";
-            toolTip1.SetToolTip(waitForFishCheckBox, "Waits up to the specified seconds for a fish to be caught before and between casts.\nWithout this, the bot casts immediately without waiting.\nRequires Auto Detect to be enabled.");
+            waitForFishCheckBox.Text = "Wait for shadow\nbefore casting";
+            toolTip1.SetToolTip(waitForFishCheckBox, "Waits up to the wait time below for a fish shadow before casting.\nRequires Auto Detect Fish to be enabled.");
             waitForFishCheckBox.UseVisualStyleBackColor = true;
             // 
             // labelWaitAttempts
             // 
             labelWaitAttempts.AutoSize = true;
-            labelWaitAttempts.Location = new System.Drawing.Point(26, 75);
+            labelWaitAttempts.Location = new System.Drawing.Point(26, 95);
             labelWaitAttempts.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             labelWaitAttempts.Name = "labelWaitAttempts";
             labelWaitAttempts.Size = new System.Drawing.Size(33, 16);
@@ -627,20 +631,20 @@
             // 
             // numericUpDownWaitAttempts
             // 
-            numericUpDownWaitAttempts.Location = new System.Drawing.Point(66, 73);
+            numericUpDownWaitAttempts.Location = new System.Drawing.Point(66, 93);
             numericUpDownWaitAttempts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numericUpDownWaitAttempts.Maximum = new decimal(new int[] { 30, 0, 0, 0 });
             numericUpDownWaitAttempts.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDownWaitAttempts.Name = "numericUpDownWaitAttempts";
             numericUpDownWaitAttempts.Size = new System.Drawing.Size(50, 22);
             numericUpDownWaitAttempts.TabIndex = 3;
-            toolTip1.SetToolTip(numericUpDownWaitAttempts, "Seconds to wait for a fish shadow after a failed cast before casting again");
+            toolTip1.SetToolTip(numericUpDownWaitAttempts, "Maximum seconds to look for a fish shadow before casting");
             numericUpDownWaitAttempts.Value = new decimal(new int[] { 20, 0, 0, 0 });
             // 
             // labelWaitSec
             // 
             labelWaitSec.AutoSize = true;
-            labelWaitSec.Location = new System.Drawing.Point(118, 75);
+            labelWaitSec.Location = new System.Drawing.Point(118, 95);
             labelWaitSec.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             labelWaitSec.Name = "labelWaitSec";
             labelWaitSec.Size = new System.Drawing.Size(29, 16);
@@ -650,7 +654,7 @@
             // showOverlayCheckBox
             // 
             showOverlayCheckBox.AutoSize = true;
-            showOverlayCheckBox.Location = new System.Drawing.Point(10, 103);
+            showOverlayCheckBox.Location = new System.Drawing.Point(10, 123);
             showOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             showOverlayCheckBox.Name = "showOverlayCheckBox";
             showOverlayCheckBox.Size = new System.Drawing.Size(109, 20);
@@ -663,7 +667,7 @@
             // quickCastingCheckBox
             // 
             quickCastingCheckBox.AutoSize = true;
-            quickCastingCheckBox.Location = new System.Drawing.Point(10, 129);
+            quickCastingCheckBox.Location = new System.Drawing.Point(10, 149);
             quickCastingCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             quickCastingCheckBox.Name = "quickCastingCheckBox";
             quickCastingCheckBox.Size = new System.Drawing.Size(108, 20);
@@ -676,7 +680,7 @@
             // backgroundModeCheckBox
             // 
             backgroundModeCheckBox.AutoSize = true;
-            backgroundModeCheckBox.Location = new System.Drawing.Point(10, 155);
+            backgroundModeCheckBox.Location = new System.Drawing.Point(10, 175);
             backgroundModeCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             backgroundModeCheckBox.Name = "backgroundModeCheckBox";
             backgroundModeCheckBox.Size = new System.Drawing.Size(137, 20);
@@ -689,7 +693,7 @@
             // fishingSeparator2
             // 
             fishingSeparator2.BackColor = System.Drawing.Color.LightGray;
-            fishingSeparator2.Location = new System.Drawing.Point(10, 185);
+            fishingSeparator2.Location = new System.Drawing.Point(10, 205);
             fishingSeparator2.Name = "fishingSeparator2";
             fishingSeparator2.Size = new System.Drawing.Size(180, 1);
             fishingSeparator2.TabIndex = 5;
@@ -697,36 +701,36 @@
             // labelBiteTimeout
             // 
             labelBiteTimeout.AutoSize = true;
-            labelBiteTimeout.Location = new System.Drawing.Point(10, 197);
+            labelBiteTimeout.Location = new System.Drawing.Point(10, 217);
             labelBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             labelBiteTimeout.Name = "labelBiteTimeout";
             labelBiteTimeout.Size = new System.Drawing.Size(85, 16);
             labelBiteTimeout.TabIndex = 6;
-            labelBiteTimeout.Text = "Bite Timeout:";
+            labelBiteTimeout.Text = "Catch timeout\nafter casting (sec):";
             // 
             // numericUpDownBiteTimeout
             // 
-            numericUpDownBiteTimeout.Location = new System.Drawing.Point(110, 195);
+            numericUpDownBiteTimeout.Location = new System.Drawing.Point(140, 229);
             numericUpDownBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             numericUpDownBiteTimeout.Maximum = new decimal(new int[] { 120, 0, 0, 0 });
             numericUpDownBiteTimeout.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDownBiteTimeout.Name = "numericUpDownBiteTimeout";
             numericUpDownBiteTimeout.Size = new System.Drawing.Size(48, 22);
             numericUpDownBiteTimeout.TabIndex = 7;
-            toolTip1.SetToolTip(numericUpDownBiteTimeout, "How many seconds to wait for a fish to bite before timing out");
+            toolTip1.SetToolTip(numericUpDownBiteTimeout, "Maximum seconds to wait for a confirmed catch after casting before giving up on that attempt");
             numericUpDownBiteTimeout.Value = new decimal(new int[] { 30, 0, 0, 0 });
             // 
             // fishingSeparator3
             // 
             fishingSeparator3.BackColor = System.Drawing.Color.LightGray;
-            fishingSeparator3.Location = new System.Drawing.Point(10, 230);
+            fishingSeparator3.Location = new System.Drawing.Point(10, 270);
             fishingSeparator3.Name = "fishingSeparator3";
             fishingSeparator3.Size = new System.Drawing.Size(180, 1);
             fishingSeparator3.TabIndex = 8;
             // 
             // editScanAreaBtn
             // 
-            editScanAreaBtn.Location = new System.Drawing.Point(10, 242);
+            editScanAreaBtn.Location = new System.Drawing.Point(10, 282);
             editScanAreaBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             editScanAreaBtn.Name = "editScanAreaBtn";
             editScanAreaBtn.Size = new System.Drawing.Size(180, 28);
@@ -738,7 +742,7 @@
             // 
             // calibrateColorsBtn
             // 
-            calibrateColorsBtn.Location = new System.Drawing.Point(10, 277);
+            calibrateColorsBtn.Location = new System.Drawing.Point(10, 317);
             calibrateColorsBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             calibrateColorsBtn.Name = "calibrateColorsBtn";
             calibrateColorsBtn.Size = new System.Drawing.Size(180, 28);
@@ -815,6 +819,9 @@
             groupBoxCustomFishing.Controls.Add(createCustomFishingActionsBtn);
             groupBoxCustomFishing.Controls.Add(customAutoDetectFishCheckBox);
             groupBoxCustomFishing.Controls.Add(customWaitForFishCheckBox);
+            groupBoxCustomFishing.Controls.Add(customLabelWait);
+            groupBoxCustomFishing.Controls.Add(customNumericUpDownWait);
+            groupBoxCustomFishing.Controls.Add(customLabelWaitSec);
             groupBoxCustomFishing.Controls.Add(customShowOverlayCheckBox);
             groupBoxCustomFishing.Controls.Add(customLabelBiteTimeout);
             groupBoxCustomFishing.Controls.Add(customNumericUpDownBiteTimeout);
@@ -822,7 +829,7 @@
             groupBoxCustomFishing.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBoxCustomFishing.Name = "groupBoxCustomFishing";
             groupBoxCustomFishing.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBoxCustomFishing.Size = new System.Drawing.Size(380, 310);
+            groupBoxCustomFishing.Size = new System.Drawing.Size(380, 375);
             groupBoxCustomFishing.TabIndex = 0;
             groupBoxCustomFishing.TabStop = false;
             groupBoxCustomFishing.Text = "Custom Fishing Actions";
@@ -943,21 +950,42 @@
             customAutoDetectFishCheckBox.Name = "customAutoDetectFishCheckBox";
             customAutoDetectFishCheckBox.Size = new System.Drawing.Size(182, 20);
             customAutoDetectFishCheckBox.TabIndex = 12;
-            customAutoDetectFishCheckBox.Text = "Auto Detect Fish Shadows";
+            customAutoDetectFishCheckBox.Text = "Auto Detect Fish";
             toolTip1.SetToolTip(customAutoDetectFishCheckBox, "Automatically detects fish shadows in the water and aims the cast at them.");
             customAutoDetectFishCheckBox.UseVisualStyleBackColor = true;
             // 
             // customWaitForFishCheckBox
             // 
-            customWaitForFishCheckBox.AutoSize = true;
+            customWaitForFishCheckBox.AutoSize = false;
             customWaitForFishCheckBox.Location = new System.Drawing.Point(200, 245);
             customWaitForFishCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             customWaitForFishCheckBox.Name = "customWaitForFishCheckBox";
-            customWaitForFishCheckBox.Size = new System.Drawing.Size(94, 20);
+            customWaitForFishCheckBox.Size = new System.Drawing.Size(170, 36);
             customWaitForFishCheckBox.TabIndex = 13;
-            customWaitForFishCheckBox.Text = "Wait for fish";
-            toolTip1.SetToolTip(customWaitForFishCheckBox, "Waits up to the specified seconds for a fish to be caught before and between casts.\nWithout this, the bot casts immediately without waiting.\nRequires Auto Detect to be enabled.");
+            customWaitForFishCheckBox.Text = "Wait for shadow\nbefore casting";
+            toolTip1.SetToolTip(customWaitForFishCheckBox, "Waits up to the wait time below for a fish shadow before casting.\nRequires Auto Detect Fish to be enabled.");
             customWaitForFishCheckBox.UseVisualStyleBackColor = true;
+            //
+            // Custom fishing shadow wait (separate from the bite timeout)
+            //
+            customLabelWait.AutoSize = true;
+            customLabelWait.Location = new System.Drawing.Point(216, 296);
+            customLabelWait.Name = "customLabelWait";
+            customLabelWait.Text = "wait:";
+            customLabelWait.TabIndex = 14;
+            customNumericUpDownWait.Location = new System.Drawing.Point(256, 294);
+            customNumericUpDownWait.Name = "customNumericUpDownWait";
+            customNumericUpDownWait.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
+            customNumericUpDownWait.Maximum = new decimal(new int[] { 30, 0, 0, 0 });
+            customNumericUpDownWait.Value = new decimal(new int[] { 20, 0, 0, 0 });
+            customNumericUpDownWait.Size = new System.Drawing.Size(50, 22);
+            customNumericUpDownWait.TabIndex = 15;
+            toolTip1.SetToolTip(customNumericUpDownWait, "Maximum seconds to look for a fish shadow before casting");
+            customLabelWaitSec.AutoSize = true;
+            customLabelWaitSec.Location = new System.Drawing.Point(308, 296);
+            customLabelWaitSec.Name = "customLabelWaitSec";
+            customLabelWaitSec.Text = "sec";
+            customLabelWaitSec.TabIndex = 16;
             // 
             // customShowOverlayCheckBox
             // 
@@ -966,8 +994,8 @@
             customShowOverlayCheckBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             customShowOverlayCheckBox.Name = "customShowOverlayCheckBox";
             customShowOverlayCheckBox.Size = new System.Drawing.Size(169, 20);
-            customShowOverlayCheckBox.TabIndex = 14;
-            customShowOverlayCheckBox.Text = "Show Detection Overlay";
+            customShowOverlayCheckBox.TabIndex = 17;
+            customShowOverlayCheckBox.Text = "Show Overlay";
             toolTip1.SetToolTip(customShowOverlayCheckBox, "Shows a transparent overlay on the game window displaying detected fish shadows and targeting info.");
             customShowOverlayCheckBox.UseVisualStyleBackColor = true;
             customShowOverlayCheckBox.CheckedChanged += customShowOverlayCheckBox_CheckedChanged;
@@ -975,23 +1003,23 @@
             // customLabelBiteTimeout
             // 
             customLabelBiteTimeout.AutoSize = true;
-            customLabelBiteTimeout.Location = new System.Drawing.Point(200, 276);
+            customLabelBiteTimeout.Location = new System.Drawing.Point(200, 330);
             customLabelBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             customLabelBiteTimeout.Name = "customLabelBiteTimeout";
             customLabelBiteTimeout.Size = new System.Drawing.Size(103, 16);
-            customLabelBiteTimeout.TabIndex = 15;
-            customLabelBiteTimeout.Text = "Bite Timeout (s):";
+            customLabelBiteTimeout.TabIndex = 18;
+            customLabelBiteTimeout.Text = "Catch timeout\nafter casting (sec):";
             // 
             // customNumericUpDownBiteTimeout
             // 
-            customNumericUpDownBiteTimeout.Location = new System.Drawing.Point(315, 274);
+            customNumericUpDownBiteTimeout.Location = new System.Drawing.Point(325, 342);
             customNumericUpDownBiteTimeout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             customNumericUpDownBiteTimeout.Maximum = new decimal(new int[] { 120, 0, 0, 0 });
             customNumericUpDownBiteTimeout.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
             customNumericUpDownBiteTimeout.Name = "customNumericUpDownBiteTimeout";
-            customNumericUpDownBiteTimeout.Size = new System.Drawing.Size(55, 22);
-            customNumericUpDownBiteTimeout.TabIndex = 16;
-            toolTip1.SetToolTip(customNumericUpDownBiteTimeout, "How many seconds to wait for a fish to bite before timing out");
+            customNumericUpDownBiteTimeout.Size = new System.Drawing.Size(45, 22);
+            customNumericUpDownBiteTimeout.TabIndex = 19;
+            toolTip1.SetToolTip(customNumericUpDownBiteTimeout, "Maximum seconds to wait for a confirmed catch after casting before giving up on that attempt");
             customNumericUpDownBiteTimeout.Value = new decimal(new int[] { 30, 0, 0, 0 });
             // 
             // groupBoxCustomFishingHelp
@@ -2516,6 +2544,7 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDownCustomCasts).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownCustomSells).EndInit();
             ((System.ComponentModel.ISupportInitialize)customNumericUpDownBiteTimeout).EndInit();
+            ((System.ComponentModel.ISupportInitialize)customNumericUpDownWait).EndInit();
             groupBoxCustomFishingHelp.ResumeLayout(false);
             Racing.ResumeLayout(false);
             Racing.PerformLayout();
@@ -2736,6 +2765,9 @@
         private System.Windows.Forms.Label labelCustomFishingHelp;
         private System.Windows.Forms.CheckBox customAutoDetectFishCheckBox;
         private System.Windows.Forms.CheckBox customWaitForFishCheckBox;
+        private System.Windows.Forms.Label customLabelWait;
+        private System.Windows.Forms.NumericUpDown customNumericUpDownWait;
+        private System.Windows.Forms.Label customLabelWaitSec;
         private System.Windows.Forms.CheckBox customShowOverlayCheckBox;
         private System.Windows.Forms.Label customLabelBiteTimeout;
         private System.Windows.Forms.NumericUpDown customNumericUpDownBiteTimeout;
