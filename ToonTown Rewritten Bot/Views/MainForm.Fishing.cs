@@ -13,6 +13,15 @@ namespace ToonTown_Rewritten_Bot
 {
     public partial class MainForm
     {
+        private bool _fishingSessionActive;
+
+        private void SetFishingSessionActive(bool active)
+        {
+            _fishingSessionActive = active;
+            startFishing.Enabled = !active;
+            startCustomFishingBtn.Enabled = !active;
+        }
+
         /// <summary>
         /// Handles the start fishing button click event. This method initiates fishing
         /// based on the selected location and settings specified in the user interface.
@@ -29,6 +38,7 @@ namespace ToonTown_Rewritten_Bot
         /// </remarks>
         private async void startFishing_Click(object sender, EventArgs e)
         {
+            if (_fishingSessionActive) return;
             // Reset the CancellationTokenSource if it's null or was previously cancelled
             if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
             {
@@ -46,6 +56,7 @@ namespace ToonTown_Rewritten_Bot
 
             try
             {
+                SetFishingSessionActive(true);
                 string selectedLocation = (string)fishingLocationscomboBox.SelectedItem; // Retrieve the location selected by the user
                 int numberOfCasts = Convert.ToInt32(numericUpDownCasts.Value); // Number of times to cast the line
                 int numberOfSells = Convert.ToInt32(numericUpDownSells.Value); // Number of times to sell the caught fish
@@ -83,7 +94,7 @@ namespace ToonTown_Rewritten_Bot
                     $"Done Fishing in '{selectedLocation}'.\n\nTotal Casts: {casts}",
                     "Fishing Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
             {
                 Logger.Info("Fishing", "Session end: reason=\"User cancelled\", casts completed=" + _fishingService.SessionCastCount);
                 fishingStatusLabel.Text = "Status: Idle";
@@ -99,6 +110,10 @@ namespace ToonTown_Rewritten_Bot
                 SetFishingOverlay(false, null, null);
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
+            finally
+            {
+                SetFishingSessionActive(false);
+            }
         }
 
         private void randomFishing_CheckedChanged(object sender, EventArgs e)
@@ -112,7 +127,7 @@ namespace ToonTown_Rewritten_Bot
         private void stopFishingBtn_Click(object sender, EventArgs e)//button to stop fishing
         {
             // Check if the operation is already canceled or not started
-            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+            if (!_fishingSessionActive || _cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
             {
                 MessageBox.Show("Fishing is not currently in progress.");
                 return;
@@ -121,9 +136,8 @@ namespace ToonTown_Rewritten_Bot
             // Signal the cancellation
             Logger.Info("Fishing", "User pressed Stop button");
             _cancellationTokenSource.Cancel();
-            fishingStatusLabel.Text = "Status: Idle";
-            fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
-            MessageBox.Show("Fishing stopped!");
+            fishingStatusLabel.Text = "Status: Stopping...";
+            fishingStatusLabel.ForeColor = System.Drawing.Color.DarkOrange;
         }
 
         private void ShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
