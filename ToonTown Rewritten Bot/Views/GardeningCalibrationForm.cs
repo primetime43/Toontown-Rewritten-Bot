@@ -162,11 +162,10 @@ namespace ToonTown_Rewritten_Bot.Views
                 Text = "Detect",
                 Size = new Size(100, 40),
                 Location = new Point(this.Width - 360, 10),
-                BackColor = Color.DodgerBlue,
-                ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9, FontStyle.Bold)
             };
+            UiTheme.ApplyButtonColors(detectButton, true);
             detectButton.Click += (s, e) => RefreshDetection();
             _bottomPanel.Controls.Add(detectButton);
 

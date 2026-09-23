@@ -35,6 +35,8 @@ namespace ToonTown_Rewritten_Bot
             InitializeComponent();
             InitializeFishingLayout();
             InitializeHomeLayout();
+            InitializeGardeningLayout();
+            UiTheme.ApplyButtonColors(devOpenLogViewerBtn, true);
 
             // Set version and author from global settings
             mainVersionLabel.Text = $"v{GlobalSettings.ApplicationInfo.Version}";
@@ -42,6 +44,7 @@ namespace ToonTown_Rewritten_Bot
 
             // Hide Racing tab
             tabControl1.TabPages.Remove(Racing);
+            UpdateShortcutLabels();
             if (!initializeRuntime) return;
 
             // Enable keyboard shortcuts (local - when bot has focus)
@@ -210,6 +213,7 @@ namespace ToonTown_Rewritten_Bot
             shortcutsLabel.Text = $"{pause,-10} Pause / Resume\r\n{stopKeys,-10} Stop task";
             fishingShortcutsLabel.Text = $"{pause}  Pause / Resume\n{stopKeys}  Stop";
             customFishingShortcutsLabel.Text = fishingShortcutsLabel.Text;
+            gardeningShortcutsLabel.Text = $"{stopKeys}  Stop gardening";
             labelKeyboardShortcuts.Text =
                 "Global shortcuts (work in-game):\n\n" +
                 $"{pause} - Pause/Resume fishing\n" +

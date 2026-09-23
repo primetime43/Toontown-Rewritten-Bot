@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Threading;
@@ -109,6 +109,7 @@ namespace ToonTown_Rewritten_Bot
 
         private async void plantFlowerBtn_Click(object sender, EventArgs e)
         {
+            if (_gardeningTaskActive) return;
             string selectedFlower = flowerComboBox.SelectedItem?.ToString();
             if (string.IsNullOrEmpty(selectedFlower) || !_plantComboDictionary.ContainsKey(selectedFlower))
             {
@@ -128,7 +129,8 @@ namespace ToonTown_Rewritten_Bot
             // applies this many waters at the end of the routine.
             int waterCount = (int)waterPlantNumericUpDown.Value;
 
-            SetPlantStatus($"Planting {selectedFlower}...", Color.DimGray);
+            SetPlantStatus($"Planting {selectedFlower}...", UiColors.MutedText);
+            SetGardeningTaskActive(true);
 
             try
             {
@@ -139,18 +141,19 @@ namespace ToonTown_Rewritten_Bot
                 }
 
                 await Task.Run(() => Services.Gardening.PlantFlowerAsync(beanCombo, selectedFlower, waterCount, _cancellationTokenSource.Token));
-                SetPlantStatus($"✓ {selectedFlower} planted ({DateTime.Now:HH:mm:ss})", Color.ForestGreen);
+                SetPlantStatus($"✓ {selectedFlower} planted ({DateTime.Now:HH:mm:ss})", UiColors.Success);
             }
             catch (OperationCanceledException)
             {
-                SetPlantStatus($"⚠ Planting cancelled ({DateTime.Now:HH:mm:ss})", Color.DarkOrange);
+                SetPlantStatus($"⚠ Planting cancelled ({DateTime.Now:HH:mm:ss})", UiColors.Warning);
             }
             catch (Exception ex)
             {
-                SetPlantStatus($"✗ Error ({DateTime.Now:HH:mm:ss})", Color.Firebrick);
+                SetPlantStatus($"✗ Error ({DateTime.Now:HH:mm:ss})", UiColors.Danger);
                 MessageBox.Show($"An error occurred: {ex.Message}", "Gardening Error", MessageBoxButtons.OK, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
+            finally { SetGardeningTaskActive(false); }
         }
 
         private void SetPlantStatus(string text, Color color)
@@ -162,19 +165,23 @@ namespace ToonTown_Rewritten_Bot
 
         private void stopPlantingBtn_Click(object sender, EventArgs e)
         {
-            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+            if (!_gardeningTaskActive || _cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
             {
-                MessageBox.Show("Planting is not currently in progress.");
                 return;
             }
 
             _cancellationTokenSource.Cancel();
+            SetPlantStatus("Stopping gardening...", UiColors.Warning);
+            stopPlantingBtn.Enabled = false;
         }
 
         #endregion
 
         private async void waterPlantBtn_Click(object sender, EventArgs e)
         {
+            if (_gardeningTaskActive || waterPlantNumericUpDown.Value == 0) return;
+            SetGardeningTaskActive(true);
+            SetPlantStatus("Watering plant...", UiColors.MutedText);
             try
             {
                 // Ensure cancellation token source exists
@@ -185,20 +192,26 @@ namespace ToonTown_Rewritten_Bot
                 }
 
                 await Services.Gardening.WaterPlantAsync((int)waterPlantNumericUpDown.Value, _cancellationTokenSource.Token);
+                SetPlantStatus("Watering complete.", UiColors.Success);
             }
             catch (OperationCanceledException)
             {
-                MessageBox.Show("Watering was canceled.");
+                SetPlantStatus("Watering cancelled.", UiColors.Warning);
             }
             catch (Exception ex)
             {
                 // General error handling
+                SetPlantStatus("Watering failed.", UiColors.Danger);
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
+            finally { SetGardeningTaskActive(false); }
         }
 
         private async void removePlantBtn_Click(object sender, EventArgs e)
         {
+            if (_gardeningTaskActive) return;
+            SetGardeningTaskActive(true);
+            SetPlantStatus("Removing plant...", UiColors.MutedText);
             try
             {
                 // Ensure cancellation token source exists
@@ -209,36 +222,47 @@ namespace ToonTown_Rewritten_Bot
                 }
 
                 await Services.Gardening.RemovePlantAsync(_cancellationTokenSource.Token);
+                SetPlantStatus("Plant removed.", UiColors.Success);
             }
             catch (OperationCanceledException)
             {
-                MessageBox.Show("Removing plant was canceled.");
+                SetPlantStatus("Removing plant cancelled.", UiColors.Warning);
             }
             catch (Exception ex)
             {
                 // General error handling
+                SetPlantStatus("Removing plant failed.", UiColors.Danger);
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
+            finally { SetGardeningTaskActive(false); }
         }
 
         private void wizardCustomGardeningBtn_Click(object sender, EventArgs e)
         {
+            string selected = customGardeningFilesComboBox.SelectedItem?.ToString();
             using (var form = new CustomGardeningWizardForm())
             {
-                form.ShowDialog();
+                form.ShowDialog(this);
             }
 
             LoadCustomActions("Gardening", customGardeningFilesComboBox);
+            if (selected != null) customGardeningFilesComboBox.SelectedItem = selected;
+            UpdateGardeningControls();
         }
 
         private void editCustomGardeningBtn_Click(object sender, EventArgs e)
         {
-            using (var form = new CustomGardeningActions())
+            string selected = customGardeningFilesComboBox.SelectedItem?.ToString();
+            if (selected == null) return;
+            string folder = (string)CoreFunctionality.ManageCustomActionsFolder("Gardening", false);
+            using (var form = new CustomGardeningActions(Path.Combine(folder, selected + ".json")))
             {
-                form.ShowDialog();
+                form.ShowDialog(this);
             }
 
             LoadCustomActions("Gardening", customGardeningFilesComboBox);
+            customGardeningFilesComboBox.SelectedItem = selected;
+            UpdateGardeningControls();
         }
 
         private void calibrateGardeningBtn_Click(object sender, EventArgs e)
@@ -256,12 +280,13 @@ namespace ToonTown_Rewritten_Bot
 
             using (var form = new GardeningCalibrationForm())
             {
-                form.ShowDialog();
+                form.ShowDialog(this);
             }
         }
 
         private async void startCustomGardeningBtn_Click(object sender, EventArgs e)
         {
+            if (_gardeningTaskActive) return;
             string selectedFileName = customGardeningFilesComboBox.SelectedItem?.ToString();
             if (string.IsNullOrEmpty(selectedFileName))
             {
@@ -283,6 +308,8 @@ namespace ToonTown_Rewritten_Bot
             // Capture the post-plant water count from the UI now — we won't be on the UI
             // thread once we start awaiting.
             int plantWaterCount = (int)waterPlantNumericUpDown.Value;
+            SetGardeningTaskActive(true);
+            SetPlantStatus($"Running {selectedFileName}...", UiColors.MutedText);
 
             try
             {
@@ -292,14 +319,12 @@ namespace ToonTown_Rewritten_Bot
                     _cancellationTokenSource = new CancellationTokenSource();
                 }
 
-                startCustomGardeningBtn.Enabled = false;
                 CoreFunctionality.FocusTTRWindow();
-                await Task.Delay(1000);
+                await Task.Delay(1000, _cancellationTokenSource.Token);
 
                 foreach (var action in result.File.Actions)
                 {
-                    if (_cancellationTokenSource.Token.IsCancellationRequested)
-                        break;
+                    _cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
                     switch (action.Action)
                     {
@@ -314,8 +339,8 @@ namespace ToonTown_Rewritten_Bot
                                 // Translate the default control key into whatever the user has bound in TTR.
                                 keyCode = Models.GameControls.Remap(keyCode);
                                 WindowsInput.InputSimulator.SimulateKeyDown(keyCode);
-                                await Task.Delay(action.Duration, _cancellationTokenSource.Token);
-                                WindowsInput.InputSimulator.SimulateKeyUp(keyCode);
+                                try { await Task.Delay(action.Duration, _cancellationTokenSource.Token); }
+                                finally { WindowsInput.InputSimulator.SimulateKeyUp(keyCode); }
                             }
                             break;
 
@@ -345,19 +370,20 @@ namespace ToonTown_Rewritten_Bot
                     }
                 }
 
-                MessageBox.Show("Gardening routine completed!", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SetPlantStatus($"Completed: {selectedFileName}", UiColors.Success);
             }
             catch (OperationCanceledException)
             {
-                MessageBox.Show("Gardening routine was canceled.");
+                SetPlantStatus("Gardening routine cancelled.", UiColors.Warning);
             }
             catch (Exception ex)
             {
+                SetPlantStatus("Gardening routine failed.", UiColors.Danger);
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                startCustomGardeningBtn.Enabled = true;
+                SetGardeningTaskActive(false);
                 CoreFunctionality.BringBotWindowToFront();
             }
         }

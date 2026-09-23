@@ -1238,7 +1238,7 @@ namespace ToonTown_Rewritten_Bot
             // 
             // waterPlantBtn
             // 
-            waterPlantBtn.BackColor = System.Drawing.Color.LightBlue;
+            waterPlantBtn.BackColor = UiColors.Surface;
             waterPlantBtn.Location = new System.Drawing.Point(10, 235);
             waterPlantBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             waterPlantBtn.Name = "waterPlantBtn";
@@ -1350,7 +1350,7 @@ namespace ToonTown_Rewritten_Bot
             // 
             // calibrateGardeningBtn
             // 
-            calibrateGardeningBtn.BackColor = System.Drawing.Color.LightBlue;
+            calibrateGardeningBtn.BackColor = UiColors.Surface;
             calibrateGardeningBtn.Location = new System.Drawing.Point(15, 195);
             calibrateGardeningBtn.Name = "calibrateGardeningBtn";
             calibrateGardeningBtn.Size = new System.Drawing.Size(330, 35);
@@ -2408,7 +2408,7 @@ namespace ToonTown_Rewritten_Bot
             // 
             // devOpenLogViewerBtn
             // 
-            devOpenLogViewerBtn.BackColor = System.Drawing.Color.LightBlue;
+            devOpenLogViewerBtn.BackColor = UiColors.Primary;
             devOpenLogViewerBtn.Location = new System.Drawing.Point(150, 70);
             devOpenLogViewerBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             devOpenLogViewerBtn.Name = "devOpenLogViewerBtn";

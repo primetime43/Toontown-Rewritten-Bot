@@ -122,7 +122,7 @@ namespace ToonTown_Rewritten_Bot.Views
             //
             lblDurationDisplay.AutoSize = true;
             lblDurationDisplay.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
-            lblDurationDisplay.ForeColor = System.Drawing.Color.DarkBlue;
+            lblDurationDisplay.ForeColor = UiColors.Primary;
             lblDurationDisplay.Location = new System.Drawing.Point(354, 139);
             lblDurationDisplay.Name = "lblDurationDisplay";
             lblDurationDisplay.Size = new System.Drawing.Size(80, 15);

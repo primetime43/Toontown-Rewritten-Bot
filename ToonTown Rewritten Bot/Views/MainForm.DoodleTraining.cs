@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -97,7 +97,7 @@ namespace ToonTown_Rewritten_Bot
                 // Training completed successfully
                 isTrainingActive = false;
                 doodleStatusLabel.Text = "Status: Complete";
-                doodleStatusLabel.ForeColor = System.Drawing.Color.DarkBlue;
+                doodleStatusLabel.ForeColor = UiColors.Primary;
                 CoreFunctionality.BringBotWindowToFront();
                 MessageBox.Show("Doodle training completed successfully!", "Training Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
