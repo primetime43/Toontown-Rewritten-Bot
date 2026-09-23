@@ -24,11 +24,10 @@ namespace ToonTown_Rewritten_Bot.Views
         private readonly ListView routeList = new() { Dock = DockStyle.Fill, View = View.Details, FullRowSelect = true, HideSelection = false, MultiSelect = false };
         private readonly ComboBox action = new() { DropDownStyle = ComboBoxStyle.DropDownList, Width = 244 };
         private readonly NumericUpDown seconds = new() { DecimalPlaces = 3, Increment = .05m, Minimum = .001m, Maximum = int.MaxValue / 1000m, Value = .5m, Width = 100 };
-        private readonly Label status = new() { Dock = DockStyle.Fill, AutoSize = true, ForeColor = Color.FromArgb(48, 72, 105), Padding = new Padding(0, 5, 0, 5) };
+        private readonly Label status = new() { Dock = DockStyle.Fill, AutoSize = true, ForeColor = UiColors.Text, Padding = new Padding(0, 5, 0, 5) };
         private readonly Label calibrationStatus = new() { AutoSize = true, Margin = new Padding(10, 10, 0, 0) };
         private readonly Button stop = new() { Text = "Stop (F8)", AutoSize = true, Enabled = false };
         private readonly Button useTake = new() { Text = "Keep recording and continue", AutoSize = true, Visible = false,
-            BackColor = Color.FromArgb(35, 102, 185), ForeColor = Color.White, FlatStyle = FlatStyle.Flat,
             MinimumSize = new Size(0, 38), Padding = new Padding(12, 3, 12, 3) };
         private readonly Button discardTake = new() { Text = "Discard recording", AutoSize = true, Visible = false };
         private readonly Label reviewTitle = new() { AutoSize = true, Font = new Font("Segoe UI", 12, FontStyle.Bold) };
@@ -62,8 +61,8 @@ namespace ToonTown_Rewritten_Bot.Views
         {
             Text = "Custom fishing route";
             Font = new Font("Segoe UI", 9.5f);
-            BackColor = Color.FromArgb(245, 247, 250);
-            ForeColor = Color.FromArgb(32, 42, 57);
+            BackColor = UiColors.Background;
+            ForeColor = UiColors.Text;
             ClientSize = new Size(930, 780);
             MinimumSize = new Size(910, 790);
             StartPosition = FormStartPosition.CenterParent;
@@ -87,6 +86,7 @@ namespace ToonTown_Rewritten_Bot.Views
             routeList.DoubleClick += (_, _) => { if (pendingTake == null && seconds.Enabled) { seconds.Focus(); seconds.Select(0, seconds.Text.Length); } };
             action.SelectedIndexChanged += (_, _) => seconds.Enabled = SelectedCommand != "SELL" && !busy && pendingTake == null;
             stop.Click += (_, _) => StopOperation();
+            UiTheme.ApplyButtonColors(useTake, true);
             useTake.Click += (_, _) => AcceptTake();
             discardTake.Click += (_, _) => { pendingTake = null; RefreshRoute(); UpdateEnabled(); status.Text = "Recording discarded. Your route is unchanged."; };
             RefreshRoute();
@@ -96,9 +96,7 @@ namespace ToonTown_Rewritten_Bot.Views
         private Button Button(string text, Action clicked, bool primary = false)
         {
             var button = new Button { Text = text, AutoSize = true, MinimumSize = new Size(0, 32), Padding = new Padding(8, 1, 8, 1), FlatStyle = FlatStyle.Flat };
-            button.FlatAppearance.BorderColor = Color.FromArgb(196, 206, 219);
-            button.BackColor = primary ? Color.FromArgb(35, 102, 185) : Color.White;
-            if (primary) button.ForeColor = Color.White;
+            UiTheme.ApplyButtonColors(button, primary);
             button.Click += (_, _) => clicked();
             idleControls.Add(button);
             return button;
@@ -129,12 +127,12 @@ namespace ToonTown_Rewritten_Bot.Views
             details.Controls.Add(description, 1, 1);
             root.Controls.Add(details, 0, 1);
 
-            var guide = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, BackColor = Color.FromArgb(231, 239, 250), Padding = new Padding(12), Margin = new Padding(0, 0, 0, 12) };
+            var guide = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, BackColor = UiColors.InfoSurface, Padding = new Padding(12), Margin = new Padding(0, 0, 0, 12) };
             routeGuide = guide;
             guide.Controls.Add(new Label { AutoSize = true, MaximumSize = new Size(820, 0), Text = "1  Leave fishing first. Start just off the dock, facing the same way as after exiting fishing.\n2  Record the walk to the fisherman, then the walk back onto the dock. Sell fish is added for you.\n3  Review the steps below, test from the same starting position, and save." });
             guide.Controls.Add(Flow(Button("Record to fisherman", () => StartRecording(true), true), recordReturnButton = Button("Record back to dock", () => StartRecording(false)), stop));
             guide.Controls.Add(new Label { AutoSize = true, MaximumSize = new Size(820, 0), Text = $"Use {GameControls.GetMovementBindingSummary()}. F8 finishes recording. Walking while turning is supported; pauses are omitted." });
-            var review = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, BackColor = Color.FromArgb(231, 239, 250), Padding = new Padding(12), Margin = new Padding(0, 0, 0, 12), Visible = false };
+            var review = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, BackColor = UiColors.InfoSurface, Padding = new Padding(12), Margin = new Padding(0, 0, 0, 12), Visible = false };
             review.Controls.Add(reviewTitle);
             review.Controls.Add(reviewHelp);
             review.Controls.Add(Flow(useTake, discardTake));
@@ -165,7 +163,7 @@ namespace ToonTown_Rewritten_Bot.Views
             calibration.Controls.Add(new Label { AutoSize = true, Text = "Optional: fish detection — enter fishing on the dock before calibrating." });
             calibration.Controls.Add(Flow(Button("Scan area…", CalibrateArea), Button("Pond colors…", CalibrateColors), calibrationStatus));
             root.Controls.Add(calibration, 0, 7);
-            testHelp = new Label { AutoSize = true, Text = "Test route walks the entire path and sells fish in the game. Press F8 to stop.", ForeColor = Color.DimGray, Margin = new Padding(0, 6, 0, 8) };
+            testHelp = new Label { AutoSize = true, Text = "Test route walks the entire path and sells fish in the game. Press F8 to stop.", ForeColor = UiColors.MutedText, Margin = new Padding(0, 6, 0, 8) };
             root.Controls.Add(testHelp, 0, 8);
             footer = Flow(Button("Open route…", OpenRoute), Button("Use template…", OpenTemplate), testButton = Button("Test route", TestRoute), Button("Save route", () => SaveRoute(false), true),
                 Button("Save a copy…", () => SaveRoute(true)), closeButton = Button("Close", Close));
@@ -200,7 +198,7 @@ namespace ToonTown_Rewritten_Bot.Views
                 var step = visible[i];
                 string section = pendingTake != null ? "Recording preview" : step.Command == "SELL" ? "At fisherman" : returning ? "Back to dock" : "To fisherman";
                 var item = new ListViewItem(new[] { (i + 1).ToString(), section, step.DisplayName, step.Command == "SELL" ? "Automatic" : DurationFormatter.FormatSeconds(step.Milliseconds) });
-                if (step.Command == "SELL") { item.BackColor = Color.FromArgb(225, 239, 227); returning = true; }
+                if (step.Command == "SELL") { item.BackColor = UiColors.SuccessSurface; returning = true; }
                 routeList.Items.Add(item);
             }
             if (selected >= 0 && selected < visible.Count) { routeList.Items[selected].Selected = true; routeList.Items[selected].EnsureVisible(); }
@@ -258,10 +256,10 @@ namespace ToonTown_Rewritten_Bot.Views
 
         private void ShowBanner(string message)
         {
-            recordingBanner = new Form { FormBorderStyle = FormBorderStyle.None, ShowInTaskbar = false, TopMost = true, StartPosition = FormStartPosition.Manual, BackColor = Color.FromArgb(25, 46, 72), Size = new Size(580, 70) };
+            recordingBanner = new Form { FormBorderStyle = FormBorderStyle.None, ShowInTaskbar = false, TopMost = true, StartPosition = FormStartPosition.Manual, BackColor = UiColors.Banner, Size = new Size(580, 70) };
             var area = Screen.FromHandle(CoreFunctionality.FindToontownWindow()).WorkingArea;
             recordingBanner.Location = new Point(area.Left + (area.Width - recordingBanner.Width) / 2, area.Top + 12);
-            recordingBanner.Controls.Add(new Label { Text = message, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, ForeColor = Color.White, Font = new Font("Segoe UI", 12, FontStyle.Bold) });
+            recordingBanner.Controls.Add(new Label { Text = message, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, ForeColor = UiColors.OnPrimary, Font = new Font("Segoe UI", 12, FontStyle.Bold) });
             recordingBanner.Show();
         }
 

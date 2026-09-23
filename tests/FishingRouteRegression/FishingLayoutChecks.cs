@@ -122,6 +122,61 @@ internal static class FishingLayoutChecks
             Check(textSize.Height <= instructions.Height, "Getting Started text fits at width " + size.Width);
             Render(form, size == defaultSize ? "home-tab.png" : size == form.MinimumSize ? "home-tab-compact.png" : "home-tab-wide.png");
         }
+        form.Size = defaultSize;
+        tabs.SelectedTab = Field<TabPage>(form, "Gardening");
+        Layout(form);
+        Check(!Field<Button>(form, "plantFlowerBtn").Enabled && !Field<ComboBox>(form, "flowerComboBox").Enabled &&
+            !Field<Button>(form, "startCustomGardeningBtn").Enabled && !Field<Button>(form, "stopPlantingBtn").Enabled,
+            "Empty gardening selections disable only unavailable actions");
+        Render(form, "gardening-tab-empty.png");
+        var beans = Field<ComboBox>(form, "beanCountComboBox");
+        var flowers = Field<ComboBox>(form, "flowerComboBox");
+        beans.SelectedIndex = 7;
+        Check(flowers.Enabled && flowers.Items.Count == 5 && !Field<Button>(form, "plantFlowerBtn").Enabled,
+            "Choosing a bean count enables its flowers without starting anything");
+        flowers.SelectedIndex = 0;
+        Check(Field<Button>(form, "plantFlowerBtn").Enabled && Field<Panel>(form, "beanSequencePanel").Controls.Count == 8,
+            "Choosing a flower shows all eight beans in order and enables Plant");
+        var routines = Field<ComboBox>(form, "customGardeningFilesComboBox");
+        routines.Items.Add("Estate flower beds");
+        routines.SelectedIndex = 0;
+        Check(Field<Button>(form, "startCustomGardeningBtn").Enabled && Field<Button>(form, "editCustomGardeningBtn").Enabled,
+            "Choosing a saved gardening routine enables Start and Edit selected");
+        Field<NumericUpDown>(form, "waterPlantNumericUpDown").Value = 0;
+        Check(!Field<Button>(form, "waterPlantBtn").Enabled && Field<Button>(form, "plantFlowerBtn").Enabled,
+            "Zero waters disables Water now while allowing planting without watering");
+        Field<NumericUpDown>(form, "waterPlantNumericUpDown").Value = 2;
+        Call(form, "SetGardeningTaskActive", true);
+        Check(!Field<Button>(form, "plantFlowerBtn").Enabled && !Field<Button>(form, "startCustomGardeningBtn").Enabled &&
+            !Field<Button>(form, "removePlantBtn").Enabled && Field<Button>(form, "stopPlantingBtn").Enabled,
+            "A gardening task disables competing actions and enables the shared Stop");
+        Call(form, "stopPlantingBtn_Click", null, EventArgs.Empty);
+        Check(Field<System.Threading.CancellationTokenSource>(form, "_cancellationTokenSource").IsCancellationRequested &&
+            Field<Label>(form, "plantStatusLabel").Text.Contains("Stopping") && !Field<Button>(form, "stopPlantingBtn").Enabled &&
+            !Field<Button>(form, "startCustomGardeningBtn").Enabled,
+            "Stop requests cancellation and keeps actions locked until cleanup finishes");
+        Call(form, "SetGardeningTaskActive", false);
+        Check(Field<Button>(form, "plantFlowerBtn").Enabled && Field<Button>(form, "startCustomGardeningBtn").Enabled,
+            "Finishing a gardening task restores available actions");
+        Call(form, "SetPlantStatus", "Ready", Color.DimGray);
+        Layout(form);
+        CheckVisibleInSettings(Field<Button>(form, "plantFlowerBtn"));
+        CheckVisibleInSettings(Field<Button>(form, "removePlantBtn"));
+        CheckVisibleInSettings(Field<Button>(form, "calibrateGardeningBtn"));
+        Render(form, "gardening-tab.png");
+        beans.SelectedIndex = 0;
+        Check(!Field<Button>(form, "plantFlowerBtn").Enabled && Field<Panel>(form, "beanSequencePanel").Controls.Count == 0,
+            "Changing bean count clears the previous flower and preview");
+        flowers.SelectedIndex = 0;
+        form.Size = form.MinimumSize;
+        Layout(form);
+        foreach (var name in new[] { "stopPlantingBtn", "plantStatusLabel", "gardeningShortcutsLabel" })
+        {
+            var control = Field<Control>(form, name);
+            Check(form.ClientRectangle.Contains(form.RectangleToClient(control.RectangleToScreen(control.ClientRectangle))),
+                "Minimum window keeps gardening session control visible: " + name);
+        }
+        Render(form, "gardening-tab-compact.png");
         Console.WriteLine($"{passed} layout checks passed.");
     }
 
