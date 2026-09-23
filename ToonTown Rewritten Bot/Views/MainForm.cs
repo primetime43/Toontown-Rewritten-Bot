@@ -27,9 +27,14 @@ namespace ToonTown_Rewritten_Bot
         /// Gets the fishing overlay form if it's active.
         /// </summary>
         public FishingOverlayForm FishingOverlay => _fishingOverlay;
-        public MainForm()
+        public MainForm() : this(true) { }
+
+        // Allows layout checks without installing hooks, checking updates, or loading user files.
+        internal MainForm(bool initializeRuntime)
         {
             InitializeComponent();
+            InitializeFishingLayout();
+            InitializeHomeLayout();
 
             // Set version and author from global settings
             mainVersionLabel.Text = $"v{GlobalSettings.ApplicationInfo.Version}";
@@ -37,6 +42,7 @@ namespace ToonTown_Rewritten_Bot
 
             // Hide Racing tab
             tabControl1.TabPages.Remove(Racing);
+            if (!initializeRuntime) return;
 
             // Enable keyboard shortcuts (local - when bot has focus)
             this.KeyPreview = true;
@@ -82,6 +88,7 @@ namespace ToonTown_Rewritten_Bot
 
             // Load saved user preferences
             LoadUserPreferences();
+            UpdateFishingWaitControls();
 
             // Populate the Settings tab preferences display
             RefreshPreferencesDisplay();
@@ -201,7 +208,8 @@ namespace ToonTown_Rewritten_Bot
             string stopKeys = Models.Hotkeys.AllowEscToStop ? $"{stop} or Esc" : stop;
 
             shortcutsLabel.Text = $"{pause,-10} Pause / Resume\r\n{stopKeys,-10} Stop task";
-            fishingShortcutsLabel.Text = $"Keyboard Shortcuts:\n{pause} - Pause/Resume\n{stopKeys} - Stop";
+            fishingShortcutsLabel.Text = $"{pause}  Pause / Resume\n{stopKeys}  Stop";
+            customFishingShortcutsLabel.Text = fishingShortcutsLabel.Text;
             labelKeyboardShortcuts.Text =
                 "Global shortcuts (work in-game):\n\n" +
                 $"{pause} - Pause/Resume fishing\n" +
