@@ -127,8 +127,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
-        /// When true, uses a shorter delay after casting (300ms instead of 1500ms).
-        /// Faster fishing but may occasionally misdetect fish caught from the casting animation.
+        /// When true, skips the additional casting-animation delay before looking for a catch popup.
         /// </summary>
         private static volatile bool _quickCasting = false;
         public static bool QuickCasting
@@ -187,8 +186,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public int SessionCastCount => _sessionCastCount;
 
         /// <summary>
-        /// Cached red fishing button position to avoid expensive template matching during catch detection.
-        /// Set during CastLine/CastLineAuto; used by CheckIfFishCaught fallback.
+        /// Cached red fishing button screen position, used to check dock state after a bite timeout.
         /// </summary>
         private Point? _cachedRedButtonPos;
 
@@ -404,11 +402,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         UpdateOverlayAction("PAUSED", "Press F11 to resume", "Paused");
                         await Task.Delay(250, cancellationToken);
                     }
-                    if (cancellationToken.IsCancellationRequested) return;
-
-                    _castCount++;
-                    _sessionCastCount++;
-                    UpdateOverlayStats();
+                    cancellationToken.ThrowIfCancellationRequested();
 
                     // Update overlay - casting
                     UpdateOverlayAction(autoDetectFish ? "Scanning for fish..." : "Casting line", "Wait for bite", "Casting");
@@ -421,6 +415,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     {
                         await CastLine(fishVariance, cancellationToken);
                     }
+
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (shouldStopFishing) return;
+                    _castCount++;
+                    _sessionCastCount++;
+                    UpdateOverlayStats();
 
                     // Brief delay for "no jellybeans" popup to appear (shows immediately on cast attempt)
                     await Task.Delay(300, cancellationToken);
@@ -451,7 +451,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     bool fishCaught = false;
                     while (stopwatch.Elapsed.TotalSeconds < BiteTimeoutSeconds)
                     {
-                        if (cancellationToken.IsCancellationRequested) return;
+                        cancellationToken.ThrowIfCancellationRequested();
                         if (await CheckIfFishCaught(cancellationToken))
                         {
                             fishCaught = true;
@@ -484,8 +484,11 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                                 Convert.ToInt32(FishingCoordinatesEnum.RedFishingButton).ToString())
                                 ?? $"Element_{Convert.ToInt32(FishingCoordinatesEnum.RedFishingButton)}";
 
+                            var windowOffset = GetGameWindowOffset();
+                            var buttonInWindow = new Point(_cachedRedButtonPos.Value.X - windowOffset.X,
+                                _cachedRedButtonPos.Value.Y - windowOffset.Y);
                             bool redButtonStillVisible = await UIElementManager.Instance
-                                .VerifyElementAtLocationAsync(redButtonName, _cachedRedButtonPos.Value);
+                                .VerifyElementAtLocationAsync(redButtonName, buttonInWindow);
 
                             if (!redButtonStillVisible)
                             {
@@ -503,6 +506,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         }
 
                         UpdateOverlayAction("No bite (timeout)", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
+                        Logger.Info("Fishing", $"No confirmed catch after {BiteTimeoutSeconds}s; fish count unchanged.");
 
                         // If "Wait for fish" is enabled, wait up to X seconds scanning for a fish
                         // before casting again. Cast immediately if a fish is detected.
@@ -663,12 +667,11 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             // Move to the actual red fishing button position (from image recognition) and press down
             SimulateDragMove(btnX, btnY);
             await Task.Delay(150, cancellationToken);
-            SendInputMouseDown();
-            Logger.Debug("Fishing", $"Mouse down at ({btnX}, {btnY})");
-            await Task.Delay(400, cancellationToken); // Wait for aim mode to activate
-
             try
             {
+                SendInputMouseDown();
+                Logger.Debug("Fishing", $"Mouse down at ({btnX}, {btnY})");
+                await Task.Delay(400, cancellationToken); // Wait for aim mode to activate
                 // Settings matching MouseClickSimulator
                 const int maxScanTimeMs = 36000;  // 36 seconds max like MouseClickSimulator
                 const int scanDelayMs = 500;      // 500ms between scans like MouseClickSimulator
@@ -796,6 +799,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             catch (Exception ex)
             {
                 Logger.Warning("Fishing", $"Error during cast: {ex.Message}");
+                throw;
             }
             finally
             {
@@ -985,7 +989,9 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             {
                 Logger.Debug("Fishing", $"Found close button at ({buttonLocation.Value.X}, {buttonLocation.Value.Y})");
 
-                MoveCursor(buttonLocation.Value.X, buttonLocation.Value.Y);
+                // Template matches are window-relative; mouse input uses screen coordinates.
+                var windowOffset = GetGameWindowOffset();
+                MoveCursor(windowOffset.X + buttonLocation.Value.X, windowOffset.Y + buttonLocation.Value.Y);
                 await Task.Delay(100, cancellationToken);
                 DoMouseClick();
                 await Task.Delay(300, cancellationToken);
