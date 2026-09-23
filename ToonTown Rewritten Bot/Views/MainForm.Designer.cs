@@ -918,8 +918,8 @@
             wizardCustomFishingBtn.Name = "wizardCustomFishingBtn";
             wizardCustomFishingBtn.Size = new System.Drawing.Size(175, 35);
             wizardCustomFishingBtn.TabIndex = 17;
-            wizardCustomFishingBtn.Text = "Create New (Wizard)";
-            toolTip1.SetToolTip(wizardCustomFishingBtn, "Launch a step-by-step wizard to create a new custom fishing action file.\nGuides you through recording paths and calibrating fish detection.");
+            wizardCustomFishingBtn.Text = "Create New Route";
+            toolTip1.SetToolTip(wizardCustomFishingBtn, "Record the walk to the fisherman and back, edit step durations, then test and save your route.");
             wizardCustomFishingBtn.UseVisualStyleBackColor = false;
             wizardCustomFishingBtn.Click += wizardCustomFishingBtn_Click;
             // 
