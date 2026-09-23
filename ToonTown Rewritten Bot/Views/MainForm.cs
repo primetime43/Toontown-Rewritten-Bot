@@ -37,7 +37,8 @@ namespace ToonTown_Rewritten_Bot
             InitializeHomeLayout();
             InitializeGardeningLayout();
             InitializeActivityLayouts();
-            UiTheme.ApplyButtonColors(devOpenLogViewerBtn, true);
+            InitializeSettingsLayout();
+            InitializeDevLayout();
 
             // Set version and author from global settings
             mainVersionLabel.Text = $"v{GlobalSettings.ApplicationInfo.Version}";
