@@ -1,13 +1,6 @@
 name: Dev Build
 
 on:
-  push:
-    branches:
-      - develop
-  pull_request:
-    branches:
-      - main
-      - develop
   workflow_dispatch:
 
 env:
@@ -107,11 +100,7 @@ jobs:
     - name: Get short SHA
       id: short_sha
       run: |
-        if ("${{ github.event_name }}" -eq "pull_request") {
-          $sha = "${{ github.event.pull_request.head.sha }}".Substring(0, 7)
-        } else {
-          $sha = "${{ github.sha }}".Substring(0, 7)
-        }
+        $sha = "${{ github.sha }}".Substring(0, 7)
         echo "SHORT_SHA=$sha" >> $env:GITHUB_OUTPUT
 
     - name: Upload build artifact
