@@ -77,6 +77,19 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public async Task<(Point? location, UIElementSource source)> GetElementLocationWithSourceAsync(string elementName, string description = null, bool forceSearch = false)
         {
             var element = GetOrCreateElement(elementName);
+            if (!GameWindowGeometry.TryRead(Services.CoreFunctionality.FindToontownWindow(), out var geometry))
+                throw new WindowCaptureException("The Toontown game area could not be read.");
+            void EnsureSameSize()
+            {
+                if (!GameWindowGeometry.TryRead(Services.CoreFunctionality.FindToontownWindow(), out var current)
+                    || current.ClientBounds.Size != geometry.ClientBounds.Size || current.Dpi != geometry.Dpi)
+                    throw new WindowCaptureException("The game window size changed during detection. Retry at the new size.");
+            }
+            if (!element.IsCacheValidFor(geometry.ClientBounds.Size, geometry.Dpi))
+            {
+                element.CachedCenter = null;
+                element.LastFoundTime = null;
+            }
 
             // If no template exists, prompt user to capture one
             if (!HasTemplate(elementName))
@@ -90,6 +103,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     // User cancelled - fall back to manual if available
                     if (element.ManualCoordinates.HasValue)
                     {
+                        EnsureSameSize();
                         Logger.Info("TemplateMatch", $"Using manual coordinates for '{elementName}'");
                         return (element.ManualCoordinates, UIElementSource.Manual);
                     }
@@ -103,6 +117,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             // partial frames from 3D-rendered games).
             if (!forceSearch && element.HasCachedCoordinates)
             {
+                EnsureSameSize();
                 Logger.Debug("TemplateMatch", $"'{elementName}' using cached location");
                 return (element.CachedCenter, UIElementSource.Cache);
             }
@@ -114,8 +129,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 var result = await FindElementAsync(elementName);
                 if (result.HasValue)
                 {
+                    EnsureSameSize();
                     // Update cache
                     element.CachedCenter = result.Value;
+                    element.CachedClientSize = geometry.ClientBounds.Size;
+                    element.CachedDpi = geometry.Dpi;
                     element.LastFoundTime = DateTime.Now;
                     SaveElementData();
                     return (result, UIElementSource.ImageRec);
@@ -124,6 +142,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             // Image rec failed — fall back to manual/cached coordinates silently
             // before interrupting the user with a recapture dialog
+            EnsureSameSize();
             if (element.ManualCoordinates.HasValue)
             {
                 Logger.Info("TemplateMatch", $"Image rec failed, using manual coordinates for '{elementName}'");
@@ -141,7 +160,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     var retryResult = await FindElementAsync(elementName);
                     if (retryResult.HasValue)
                     {
+                        EnsureSameSize();
                         element.CachedCenter = retryResult.Value;
+                        element.CachedClientSize = geometry.ClientBounds.Size;
+                        element.CachedDpi = geometry.Dpi;
                         element.LastFoundTime = DateTime.Now;
                         SaveElementData();
                         return (retryResult, UIElementSource.ImageRec);
@@ -787,7 +809,13 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         public Point? ManualCoordinates { get; set; }
         public Point? CachedCenter { get; set; }
+        public Size CachedClientSize { get; set; }
+        public uint CachedDpi { get; set; }
         public DateTime? LastFoundTime { get; set; }
+
+        public bool IsCacheValidFor(Size clientSize, uint dpi) => CachedCenter.HasValue
+            && !clientSize.IsEmpty && CachedClientSize == clientSize && CachedDpi == dpi
+            && new Rectangle(Point.Empty, clientSize).Contains(CachedCenter.Value);
 
         [JsonIgnore]
         public bool HasCachedCoordinates => CachedCenter.HasValue;
