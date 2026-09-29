@@ -387,7 +387,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
         public static string GetCustomGolfActionFilePath(string fileName)
         {
-            string exePath = AppPaths.ExeDirectory;
+            string exePath = AppPaths.GameDataDirectory;
             return Path.Combine(exePath, "Custom Golf Actions", fileName + ".json");
         }
 

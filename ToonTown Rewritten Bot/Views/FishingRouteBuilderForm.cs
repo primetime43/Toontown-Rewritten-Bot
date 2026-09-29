@@ -266,7 +266,7 @@ namespace ToonTown_Rewritten_Bot.Views
         private async Task<bool> PrepareOperation(string instructions)
         {
             if (busy || pendingTake != null) return false;
-            if (CoreFunctionality.FindToontownWindow() == IntPtr.Zero) { status.Text = "Open Toontown Rewritten before recording or testing."; return false; }
+            if (CoreFunctionality.FindToontownWindow() == IntPtr.Zero) { status.Text = GameProfile.WindowNotFoundMessage; return false; }
             if (MessageBox.Show(this, instructions + "\n\nA three-second countdown will appear in the game. Press F8 to stop.", "Ready?", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) != DialogResult.OK) return false;
             if (!hook.Start()) { status.Text = "Could not start the keyboard listener. Try reopening the route builder."; return false; }
             busy = true;
@@ -423,7 +423,7 @@ namespace ToonTown_Rewritten_Bot.Views
         private void OpenTemplate()
         {
             if (!ConfirmDiscard()) return;
-            using var dialog = new OpenFileDialog { Title = "Start from a fishing route template", Filter = "Fishing route (*.json)|*.json", InitialDirectory = Path.Combine(AppPaths.ExeDirectory, "Templates", "CustomFishingTemplates") };
+            using var dialog = new OpenFileDialog { Title = "Start from a fishing route template", Filter = "Fishing route (*.json)|*.json", InitialDirectory = Path.Combine(AppPaths.GameDataDirectory, "Templates", "CustomFishingTemplates") };
             if (dialog.ShowDialog(this) != DialogResult.OK || !LoadRoute(dialog.FileName)) return;
             filePath = null;
             SavedFileName = null;

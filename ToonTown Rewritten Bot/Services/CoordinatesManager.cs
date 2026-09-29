@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,7 +15,7 @@ namespace ToonTown_Rewritten_Bot.Services
     {
         private const string CoordinatesFileName = "UIElementCoordinates.json";
         // Static readonly field that computes the file path only once when the class is loaded
-        private static readonly string CoordinatesFilePath = Path.Combine(AppPaths.ExeDirectory, CoordinatesFileName);
+        private static readonly string CoordinatesFilePath = Path.Combine(AppPaths.GameDataDirectory, CoordinatesFileName);
         private static readonly object _fileLock = new object();
         public CoordinatesManager()
         {

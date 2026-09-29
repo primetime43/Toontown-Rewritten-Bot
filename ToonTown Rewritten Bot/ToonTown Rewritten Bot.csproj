@@ -117,6 +117,9 @@
     <Compile Update="Views\MainForm.SettingsLayout.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Update="Views\MainForm.GameProfile.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
     <Compile Update="Views\MainForm.GardeningLayout.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>

@@ -128,7 +128,7 @@ namespace ToonTown_Rewritten_Bot.Views
             }
 
             // Draw instruction text
-            string instructionText = "Switch to TTR now!";
+            string instructionText = "Switch to the game now!";
             using (var font = new Font("Segoe UI", 36, FontStyle.Regular))
             using (var brush = new SolidBrush(Color.LightGray))
             {

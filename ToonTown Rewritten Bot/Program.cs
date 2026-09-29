@@ -17,6 +17,16 @@ namespace ToonTown_Rewritten_Bot
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            try
+            {
+                _ = Utilities.GameProfile.Current;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not read game_selection.json. Fix or remove that file beside the bot, then restart.\n\n{ex.GetBaseException().Message}",
+                    "Game selection", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             Application.Run(new MainForm());
         }
     }

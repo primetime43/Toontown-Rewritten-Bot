@@ -685,30 +685,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
         }
 
-        private string GetTemplatesFolder()
-        {
-            string baseDir = AppPaths.ExeDirectory;
-
-            // Navigate up from bin/Debug/net10.0-windows to find the project folder
-            DirectoryInfo dir = new DirectoryInfo(baseDir);
-            while (dir != null && dir.Parent != null)
-            {
-                if (Directory.GetFiles(dir.FullName, "*.csproj").Length > 0)
-                {
-                    string projectTemplates = Path.Combine(dir.FullName, "Templates");
-                    if (!Directory.Exists(projectTemplates))
-                        Directory.CreateDirectory(projectTemplates);
-                    return projectTemplates;
-                }
-                dir = dir.Parent;
-            }
-
-            // Fall back to output directory
-            string fallback = Path.Combine(baseDir, "Templates");
-            if (!Directory.Exists(fallback))
-                Directory.CreateDirectory(fallback);
-            return fallback;
-        }
+        private string GetTemplatesFolder() => AppPaths.TemplatesDirectory;
 
         private string MakeSafeFileName(string name)
         {

@@ -239,7 +239,7 @@ namespace ToonTown_Rewritten_Bot.Services
             return IsWindowVisible(hwnd);
         }
 
-        private const string GameWindowNotFoundMessage = "Toontown Rewritten window not found. Please make sure the game is running.";
+        private static string GameWindowNotFoundMessage => GameProfile.WindowNotFoundMessage;
 
         /// <summary>
         /// Ensures the game window is ready, throwing an exception if not.
@@ -333,7 +333,7 @@ namespace ToonTown_Rewritten_Bot.Services
             };
 
             // Get the directory where the executable is running
-            string exePath = AppPaths.ExeDirectory;
+            string exePath = AppPaths.GameDataDirectory;
 
             // Combine the executable path with the specific folder name
             string customActionsFolderPath = Path.Combine(exePath, folderName);
@@ -381,6 +381,8 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static void EnsureAllEmbeddedJsonFilesExist()
         {
+            if (GameProfile.IsClash) return;
+
             // Handle Fishing Actions
             string fishingFolderPath = (string)ManageCustomActionsFolder("Fishing", false);
             var fishingResources = GetFishingResourceDictionary();
@@ -565,13 +567,10 @@ namespace ToonTown_Rewritten_Bot.Services
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(ref Point lpPoint);
 
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
         public static IntPtr FindToontownWindow()
         {
             // Attempt to find the Toontown window by its title
-            return FindWindow(null, "Toontown Rewritten");
+            return GameProfile.FindWindow();
         }
 
         [DllImport("user32.dll")]

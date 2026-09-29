@@ -38,44 +38,7 @@ namespace ToonTown_Rewritten_Bot.Views
         /// Gets the Templates folder path. Tries to find the project source folder first (for persistence),
         /// falls back to the output directory.
         /// </summary>
-        private static string GetTemplatesFolder()
-        {
-            // First, try to find the project source folder (for development)
-            string baseDir = AppPaths.ExeDirectory;
-
-            // Navigate up from bin/Debug/net10.0-windows to find the project folder
-            DirectoryInfo dir = new DirectoryInfo(baseDir);
-            while (dir != null && dir.Parent != null)
-            {
-                // Look for .csproj file to identify project root
-                if (Directory.GetFiles(dir.FullName, "*.csproj").Length > 0)
-                {
-                    string projectTemplates = Path.Combine(dir.FullName, "Templates");
-                    if (Directory.Exists(projectTemplates) || TryCreateDirectory(projectTemplates))
-                    {
-                        return projectTemplates;
-                    }
-                }
-                dir = dir.Parent;
-            }
-
-            // Fall back to output directory
-            return Path.Combine(baseDir, "Templates");
-        }
-
-        private static bool TryCreateDirectory(string path)
-        {
-            try
-            {
-                Directory.CreateDirectory(path);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[ImageRecognitionDebugForm] Failed to create directory '{path}': {ex.Message}");
-                return false;
-            }
-        }
+        private static string GetTemplatesFolder() => AppPaths.TemplatesDirectory;
 
         public ImageRecognitionDebugForm()
         {
@@ -724,7 +687,7 @@ namespace ToonTown_Rewritten_Bot.Views
             catch (Exception ex)
             {
                 Log($"Failed to capture: {ex.Message}");
-                Log("Make sure Toontown Rewritten is running.");
+                Log(GameProfile.WindowNotFoundMessage);
             }
         }
 

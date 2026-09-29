@@ -543,7 +543,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     {
                         try
                         {
-                            string debugDir = Path.Combine(AppPaths.ExeDirectory, "Templates", "debug");
+                            string debugDir = Path.Combine(AppPaths.TemplatesDirectory, "debug");
                             Directory.CreateDirectory(debugDir);
                             string timestamp = DateTime.Now.ToString("HH-mm-ss-fff");
                             string status = result.HasValue ? "FOUND" : "NOTFOUND";

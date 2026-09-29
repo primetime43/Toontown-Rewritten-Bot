@@ -39,6 +39,7 @@ namespace ToonTown_Rewritten_Bot
             InitializeActivityLayouts();
             InitializeSettingsLayout();
             InitializeDevLayout();
+            ApplyGameProfile();
 
             // Set version and author from global settings
             mainVersionLabel.Text = $"v{GlobalSettings.ApplicationInfo.Version}";
@@ -220,10 +221,9 @@ namespace ToonTown_Rewritten_Bot
             doodleShortcutsLabel.Text = $"{stopKeys}  Stop";
             awakeShortcutsLabel.Text = $"{stopKeys}  Stop keeping awake";
             labelKeyboardShortcuts.Text =
-                "Global shortcuts (work in-game):\n\n" +
                 $"{pause} - Pause/Resume fishing\n" +
-                $"{stopKeys} - Stop current task\n\n" +
-                "These work even when TTR\nhas focus.";
+                $"{stopKeys} - Stop current task\n" +
+                "Works while the game has focus.";
         }
 
         /// <summary>

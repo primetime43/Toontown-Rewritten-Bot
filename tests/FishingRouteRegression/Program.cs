@@ -24,6 +24,9 @@ internal static class Program
             Directory.SetCurrentDirectory(AppContext.BaseDirectory);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
+            if (args.Contains("--profile-probe")) return GameProfileChecks.Probe(args.Last());
+            GameProfileChecks.Run();
+            if (args.Contains("--profiles-only")) return 0;
             WindowedModeChecks.Run();
             if (args.Contains("--windowed-only")) return 0;
             string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../ToonTown Rewritten Bot"));
