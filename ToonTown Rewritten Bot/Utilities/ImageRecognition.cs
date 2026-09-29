@@ -38,28 +38,28 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 throw new WindowCaptureException("The Toontown Rewritten window was not found.");
             }
 
-            // Get the window's position and size
-            NativeMethods.Rect windowRect = new NativeMethods.Rect();
-            if (!NativeMethods.GetWindowRect(windowHandle, ref windowRect))
+            return CaptureGameClient(windowHandle, captureBackground);
+        }
+
+        internal static Bitmap CaptureGameClient(nint windowHandle, bool captureBackground)
+        {
+            if (NativeMethods.IsIconic(windowHandle))
+                throw new WindowCaptureException("Toontown is minimized. Restore the game window before running the bot.");
+            if (!GameWindowGeometry.TryRead(windowHandle, out var geometry))
             {
                 throw new WindowCaptureException("Could not read the Toontown window bounds for screen capture.");
             }
 
-            if (captureBackground)
+            // Both capture paths use the same client-area coordinate space.
+            Bitmap frame = captureBackground && !_printWindowUnavailable
+                ? CaptureWindowWithPrintWindow(windowHandle, geometry)
+                : CaptureVisibleWindow(windowHandle, geometry.ClientBounds);
+            if (!GameWindowGeometry.TryRead(windowHandle, out var current) || current != geometry)
             {
-                // Some GPU/driver combinations report PrintWindow success but return blank pixels.
-                // Once that is detected, avoid repeatedly calling the broken path for this session.
-                if (_printWindowUnavailable)
-                {
-                    return CaptureVisibleWindow(windowHandle, windowRect);
-                }
-
-                return CaptureWindowWithPrintWindow(windowHandle, windowRect.Width, windowRect.Height);
+                frame.Dispose();
+                throw new WindowCaptureException("The game window moved or resized during capture. Keep it stationary while the bot runs.");
             }
-            else
-            {
-                return CaptureVisibleWindow(windowHandle, windowRect);
-            }
+            return frame;
         }
 
         /// <summary>
@@ -67,12 +67,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// Retries with the legacy flag and falls back to visible screen capture when Windows
         /// reports success but returns a black or uniform blank frame.
         /// </summary>
-        private static Bitmap CaptureWindowWithPrintWindow(nint windowHandle, int width, int height)
+        private static Bitmap CaptureWindowWithPrintWindow(nint windowHandle, GameWindowGeometry geometry)
         {
             Bitmap bitmap = TryCaptureWithPrintWindow(
                 windowHandle,
-                width,
-                height,
+                geometry,
                 NativeMethods.PW_RENDERFULLCONTENT);
             if (bitmap != null)
             {
@@ -80,7 +79,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
 
             // Some drivers support PrintWindow but not PW_RENDERFULLCONTENT.
-            bitmap = TryCaptureWithPrintWindow(windowHandle, width, height, 0);
+            bitmap = TryCaptureWithPrintWindow(windowHandle, geometry, 0);
             if (bitmap != null)
             {
                 return bitmap;
@@ -95,25 +94,23 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     "keep the Toontown window visible and unobscured.");
             }
 
-            NativeMethods.Rect windowRect = new NativeMethods.Rect();
-            if (!NativeMethods.GetWindowRect(windowHandle, ref windowRect))
+            if (!GameWindowGeometry.TryRead(windowHandle, out geometry))
             {
                 throw new WindowCaptureException("Could not read the Toontown window bounds for screen capture.");
             }
 
-            return CaptureVisibleWindow(windowHandle, windowRect);
+            return CaptureVisibleWindow(windowHandle, geometry.ClientBounds);
         }
 
         private static Bitmap TryCaptureWithPrintWindow(
             nint windowHandle,
-            int width,
-            int height,
+            GameWindowGeometry geometry,
             uint flags)
         {
-            Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            using Bitmap fullWindow = new Bitmap(geometry.WindowBounds.Width, geometry.WindowBounds.Height, PixelFormat.Format32bppArgb);
             bool success;
 
-            using (Graphics graphics = Graphics.FromImage(bitmap))
+            using (Graphics graphics = Graphics.FromImage(fullWindow))
             {
                 IntPtr hdc = graphics.GetHdc();
                 try
@@ -128,7 +125,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
             }
 
-            string unusableReason = success ? GetPrintWindowFrameFailureReason(bitmap) : null;
+            if (!success) return null;
+            if (!new Rectangle(Point.Empty, fullWindow.Size).Contains(geometry.ClientCrop)) return null;
+            // Preserve the existing GPU capture flags, then remove window decorations before
+            // validating the pixels. A painted title bar must not hide a blank game frame.
+            Bitmap bitmap = fullWindow.Clone(geometry.ClientCrop, PixelFormat.Format32bppArgb);
+            string unusableReason = GetPrintWindowFrameFailureReason(bitmap);
             if (success && unusableReason == null)
             {
                 return bitmap;
@@ -141,7 +143,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             return null;
         }
 
-        private static Bitmap CaptureVisibleWindow(nint windowHandle, NativeMethods.Rect windowRect)
+        private static Bitmap CaptureVisibleWindow(nint windowHandle, Rectangle windowRect)
         {
             if (windowRect.Width <= 0 || windowRect.Height <= 0)
             {

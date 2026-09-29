@@ -62,7 +62,8 @@ namespace ToonTown_Rewritten_Bot.Services
             var coordinate = FindCoordinateByKey(keyAsString);
 
             // Coordinates at (0,0) are considered unset
-            return coordinate != null && !(coordinate.X == 0 && coordinate.Y == 0);
+            return coordinate != null && GameWindowGeometry.TryRead(CoreFunctionality.FindToontownWindow(), out var geometry)
+                && coordinate.ResolveScreenPoint(geometry.ClientBounds, geometry.Dpi).HasValue;
         }
 
         /// <summary>
@@ -84,7 +85,10 @@ namespace ToonTown_Rewritten_Bot.Services
 
             if (action != null)
             {
-                return (action.X, action.Y);
+                if (GameWindowGeometry.TryRead(CoreFunctionality.FindToontownWindow(), out var geometry)
+                    && action.ResolveScreenPoint(geometry.ClientBounds, geometry.Dpi) is Point point)
+                    return (point.X, point.Y);
+                throw new InvalidOperationException("Recalibrate this manual coordinate at the current game window size.");
             }
 
             throw new Exception($"No coordinates found for the key: {keyAsString}");
@@ -136,6 +140,11 @@ namespace ToonTown_Rewritten_Bot.Services
             {
                 if (source == UIElementSource.Manual)
                 {
+                    // A capture prompt may have moved the window; resolve against its current origin.
+                    var currentManual = GetManualCoordsOrDefault(key);
+                    if (currentManual == (0, 0))
+                        throw new InvalidOperationException("Recalibrate this manual coordinate at the current game window size.");
+                    location = new Point(currentManual.x, currentManual.y);
                     // Manual updates are captured from the OS cursor, so they are already absolute
                     // screen coordinates. Adding the window offset again breaks moved/multi-monitor
                     // game windows.
@@ -152,9 +161,7 @@ namespace ToonTown_Rewritten_Bot.Services
                             $"Ignoring manual coordinates for '{elementName}' at ({location.Value.X}, {location.Value.Y}); " +
                             $"they are outside the game window {windowRect}.");
 
-                        // Remove the invalid value from both stores, then force a real search. If it
-                        // still fails, UIElementManager will guide the user through recapture.
-                        UpdateCoordinateByKey(keyAsString, 0, 0);
+                        // Preserve the saved calibration, but do not use an invalid fallback.
                         UIElementManager.Instance.ClearManualCoordinates(elementName);
                         (location, source) = await UIElementManager.Instance.GetElementLocationWithSourceAsync(
                             elementName,
@@ -209,7 +216,9 @@ namespace ToonTown_Rewritten_Bot.Services
                         var action = coordinateActions.FirstOrDefault(a => a.Key == keyAsString);
                         if (action != null)
                         {
-                            return (action.X, action.Y);
+                            if (GameWindowGeometry.TryRead(CoreFunctionality.FindToontownWindow(), out var geometry)
+                                && action.ResolveScreenPoint(geometry.ClientBounds, geometry.Dpi) is Point point)
+                                return (point.X, point.Y);
                         }
                     }
                 }
@@ -246,8 +255,7 @@ namespace ToonTown_Rewritten_Bot.Services
                     var actionToUpdate = coordinateActions.Find(action => action.Key == keyAsString);
                     if (actionToUpdate != null)
                     {
-                        actionToUpdate.X = coordinates.X;
-                        actionToUpdate.Y = coordinates.Y;
+                        SetClientCoordinate(actionToUpdate, coordinates);
 
                         // Serialize the updated list back to JSON and write it to the file
                         string updatedJson = JsonConvert.SerializeObject(coordinateActions, Formatting.Indented);
@@ -312,7 +320,12 @@ namespace ToonTown_Rewritten_Bot.Services
 
             // Get the updated cursor location and save
             Point coords = CoreFunctionality.getCursorLocation();
-            UpdateCoordinateByKey(key, coords.X, coords.Y);
+            try { UpdateCoordinateByKey(key, coords.X, coords.Y); }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, "Coordinate not saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
             if (focusTTRAfter)
             {
@@ -330,11 +343,22 @@ namespace ToonTown_Rewritten_Bot.Services
             var coordinateToUpdate = coordinateActions.FirstOrDefault(ca => ca.Key == key);
             if (coordinateToUpdate != null)
             {
-                coordinateToUpdate.X = x;
-                coordinateToUpdate.Y = y;
+                SetClientCoordinate(coordinateToUpdate, new Point(x, y));
             }
 
             SaveCoordinatesToFile(coordinateActions);
+        }
+
+        private static void SetClientCoordinate(CoordinateActions action, Point screenPoint)
+        {
+            if (!GameWindowGeometry.TryRead(CoreFunctionality.FindToontownWindow(), out var geometry)
+                || !geometry.ClientBounds.Contains(screenPoint))
+                throw new InvalidOperationException("Point at a control inside the Toontown game area and try again.");
+            action.X = screenPoint.X - geometry.ClientBounds.X;
+            action.Y = screenPoint.Y - geometry.ClientBounds.Y;
+            action.CoordinateSpace = "Client";
+            action.ClientSize = geometry.ClientBounds.Size;
+            action.ClientDpi = geometry.Dpi;
         }
 
         /// <summary>

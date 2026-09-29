@@ -17,13 +17,15 @@ internal static class Program
     private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
 
     [STAThread]
-    private static int Main()
+    private static int Main(string[] args)
     {
         try
         {
             Directory.SetCurrentDirectory(AppContext.BaseDirectory);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
+            WindowedModeChecks.Run();
+            if (args.Contains("--windowed-only")) return 0;
             string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../ToonTown Rewritten Bot"));
             foreach (string path in Directory.GetFiles(Path.Combine(root, "Services/CustomFishingActions"), "*.json")
                 .Concat(Directory.GetFiles(Path.Combine(root, "Templates/CustomFishingTemplates"), "*.json")))

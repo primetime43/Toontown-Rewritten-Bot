@@ -20,6 +20,19 @@ namespace ToonTown_Rewritten_Bot.Models
         public string Description { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public string CoordinateSpace { get; set; }
+        public System.Drawing.Size ClientSize { get; set; }
+        public uint ClientDpi { get; set; }
+
+        public System.Drawing.Point? ResolveScreenPoint(System.Drawing.Rectangle clientBounds, uint dpi)
+        {
+            // Legacy absolute positions have no window geometry; keep the saved values, but
+            // require recapture instead of guessing where they belong in a moved window.
+            if (CoordinateSpace != "Client" || ClientSize != clientBounds.Size || ClientDpi != dpi
+                || !new System.Drawing.Rectangle(System.Drawing.Point.Empty, ClientSize).Contains(X, Y))
+                return null;
+            return new System.Drawing.Point(clientBounds.X + X, clientBounds.Y + Y);
+        }
 
         /// <summary>
         /// Retrieves the description for a given key.

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -195,69 +195,37 @@ namespace ToonTown_Rewritten_Bot.Services
             return UseBackgroundInput ? _backgroundTargetPos : getCursorLocation();
         }
 
-        public static void MaximizeAndFocusTTRWindow()
-        {
-            if (UseBackgroundInput) return;
-            nint hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero) return;
-            ShowWindow(hwnd, SW_RESTORE);
-            Thread.Sleep(50);
-            ShowWindow(hwnd, SW_MAXIMIZE);
-            Thread.Sleep(50);
-            SetForegroundWindow(hwnd);
-        }
+        public static void MaximizeAndFocusTTRWindow() => FocusTTRWindow();
 
+        /// <summary>Focuses the game without changing a normal or maximized window's size.</summary>
         public static void FocusTTRWindow()
         {
             if (UseBackgroundInput) return;
             nint hwnd = FindToontownWindow();
             if (hwnd == IntPtr.Zero) return;
-            ShowWindow(hwnd, SW_RESTORE);
-            Thread.Sleep(50);
-            ShowWindow(hwnd, SW_MAXIMIZE);
-            Thread.Sleep(50);
+            RestoreGameWindowIfMinimized(hwnd);
             SetForegroundWindow(hwnd);
         }
 
-        /// <summary>
-        /// Forces the Toontown Rewritten window to fullscreen position (0,0) covering the primary screen.
-        /// Call this before starting any bot operations to ensure consistent window positioning.
-        /// </summary>
-        /// <returns>True if window was found and positioned, false otherwise</returns>
+        internal static void RestoreGameWindowIfMinimized(IntPtr hwnd)
+        {
+            if (IsIconic(hwnd))
+            {
+                ShowWindow(hwnd, SW_RESTORE);
+                Thread.Sleep(50);
+            }
+        }
+
+        // Kept for callers compiled against the former fullscreen-only entry point.
         public static bool ForceGameWindowFullscreen()
         {
-            if (UseBackgroundInput) return IsGameWindowReady();
-            nint hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero)
-            {
-                Logger.Warning("Input", "Toontown window not found");
-                return false;
-            }
-            ShowWindow(hwnd, SW_RESTORE);
-            Thread.Sleep(100);
-            ShowWindow(hwnd, SW_MAXIMIZE);
-            Thread.Sleep(100);
-            SetForegroundWindow(hwnd);
-            Thread.Sleep(300);
+            if (!IsGameWindowReady()) return false;
+            FocusTTRWindow();
             return true;
         }
 
-        /// <summary>
-        /// Gets the offset that needs to be added to window-relative coordinates to get screen coordinates.
-        /// </summary>
-        public static Point GetGameWindowOffset()
-        {
-            nint hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero)
-                return Point.Empty;
-
-            RECT rect;
-            if (GetWindowRect(hwnd, out rect))
-            {
-                return new Point(rect.Left, rect.Top);
-            }
-            return Point.Empty;
-        }
+        /// <summary>Screen origin of the playable client area used by all captures.</summary>
+        public static Point GetGameWindowOffset() => GetGameWindowRect().Location;
 
         /// <summary>
         /// Checks if the Toontown window is running and visible.
@@ -302,43 +270,26 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
-        /// Gets the current position and size of the Toontown window.
+        /// Gets the playable client area in screen coordinates, excluding window decorations.
         /// </summary>
         public static Rectangle GetGameWindowRect()
         {
-            nint hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero)
-                return Rectangle.Empty;
-
-            RECT rect;
-            if (GetWindowRect(hwnd, out rect))
-            {
-                return new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
-            }
-            return Rectangle.Empty;
+            return GameWindowGeometry.TryRead(FindToontownWindow(), out var geometry)
+                ? geometry.ClientBounds : Rectangle.Empty;
         }
+
+        [DllImport("user32.dll")]
+        private static extern bool IsIconic(IntPtr handle);
 
         // Window show commands
         private const int SW_RESTORE = 9;
-        private const int SW_MAXIMIZE = 3;
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct RECT
-        {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
-        }
 
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
         private static extern bool IsWindowVisible(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
         /// <summary>
         /// Brings the Toontown Rewritten Bot window to the foreground.

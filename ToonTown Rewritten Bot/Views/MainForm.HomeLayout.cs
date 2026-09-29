@@ -40,7 +40,10 @@ namespace ToonTown_Rewritten_Bot
             gettingStartedGroup.Margin = new Padding(0, 0, 7, 0);
             gettingStartedGroup.Padding = new Padding(12, 8, 12, 12);
             gettingStartedLabel.Dock = DockStyle.Fill;
-            gettingStartedLabel.Text = gettingStartedLabel.Text.Replace("with\r\n   templates", "with templates");
+            gettingStartedLabel.Text = "• Windowed or fullscreen TTR works\r\n\r\n" +
+                "• Choose a window size before starting\r\n\r\n" +
+                "• Keep the game visible; calibrate at\r\n   the size you plan to use\r\n\r\n" +
+                "• Select a tab above to begin";
             layout.Controls.Add(gettingStartedGroup, 0, 3);
 
             infoGroup.Dock = DockStyle.Fill;
