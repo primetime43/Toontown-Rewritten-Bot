@@ -36,8 +36,8 @@ namespace ToonTown_Rewritten_Bot
                 button.Margin = new Padding(0, 5, 0, 3);
             }
             right.Controls.Add(CreateSettingsSection("Controls & shortcuts",
-                ActivityHelp("Match the bot’s movement keys to TTR and customize pause and stop shortcuts."),
                 btnGameControls, btnHotkeys));
+            right.Controls.Add(CreateGameProfileSection());
             ConfigureSettingsHint(labelKeyboardShortcuts, labelKeyboardShortcuts.Text);
             right.Controls.Add(CreateSettingsSection("Current shortcuts", labelKeyboardShortcuts));
             FinishActivityLayout(Settings, root, oldControls);

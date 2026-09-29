@@ -15,7 +15,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         static UserPreferences()
         {
-            string exePath = AppPaths.ExeDirectory;
+            string exePath = AppPaths.GameDataDirectory;
             PreferencesFilePath = Path.Combine(exePath, "user_preferences.json");
         }
 

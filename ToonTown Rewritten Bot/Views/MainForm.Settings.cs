@@ -34,7 +34,7 @@ namespace ToonTown_Rewritten_Bot
         private void btnOpenPreferencesFile_Click(object sender, EventArgs e)
         {
             string filePath = Path.Combine(
-                AppPaths.ExeDirectory,
+                AppPaths.GameDataDirectory,
                 "user_preferences.json");
 
             if (!File.Exists(filePath))
@@ -116,6 +116,9 @@ namespace ToonTown_Rewritten_Bot
             preferencesListBox.Items.Clear();
 
             var prefs = UserPreferences.Instance;
+
+            preferencesListBox.Items.Add($"Game: {GameProfile.DisplayName}");
+            preferencesListBox.Items.Add("");
 
             preferencesListBox.Items.Add("═══════ FISHING ═══════");
             preferencesListBox.Items.Add($"  Location: {(string.IsNullOrEmpty(prefs.FishingLocation) ? "(not set)" : prefs.FishingLocation)}");

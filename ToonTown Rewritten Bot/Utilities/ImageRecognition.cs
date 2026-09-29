@@ -30,12 +30,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// <returns>Screenshot of the game window</returns>
         public static Image GetWindowScreenshot(bool captureBackground = true)
         {
-            string windowName = "Toontown Rewritten";
-            // Find the window by name
-            nint windowHandle = NativeMethods.FindWindow(null, windowName);
+            nint windowHandle = GameProfile.FindWindow();
             if (windowHandle == nint.Zero)
             {
-                throw new WindowCaptureException("The Toontown Rewritten window was not found.");
+                throw new WindowCaptureException(GameProfile.WindowNotFoundMessage);
             }
 
             return CaptureGameClient(windowHandle, captureBackground);
@@ -289,7 +287,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// <returns>Window handle or IntPtr.Zero if not found</returns>
         public static IntPtr GetGameWindowHandle()
         {
-            return NativeMethods.FindWindow(null, "Toontown Rewritten");
+            return GameProfile.FindWindow();
         }
 
         /// <summary>

@@ -51,7 +51,7 @@ namespace ToonTown_Rewritten_Bot.Views
                 Location = new Point(15, 12),
                 Size = new Size(330, 56),
                 Text = "Set these to match your in-game controls (Options & Codes → " +
-                       "Controls in TTR). Click a button, then press the key you have bound."
+                       "Controls in the game). Click a button, then press the key you have bound."
             };
             Controls.Add(intro);
 

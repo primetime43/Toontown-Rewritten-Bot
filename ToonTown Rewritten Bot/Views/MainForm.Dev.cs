@@ -162,6 +162,7 @@ namespace ToonTown_Rewritten_Bot
             var definitions = TemplateDefinitionManager.Instance.GetAllDefinitions();
             foreach (var def in definitions)
             {
+                if (GameProfile.IsClash && def.Category != "Fishing") continue;
                 comboBoxTemplateItems.Items.Add($"[{def.Category}] {def.Name}");
             }
 

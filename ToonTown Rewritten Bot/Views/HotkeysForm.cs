@@ -45,7 +45,7 @@ namespace ToonTown_Rewritten_Bot.Views
                 Location = new Point(15, 12),
                 Size = new Size(330, 56),
                 Text = "Set the global keys that stop and pause the bot. Click a button, " +
-                       "then press the key you want to use (these work even while TTR has focus)."
+                       "then press the key you want to use (these work even while the game has focus)."
             };
             Controls.Add(intro);
 

@@ -186,7 +186,7 @@ internal static class FishingLayoutChecks
             {
                 "Golf" => new[] { "customGolfFilesComboBox", "golfActionsListBox", "showGolfOverlayCheckBox", "golfInstructionsLabel", "createCustomGolfActionsBtn" },
                 "Doodles" => new[] { "doodleTrickComboBox", "numberOfDoodleScratchesNumericUpDown", "justScratchDoodleCheckBox", "doodlePictureBox", "doodleHelpRichTextBox", "doodleBackgroundModeCheckBox" },
-                "Settings" => new[] { "preferencesListBox", "btnSavePreferencesNow", "btnResetPreferences", "btnGameControls", "btnHotkeys", "labelSettingsInfo", "labelKeyboardShortcuts" },
+                "Settings" => new[] { "preferencesListBox", "btnSavePreferencesNow", "btnResetPreferences", "btnGameControls", "btnHotkeys", "labelSettingsInfo", "labelKeyboardShortcuts", "gameProfileComboBox", "gameProfileHint" },
                 "Dev" => new[] { "comboBoxTemplateItems", "labelTemplateStatus", "btnCaptureTemplate", "btnViewTemplate", "btnAddTemplateItem", "btnEditTemplate", "btnManageVariants", "btnDeleteTemplate", "btnOpenTemplateDefinitions", "devOpenDebugBtn", "devOpenLogViewerBtn", "devDownloadOcrBtn", "devResetCoordinatesBtn", "devCoordinatesComboBox", "devUpdateCoordinateBtn", "devOpenConfigBtn" },
                 _ => new[] { "messageToType", "startSpamButton", "startKeepToonAwakeButton", "stopKeepToonAwakeButton", "keepOnTopCheckBox" }
             };

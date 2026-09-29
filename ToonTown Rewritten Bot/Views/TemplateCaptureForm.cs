@@ -210,7 +210,7 @@ namespace ToonTown_Rewritten_Bot.Views
                 _statusLabel.Text = $"Error: {ex.Message}";
                 _statusLabel.ForeColor = Color.Red;
                 MessageBox.Show(
-                    "Could not capture game window. Make sure Toontown Rewritten is running.",
+                    GameProfile.WindowNotFoundMessage,
                     "Capture Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);

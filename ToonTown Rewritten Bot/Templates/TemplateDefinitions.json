@@ -173,5 +173,10 @@
     "Key": 31,
     "Name": "PopupExitButton",
     "Category": "Fishing"
+  },
+  {
+    "Key": 36,
+    "Name": "FishBucketFullPopup",
+    "Category": "Fishing"
   }
 ]

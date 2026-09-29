@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Threading;
@@ -37,7 +37,11 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </remarks>
         public async Task StartFishing(string locationName, int casts, int sells, bool variance, CancellationToken cancellationToken, string customFishingFilePath = "", bool autoDetectFish = false)
         {
+            if (!GameProfile.SupportsFishingLocation(GameProfile.Current, locationName))
+                throw new InvalidOperationException("Corporate Clash supports Fish Anywhere and custom fishing routes. Rewritten's built-in routes cannot be used.");
+
             int totalExpectedCasts = locationName == FishingLocationNames.FishAnywhere ? casts : casts * sells;
+            Logger.Info("Fishing", $"Game profile: {GameProfile.DisplayName}");
             Logger.Info("Fishing", $"Session start: location={locationName}, casts per round={casts}, sell rounds={sells}, total expected casts={totalExpectedCasts}, variance={variance}, autoDetect={autoDetectFish}, background={CoreFunctionality.UseBackgroundInput}, overlay={FishingStrategyBase.Overlay != null}");
 
             // Set the fishing location for proper bubble detection configuration
@@ -103,7 +107,7 @@ namespace ToonTown_Rewritten_Bot.Services
                         }
                         await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
-                        string estateSellPath = Path.Combine(AppPaths.ExeDirectory, "Custom Fishing Actions", "EstateFishing Far Left Dock.json");
+                        string estateSellPath = Path.Combine(AppPaths.GameDataDirectory, "Custom Fishing Actions", "EstateFishing Far Left Dock.json");
                         Logger.Debug("Fishing", $"Estate sell path: {estateSellPath}, exists: {System.IO.File.Exists(estateSellPath)}");
                         CustomActionsFishing estateFishing = new CustomActionsFishing(estateSellPath);
                         await estateFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);

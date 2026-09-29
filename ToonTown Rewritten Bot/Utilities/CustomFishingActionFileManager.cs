@@ -17,10 +17,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
     public static class CustomFishingActionFileManager
     {
         private static readonly string CustomActionsFolder = Path.Combine(
-            AppPaths.ExeDirectory, "Custom Fishing Actions");
+            AppPaths.GameDataDirectory, "Custom Fishing Actions");
 
         private static readonly string TemplatesFolder = Path.Combine(
-            AppPaths.ExeDirectory, "Templates", "CustomFishingTemplates");
+            AppPaths.GameDataDirectory, "Templates", "CustomFishingTemplates");
 
         public static List<CustomFishingRouteItem> GetRouteListItems(IEnumerable<string> paths)
         {

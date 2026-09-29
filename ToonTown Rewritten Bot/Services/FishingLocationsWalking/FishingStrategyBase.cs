@@ -1035,14 +1035,15 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             Logger.Debug("Fishing", "Looking for popup Exit button via template matching...");
 
             // GetElementLocationAsync will prompt user to capture template if none exists
-            var location = await UIElementManager.Instance.GetElementLocationAsync(
+            var (location, source) = await UIElementManager.Instance.GetElementLocationWithSourceAsync(
                 elementName, "Please click on the Exit button on the popup");
 
             if (location.HasValue)
             {
                 // Template includes the red X icon + "Exit" text label below it.
                 // The center lands on the text, so offset upward to hit the actual button.
-                var adjusted = new Point(location.Value.X, location.Value.Y - 15);
+                var offset = source == UIElementSource.Manual ? Point.Empty : GetGameWindowOffset();
+                var adjusted = new Point(location.Value.X + offset.X, location.Value.Y + offset.Y - 15);
                 Logger.Info("Fishing", $"Found popup Exit button at ({adjusted.X}, {adjusted.Y})");
                 return adjusted;
             }

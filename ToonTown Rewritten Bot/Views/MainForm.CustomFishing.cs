@@ -60,6 +60,7 @@ namespace ToonTown_Rewritten_Bot
         private async void startCustomFishingBtn_Click(object sender, EventArgs e)
         {
             if (_fishingSessionActive) return;
+            if (!CheckClashFishingSetup()) return;
             // Reset the CancellationTokenSource if it's null or was previously cancelled
             if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
             {
