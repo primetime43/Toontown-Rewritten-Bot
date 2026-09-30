@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using ToonTown_Rewritten_Bot;
@@ -121,6 +122,19 @@ internal static class GameProfileChecks
         Check((IntPtr)find.Invoke(null, new object[] { kind, otherGameOnly }) == IntPtr.Zero,
             "Missing selected game never falls back to the other game");
 
+        var findProcess = Profile.GetMethods(Static).Single(m => m.Name == "FindWindow" && m.GetParameters().Length == 3);
+        Func<string, IntPtr> clashProcess = name => name == "CorporateClash" ? new IntPtr(44) : IntPtr.Zero;
+        Func<string, IntPtr> noTitleMatch = _ => IntPtr.Zero;
+        Check((IntPtr)findProcess.Invoke(null, new object[] { kind, noTitleMatch, clashProcess }) == (clash ? new IntPtr(44) : IntPtr.Zero),
+            "Versioned Clash window is found by process only in the Clash profile");
+        Check((IntPtr)findProcess.Invoke(null, new object[] { kind, bothGames, clashProcess }) == new IntPtr(clash ? 44 : 11),
+            "Clash process takes priority over title lookup without changing Rewritten selection");
+        Func<string, IntPtr> noProcess = _ => IntPtr.Zero;
+        Check((IntPtr)findProcess.Invoke(null, new object[] { kind, bothGames, noProcess }) == new IntPtr(clash ? 22 : 11),
+            "Known titles remain a fallback when the process has no usable window");
+        Check((IntPtr)findProcess.Invoke(null, new object[] { kind, otherGameOnly, noProcess }) == IntPtr.Zero,
+            "Process lookup never introduces a fallback to the wrong game");
+
         using var form = (MainForm)Activator.CreateInstance(typeof(MainForm), Private, null, new object[] { false }, null);
         var tabs = (TabControl)typeof(MainForm).GetField("tabControl1", Private).GetValue(form);
         var locations = (ComboBox)typeof(MainForm).GetField("fishingLocationscomboBox", Private).GetValue(form);
@@ -149,6 +163,25 @@ internal static class GameProfileChecks
         Console.WriteLine($"{passed} {game} profile checks passed.");
         return 0;
     }
+
+    public static int CheckLiveClashWindow()
+    {
+        object kind = Enum.Parse(Kind, "CorporateClash");
+        var find = Profile.GetMethods(Static).Single(m => m.Name == "FindWindow" && m.GetParameters().Length == 1);
+        var handle = (IntPtr)find.Invoke(null, new[] { kind });
+        Check(handle != IntPtr.Zero, "Find the running Clash game with the production window resolver");
+        GetWindowThreadProcessId(handle, out uint processId);
+        using var process = Process.GetProcessById((int)processId);
+        Check(process.ProcessName == "CorporateClash", "Resolved window belongs to CorporateClash.exe");
+        var capture = typeof(MainForm).Assembly.GetType("ToonTown_Rewritten_Bot.Utilities.ImageRecognition");
+        using var frame = (Bitmap)capture.GetMethod("CaptureGameClient", Static).Invoke(null, new object[] { handle, true });
+        Check(frame.Width > 0 && frame.Height > 0, "Capture the live Clash game client without sending input");
+        Console.WriteLine($"Live Clash verification: PID {processId}, client capture {frame.Width} x {frame.Height}.");
+        return 0;
+    }
+
+    [DllImport("user32.dll")]
+    private static extern uint GetWindowThreadProcessId(IntPtr window, out uint processId);
 
     private static string DataDirectory(string game, string root) => game == "CorporateClash" ? Path.Combine(root, "Profiles", "CorporateClash") : root;
     private static void Check(bool condition, string message)
