@@ -379,6 +379,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
             // Check if game window is available
             EnsureGameWindowReady();
+            GameInputAccess.EnsureAllowed(GameProfile.FindWindow());
 
             // On subsequent cycles (after a sell trip), wait for the dock UI to settle.
             // Skip on the first cycle since the user already confirmed they're at the dock.
@@ -552,8 +553,23 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
             int randX = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
             int randY = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
+            // Template capture can leave the bot in front of the game.
+            FocusTTRWindow();
+            await Task.Delay(150, cancellationToken);
             MoveCursor(x + randX, y + randY);
-            DoFishingClick();
+            await Task.Delay(150, cancellationToken);
+            Logger.Info("Fishing", $"Casting from ({x + randX}, {y + randY}) to ({x + randX}, {y + randY + 150}).");
+            try
+            {
+                SendInputMouseDown();
+                await Task.Delay(500, cancellationToken);
+                SimulateDragMove(x + randX, y + randY + 150);
+                await Task.Delay(500, cancellationToken);
+            }
+            finally
+            {
+                SendInputMouseUp();
+            }
             await Task.Delay(100, cancellationToken);
         }
 
@@ -834,6 +850,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         protected Task<bool> CheckIfFishCaught(CancellationToken cancellationToken)
         {
+            if (GameProfile.IsClash) return CheckClashFishCaught(cancellationToken);
+
             var windowRect = CoreFunctionality.GetGameWindowRect();
             if (windowRect.IsEmpty) return Task.FromResult(false);
 
@@ -853,6 +871,34 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             }
 
             return Task.FromResult(CheckIfFishCaughtCore(windowRect, null, Point.Empty));
+        }
+
+        private async Task<bool> CheckClashFishCaught(CancellationToken cancellationToken)
+        {
+            // Clash's pond and scenery colors do not follow Rewritten's catch-card palette.
+            // Only a fresh match counts; cached positions cannot establish popup visibility.
+            var button = await FindClashCatchButton(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            if (!button.HasValue) return false;
+            Logger.Info("Fishing", "Clash catch popup confirmed by its close-button template.");
+            return true;
+        }
+
+        private static async Task<Point?> FindClashCatchButton(CancellationToken cancellationToken)
+        {
+            var templates = UIElementManager.Instance.GetAllTemplatePaths("FishPopupCloseButton");
+            if (templates.Count == 0) return null;
+            try
+            {
+                using var frame = (Bitmap)ImageRecognition.GetWindowScreenshot();
+                return await Task.Run(() => ClashFishingDetector.FindCatchButton(frame, templates, cancellationToken), cancellationToken);
+            }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex)
+            {
+                Logger.Warning("FishDetect", $"Could not check the Clash catch popup: {ex.Message}");
+                return null;
+            }
         }
 
         private bool CheckIfFishCaughtCore(Rectangle windowRect, Bitmap screenshot, Point windowOffset)
@@ -992,7 +1038,9 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             // Use silent search (FindElementAsync) — no prompts during active fishing.
             // Color-based catch detection can have false positives, so we don't want to
             // prompt for template capture when there may be no popup on screen.
-            var buttonLocation = await UIElementManager.Instance.FindElementAsync(elementName, cancellationToken);
+            var buttonLocation = GameProfile.IsClash
+                ? await FindClashCatchButton(cancellationToken)
+                : await UIElementManager.Instance.FindElementAsync(elementName, cancellationToken);
 
             if (buttonLocation.HasValue)
             {
@@ -1007,6 +1055,13 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             }
             else
             {
+                if (GameProfile.IsClash)
+                {
+                    shouldStopFishing = true;
+                    stopReasonMessage = "Clash catch popup button could not be found. Check its template in Dev.";
+                    Logger.Warning("Fishing", stopReasonMessage);
+                    return;
+                }
                 Logger.Debug("Fishing", "Close button not found, using fallback position...");
 
                 // Fallback to estimated position — handles both missing template and false positive cases
