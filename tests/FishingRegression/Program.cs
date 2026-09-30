@@ -7,6 +7,11 @@ using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
 
 // Run with: dotnet run --project tests/FishingRegression -- [optional catch screenshot]
 // Default checks sample supplied bitmaps; opt-in live probes never send input.
+if (args.Length > 0 && args[0] == "--track-frames")
+{
+    FishTargetTrackerChecks.ReplayFrames(args[1]);
+    return;
+}
 if (args.Length > 0 && args[0] == "--check-clash-input")
 {
     var access = typeof(FishingStrategyBase).Assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameInputAccess");
@@ -68,6 +73,8 @@ using (var graphics = Graphics.FromImage(frame))
     Check(Detect(frame, Point.Empty), "Catch card colors work without a close-button template");
     Check(Detect(frame, new Point(-1200, 80)), "Moved-window color sampling uses the window offset");
 }
+
+FishTargetTrackerChecks.Run(Check);
 
 if (args.Length > 0 && args[0] == "--clash")
 {
