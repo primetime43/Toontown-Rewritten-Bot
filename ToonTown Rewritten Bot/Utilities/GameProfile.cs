@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -47,14 +49,46 @@ namespace ToonTown_Rewritten_Bot.Utilities
             ? new[] { "Toontown: Corporate Clash", "Corporate Clash", "Toontown Corporate Clash" }
             : new[] { "Toontown Rewritten" };
 
-        public static IntPtr FindWindow() => FindWindow(Current, title => FindWindowNative(null, title));
+        public static IntPtr FindWindow() => FindWindow(Current);
 
-        internal static IntPtr FindWindow(GameKind game, Func<string, IntPtr> findByTitle)
+        internal static IntPtr FindWindow(GameKind game) =>
+            FindWindow(game, title => FindWindowNative(null, title), FindProcessWindow);
+
+        internal static IntPtr FindWindow(GameKind game, Func<string, IntPtr> findByTitle) =>
+            FindWindow(game, findByTitle, _ => IntPtr.Zero);
+
+        internal static IntPtr FindWindow(GameKind game, Func<string, IntPtr> findByTitle,
+            Func<string, IntPtr> findByProcess)
         {
+            // Clash includes its version in the window title, e.g. Corporate Clash [1.12.0].
+            if (game == GameKind.CorporateClash)
+            {
+                var handle = findByProcess("CorporateClash");
+                if (handle != IntPtr.Zero) return handle;
+            }
+
             foreach (string title in GetWindowTitles(game))
             {
                 var handle = findByTitle(title);
                 if (handle != IntPtr.Zero) return handle;
+            }
+            return IntPtr.Zero;
+        }
+
+        private static IntPtr FindProcessWindow(string processName)
+        {
+            foreach (var process in Process.GetProcessesByName(processName))
+            {
+                using (process)
+                {
+                    try
+                    {
+                        var handle = process.MainWindowHandle;
+                        if (handle != IntPtr.Zero && IsWindowVisible(handle)) return handle;
+                    }
+                    catch (InvalidOperationException) { } // The game closed during lookup.
+                    catch (Win32Exception) { } // This process is no longer accessible.
+                }
             }
             return IntPtr.Zero;
         }
@@ -65,5 +99,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         [DllImport("user32.dll", EntryPoint = "FindWindowW", CharSet = CharSet.Unicode)]
         private static extern IntPtr FindWindowNative(string className, string windowName);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool IsWindowVisible(IntPtr window);
     }
 }
