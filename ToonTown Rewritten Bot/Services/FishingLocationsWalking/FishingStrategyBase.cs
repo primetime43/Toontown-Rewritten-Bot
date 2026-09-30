@@ -695,10 +695,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 // Settings matching MouseClickSimulator
                 const int maxScanTimeMs = 36000;  // 36 seconds max like MouseClickSimulator
                 const int scanDelayMs = 500;      // 500ms between scans like MouseClickSimulator
-                const int scanStep = 15;          // Position tolerance
-
-                Point? oldFishPosition = null;
-                int coordsMatchCounter = 0;
+                var targetTracker = new FishTargetTracker();
                 var startTime = DateTime.Now;
                 bool firstScan = true;
 
@@ -706,7 +703,6 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    Point? newFishPosition = null;
                     Point castDestination;
 
                     if (firstScan) Logger.Info("Fishing", "Capturing initial aiming frame...");
@@ -718,45 +714,27 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                             var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot, cancellationToken);
                             if (firstScan) Logger.Info("Fishing", $"Initial aiming scan complete: matched pixels={detectionResult.DarkPixelCount}, candidates={detectionResult.AllCandidates.Count}");
 
-                            // Find fish position
-                            if (detectionResult.AllCandidates.Count > 0)
-                            {
-                                var easiest = detectionResult.AllCandidates
-                                    .OrderBy(c => c.CastPower)
-                                    .First();
-                                newFishPosition = easiest.Position;
-                            }
-                            else if (detectionResult.BestShadowPosition.HasValue)
-                            {
-                                newFishPosition = detectionResult.BestShadowPosition.Value;
-                            }
+                            targetTracker.Update(detectionResult, screenshot.Size);
 
                             // Update overlay
-                            if (newFishPosition.HasValue)
+                            if (targetTracker.Position is Point target)
                             {
-                                UpdateOverlay(detectionResult, newFishPosition, $"Found fish at ({newFishPosition.Value.X},{newFishPosition.Value.Y})");
+                                UpdateOverlay(detectionResult, target, targetTracker.ObservedThisFrame
+                                    ? $"Tracking fish at ({target.X},{target.Y})"
+                                    : "Holding target; waiting for shadow...");
                             }
                             else
                             {
                                 UpdateOverlay(detectionResult, null, "Scanning for fish...");
                             }
                         }
+                        else
+                        {
+                            targetTracker.Update(null, windowRect.Size);
+                        }
                     }
                     firstScan = false;
-
-                    // Check if fish position is stable (same as last scan within tolerance)
-                    if (newFishPosition.HasValue && oldFishPosition.HasValue &&
-                        Math.Abs(oldFishPosition.Value.X - newFishPosition.Value.X) <= scanStep &&
-                        Math.Abs(oldFishPosition.Value.Y - newFishPosition.Value.Y) <= scanStep)
-                    {
-                        coordsMatchCounter++;
-                        Logger.Debug("Fishing", $"Fish stable, match count: {coordsMatchCounter}");
-                    }
-                    else
-                    {
-                        oldFishPosition = newFishPosition;
-                        coordsMatchCounter = 0;
-                    }
+                    Point? newFishPosition = targetTracker.Position;
 
                     // Calculate cast destination - ALWAYS move mouse every iteration
                     if (newFishPosition.HasValue)
@@ -796,7 +774,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     Logger.Debug("Fishing", $"Moving mouse to ({castDestination.X},{castDestination.Y})");
 
                     // Release if fish position is stable (2 consecutive matches)
-                    if (coordsMatchCounter >= 2)
+                    if (targetTracker.ReadyToRelease)
                     {
                         Logger.Info("Fishing", $"Fish stable - releasing at ({castDestination.X},{castDestination.Y})!");
                         UpdateOverlay(null, newFishPosition, "CASTING!");
