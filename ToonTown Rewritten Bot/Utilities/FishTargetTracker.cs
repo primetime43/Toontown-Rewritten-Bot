@@ -9,11 +9,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
     {
         public Point? Position { get; private set; }
         public bool ObservedThisFrame { get; private set; }
-        public bool ReadyToRelease => ObservedThisFrame && _stableMatches >= 2;
+        public bool ReadyToRelease => ObservedThisFrame && _targetMatches >= 2;
 
         private PointF _velocity;
         private int _missedFrames;
-        private int _stableMatches;
+        private int _targetMatches;
 
         public void Update(FishDetectionDebugResult detection, Size frameSize)
         {
@@ -57,10 +57,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 if (match != null)
                 {
                     Point current = match.Candidate.Position;
-                    _stableMatches = previouslyObserved &&
-                        Math.Abs(current.X - previous.X) <= 15 * scaleX &&
-                        Math.Abs(current.Y - previous.Y) <= 15 * scaleY
-                        ? _stableMatches + 1 : 0;
+                    // Matching the same moving shadow confirms the target. Requiring
+                    // it to become stationary can prevent release for an entire cast.
+                    _targetMatches = previouslyObserved ? _targetMatches + 1 : 0;
                     _velocity = new PointF((current.X - previous.X) / (float)(_missedFrames + 1),
                         (current.Y - previous.Y) / (float)(_missedFrames + 1));
                     _missedFrames = 0;
@@ -86,7 +85,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             var selected = candidates.OrderBy(c => c.CastPower).FirstOrDefault();
             if (selected == null) return;
             _missedFrames = 0;
-            _stableMatches = 0;
+            _targetMatches = 0;
             _velocity = PointF.Empty;
             Position = selected.Position;
             ObservedThisFrame = true;
@@ -98,7 +97,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             if (Position.HasValue && _missedFrames == 0)
                 Logger.Debug("Fishing", "Tracked shadow temporarily missing; holding its last aim.");
             _missedFrames++;
-            _stableMatches = 0;
+            _targetMatches = 0;
         }
 
         private void ClearTarget()
@@ -106,7 +105,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             Position = null;
             _velocity = PointF.Empty;
             _missedFrames = 0;
-            _stableMatches = 0;
+            _targetMatches = 0;
         }
     }
 }

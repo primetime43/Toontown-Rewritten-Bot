@@ -14,6 +14,7 @@ internal static class FishTargetTrackerChecks
         if (files.Length == 0) throw new Exception("No replay frames found.");
         var detector = new FishBubbleDetector();
         Probe tracker = null;
+        int frameNumber = 0;
         foreach (var path in files)
         {
             using var frame = new Bitmap(path);
@@ -23,7 +24,7 @@ internal static class FishTargetTrackerChecks
             var cheapest = detection.AllCandidates.OrderBy(c => c.CastPower).FirstOrDefault();
             Console.WriteLine($"{Path.GetFileName(path)}: candidates={detection.AllCandidates.Count}, " +
                 $"cheapest={cheapest?.Position}, locked={tracker.Position}, " +
-                $"observed={tracker.Observed}, ready={tracker.Ready}");
+                $"observed={tracker.Observed}, release={tracker.ReleaseAt(frameNumber++ * 0.5) ?? "waiting"}");
         }
     }
 
@@ -44,6 +45,13 @@ internal static class FishTargetTrackerChecks
             check(tracker.Position == P(505, 400), $"{frame}: cheaper alternate shadow cannot steal target");
             tracker.Scan(area, Fish(510, 400, 3), Fish(800, 400, 0));
             check(tracker.Ready, $"{frame}: following the same shadow permits release");
+
+            var movingTracker = new Probe(frame);
+            movingTracker.Scan(area, Fish(500, 400));
+            movingTracker.Scan(area, Fish(525, 420));
+            movingTracker.Scan(area, Fish(550, 440));
+            check(movingTracker.Ready && movingTracker.Position == P(550, 440),
+                $"{frame}: a continuously moving tracked shadow permits release without stopping");
 
             tracker.Scan(area, Fish(800, 400, 0));
             check(tracker.Position == P(510, 400) && !tracker.Observed && !tracker.Ready,
@@ -100,7 +108,50 @@ internal static class FishTargetTrackerChecks
             newCast.Scan(area, Fish(500, 400, 2), Fish(800, 400, 0));
             check(newCast.Position == P(800, 400) && !newCast.Ready,
                 $"{frame}: a new cast starts with a fresh target");
+
+            var lost = new Probe(frame);
+            lost.Scan(area, Fish(500, 400));
+            check(lost.ReleaseAt(0) == null, $"{frame}: acquiring a shadow alone does not release immediately");
+            lost.Scan(area, Fish(800, 400));
+            check(lost.ReleaseAt(0.5) == null && lost.Position == P(500, 400),
+                $"{frame}: brief dropout holds the original aim");
+            lost.Scan(area, Fish(800, 400));
+            check(lost.ReleaseAt(1.5)?.Contains("Shadow lost") == true && lost.Position == P(500, 400),
+                $"{frame}: a lost lock releases at its last aim after 1.5 seconds without switching");
+
+            var empty = new Probe(frame);
+            empty.Scan(area);
+            check(empty.ReleaseAt(3.99) == null && empty.ReleaseAt(4)?.Contains("4-second") == true,
+                $"{frame}: no detections cannot keep the mouse held beyond the aiming deadline");
+            empty.NoFrame();
+            check(empty.ReleaseAt(5) != null, $"{frame}: missing screenshots still trigger the aiming deadline");
+
+            var intermittent = new Probe(frame);
+            string intermittentReason = null;
+            for (int i = 0; i <= 8; i++)
+            {
+                if (i % 2 == 0) intermittent.Scan(area, Fish(500 + i, 400));
+                else intermittent.Scan(area);
+                intermittentReason = intermittent.ReleaseAt(i * 0.5);
+                if (i < 8) check(intermittentReason == null,
+                    $"{frame}: intermittent detection at {i * 0.5:F1}s preserves the lock without stale confirmation");
+            }
+            check(intermittentReason?.Contains("4-second") == true,
+                $"{frame}: flickering observations cannot restart the overall aiming deadline");
         }
+
+        // Actual moving-shadow positions from the reported TTR run, before it froze.
+        var recorded = new Probe(new Size(1920, 1009));
+        var recordedArea = new Rectangle(200, 100, 1500, 650);
+        var recordedPositions = new[] { new Point(1406, 474), new Point(1386, 462), new Point(1355, 444) };
+        string recordedReason = null;
+        for (int i = 0; i < recordedPositions.Length; i++)
+        {
+            recorded.Scan(recordedArea, new FishCandidate { Position = recordedPositions[i] });
+            recordedReason = recorded.ReleaseAt(i * 0.6);
+        }
+        check(recordedReason == "Tracked target confirmed",
+            "Recorded TTR moving-shadow sequence releases instead of waiting for the fish to stop");
     }
 
     private sealed class Probe
@@ -108,11 +159,16 @@ internal static class FishTargetTrackerChecks
         private static readonly Type TrackerType = typeof(FishBubbleDetector).Assembly
             .GetType("ToonTown_Rewritten_Bot.Utilities.FishTargetTracker", throwOnError: true);
         private readonly object _tracker = Activator.CreateInstance(TrackerType, nonPublic: true);
+        private static readonly Type ReleaseType = TrackerType.Assembly
+            .GetType("ToonTown_Rewritten_Bot.Utilities.FishingAimReleasePolicy", throwOnError: true);
+        private readonly object _releasePolicy = Activator.CreateInstance(ReleaseType, nonPublic: true);
         private readonly Size _frame;
         public Probe(Size frame) => _frame = frame;
         public Point? Position => (Point?)TrackerType.GetProperty("Position").GetValue(_tracker);
         public bool Observed => (bool)TrackerType.GetProperty("ObservedThisFrame").GetValue(_tracker);
         public bool Ready => (bool)TrackerType.GetProperty("ReadyToRelease").GetValue(_tracker);
+        public string ReleaseAt(double seconds) => (string)ReleaseType.GetMethod("GetReleaseReason")
+            .Invoke(_releasePolicy, new object[] { _tracker, TimeSpan.FromSeconds(seconds) });
         public void NoFrame() => Update(null);
         public void Scan(Rectangle area, params FishCandidate[] candidates)
         {

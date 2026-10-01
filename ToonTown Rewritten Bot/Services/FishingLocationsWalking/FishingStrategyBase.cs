@@ -640,7 +640,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// <summary>
         /// Casts the fishing line by automatically detecting fish shadows and aiming at them.
         /// Moves the mouse to track the fish in real-time while holding the cast button,
-        /// then releases when fish position is stable (like MouseClickSimulator approach).
+        /// then releases once tracking confirms the target, with a bounded aiming wait.
         /// </summary>
         protected async Task CastLineAuto(CancellationToken cancellationToken)
         {
@@ -690,13 +690,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             try
             {
                 SendInputMouseDown();
+                var aimTimer = Stopwatch.StartNew();
                 Logger.Debug("Fishing", $"Mouse down at ({btnX}, {btnY})");
                 await Task.Delay(400, cancellationToken); // Wait for aim mode to activate
-                // Settings matching MouseClickSimulator
-                const int maxScanTimeMs = 36000;  // 36 seconds max like MouseClickSimulator
                 const int scanDelayMs = 500;      // 500ms between scans like MouseClickSimulator
                 var targetTracker = new FishTargetTracker();
-                var startTime = DateTime.Now;
+                var releasePolicy = new FishingAimReleasePolicy();
                 bool firstScan = true;
 
                 while (true)
@@ -773,10 +772,10 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     SimulateDragMove(castDestination.X, castDestination.Y);
                     Logger.Debug("Fishing", $"Moving mouse to ({castDestination.X},{castDestination.Y})");
 
-                    // Release if fish position is stable (2 consecutive matches)
-                    if (targetTracker.ReadyToRelease)
+                    string releaseReason = releasePolicy.GetReleaseReason(targetTracker, aimTimer.Elapsed);
+                    if (releaseReason != null)
                     {
-                        Logger.Info("Fishing", $"Fish stable - releasing at ({castDestination.X},{castDestination.Y})!");
+                        Logger.Info("Fishing", $"{releaseReason}; releasing at ({castDestination.X},{castDestination.Y}) after {aimTimer.Elapsed.TotalSeconds:F1}s.");
                         UpdateOverlay(null, newFishPosition, "CASTING!");
                         SendInputMouseUp();
                         break;
@@ -785,13 +784,6 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     // Wait before next scan
                     await Task.Delay(scanDelayMs, cancellationToken);
 
-                    // Timeout check
-                    if ((DateTime.Now - startTime).TotalMilliseconds >= maxScanTimeMs)
-                    {
-                        Logger.Warning("Fishing", "Timeout - releasing!");
-                        SendInputMouseUp();
-                        break;
-                    }
                 }
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
