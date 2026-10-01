@@ -640,7 +640,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         /// <summary>
         /// Casts the fishing line by automatically detecting fish shadows and aiming at them.
         /// Moves the mouse to track the fish in real-time while holding the cast button,
-        /// then releases once tracking confirms the target, with a bounded aiming wait.
+        /// then releases when fish position is stable (like MouseClickSimulator approach).
         /// </summary>
         protected async Task CastLineAuto(CancellationToken cancellationToken)
         {
@@ -690,18 +690,24 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             try
             {
                 SendInputMouseDown();
-                var aimTimer = Stopwatch.StartNew();
                 Logger.Debug("Fishing", $"Mouse down at ({btnX}, {btnY})");
                 await Task.Delay(400, cancellationToken); // Wait for aim mode to activate
+                // Settings matching MouseClickSimulator
+                const int maxScanTimeMs = 36000;  // 36 seconds max like MouseClickSimulator
                 const int scanDelayMs = 500;      // 500ms between scans like MouseClickSimulator
-                var targetTracker = new FishTargetTracker();
-                var releasePolicy = new FishingAimReleasePolicy();
+                const int scanStep = 15;          // Position tolerance
+
+                Point? oldFishPosition = null;
+                var targetSelector = new FishTargetSelector();
+                int coordsMatchCounter = 0;
+                var startTime = DateTime.Now;
                 bool firstScan = true;
 
                 while (true)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
+                    Point? newFishPosition = null;
                     Point castDestination;
 
                     if (firstScan) Logger.Info("Fishing", "Capturing initial aiming frame...");
@@ -713,14 +719,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                             var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot, cancellationToken);
                             if (firstScan) Logger.Info("Fishing", $"Initial aiming scan complete: matched pixels={detectionResult.DarkPixelCount}, candidates={detectionResult.AllCandidates.Count}");
 
-                            targetTracker.Update(detectionResult, screenshot.Size);
+                            newFishPosition = targetSelector.Select(detectionResult, screenshot.Size);
 
                             // Update overlay
-                            if (targetTracker.Position is Point target)
+                            if (newFishPosition.HasValue)
                             {
-                                UpdateOverlay(detectionResult, target, targetTracker.ObservedThisFrame
-                                    ? $"Tracking fish at ({target.X},{target.Y})"
-                                    : "Holding target; waiting for shadow...");
+                                UpdateOverlay(detectionResult, newFishPosition, $"Found fish at ({newFishPosition.Value.X},{newFishPosition.Value.Y})");
                             }
                             else
                             {
@@ -729,11 +733,24 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         }
                         else
                         {
-                            targetTracker.Update(null, windowRect.Size);
+                            targetSelector.Select(null, windowRect.Size);
                         }
                     }
                     firstScan = false;
-                    Point? newFishPosition = targetTracker.Position;
+
+                    // Check if fish position is stable (same as last scan within tolerance)
+                    if (newFishPosition.HasValue && oldFishPosition.HasValue &&
+                        Math.Abs(oldFishPosition.Value.X - newFishPosition.Value.X) <= scanStep &&
+                        Math.Abs(oldFishPosition.Value.Y - newFishPosition.Value.Y) <= scanStep)
+                    {
+                        coordsMatchCounter++;
+                        Logger.Debug("Fishing", $"Fish stable, match count: {coordsMatchCounter}");
+                    }
+                    else
+                    {
+                        oldFishPosition = newFishPosition;
+                        coordsMatchCounter = 0;
+                    }
 
                     // Calculate cast destination - ALWAYS move mouse every iteration
                     if (newFishPosition.HasValue)
@@ -772,10 +789,10 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     SimulateDragMove(castDestination.X, castDestination.Y);
                     Logger.Debug("Fishing", $"Moving mouse to ({castDestination.X},{castDestination.Y})");
 
-                    string releaseReason = releasePolicy.GetReleaseReason(targetTracker, aimTimer.Elapsed);
-                    if (releaseReason != null)
+                    // Release if fish position is stable (2 consecutive matches)
+                    if (coordsMatchCounter >= 2)
                     {
-                        Logger.Info("Fishing", $"{releaseReason}; releasing at ({castDestination.X},{castDestination.Y}) after {aimTimer.Elapsed.TotalSeconds:F1}s.");
+                        Logger.Info("Fishing", $"Fish stable - releasing at ({castDestination.X},{castDestination.Y})!");
                         UpdateOverlay(null, newFishPosition, "CASTING!");
                         SendInputMouseUp();
                         break;
@@ -784,6 +801,13 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     // Wait before next scan
                     await Task.Delay(scanDelayMs, cancellationToken);
 
+                    // Timeout check
+                    if ((DateTime.Now - startTime).TotalMilliseconds >= maxScanTimeMs)
+                    {
+                        Logger.Warning("Fishing", "Timeout - releasing!");
+                        SendInputMouseUp();
+                        break;
+                    }
                 }
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
