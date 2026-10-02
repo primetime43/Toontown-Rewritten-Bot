@@ -46,6 +46,20 @@ internal static class WindowedModeChecks
         window.Invalidate();
         window.Update();
         VerifyCapture(window);
+        using (var cover = new CaptureCover { Bounds = window.Bounds, BackColor = Color.Lime,
+            TopMost = true, ShowInTaskbar = false, FormBorderStyle = FormBorderStyle.None })
+        {
+            cover.Show();
+            cover.Update();
+            using var covered = CaptureFrame(window.Handle);
+            Check(covered.GetPixel(5, 5).ToArgb() == Color.Red.ToArgb()
+                && covered.GetPixel(covered.Width - 5, covered.Height - 5).ToArgb() == Color.Blue.ToArgb(),
+                "Background capture reads the target behind another window");
+            using var next = CaptureFrame(window.Handle);
+            Check(next.GetPixel(next.Width / 2 + 5, next.Height / 2 + 5)
+                != covered.GetPixel(covered.Width / 2 + 5, covered.Height / 2 + 5),
+                "Covered-window capture continues receiving new rendered frames");
+        }
         window.WindowState = FormWindowState.Minimized;
         try
         {
@@ -58,6 +72,8 @@ internal static class WindowedModeChecks
         }
         Restore(window.Handle);
         Check(window.WindowState == FormWindowState.Normal, "Focus preparation restores a minimized window");
+        typeof(MainForm).Assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameGraphicsCapture")
+            .GetMethod("Stop", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, null);
         Console.WriteLine($"{passed} windowed-mode checks passed.");
     }
 
@@ -77,14 +93,27 @@ internal static class WindowedModeChecks
         {
             using var frame = CaptureFrame(window.Handle, background);
             Check(frame.Size == window.ClientSize, "Captured pixels have the exact client dimensions (background=" + background + ")");
-            Check(frame.GetPixel(5, 5).ToArgb() == Color.Red.ToArgb()
-                && frame.GetPixel(frame.Width - 5, frame.Height - 5).ToArgb() == Color.Blue.ToArgb(),
-                "Capture removes decorations without shifting corner pixels (background=" + background + ")");
+            var topLeft = frame.GetPixel(5, 5);
+            var bottomRight = frame.GetPixel(frame.Width - 5, frame.Height - 5);
+            Check(topLeft.ToArgb() == Color.Red.ToArgb() && bottomRight.ToArgb() == Color.Blue.ToArgb(),
+                $"Capture removes decorations without shifting corner pixels (background={background}, topLeft={topLeft}, bottomRight={bottomRight})");
         }
     }
 
-    private static Bitmap CaptureFrame(IntPtr handle, bool background = true) => (Bitmap)Capture.GetMethod("CaptureGameClient", BindingFlags.Static | BindingFlags.NonPublic)
-        .Invoke(null, new object[] { handle, background });
+    private static Bitmap CaptureFrame(IntPtr handle, bool background = true)
+    {
+        // The fixture is in this process, unlike the game. Keep its message pump
+        // running while Windows delivers the captured surface to the worker.
+        var pending = System.Threading.Tasks.Task.Run(() => (Bitmap)Capture
+            .GetMethod("CaptureGameClient", BindingFlags.Static | BindingFlags.NonPublic)
+            .Invoke(null, new object[] { handle, background }));
+        while (!pending.IsCompleted)
+        {
+            Application.DoEvents();
+            System.Threading.Thread.Sleep(10);
+        }
+        return pending.GetAwaiter().GetResult();
+    }
     private static void Restore(IntPtr handle) => typeof(CoreFunctionality).GetMethod("RestoreGameWindowIfMinimized", BindingFlags.Static | BindingFlags.NonPublic)
         .Invoke(null, new object[] { handle });
     private static void Check(bool condition, string name)
@@ -94,14 +123,37 @@ internal static class WindowedModeChecks
         Console.WriteLine("PASS " + name);
     }
 
+    private sealed class CaptureCover : Form
+    {
+        protected override bool ShowWithoutActivation => true;
+    }
+
     private sealed class CaptureFixture : Form
     {
+        private readonly Timer renderTimer = new() { Interval = 30 };
+        private int frameNumber;
+
+        public CaptureFixture()
+        {
+            renderTimer.Tick += (_, _) => { frameNumber++; Invalidate(); };
+            renderTimer.Start();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) renderTimer.Dispose();
+            base.Dispose(disposing);
+        }
+
         protected override bool ShowWithoutActivation => true;
         protected override void OnPaint(PaintEventArgs e)
         {
             e.Graphics.Clear(Color.White);
             e.Graphics.FillRectangle(Brushes.Red, 0, 0, ClientSize.Width / 2, ClientSize.Height / 2);
             e.Graphics.FillRectangle(Brushes.Blue, ClientSize.Width / 2, ClientSize.Height / 2, ClientSize.Width, ClientSize.Height);
+            // Like a game, keep presenting changing frames while capture is running.
+            using var marker = new SolidBrush(Color.FromArgb(frameNumber % 256, 128, 128));
+            e.Graphics.FillRectangle(marker, ClientSize.Width / 2, ClientSize.Height / 2, 20, 20);
         }
     }
 }

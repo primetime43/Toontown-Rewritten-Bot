@@ -27,7 +27,8 @@ internal static class ClashCaptureProbe
             for (int i = 0; i < 3; i++)
             {
                 var timer = Stopwatch.StartNew();
-                using var frame = (Bitmap)capture.GetMethod("Capture", flags).Invoke(null, readArgs);
+                using var frame = (Bitmap)assembly.GetType("ToonTown_Rewritten_Bot.Utilities.ImageRecognition")
+                    .GetMethod("CaptureGameClient", flags).Invoke(null, new object[] { window, true });
                 var client = (Rectangle)geometry.GetProperty("ClientBounds").GetValue(readArgs[1]);
                 if (frame.Size != client.Size) throw new Exception("Capture did not match the client size.");
                 string path = i == 0 ? outputPath : System.IO.Path.Combine(

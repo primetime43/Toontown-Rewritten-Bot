@@ -13,16 +13,13 @@ namespace ToonTown_Rewritten_Bot.Utilities
 {
     internal sealed class WindowCaptureException : InvalidOperationException
     {
-        public WindowCaptureException(string message) : base(message)
+        public WindowCaptureException(string message, Exception innerException = null) : base(message, innerException)
         {
         }
     }
 
     class ImageRecognition
     {
-        private static volatile bool _printWindowUnavailable;
-        private static int _screenFallbackWarningLogged;
-
         /// <summary>
         /// Captures a screenshot of the game window.
         /// </summary>
@@ -49,10 +46,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
 
             // All capture paths use the same client-area coordinate space.
-            Bitmap frame = captureBackground && GameProfile.IsClash
+            Bitmap frame = captureBackground
                 ? GameGraphicsCapture.Capture(windowHandle, geometry)
-                : captureBackground && !_printWindowUnavailable
-                ? CaptureWindowWithPrintWindow(windowHandle, geometry)
                 : CaptureVisibleWindow(windowHandle, geometry.ClientBounds);
             if (!GameWindowGeometry.TryRead(windowHandle, out var current) || current != geometry)
             {
@@ -60,87 +55,6 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 throw new WindowCaptureException("The game window moved or resized during capture. Keep it stationary while the bot runs.");
             }
             return frame;
-        }
-
-        /// <summary>
-        /// Captures a window using PrintWindow API, which works even when the window is obscured.
-        /// Retries with the legacy flag and falls back to visible screen capture when Windows
-        /// reports success but returns a black or uniform blank frame.
-        /// </summary>
-        private static Bitmap CaptureWindowWithPrintWindow(nint windowHandle, GameWindowGeometry geometry)
-        {
-            Bitmap bitmap = TryCaptureWithPrintWindow(
-                windowHandle,
-                geometry,
-                NativeMethods.PW_RENDERFULLCONTENT);
-            if (bitmap != null)
-            {
-                return bitmap;
-            }
-
-            // Some drivers support PrintWindow but not PW_RENDERFULLCONTENT.
-            bitmap = TryCaptureWithPrintWindow(windowHandle, geometry, 0);
-            if (bitmap != null)
-            {
-                return bitmap;
-            }
-
-            _printWindowUnavailable = true;
-            if (Interlocked.Exchange(ref _screenFallbackWarningLogged, 1) == 0)
-            {
-                Logger.Warning(
-                    "Capture",
-                    "PrintWindow returned unusable blank frames. Using visible screen capture for this session; " +
-                    "keep the Toontown window visible and unobscured.");
-            }
-
-            if (!GameWindowGeometry.TryRead(windowHandle, out geometry))
-            {
-                throw new WindowCaptureException("Could not read the Toontown window bounds for screen capture.");
-            }
-
-            return CaptureVisibleWindow(windowHandle, geometry.ClientBounds);
-        }
-
-        private static Bitmap TryCaptureWithPrintWindow(
-            nint windowHandle,
-            GameWindowGeometry geometry,
-            uint flags)
-        {
-            using Bitmap fullWindow = new Bitmap(geometry.WindowBounds.Width, geometry.WindowBounds.Height, PixelFormat.Format32bppArgb);
-            bool success;
-
-            using (Graphics graphics = Graphics.FromImage(fullWindow))
-            {
-                IntPtr hdc = graphics.GetHdc();
-                try
-                {
-                    success = NativeMethods.PrintWindow(windowHandle, hdc, flags);
-                }
-                finally
-                {
-                    // Release exactly once. The previous fallback path released here and inside the
-                    // failure branch, leaving Graphics in an invalid state on some machines.
-                    graphics.ReleaseHdc(hdc);
-                }
-            }
-
-            if (!success) return null;
-            if (!new Rectangle(Point.Empty, fullWindow.Size).Contains(geometry.ClientCrop)) return null;
-            // Preserve the existing GPU capture flags, then remove window decorations before
-            // validating the pixels. A painted title bar must not hide a blank game frame.
-            Bitmap bitmap = fullWindow.Clone(geometry.ClientCrop, PixelFormat.Format32bppArgb);
-            string unusableReason = GetPrintWindowFrameFailureReason(bitmap);
-            if (success && unusableReason == null)
-            {
-                return bitmap;
-            }
-
-            Debug.WriteLine(success
-                ? $"PrintWindow returned an unusable {unusableReason} (flags=0x{flags:X})"
-                : $"PrintWindow failed (flags=0x{flags:X})");
-            bitmap.Dispose();
-            return null;
         }
 
         private static Bitmap CaptureVisibleWindow(nint windowHandle, Rectangle windowRect)
@@ -153,7 +67,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             if (NativeMethods.IsIconic(windowHandle))
             {
                 throw new WindowCaptureException(
-                    "Toontown is minimized and this graphics driver does not support background capture. " +
+                    "Toontown is minimized. " +
                     "Restore the game window and try again.");
             }
 
@@ -168,7 +82,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 if (IsBitmapEffectivelyBlack(screenshot))
                 {
                     throw new WindowCaptureException(
-                        "Both background and visible Toontown capture returned a black frame. Keep the game " +
+                        "Visible Toontown capture returned a black frame. Keep the game " +
                         "visible and unobscured, then try disabling Hardware-accelerated GPU scheduling or " +
                         "updating/rolling back the graphics driver.");
                 }
@@ -183,9 +97,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
         }
 
         /// <summary>
-        /// Detects the effectively empty frames returned by PrintWindow on affected Intel/Windows
+        /// Detects effectively empty frames returned by visible screen capture on affected
         /// configurations. A grid is used instead of a single pixel so dark UI borders do not
-        /// trigger the fallback, while a frame with only a few non-black artifacts still does.
+        /// hide an empty frame, while a frame with only a few non-black artifacts still counts as empty.
         /// </summary>
         private static bool IsBitmapEffectivelyBlack(Bitmap bitmap)
         {
@@ -228,59 +142,6 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
 
             return totalSamples == 0 || (double)blackSamples / totalSamples >= requiredBlackRatio;
-        }
-
-        /// <summary>
-        /// Identifies frames where PrintWindow rendered the non-client title bar but filled the
-        /// game client area with one flat gray/white color. The interior-only grid deliberately
-        /// excludes the title bar and borders that can otherwise make a blank frame look valid.
-        /// </summary>
-        private static string GetPrintWindowFrameFailureReason(Bitmap bitmap)
-        {
-            if (IsBitmapEffectivelyBlack(bitmap))
-            {
-                return "black frame";
-            }
-
-            const int columns = 9;
-            const int rows = 7;
-            const int uniformChannelRange = 8;
-
-            int marginX = bitmap.Width / 10;
-            int marginY = bitmap.Height / 10;
-            int sampleWidth = Math.Max(1, bitmap.Width - (marginX * 2));
-            int sampleHeight = Math.Max(1, bitmap.Height - (marginY * 2));
-            int minR = 255;
-            int minG = 255;
-            int minB = 255;
-            int maxR = 0;
-            int maxG = 0;
-            int maxB = 0;
-
-            for (int row = 0; row < rows; row++)
-            {
-                int y = marginY + (sampleHeight - 1) * row / (rows - 1);
-                y = Math.Min(y, bitmap.Height - 1);
-
-                for (int column = 0; column < columns; column++)
-                {
-                    int x = marginX + (sampleWidth - 1) * column / (columns - 1);
-                    x = Math.Min(x, bitmap.Width - 1);
-
-                    Color pixel = bitmap.GetPixel(x, y);
-                    minR = Math.Min(minR, pixel.R);
-                    minG = Math.Min(minG, pixel.G);
-                    minB = Math.Min(minB, pixel.B);
-                    maxR = Math.Max(maxR, pixel.R);
-                    maxG = Math.Max(maxG, pixel.G);
-                    maxB = Math.Max(maxB, pixel.B);
-                }
-            }
-
-            bool isUniform = maxR - minR <= uniformChannelRange &&
-                             maxG - minG <= uniformChannelRange &&
-                             maxB - minB <= uniformChannelRange;
-            return isUniform ? "uniform/blank frame" : null;
         }
 
         /// <summary>
@@ -369,10 +230,6 @@ namespace ToonTown_Rewritten_Bot.Utilities
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool SetForegroundWindow(IntPtr hWnd);
 
-            [DllImport("user32.dll", SetLastError = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool PrintWindow(IntPtr hwnd, IntPtr hdcBlt, uint nFlags);
-
             [DllImport("user32.dll")]
             public static extern IntPtr GetWindowDC(IntPtr hWnd);
 
@@ -391,8 +248,6 @@ namespace ToonTown_Rewritten_Bot.Utilities
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool IsIconic(IntPtr hWnd);
 
-            // PrintWindow flags
-            public const uint PW_RENDERFULLCONTENT = 0x00000002; // Works better with DWM/hardware acceleration
         }
         #endregion
 
