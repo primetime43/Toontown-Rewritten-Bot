@@ -17,6 +17,7 @@ namespace ToonTown_Rewritten_Bot
 
         private void SetFishingSessionActive(bool active)
         {
+            if (!active) GameGraphicsCapture.Stop();
             _fishingSessionActive = active;
             startFishing.Enabled = !active;
             startCustomFishingBtn.Enabled = !active;

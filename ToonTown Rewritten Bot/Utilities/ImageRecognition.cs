@@ -48,8 +48,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 throw new WindowCaptureException("Could not read the Toontown window bounds for screen capture.");
             }
 
-            // Both capture paths use the same client-area coordinate space.
-            Bitmap frame = captureBackground && !_printWindowUnavailable
+            // All capture paths use the same client-area coordinate space.
+            Bitmap frame = captureBackground && GameProfile.IsClash
+                ? GameGraphicsCapture.Capture(windowHandle, geometry)
+                : captureBackground && !_printWindowUnavailable
                 ? CaptureWindowWithPrintWindow(windowHandle, geometry)
                 : CaptureVisibleWindow(windowHandle, geometry.ClientBounds);
             if (!GameWindowGeometry.TryRead(windowHandle, out var current) || current != geometry)

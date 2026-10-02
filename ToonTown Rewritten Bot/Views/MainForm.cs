@@ -365,6 +365,7 @@ namespace ToonTown_Rewritten_Bot
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _globalKeyboardHook?.Dispose();
+            GameGraphicsCapture.Stop();
 
             // Save user preferences on close
             SaveUserPreferences();
