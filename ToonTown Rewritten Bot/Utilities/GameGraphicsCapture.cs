@@ -48,7 +48,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 {
                     _current?.Dispose();
                     _current = null;
-                    throw new WindowCaptureException($"Could not capture the game in background mode: {ex.Message}");
+                    throw new WindowCaptureException($"Could not capture the game in background mode: {ex.Message}", ex);
                 }
             }
         }
@@ -115,6 +115,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 using var software = await SoftwareBitmap.CreateCopyFromSurfaceAsync(frame.Surface)
                     .AsTask().ConfigureAwait(false);
                 var captureSize = new Size(frame.ContentSize.Width, frame.ContentSize.Height);
+                // During resize, queued frames can report the new content size while
+                // still using a smaller texture from the previous pool allocation.
+                if (software.PixelWidth < captureSize.Width || software.PixelHeight < captureSize.Height)
+                {
+                    frame.Dispose();
+                    _pool.Recreate(_device, DirectXPixelFormat.B8G8R8A8UIntNormalized, 2, _size);
+                    continue;
+                }
                 Rectangle crop = GetClientCrop(_window, geometry, captureSize);
                 byte[] pixels = new byte[checked(software.PixelWidth * software.PixelHeight * 4)];
                 software.CopyToBuffer(pixels.AsBuffer());

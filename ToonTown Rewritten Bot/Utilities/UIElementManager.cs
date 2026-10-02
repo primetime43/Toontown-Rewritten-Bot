@@ -112,9 +112,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
 
             // If we have cached coordinates, trust them without re-verifying.
-            // UI elements like buttons don't move during a session, and re-verifying
-            // via template matching on every call is unreliable (PrintWindow can return
-            // partial frames from 3D-rendered games).
+            // Reuse locations while the client size and DPI stay the same; callers
+            // that need to recheck a changing element can request a fresh search.
             if (!forceSearch && element.HasCachedCoordinates)
             {
                 EnsureSameSize();
