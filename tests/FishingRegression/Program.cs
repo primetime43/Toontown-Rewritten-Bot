@@ -7,6 +7,11 @@ using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
 
 // Run with: dotnet run --project tests/FishingRegression -- [optional catch screenshot]
 // Default checks sample supplied bitmaps; opt-in live probes never send input.
+if (args.Length > 0 && args[0] == "--capture-clash-background")
+{
+    ClashCaptureProbe.CaptureBackground(args[1]);
+    return;
+}
 if (args.Length > 0 && args[0] == "--check-clash-input")
 {
     var access = typeof(FishingStrategyBase).Assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameInputAccess");

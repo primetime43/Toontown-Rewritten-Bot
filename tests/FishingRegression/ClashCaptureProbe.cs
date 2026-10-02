@@ -2,11 +2,48 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
 
 internal static class ClashCaptureProbe
 {
+    internal static void CaptureBackground(string outputPath)
+    {
+        var assembly = typeof(FishingStrategyBase).Assembly;
+        var flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+        var profile = assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameProfile");
+        var kind = assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameKind");
+        var find = profile.GetMethod("FindWindow", flags, null, new[] { kind }, null);
+        var window = (IntPtr)find.Invoke(null, new[] { Enum.Parse(kind, "CorporateClash") });
+        if (window == IntPtr.Zero) throw new Exception("Start Clash before capturing.");
+        var geometry = assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameWindowGeometry");
+        object[] readArgs = { window, null };
+        if (!(bool)geometry.GetMethod("TryRead", flags).Invoke(null, readArgs))
+            throw new Exception("Could not read Clash window bounds.");
+        var capture = assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameGraphicsCapture");
+        try
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                var timer = Stopwatch.StartNew();
+                using var frame = (Bitmap)capture.GetMethod("Capture", flags).Invoke(null, readArgs);
+                var client = (Rectangle)geometry.GetProperty("ClientBounds").GetValue(readArgs[1]);
+                if (frame.Size != client.Size) throw new Exception("Capture did not match the client size.");
+                string path = i == 0 ? outputPath : System.IO.Path.Combine(
+                    System.IO.Path.GetDirectoryName(outputPath),
+                    System.IO.Path.GetFileNameWithoutExtension(outputPath) + $"-{i}.png");
+                frame.Save(path);
+                Console.WriteLine($"Frame {i}: {frame.Width}x{frame.Height}, {timer.ElapsedMilliseconds}ms, game focused={GetForegroundWindow() == window}, saved {path}");
+                Thread.Sleep(500);
+            }
+        }
+        finally { capture.GetMethod("Stop", flags).Invoke(null, null); }
+    }
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr GetForegroundWindow();
+
     // Opt-in live diagnostic: captures pixels only and never sends game input.
     internal static void Watch(string templatePath, string outputPath)
     {
