@@ -30,7 +30,7 @@ internal static class ShadowSelectionProbe
                 using var frame = new Bitmap(path);
                 var result = detector.DetectFromScreenshot(frame);
                 var selected = selectorType.GetMethod("Select").Invoke(selector, new object[] { result, frame.Size });
-                Console.WriteLine($"{Path.GetFileName(path)}: blobs={result.Blobs.Count}, rejected={result.RejectedBlobCount}, filtered candidates={result.CandidateCount}, selectable={result.AllCandidates.Count}, selected={selected}");
+                Console.WriteLine($"{Path.GetFileName(path)}: local contrast={result.UsedLocalContrastDetection}, matched pixels={result.DarkPixelCount}, blobs={result.Blobs.Count}, rejected={result.RejectedBlobCount}, filtered candidates={result.CandidateCount}, selectable={result.AllCandidates.Count}, selected={selected}");
                 foreach (var blob in result.Blobs.Where(b => b.Count >= 3))
                     Console.WriteLine($"  Blob center=({blob.Average(p => p.X):F0},{blob.Average(p => p.Y):F0}), samples={blob.Count}");
                 foreach (var candidate in result.AllCandidates)

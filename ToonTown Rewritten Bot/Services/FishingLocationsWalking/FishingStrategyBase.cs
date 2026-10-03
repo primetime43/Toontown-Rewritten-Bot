@@ -717,7 +717,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         {
                             if (firstScan) Logger.Info("Fishing", $"Analyzing initial aiming frame ({screenshot.Width}x{screenshot.Height})...");
                             var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot, cancellationToken);
-                            if (firstScan) Logger.Info("Fishing", $"Initial aiming scan complete: matched pixels={detectionResult.DarkPixelCount}, candidates={detectionResult.AllCandidates.Count}");
+                            if (firstScan) Logger.Info("Fishing", $"Initial aiming scan complete: mode={(detectionResult.UsedLocalContrastDetection ? "local contrast" : "color")}, matched pixels={detectionResult.DarkPixelCount}, candidates={detectionResult.AllCandidates.Count}");
 
                             newFishPosition = targetSelector.Select(detectionResult, screenshot.Size);
 

@@ -24,6 +24,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
     {
         public Rectangle ScanArea { get; set; }
         public bool UsedDynamicPondDetection { get; set; }
+        public bool UsedLocalContrastDetection { get; set; }
         public Color TargetBubbleColor { get; set; }
         public Tolerance ColorTolerance { get; set; }
         public int AvgBrightness { get; set; }

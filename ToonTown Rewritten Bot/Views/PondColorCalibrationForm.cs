@@ -287,7 +287,9 @@ namespace ToonTown_Rewritten_Bot.Views
                 bool waterMatches = Math.Abs(water.R - shadow.R) <= _redTolerance.Value &&
                     Math.Abs(water.G - shadow.G) <= _greenTolerance.Value && Math.Abs(water.B - shadow.B) <= _blueTolerance.Value;
                 bool darker = shadow.R + shadow.G + shadow.B < water.R + water.G + water.B;
-                _quality.Text = waterMatches
+                _quality.Text = LocalContrastShadowDetector.ShouldUse(water, shadow)
+                    ? "Water and shadow are close in color. Fishing will compare shadows with the water around them."
+                    : waterMatches
                     ? "Water also matches this shadow tolerance. Sample a darker shadow or lower tolerance."
                     : !darker ? "The shadow is lighter than the water. Check that you sampled the dark center."
                     : "Colors are distinct at this tolerance. Ready to try in the pond.";
