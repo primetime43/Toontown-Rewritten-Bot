@@ -78,8 +78,9 @@ internal static class ShadowScanChecks
             using (var graphics = Graphics.FromImage(frame)) graphics.Clear(Color.FromArgb(28, 39, 70));
             var stopwatch = Stopwatch.StartNew();
             var result = new FishBubbleDetector("Startup regression").DetectFromScreenshot(frame);
-            Require(result.DarkPixelCount > 70000 && stopwatch.Elapsed < TimeSpan.FromSeconds(5),
-                $"Full frame with overlapping pond colors completes ({result.DarkPixelCount:N0} pixels in {stopwatch.Elapsed.TotalMilliseconds:F0} ms)");
+            Require(result.UsedLocalContrastDetection && result.AllCandidates.Count == 0 &&
+                stopwatch.Elapsed < TimeSpan.FromSeconds(5),
+                $"Uniform pond with overlapping colors is rejected promptly ({stopwatch.Elapsed.TotalMilliseconds:F0} ms)");
         }
         finally
         {

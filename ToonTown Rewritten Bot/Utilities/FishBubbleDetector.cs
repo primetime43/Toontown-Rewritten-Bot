@@ -165,7 +165,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
             // Run detection - only find pixels that look like fish shadows (teal/cyan)
             const int step = 3;
             const int minBlobSize = 50;
-            const int maxBlobSize = 2000;
+            bool useLocalContrast = customColors != null &&
+                LocalContrastShadowDetector.ShouldUse(customColors.WaterColor, customColors.ShadowColor);
+            result.UsedLocalContrastDetection = useLocalContrast;
+            int maxBlobSize = useLocalContrast ? (int)(10000 * scaleX * scaleY) : 2000;
 
             // First pass: Calculate average brightness
             long totalBrightness = 0;
@@ -190,7 +193,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             result.DarkThreshold = Math.Max(10, result.AvgBrightness - 25);
 
             // Second pass: Find dark pixels that could be fish shadows
-            bool usingLearnedColor = LearnedShadowColor.HasValue && LearnedColorConfidence >= 1;
+            bool usingLearnedColor = !useLocalContrast && LearnedShadowColor.HasValue && LearnedColorConfidence >= 1;
 
             result.UsingLearnedColor = usingLearnedColor;
             result.LearnedColor = LearnedShadowColor;
@@ -209,7 +212,12 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             var fishShadowPixels = new List<Point>();
 
-            for (int y = startY; y < endY; y += step)
+            if (useLocalContrast)
+            {
+                fishShadowPixels = LocalContrastShadowDetector.FindPixels(screenshot, result.ScanArea,
+                    step, customColors.WaterColor, cancellationToken);
+            }
+            else for (int y = startY; y < endY; y += step)
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 for (int x = startX; x < endX; x += step)
@@ -270,7 +278,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
                 Point blobCenter = new Point(sumX / blob.Count, sumY / blob.Count);
 
-                if (!_shadowAnalyzer.IsSurroundedByWater(screenshot, blobCenter))
+                // Local contrast already verifies surrounding water using the sampled
+                // pond tint; the legacy teal-water test would reject gray/dark ponds.
+                if (!useLocalContrast && !_shadowAnalyzer.IsSurroundedByWater(screenshot, blobCenter))
                 {
                     rejectedCount++;
                     continue;
@@ -375,7 +385,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 bestBlobColor = bestNoBubblesColor;
                 result.HasBubblesAbove = false;
             }
-            else if (allBlobs.Count > 0 && candidates.Count == 0)
+            else if (!useLocalContrast && allBlobs.Count > 0 && candidates.Count == 0)
             {
                 // FALLBACK: No candidates passed filters, but we have raw blobs
                 Logger.Debug("FishDetect", $"No candidates passed filters, using blob fallback");

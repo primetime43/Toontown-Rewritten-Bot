@@ -81,6 +81,7 @@ using (var graphics = Graphics.FromImage(frame))
 
 FishTargetSelectorChecks.Run(Check);
 FallbackShadowChecks.Run(Check);
+LowContrastShadowChecks.Run(Check);
 
 if (args.Length > 0 && args[0] == "--clash")
 {
