@@ -7,6 +7,11 @@ using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
 
 // Run with: dotnet run --project tests/FishingRegression -- [optional catch screenshot]
 // Default checks sample supplied bitmaps; opt-in live probes never send input.
+if (args.Length > 0 && args[0] == "--analyze-shadows")
+{
+    ShadowSelectionProbe.Analyze(args[1], args[2..]);
+    return;
+}
 if (args.Length > 0 && args[0] == "--capture-clash-background")
 {
     ClashCaptureProbe.CaptureBackground(args[1]);
@@ -75,6 +80,7 @@ using (var graphics = Graphics.FromImage(frame))
 }
 
 FishTargetSelectorChecks.Run(Check);
+FallbackShadowChecks.Run(Check);
 
 if (args.Length > 0 && args[0] == "--clash")
 {

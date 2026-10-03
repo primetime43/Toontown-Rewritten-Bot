@@ -383,7 +383,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 var centerX = (startX + endX) / 2;
                 var centerY = (startY + endY) / 2;
 
-                var bestFallbackBlob = allBlobs
+                var fallbackBlobs = allBlobs
                     .Where(b => b.Count >= 3)
                     .Select(b => {
                         int sumX = 0, sumY = 0;
@@ -394,25 +394,32 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     })
                     .OrderByDescending(x => x.size)
                     .ThenBy(x => x.distToCenter)
-                    .FirstOrDefault();
+                    .ToList();
 
-                if (bestFallbackBlob.blob != null)
+                if (fallbackBlobs.Count > 0)
                 {
+                    var bestFallbackBlob = fallbackBlobs[0];
                     bestBlob = bestFallbackBlob.center;
                     bestBlobColor = screenshot.GetPixel(
                         Math.Min(Math.Max(bestFallbackBlob.center.X, 0), screenshot.Width - 1),
                         Math.Min(Math.Max(bestFallbackBlob.center.Y, 0), screenshot.Height - 1));
                     result.HasBubblesAbove = false;
 
-                    result.AllCandidates.Add(new FishCandidate
+                    // Preserve every fallback option for motion-based selection. Passing
+                    // only the largest blob made a still fish disappear whenever another
+                    // shadow gained more sampled pixels, forcing the aim to chase it.
+                    foreach (var fallback in fallbackBlobs)
                     {
-                        Position = bestFallbackBlob.center,
-                        Color = bestBlobColor,
-                        Size = bestFallbackBlob.size * step * step,
-                        DistanceFromCenter = bestFallbackBlob.distToCenter,
-                        CastPower = CalculateCastPower(bestFallbackBlob.center.X, bestFallbackBlob.center.Y, screenshot.Width, screenshot.Height),
-                        HasBubblesAbove = false
-                    });
+                        result.AllCandidates.Add(new FishCandidate
+                        {
+                            Position = fallback.center,
+                            Color = screenshot.GetPixel(fallback.center.X, fallback.center.Y),
+                            Size = fallback.size * step * step,
+                            DistanceFromCenter = fallback.distToCenter,
+                            CastPower = CalculateCastPower(fallback.center.X, fallback.center.Y, screenshot.Width, screenshot.Height),
+                            HasBubblesAbove = false
+                        });
+                    }
 
                     Logger.Debug("FishDetect", $"Fallback blob at ({bestFallbackBlob.center.X},{bestFallbackBlob.center.Y}), size={bestFallbackBlob.size}");
                 }
