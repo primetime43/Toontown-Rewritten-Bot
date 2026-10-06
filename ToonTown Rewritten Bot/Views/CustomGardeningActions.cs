@@ -79,6 +79,11 @@ namespace ToonTown_Rewritten_Bot.Views
             UpdateSummary();
         }
 
+        public CustomGardeningActions(string filePath) : this()
+        {
+            LoadActionsFromFile(filePath, false);
+        }
+
         private void PopulateActionComboBox()
         {
             cmbAction.Items.Clear();
@@ -294,7 +299,7 @@ namespace ToonTown_Rewritten_Bot.Views
             }
         }
 
-        private void LoadActionsFromFile(string filePath)
+        private void LoadActionsFromFile(string filePath, bool showConfirmation = true)
         {
             var result = CustomGardeningActionFileManager.Load(filePath);
             if (!result.Success)
@@ -314,7 +319,8 @@ namespace ToonTown_Rewritten_Bot.Views
 
             UpdatePreview();
             UpdateSummary();
-            MessageBox.Show($"Loaded {result.File.Actions.Count} actions.", "Load Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (showConfirmation)
+                MessageBox.Show($"Loaded {result.File.Actions.Count} actions.", "Load Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void saveActionItemBtn_Click(object sender, EventArgs e)

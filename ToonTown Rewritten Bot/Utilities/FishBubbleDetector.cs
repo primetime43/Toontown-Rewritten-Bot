@@ -108,8 +108,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// Detects fish in a provided screenshot (for debug UI use).
         /// Returns detailed results for visualization.
         /// </summary>
-        public FishDetectionDebugResult DetectFromScreenshot(Bitmap screenshot)
+        public FishDetectionDebugResult DetectFromScreenshot(Bitmap screenshot, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             // Check for custom user-defined colors first
             var customColors = PondColorManager.GetPondColors(_currentLocationName);
 
@@ -164,7 +165,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
             // Run detection - only find pixels that look like fish shadows (teal/cyan)
             const int step = 3;
             const int minBlobSize = 50;
-            const int maxBlobSize = 2000;
+            bool useLocalContrast = customColors != null &&
+                LocalContrastShadowDetector.ShouldUse(customColors.WaterColor, customColors.ShadowColor);
+            result.UsedLocalContrastDetection = useLocalContrast;
+            int maxBlobSize = useLocalContrast ? (int)(10000 * scaleX * scaleY) : 2000;
 
             // First pass: Calculate average brightness
             long totalBrightness = 0;
@@ -172,6 +176,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             for (int y = startY; y < endY; y += step * 2)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 for (int x = startX; x < endX; x += step * 2)
                 {
                     if (x >= 0 && x < screenshot.Width && y >= 0 && y < screenshot.Height)
@@ -188,7 +193,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             result.DarkThreshold = Math.Max(10, result.AvgBrightness - 25);
 
             // Second pass: Find dark pixels that could be fish shadows
-            bool usingLearnedColor = LearnedShadowColor.HasValue && LearnedColorConfidence >= 1;
+            bool usingLearnedColor = !useLocalContrast && LearnedShadowColor.HasValue && LearnedColorConfidence >= 1;
 
             result.UsingLearnedColor = usingLearnedColor;
             result.LearnedColor = LearnedShadowColor;
@@ -207,8 +212,14 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             var fishShadowPixels = new List<Point>();
 
-            for (int y = startY; y < endY; y += step)
+            if (useLocalContrast)
             {
+                fishShadowPixels = LocalContrastShadowDetector.FindPixels(screenshot, result.ScanArea,
+                    step, customColors.WaterColor, cancellationToken);
+            }
+            else for (int y = startY; y < endY; y += step)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
                 for (int x = startX; x < endX; x += step)
                 {
                     if (x >= 0 && x < screenshot.Width && y >= 0 && y < screenshot.Height)
@@ -229,7 +240,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 return result;
 
             // Find blobs from fish shadow colored pixels only
-            var allBlobs = _shadowAnalyzer.FindBlobs(fishShadowPixels, step * 3);
+            var allBlobs = _shadowAnalyzer.FindBlobs(fishShadowPixels, step * 3, cancellationToken);
             result.Blobs = allBlobs;
 
             // Find best blob (fish shadow) - prefer ones with bubbles above
@@ -243,6 +254,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             foreach (var blob in allBlobs)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 int blobSize = blob.Count * step * step;
 
                 if (blobSize < minBlobSize || blobSize > maxBlobSize)
@@ -266,7 +278,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
                 Point blobCenter = new Point(sumX / blob.Count, sumY / blob.Count);
 
-                if (!_shadowAnalyzer.IsSurroundedByWater(screenshot, blobCenter))
+                // Local contrast already verifies surrounding water using the sampled
+                // pond tint; the legacy teal-water test would reject gray/dark ponds.
+                if (!useLocalContrast && !_shadowAnalyzer.IsSurroundedByWater(screenshot, blobCenter))
                 {
                     rejectedCount++;
                     continue;
@@ -316,6 +330,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             foreach (var candidate in candidates.OrderBy(c => c.castPower))
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 double score = candidate.castPower - candidate.size * 0.1;
                 bool hasBubbles = _shadowAnalyzer.HasBubblesAbove(screenshot, candidate.center, result.AvgBrightness);
 
@@ -370,7 +385,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 bestBlobColor = bestNoBubblesColor;
                 result.HasBubblesAbove = false;
             }
-            else if (allBlobs.Count > 0 && candidates.Count == 0)
+            else if (!useLocalContrast && allBlobs.Count > 0 && candidates.Count == 0)
             {
                 // FALLBACK: No candidates passed filters, but we have raw blobs
                 Logger.Debug("FishDetect", $"No candidates passed filters, using blob fallback");
@@ -378,7 +393,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 var centerX = (startX + endX) / 2;
                 var centerY = (startY + endY) / 2;
 
-                var bestFallbackBlob = allBlobs
+                var fallbackBlobs = allBlobs
                     .Where(b => b.Count >= 3)
                     .Select(b => {
                         int sumX = 0, sumY = 0;
@@ -389,25 +404,32 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     })
                     .OrderByDescending(x => x.size)
                     .ThenBy(x => x.distToCenter)
-                    .FirstOrDefault();
+                    .ToList();
 
-                if (bestFallbackBlob.blob != null)
+                if (fallbackBlobs.Count > 0)
                 {
+                    var bestFallbackBlob = fallbackBlobs[0];
                     bestBlob = bestFallbackBlob.center;
                     bestBlobColor = screenshot.GetPixel(
                         Math.Min(Math.Max(bestFallbackBlob.center.X, 0), screenshot.Width - 1),
                         Math.Min(Math.Max(bestFallbackBlob.center.Y, 0), screenshot.Height - 1));
                     result.HasBubblesAbove = false;
 
-                    result.AllCandidates.Add(new FishCandidate
+                    // Preserve every fallback option for motion-based selection. Passing
+                    // only the largest blob made a still fish disappear whenever another
+                    // shadow gained more sampled pixels, forcing the aim to chase it.
+                    foreach (var fallback in fallbackBlobs)
                     {
-                        Position = bestFallbackBlob.center,
-                        Color = bestBlobColor,
-                        Size = bestFallbackBlob.size * step * step,
-                        DistanceFromCenter = bestFallbackBlob.distToCenter,
-                        CastPower = CalculateCastPower(bestFallbackBlob.center.X, bestFallbackBlob.center.Y, screenshot.Width, screenshot.Height),
-                        HasBubblesAbove = false
-                    });
+                        result.AllCandidates.Add(new FishCandidate
+                        {
+                            Position = fallback.center,
+                            Color = screenshot.GetPixel(fallback.center.X, fallback.center.Y),
+                            Size = fallback.size * step * step,
+                            DistanceFromCenter = fallback.distToCenter,
+                            CastPower = CalculateCastPower(fallback.center.X, fallback.center.Y, screenshot.Width, screenshot.Height),
+                            HasBubblesAbove = false
+                        });
+                    }
 
                     Logger.Debug("FishDetect", $"Fallback blob at ({bestFallbackBlob.center.X},{bestFallbackBlob.center.Y}), size={bestFallbackBlob.size}");
                 }

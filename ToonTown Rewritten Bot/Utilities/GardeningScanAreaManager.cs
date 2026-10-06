@@ -12,7 +12,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
     public static class GardeningScanAreaManager
     {
         private static readonly string TemplatesFolder = Path.Combine(
-            AppPaths.ExeDirectory, "Templates");
+            AppPaths.GameDataDirectory, "Templates");
 
         private static readonly string ScanAreaFile = Path.Combine(
             TemplatesFolder, "GardeningScanArea.json");

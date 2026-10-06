@@ -13,6 +13,28 @@ namespace ToonTown_Rewritten_Bot
 {
     public partial class MainForm
     {
+        private bool _fishingSessionActive;
+
+        private void SetFishingSessionActive(bool active)
+        {
+            if (active) _cancellationReason = null;
+            if (!active) GameGraphicsCapture.Stop();
+            _fishingSessionActive = active;
+            startFishing.Enabled = !active;
+            startCustomFishingBtn.Enabled = !active;
+            stopFishingBtn.Enabled = active;
+            stopCustomFishingBtn.Enabled = active;
+            createCustomFishingActionsBtn.Enabled = !active;
+            wizardCustomFishingBtn.Enabled = !active;
+            fishingStatusLabel.Text = active ? "Status: Fishing..." : "Status: Idle";
+            fishingStatusLabel.ForeColor = active ? Color.DarkGreen : Color.DimGray;
+            if (customFishingStatusLabel != null)
+            {
+                customFishingStatusLabel.Text = active ? "Status: Fishing..." : "Status: Idle";
+                customFishingStatusLabel.ForeColor = active ? Color.DarkGreen : Color.DimGray;
+            }
+        }
+
         /// <summary>
         /// Handles the start fishing button click event. This method initiates fishing
         /// based on the selected location and settings specified in the user interface.
@@ -29,6 +51,10 @@ namespace ToonTown_Rewritten_Bot
         /// </remarks>
         private async void startFishing_Click(object sender, EventArgs e)
         {
+            using var activity = TryBeginAutomation("Fishing");
+            if (activity == null) return;
+            if (_fishingSessionActive) return;
+            if (!CheckClashFishingSetup()) return;
             // Reset the CancellationTokenSource if it's null or was previously cancelled
             if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
             {
@@ -40,12 +66,13 @@ namespace ToonTown_Rewritten_Bot
 
             // Set the fishing settings from UI controls
             FishingStrategyBase.BiteTimeoutSeconds = Convert.ToInt32(numericUpDownBiteTimeout.Value);
-            FishingStrategyBase.WaitForFishBeforeCasting = waitForFishCheckBox.Checked && autoDetectFishCheckBox.Checked;
+            FishingStrategyBase.WaitForFishBeforeCasting = waitForFishCheckBox.Checked && autoDetectFishCheckBox.Checked && !quickCastingCheckBox.Checked;
             FishingStrategyBase.MaxFishWaitSeconds = Convert.ToInt32(numericUpDownWaitAttempts.Value);
             FishingStrategyBase.QuickCasting = quickCastingCheckBox.Checked;
 
             try
             {
+                SetFishingSessionActive(true);
                 string selectedLocation = (string)fishingLocationscomboBox.SelectedItem; // Retrieve the location selected by the user
                 int numberOfCasts = Convert.ToInt32(numericUpDownCasts.Value); // Number of times to cast the line
                 int numberOfSells = Convert.ToInt32(numericUpDownSells.Value); // Number of times to sell the caught fish
@@ -83,9 +110,9 @@ namespace ToonTown_Rewritten_Bot
                     $"Done Fishing in '{selectedLocation}'.\n\nTotal Casts: {casts}",
                     "Fishing Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
             {
-                Logger.Info("Fishing", "Session end: reason=\"User cancelled\", casts completed=" + _fishingService.SessionCastCount);
+                Logger.Info("Fishing", $"Session end: reason=\"Cancelled: {_cancellationReason ?? "unknown source"}\", casts completed=" + _fishingService.SessionCastCount);
                 fishingStatusLabel.Text = "Status: Idle";
                 fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
                 SetFishingOverlay(false, null, null);
@@ -98,6 +125,10 @@ namespace ToonTown_Rewritten_Bot
                 fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
                 SetFishingOverlay(false, null, null);
                 MessageBox.Show("An error occurred: " + ex.Message);
+            }
+            finally
+            {
+                SetFishingSessionActive(false);
             }
         }
 
@@ -112,7 +143,7 @@ namespace ToonTown_Rewritten_Bot
         private void stopFishingBtn_Click(object sender, EventArgs e)//button to stop fishing
         {
             // Check if the operation is already canceled or not started
-            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+            if (!_fishingSessionActive || _cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
             {
                 MessageBox.Show("Fishing is not currently in progress.");
                 return;
@@ -120,10 +151,11 @@ namespace ToonTown_Rewritten_Bot
 
             // Signal the cancellation
             Logger.Info("Fishing", "User pressed Stop button");
-            _cancellationTokenSource.Cancel();
-            fishingStatusLabel.Text = "Status: Idle";
-            fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
-            MessageBox.Show("Fishing stopped!");
+            StopAllActiveTasks();
+            fishingStatusLabel.Text = "Status: Stopping...";
+            fishingStatusLabel.ForeColor = System.Drawing.Color.DarkOrange;
+            customFishingStatusLabel.Text = fishingStatusLabel.Text;
+            customFishingStatusLabel.ForeColor = fishingStatusLabel.ForeColor;
         }
 
         private void ShowOverlayCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -136,12 +168,9 @@ namespace ToonTown_Rewritten_Bot
             if (quickCastingCheckBox.Checked)
             {
                 waitForFishCheckBox.Checked = false;
-                waitForFishCheckBox.Enabled = false;
+                customWaitForFishCheckBox.Checked = false;
             }
-            else
-            {
-                waitForFishCheckBox.Enabled = true;
-            }
+            UpdateFishingWaitControls();
         }
 
         private void BackgroundModeCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -162,8 +191,10 @@ namespace ToonTown_Rewritten_Bot
                 {
                     _fishingOverlay = new FishingOverlayForm();
                 }
-                _fishingOverlay.Show();
                 _fishingOverlay.SetStatus(statusMessage);
+                _fishingOverlay.Show();
+                _fishingOverlay.Update();
+                Logger.Info("Fishing", $"Overlay shown: visible={_fishingOverlay.Visible}, bounds={_fishingOverlay.Bounds}");
 
                 Services.FishingLocationsWalking.FishingStrategyBase.Overlay = _fishingOverlay;
                 Services.FishingLocationsWalking.FishingStrategyBase.OnFishingEnded = onEndedCallback;
@@ -255,7 +286,7 @@ namespace ToonTown_Rewritten_Bot
 
                 using (var colorForm = new PondColorCalibrationForm(locationName))
                 {
-                    colorForm.ShowDialog();
+                    colorForm.ShowDialog(this);
                 }
             }
 
@@ -265,6 +296,11 @@ namespace ToonTown_Rewritten_Bot
         private void EditScanAreaBtn_Click(object sender, EventArgs e)
         {
             string selectedLocation = fishingLocationscomboBox.SelectedItem?.ToString();
+            EditFishingScanArea(selectedLocation);
+        }
+
+        private void EditFishingScanArea(string selectedLocation)
+        {
             if (string.IsNullOrEmpty(selectedLocation))
             {
                 MessageBox.Show("Please select a fishing location first.", "No Location Selected",
@@ -305,7 +341,7 @@ namespace ToonTown_Rewritten_Bot
             // Open the calibration form
             using (var calibrationForm = new ScanAreaCalibrationForm(selectedLocation, scanArea))
             {
-                calibrationForm.ShowDialog();
+                calibrationForm.ShowDialog(this);
 
                 if (calibrationForm.WasSaved)
                 {
@@ -319,6 +355,11 @@ namespace ToonTown_Rewritten_Bot
         private void CalibrateColorsBtn_Click(object sender, EventArgs e)
         {
             string selectedLocation = fishingLocationscomboBox.SelectedItem?.ToString();
+            EditFishingPondColors(selectedLocation);
+        }
+
+        private void EditFishingPondColors(string selectedLocation)
+        {
             if (string.IsNullOrEmpty(selectedLocation))
             {
                 MessageBox.Show("Please select a fishing location first.", "No Location Selected",
@@ -326,26 +367,10 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
-            // Show explanation before opening
-            var result = MessageBox.Show(
-                "This will open a calibration window to set the pond water and fish shadow colors.\n\n" +
-                "How to use:\n" +
-                "• Click on the pond water to sample the water color\n" +
-                "• Click on a fish shadow to sample the shadow color\n" +
-                "• Use the sliders to adjust color tolerance\n" +
-                "• Click 'Save' when done, or 'Cancel' to exit\n\n" +
-                "Make sure Toontown is running and you can see the pond.",
-                "Pond Color Calibration",
-                MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Information);
-
-            if (result != DialogResult.OK)
-                return;
-
-            // Open the color calibration form
+            // Sampling instructions and capture recovery are provided inside the dialog.
             using (var colorForm = new PondColorCalibrationForm(selectedLocation))
             {
-                colorForm.ShowDialog();
+                colorForm.ShowDialog(this);
             }
         }
 

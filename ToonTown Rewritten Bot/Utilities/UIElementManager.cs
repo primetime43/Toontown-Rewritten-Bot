@@ -77,6 +77,19 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public async Task<(Point? location, UIElementSource source)> GetElementLocationWithSourceAsync(string elementName, string description = null, bool forceSearch = false)
         {
             var element = GetOrCreateElement(elementName);
+            if (!GameWindowGeometry.TryRead(Services.CoreFunctionality.FindToontownWindow(), out var geometry))
+                throw new WindowCaptureException("The Toontown game area could not be read.");
+            void EnsureSameSize()
+            {
+                if (!GameWindowGeometry.TryRead(Services.CoreFunctionality.FindToontownWindow(), out var current)
+                    || current.ClientBounds.Size != geometry.ClientBounds.Size || current.Dpi != geometry.Dpi)
+                    throw new WindowCaptureException("The game window size changed during detection. Retry at the new size.");
+            }
+            if (!element.IsCacheValidFor(geometry.ClientBounds.Size, geometry.Dpi))
+            {
+                element.CachedCenter = null;
+                element.LastFoundTime = null;
+            }
 
             // If no template exists, prompt user to capture one
             if (!HasTemplate(elementName))
@@ -90,6 +103,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     // User cancelled - fall back to manual if available
                     if (element.ManualCoordinates.HasValue)
                     {
+                        EnsureSameSize();
                         Logger.Info("TemplateMatch", $"Using manual coordinates for '{elementName}'");
                         return (element.ManualCoordinates, UIElementSource.Manual);
                     }
@@ -98,11 +112,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
 
             // If we have cached coordinates, trust them without re-verifying.
-            // UI elements like buttons don't move during a session, and re-verifying
-            // via template matching on every call is unreliable (PrintWindow can return
-            // partial frames from 3D-rendered games).
+            // Reuse locations while the client size and DPI stay the same; callers
+            // that need to recheck a changing element can request a fresh search.
             if (!forceSearch && element.HasCachedCoordinates)
             {
+                EnsureSameSize();
                 Logger.Debug("TemplateMatch", $"'{elementName}' using cached location");
                 return (element.CachedCenter, UIElementSource.Cache);
             }
@@ -114,8 +128,11 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 var result = await FindElementAsync(elementName);
                 if (result.HasValue)
                 {
+                    EnsureSameSize();
                     // Update cache
                     element.CachedCenter = result.Value;
+                    element.CachedClientSize = geometry.ClientBounds.Size;
+                    element.CachedDpi = geometry.Dpi;
                     element.LastFoundTime = DateTime.Now;
                     SaveElementData();
                     return (result, UIElementSource.ImageRec);
@@ -124,6 +141,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
             // Image rec failed — fall back to manual/cached coordinates silently
             // before interrupting the user with a recapture dialog
+            EnsureSameSize();
             if (element.ManualCoordinates.HasValue)
             {
                 Logger.Info("TemplateMatch", $"Image rec failed, using manual coordinates for '{elementName}'");
@@ -141,7 +159,10 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     var retryResult = await FindElementAsync(elementName);
                     if (retryResult.HasValue)
                     {
+                        EnsureSameSize();
                         element.CachedCenter = retryResult.Value;
+                        element.CachedClientSize = geometry.ClientBounds.Size;
+                        element.CachedDpi = geometry.Dpi;
                         element.LastFoundTime = DateTime.Now;
                         SaveElementData();
                         return (retryResult, UIElementSource.ImageRec);
@@ -269,6 +290,19 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// </summary>
         public async Task<Point?> FindElementAsync(string elementName, CancellationToken cancellationToken = default)
         {
+            try
+            {
+                var bounds = await FindElementBoundsAsync(elementName, cancellationToken);
+                return bounds.HasValue
+                    ? new Point(bounds.Value.X + bounds.Value.Width / 2, bounds.Value.Y + bounds.Value.Height / 2)
+                    : null;
+            }
+            catch (Exception) { return null; } // Preserve silent lookup behavior for existing callers.
+        }
+
+        // Unlike the silent point lookup, verification callers must distinguish capture errors from absence.
+        public async Task<Rectangle?> FindElementBoundsAsync(string elementName, CancellationToken cancellationToken = default)
+        {
             var allPaths = GetAllTemplatePaths(elementName);
             if (allPaths.Count == 0)
                 return null;
@@ -293,7 +327,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                             if (result.Found)
                             {
                                 Logger.Debug("TemplateMatch", $"'{elementName}' matched variant {i} ({Path.GetFileName(allPaths[i])}) at {result.Confidence:P1}");
-                                return result.Center;
+                                return result.Bounds;
                             }
 
                             if (result.Confidence > bestConfidence)
@@ -310,6 +344,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             catch (Exception ex)
             {
                 Logger.Error("TemplateMatch", $"Error finding '{elementName}': {ex.Message}");
+                throw;
             }
 
             return null;
@@ -663,30 +698,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             }
         }
 
-        private string GetTemplatesFolder()
-        {
-            string baseDir = AppPaths.ExeDirectory;
-
-            // Navigate up from bin/Debug/net10.0-windows to find the project folder
-            DirectoryInfo dir = new DirectoryInfo(baseDir);
-            while (dir != null && dir.Parent != null)
-            {
-                if (Directory.GetFiles(dir.FullName, "*.csproj").Length > 0)
-                {
-                    string projectTemplates = Path.Combine(dir.FullName, "Templates");
-                    if (!Directory.Exists(projectTemplates))
-                        Directory.CreateDirectory(projectTemplates);
-                    return projectTemplates;
-                }
-                dir = dir.Parent;
-            }
-
-            // Fall back to output directory
-            string fallback = Path.Combine(baseDir, "Templates");
-            if (!Directory.Exists(fallback))
-                Directory.CreateDirectory(fallback);
-            return fallback;
-        }
+        private string GetTemplatesFolder() => AppPaths.TemplatesDirectory;
 
         private string MakeSafeFileName(string name)
         {
@@ -787,7 +799,13 @@ namespace ToonTown_Rewritten_Bot.Utilities
 
         public Point? ManualCoordinates { get; set; }
         public Point? CachedCenter { get; set; }
+        public Size CachedClientSize { get; set; }
+        public uint CachedDpi { get; set; }
         public DateTime? LastFoundTime { get; set; }
+
+        public bool IsCacheValidFor(Size clientSize, uint dpi) => CachedCenter.HasValue
+            && !clientSize.IsEmpty && CachedClientSize == clientSize && CachedDpi == dpi
+            && new Rectangle(Point.Empty, clientSize).Contains(CachedCenter.Value);
 
         [JsonIgnore]
         public bool HasCachedCoordinates => CachedCenter.HasValue;

@@ -27,30 +27,8 @@ namespace ToonTown_Rewritten_Bot.Utilities
             LoadDefinitions();
         }
 
-        private static string ComputeDefinitionsFilePath()
-        {
-            // Try to find the project source folder first (for persistence)
-            string baseDir = AppPaths.ExeDirectory;
-            DirectoryInfo dir = new DirectoryInfo(baseDir);
-
-            while (dir != null && dir.Parent != null)
-            {
-                if (Directory.GetFiles(dir.FullName, "*.csproj").Length > 0)
-                {
-                    string projectTemplates = Path.Combine(dir.FullName, "Templates");
-                    if (!Directory.Exists(projectTemplates))
-                        Directory.CreateDirectory(projectTemplates);
-                    return Path.Combine(projectTemplates, "TemplateDefinitions.json");
-                }
-                dir = dir.Parent;
-            }
-
-            // Fall back to output directory
-            string templatesDir = Path.Combine(baseDir, "Templates");
-            if (!Directory.Exists(templatesDir))
-                Directory.CreateDirectory(templatesDir);
-            return Path.Combine(templatesDir, "TemplateDefinitions.json");
-        }
+        private static string ComputeDefinitionsFilePath() =>
+            Path.Combine(AppPaths.TemplatesDirectory, "TemplateDefinitions.json");
 
         private void LoadDefinitions()
         {
@@ -111,6 +89,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                     if (defaultDef.Key > 0 && !_definitions.Any(d => d.Key == defaultDef.Key))
                     {
                         _definitions.Add(defaultDef);
+                        _nextKey = Math.Max(_nextKey, defaultDef.Key + 1);
                     }
                     else
                     {
@@ -152,6 +131,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 new TemplateDefinition { Key = 17, Name = "Blue Sell All Button", Category = "Fishing" },
                 new TemplateDefinition { Key = 30, Name = "FishPopupCloseButton", Category = "Fishing" },
                 new TemplateDefinition { Key = 31, Name = "PopupExitButton", Category = "Fishing" },
+                new TemplateDefinition { Key = 36, Name = "FishBucketFullPopup", Category = "Fishing" },
 
                 // Doodle Training (keys 18-29)
                 new TemplateDefinition { Key = 18, Name = "Feed Doodle Button", Category = "Doodle Training" },
@@ -172,7 +152,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         private void CreateDefaultDefinitions()
         {
             _definitions = GetDefaultDefinitions();
-            _nextKey = 36;
+            _nextKey = 37;
             SaveDefinitions();
         }
 

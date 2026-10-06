@@ -127,8 +127,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         }
 
         /// <summary>
-        /// When true, uses a shorter delay after casting (300ms instead of 1500ms).
-        /// Faster fishing but may occasionally misdetect fish caught from the casting animation.
+        /// When true, skips the additional casting-animation delay before looking for a catch popup.
         /// </summary>
         private static volatile bool _quickCasting = false;
         public static bool QuickCasting
@@ -187,10 +186,23 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public int SessionCastCount => _sessionCastCount;
 
         /// <summary>
-        /// Cached red fishing button position to avoid expensive template matching during catch detection.
-        /// Set during CastLine/CastLineAuto; used by CheckIfFishCaught fallback.
+        /// Cached red fishing button client position, used to check dock state after a bite timeout.
         /// </summary>
         private Point? _cachedRedButtonPos;
+
+        internal void ResetRoundState()
+        {
+            BucketWasFull = false;
+            _fishCaught = 0;
+            _castCount = 0;
+            _cachedRedButtonPos = null;
+        }
+
+        private void CacheRedButtonPosition(int screenX, int screenY)
+        {
+            var offset = GetGameWindowOffset();
+            _cachedRedButtonPos = new Point(screenX - offset.X, screenY - offset.Y);
+        }
 
         /// <summary>
         /// Sets the fishing location for proper bubble detection configuration.
@@ -201,15 +213,23 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             // Reset state from any previous fishing session
             shouldStopFishing = false;
             stopReasonMessage = null;
-            BucketWasFull = false;
-            _fishCaught = 0;
-            _castCount = 0;
+            ResetRoundState();
             _sessionFishCaught = 0;
             _sessionCastCount = 0;
             ResetPause(); // Ensure not paused when starting new session
 
             _locationName = locationName;
             _bubbleDetector = new FishBubbleDetector(locationName);
+
+            var colors = PondColorManager.GetPondColors(locationName);
+            if (colors != null && Math.Abs(colors.WaterR - colors.ShadowR) <= colors.ToleranceR &&
+                Math.Abs(colors.WaterG - colors.ShadowG) <= colors.ToleranceG &&
+                Math.Abs(colors.WaterB - colors.ShadowB) <= colors.ToleranceB)
+            {
+                Logger.Warning("Fishing", $"Pond calibration overlaps: water RGB({colors.WaterR},{colors.WaterG},{colors.WaterB}) " +
+                    $"also matches shadow RGB({colors.ShadowR},{colors.ShadowG},{colors.ShadowB}) at tolerance " +
+                    $"({colors.ToleranceR},{colors.ToleranceG},{colors.ToleranceB}). Lower tolerance or resample the shadow.");
+            }
 
             // Update overlay with location
             UpdateOverlayLocation(locationName);
@@ -230,7 +250,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             {
                 if (overlay.InvokeRequired)
                 {
-                    overlay.Invoke(new Action(() =>
+                    overlay.BeginInvoke(new Action(() =>
                     {
                         if (overlay != null && !overlay.IsDisposed)
                             action(overlay);
@@ -296,19 +316,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
             try
             {
-                using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
-                {
-                    if (screenshot != null)
-                    {
-                        var result = _bubbleDetector.DetectFromScreenshot(screenshot);
-                        Logger.Debug("Fishing", $"Initial scan area for '{_locationName}': {result.ScanArea} (IsEmpty={result.ScanArea.IsEmpty})");
-                        UpdateOverlay(result, null, "");
-                    }
-                    else
-                    {
-                        Logger.Warning("Fishing", $"Initial scan area: screenshot was null for '{_locationName}'");
-                    }
-                }
+                // Drawing the scan rectangle must not wait for screenshot capture or fish analysis.
+                var windowRect = GetGameWindowRect();
+                var scanArea = CustomScanAreaManager.GetCustomScanArea(_locationName, windowRect.Width, windowRect.Height)
+                    ?? _bubbleDetector.GetDefaultScanArea();
+                UpdateOverlay(new FishDetectionDebugResult { ScanArea = scanArea }, null, "Ready to cast");
+                Logger.Info("Fishing", $"Overlay scan area ready: {scanArea}");
             }
             catch (Exception ex)
             {
@@ -372,11 +385,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public async Task StartFishingActionsAsync(int numberOfCasts, bool fishVariance, bool autoDetectFish, bool isFirstCycle, CancellationToken cancellationToken)
         {
             // Reset cycle counts for this fishing round (session totals keep accumulating)
-            _fishCaught = 0;
-            _castCount = 0;
+            cancellationToken.ThrowIfCancellationRequested();
+            ResetRoundState();
 
             // Check if game window is available
             EnsureGameWindowReady();
+            GameInputAccess.EnsureAllowed(GameProfile.FindWindow());
 
             // On subsequent cycles (after a sell trip), wait for the dock UI to settle.
             // Skip on the first cycle since the user already confirmed they're at the dock.
@@ -404,11 +418,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         UpdateOverlayAction("PAUSED", "Press F11 to resume", "Paused");
                         await Task.Delay(250, cancellationToken);
                     }
-                    if (cancellationToken.IsCancellationRequested) return;
-
-                    _castCount++;
-                    _sessionCastCount++;
-                    UpdateOverlayStats();
+                    cancellationToken.ThrowIfCancellationRequested();
 
                     // Update overlay - casting
                     UpdateOverlayAction(autoDetectFish ? "Scanning for fish..." : "Casting line", "Wait for bite", "Casting");
@@ -421,6 +431,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     {
                         await CastLine(fishVariance, cancellationToken);
                     }
+
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (shouldStopFishing) return;
+                    _castCount++;
+                    _sessionCastCount++;
+                    UpdateOverlayStats();
 
                     // Brief delay for "no jellybeans" popup to appear (shows immediately on cast attempt)
                     await Task.Delay(300, cancellationToken);
@@ -451,7 +467,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     bool fishCaught = false;
                     while (stopwatch.Elapsed.TotalSeconds < BiteTimeoutSeconds)
                     {
-                        if (cancellationToken.IsCancellationRequested) return;
+                        cancellationToken.ThrowIfCancellationRequested();
                         if (await CheckIfFishCaught(cancellationToken))
                         {
                             fishCaught = true;
@@ -503,6 +519,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                         }
 
                         UpdateOverlayAction("No bite (timeout)", numberOfCasts > 1 ? "Cast again" : "Finish up", "Fishing");
+                        Logger.Info("Fishing", $"No confirmed catch after {BiteTimeoutSeconds}s; fish count unchanged.");
 
                         // If "Wait for fish" is enabled, wait up to X seconds scanning for a fish
                         // before casting again. Cast immediately if a fish is detected.
@@ -538,14 +555,29 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         {
             // Use image recognition to find the red fishing button (will prompt for template capture if needed)
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
-            _cachedRedButtonPos = new Point(x, y);
+            CacheRedButtonPosition(x, y);
 
             Logger.Debug("Fishing", $"CastLine: Red button at screen ({x}, {y})");
 
             int randX = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
             int randY = fishVariance ? _rand.Next(-_VARIANCE, _VARIANCE + 1) : 0;
+            // Template capture can leave the bot in front of the game.
+            FocusTTRWindow();
+            await Task.Delay(150, cancellationToken);
             MoveCursor(x + randX, y + randY);
-            DoFishingClick();
+            await Task.Delay(150, cancellationToken);
+            Logger.Info("Fishing", $"Casting from ({x + randX}, {y + randY}) to ({x + randX}, {y + randY + 150}).");
+            try
+            {
+                SendInputMouseDown();
+                await Task.Delay(500, cancellationToken);
+                SimulateDragMove(x + randX, y + randY + 150);
+                await Task.Delay(500, cancellationToken);
+            }
+            finally
+            {
+                SendInputMouseUp();
+            }
             await Task.Delay(100, cancellationToken);
         }
 
@@ -563,7 +595,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             }
 
             int waitSeconds = MaxFishWaitSeconds;
-            Logger.Debug("Fishing", $"Waiting for fish detection (max {waitSeconds}s)...");
+            Logger.Info("Fishing", $"Waiting for fish detection (max {waitSeconds}s)...");
             UpdateOverlayAction("Scanning for fish...", "Waiting", "Detecting");
 
             var stopwatch = Stopwatch.StartNew();
@@ -586,7 +618,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                 {
                     if (screenshot != null)
                     {
-                        var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot);
+                        var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot, cancellationToken);
 
                         bool fishFound = detectionResult.AllCandidates.Count > 0 ||
                                         detectionResult.BestShadowPosition.HasValue;
@@ -656,27 +688,28 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
             // Find the cast button using image recognition — use the actual detected position
             var (btnX, btnY) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
-            _cachedRedButtonPos = new Point(btnX, btnY);
+            CacheRedButtonPosition(btnX, btnY);
 
             Logger.Debug("Fishing", $"Red button found at screen ({btnX}, {btnY}), window rect: {windowRect}");
 
             // Move to the actual red fishing button position (from image recognition) and press down
             SimulateDragMove(btnX, btnY);
             await Task.Delay(150, cancellationToken);
-            SendInputMouseDown();
-            Logger.Debug("Fishing", $"Mouse down at ({btnX}, {btnY})");
-            await Task.Delay(400, cancellationToken); // Wait for aim mode to activate
-
             try
             {
+                SendInputMouseDown();
+                Logger.Debug("Fishing", $"Mouse down at ({btnX}, {btnY})");
+                await Task.Delay(400, cancellationToken); // Wait for aim mode to activate
                 // Settings matching MouseClickSimulator
                 const int maxScanTimeMs = 36000;  // 36 seconds max like MouseClickSimulator
                 const int scanDelayMs = 500;      // 500ms between scans like MouseClickSimulator
                 const int scanStep = 15;          // Position tolerance
 
                 Point? oldFishPosition = null;
+                var targetSelector = new FishTargetSelector();
                 int coordsMatchCounter = 0;
                 var startTime = DateTime.Now;
+                bool firstScan = true;
 
                 while (true)
                 {
@@ -685,24 +718,16 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                     Point? newFishPosition = null;
                     Point castDestination;
 
+                    if (firstScan) Logger.Info("Fishing", "Capturing initial aiming frame...");
                     using (var screenshot = (Bitmap)ImageRecognition.GetWindowScreenshot())
                     {
                         if (screenshot != null)
                         {
-                            var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot);
+                            if (firstScan) Logger.Info("Fishing", $"Analyzing initial aiming frame ({screenshot.Width}x{screenshot.Height})...");
+                            var detectionResult = _bubbleDetector.DetectFromScreenshot(screenshot, cancellationToken);
+                            if (firstScan) Logger.Info("Fishing", $"Initial aiming scan complete: mode={(detectionResult.UsedLocalContrastDetection ? "local contrast" : "color")}, matched pixels={detectionResult.DarkPixelCount}, candidates={detectionResult.AllCandidates.Count}");
 
-                            // Find fish position
-                            if (detectionResult.AllCandidates.Count > 0)
-                            {
-                                var easiest = detectionResult.AllCandidates
-                                    .OrderBy(c => c.CastPower)
-                                    .First();
-                                newFishPosition = easiest.Position;
-                            }
-                            else if (detectionResult.BestShadowPosition.HasValue)
-                            {
-                                newFishPosition = detectionResult.BestShadowPosition.Value;
-                            }
+                            newFishPosition = targetSelector.Select(detectionResult, screenshot.Size);
 
                             // Update overlay
                             if (newFishPosition.HasValue)
@@ -714,7 +739,12 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                                 UpdateOverlay(detectionResult, null, "Scanning for fish...");
                             }
                         }
+                        else
+                        {
+                            targetSelector.Select(null, windowRect.Size);
+                        }
                     }
+                    firstScan = false;
 
                     // Check if fish position is stable (same as last scan within tolerance)
                     if (newFishPosition.HasValue && oldFishPosition.HasValue &&
@@ -796,6 +826,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             catch (Exception ex)
             {
                 Logger.Warning("Fishing", $"Error during cast: {ex.Message}");
+                throw;
             }
             finally
             {
@@ -821,6 +852,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
         protected Task<bool> CheckIfFishCaught(CancellationToken cancellationToken)
         {
+            if (GameProfile.IsClash) return CheckClashFishCaught(cancellationToken);
+
             var windowRect = CoreFunctionality.GetGameWindowRect();
             if (windowRect.IsEmpty) return Task.FromResult(false);
 
@@ -840,6 +873,34 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             }
 
             return Task.FromResult(CheckIfFishCaughtCore(windowRect, null, Point.Empty));
+        }
+
+        private async Task<bool> CheckClashFishCaught(CancellationToken cancellationToken)
+        {
+            // Clash's pond and scenery colors do not follow Rewritten's catch-card palette.
+            // Only a fresh match counts; cached positions cannot establish popup visibility.
+            var button = await FindClashCatchButton(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            if (!button.HasValue) return false;
+            Logger.Info("Fishing", "Clash catch popup confirmed by its close-button template.");
+            return true;
+        }
+
+        private static async Task<Point?> FindClashCatchButton(CancellationToken cancellationToken)
+        {
+            var templates = UIElementManager.Instance.GetAllTemplatePaths("FishPopupCloseButton");
+            if (templates.Count == 0) return null;
+            try
+            {
+                using var frame = (Bitmap)ImageRecognition.GetWindowScreenshot();
+                return await Task.Run(() => ClashFishingDetector.FindCatchButton(frame, templates, cancellationToken), cancellationToken);
+            }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex)
+            {
+                Logger.Warning("FishDetect", $"Could not check the Clash catch popup: {ex.Message}");
+                return null;
+            }
         }
 
         private bool CheckIfFishCaughtCore(Rectangle windowRect, Bitmap screenshot, Point windowOffset)
@@ -979,19 +1040,30 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             // Use silent search (FindElementAsync) — no prompts during active fishing.
             // Color-based catch detection can have false positives, so we don't want to
             // prompt for template capture when there may be no popup on screen.
-            var buttonLocation = await UIElementManager.Instance.FindElementAsync(elementName, cancellationToken);
+            var buttonLocation = GameProfile.IsClash
+                ? await FindClashCatchButton(cancellationToken)
+                : await UIElementManager.Instance.FindElementAsync(elementName, cancellationToken);
 
             if (buttonLocation.HasValue)
             {
                 Logger.Debug("Fishing", $"Found close button at ({buttonLocation.Value.X}, {buttonLocation.Value.Y})");
 
-                MoveCursor(buttonLocation.Value.X, buttonLocation.Value.Y);
+                // Template matches are window-relative; mouse input uses screen coordinates.
+                var windowOffset = GetGameWindowOffset();
+                MoveCursor(windowOffset.X + buttonLocation.Value.X, windowOffset.Y + buttonLocation.Value.Y);
                 await Task.Delay(100, cancellationToken);
                 DoMouseClick();
                 await Task.Delay(300, cancellationToken);
             }
             else
             {
+                if (GameProfile.IsClash)
+                {
+                    shouldStopFishing = true;
+                    stopReasonMessage = "Clash catch popup button could not be found. Check its template in Dev.";
+                    Logger.Warning("Fishing", stopReasonMessage);
+                    return;
+                }
                 Logger.Debug("Fishing", "Close button not found, using fallback position...");
 
                 // Fallback to estimated position — handles both missing template and false positive cases
@@ -1020,14 +1092,15 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             Logger.Debug("Fishing", "Looking for popup Exit button via template matching...");
 
             // GetElementLocationAsync will prompt user to capture template if none exists
-            var location = await UIElementManager.Instance.GetElementLocationAsync(
+            var (location, source) = await UIElementManager.Instance.GetElementLocationWithSourceAsync(
                 elementName, "Please click on the Exit button on the popup");
 
             if (location.HasValue)
             {
                 // Template includes the red X icon + "Exit" text label below it.
                 // The center lands on the text, so offset upward to hit the actual button.
-                var adjusted = new Point(location.Value.X, location.Value.Y - 15);
+                var offset = source == UIElementSource.Manual ? Point.Empty : GetGameWindowOffset();
+                var adjusted = new Point(location.Value.X + offset.X, location.Value.Y + offset.Y - 15);
                 Logger.Info("Fishing", $"Found popup Exit button at ({adjusted.X}, {adjusted.Y})");
                 return adjusted;
             }
@@ -1115,40 +1188,40 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             // Find the red fishing button
             var (btnX, btnY) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
 
-            // Click and hold the button
             MoveCursor(btnX, btnY);
             await Task.Delay(100, cancellationToken);
-            DoMouseClickDown(new Point(btnX, btnY));
-            await Task.Delay(200, cancellationToken);
-
-            // Drag straight down (this makes the toon face forward/center)
-            int straightY = btnY + 150; // Drag down 150 pixels
-            SimulateDragMove(btnX, straightY);
-            await Task.Delay(300, cancellationToken);
-
-            // Press ESC to cancel the cast WHILE still holding the mouse button
-            // Set flag to prevent global keyboard hook from treating this as a user-initiated cancel
-            IsSimulatedKeyPress = true;
+            int straightY = btnY + 150;
             try
             {
-                if (UseBackgroundInput)
+                DoMouseClickDown(new Point(btnX, btnY));
+                await Task.Delay(200, cancellationToken);
+                SimulateDragMove(btnX, straightY);
+                await Task.Delay(300, cancellationToken);
+
+                // Cancel the cast before releasing the rod.
+                IsSimulatedKeyPress = true;
+                try
                 {
-                    PostBackgroundKeyDown(0x1B); // VK_ESCAPE
-                    PostBackgroundKeyUp(0x1B);
+                    if (UseBackgroundInput)
+                    {
+                        PostBackgroundKeyDown(0x1B);
+                        PostBackgroundKeyUp(0x1B);
+                    }
+                    else
+                    {
+                        SendKeys.SendWait("{ESC}");
+                    }
                 }
-                else
+                finally
                 {
-                    SendKeys.SendWait("{ESC}");
+                    IsSimulatedKeyPress = false;
                 }
+                await Task.Delay(200, cancellationToken);
             }
             finally
             {
-                IsSimulatedKeyPress = false;
+                DoMouseClickUp(new Point(btnX, straightY));
             }
-            await Task.Delay(200, cancellationToken);
-
-            // Now release the mouse (cast is already cancelled)
-            DoMouseClickUp(new Point(btnX, straightY));
             await Task.Delay(300, cancellationToken);
 
             Logger.Debug("Fishing", "Toon straightened.");
@@ -1166,10 +1239,30 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         protected async Task SellFishAsync(CancellationToken cancellationToken)
         {
             await Task.Delay(2100, cancellationToken);
-            // Use image recognition to find sell button (will prompt for template capture if needed)
-            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.BlueSellAllButton);
-            MoveCursor(x, y);
-            DoMouseClick();
+            const string elementName = "Blue Sell All Button";
+            if (!UIElementManager.Instance.HasTemplate(elementName))
+                throw new InvalidOperationException("The Sell All button template is missing. Capture it in Dev before selling fish.");
+
+            await FishingSellInteraction.RunAsync(
+                token => UIElementManager.Instance.FindElementBoundsAsync(elementName, token),
+                async (target, token) =>
+                {
+                    var offset = GetGameWindowOffset();
+                    var screenTarget = new Point(offset.X + target.X, offset.Y + target.Y);
+                    Logger.Info("Fishing", $"Clicking visible Sell All button at screen {screenTarget}; background={UseBackgroundInput}.");
+                    MoveCursor(screenTarget.X, screenTarget.Y);
+                    // Let the game's UI register hover before pressing the confirmation button.
+                    await Task.Delay(300, token);
+                    try
+                    {
+                        DoMouseClickDown(screenTarget);
+                        await Task.Delay(300, token);
+                    }
+                    finally
+                    {
+                        DoMouseClickUp(screenTarget);
+                    }
+                }, cancellationToken);
             await Task.Delay(2000, cancellationToken);
         }
 

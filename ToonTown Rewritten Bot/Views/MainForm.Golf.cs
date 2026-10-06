@@ -16,14 +16,9 @@ namespace ToonTown_Rewritten_Bot
         private void UpdateGolfInstructionsLabel()
         {
             golfInstructionsLabel.Text =
-                $"Golf uses your configured Jump key: {ConfiguredGolfSwingKey}.\n" +
-                "It must match TTR (Options & Codes → Controls).\n\n" +
-                "1. Select a golf course\n" +
-                "2. Check the required tee position\n" +
-                "3. Move to that position in TTR\n" +
-                "4. Click Start Golf\n" +
-                "5. Keep TTR focused until the shot finishes\n\n" +
-                "Change the key under Settings → Configure Game Controls.";
+                "Select a course, check the tee position in the preview, and move there in TTR.\n\n" +
+                "Click Start Golf for that shot, or Auto Golf to detect and play each hole. Keep TTR focused.\n\n" +
+                $"Swing key: {ConfiguredGolfSwingKey}. Match TTR’s Jump control in Settings → Configure Game Controls.";
         }
 
         private void createCustomGolfActionsBtn_Click(object sender, EventArgs e)
@@ -48,6 +43,8 @@ namespace ToonTown_Rewritten_Bot
 
         private async void startGolfBtn_Click(object sender, EventArgs e)
         {
+            using var activity = TryBeginAutomation("Golf");
+            if (activity == null) return;
             string selectedFileName = customGolfFilesComboBox.SelectedItem?.ToString();
             if (string.IsNullOrEmpty(selectedFileName))
             {
@@ -124,7 +121,7 @@ namespace ToonTown_Rewritten_Bot
 
             if (_cancellationTokenSource != null)
             {
-                _cancellationTokenSource.Cancel();
+                StopAllActiveTasks();
                 _cancellationTokenSource.Dispose();
             }
 
@@ -157,12 +154,15 @@ namespace ToonTown_Rewritten_Bot
             if (_isAutoGolfRunning)
             {
                 // Cancel running auto-golf
-                _cancellationTokenSource?.Cancel();
+                StopAllActiveTasks();
                 startAutoGolfBtn.Text = "Auto Golf";
                 autoGolfStatusLabel.Text = "Cancelled";
                 _isAutoGolfRunning = false;
                 return;
             }
+
+            using var activity = TryBeginAutomation("Auto golf");
+            if (activity == null) return;
 
             if (CoreFunctionality.FindToontownWindow() == IntPtr.Zero)
             {
@@ -203,7 +203,7 @@ namespace ToonTown_Rewritten_Bot
 
             if (_cancellationTokenSource != null)
             {
-                _cancellationTokenSource.Cancel();
+                StopAllActiveTasks();
                 _cancellationTokenSource.Dispose();
             }
 

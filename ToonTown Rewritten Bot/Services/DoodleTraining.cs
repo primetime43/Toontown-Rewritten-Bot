@@ -122,7 +122,7 @@ namespace ToonTown_Rewritten_Bot.Services
 
             // Apply the requested input mode for this session, restoring the previous global on exit
             // (the flag is shared with fishing). Background mode posts clicks/mouse-moves to the
-            // game window and captures via PrintWindow, so training can run while unfocused.
+            // game window and uses Windows Graphics Capture, so training can run while unfocused.
             bool savedBackgroundMode = UseBackgroundInput;
             UseBackgroundInput = backgroundMode;
 

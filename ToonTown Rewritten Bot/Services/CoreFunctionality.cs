@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -195,69 +195,37 @@ namespace ToonTown_Rewritten_Bot.Services
             return UseBackgroundInput ? _backgroundTargetPos : getCursorLocation();
         }
 
-        public static void MaximizeAndFocusTTRWindow()
-        {
-            if (UseBackgroundInput) return;
-            nint hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero) return;
-            ShowWindow(hwnd, SW_RESTORE);
-            Thread.Sleep(50);
-            ShowWindow(hwnd, SW_MAXIMIZE);
-            Thread.Sleep(50);
-            SetForegroundWindow(hwnd);
-        }
+        public static void MaximizeAndFocusTTRWindow() => FocusTTRWindow();
 
+        /// <summary>Focuses the game without changing a normal or maximized window's size.</summary>
         public static void FocusTTRWindow()
         {
             if (UseBackgroundInput) return;
             nint hwnd = FindToontownWindow();
             if (hwnd == IntPtr.Zero) return;
-            ShowWindow(hwnd, SW_RESTORE);
-            Thread.Sleep(50);
-            ShowWindow(hwnd, SW_MAXIMIZE);
-            Thread.Sleep(50);
+            RestoreGameWindowIfMinimized(hwnd);
             SetForegroundWindow(hwnd);
         }
 
-        /// <summary>
-        /// Forces the Toontown Rewritten window to fullscreen position (0,0) covering the primary screen.
-        /// Call this before starting any bot operations to ensure consistent window positioning.
-        /// </summary>
-        /// <returns>True if window was found and positioned, false otherwise</returns>
+        internal static void RestoreGameWindowIfMinimized(IntPtr hwnd)
+        {
+            if (IsIconic(hwnd))
+            {
+                ShowWindow(hwnd, SW_RESTORE);
+                Thread.Sleep(50);
+            }
+        }
+
+        // Kept for callers compiled against the former fullscreen-only entry point.
         public static bool ForceGameWindowFullscreen()
         {
-            if (UseBackgroundInput) return IsGameWindowReady();
-            nint hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero)
-            {
-                Logger.Warning("Input", "Toontown window not found");
-                return false;
-            }
-            ShowWindow(hwnd, SW_RESTORE);
-            Thread.Sleep(100);
-            ShowWindow(hwnd, SW_MAXIMIZE);
-            Thread.Sleep(100);
-            SetForegroundWindow(hwnd);
-            Thread.Sleep(300);
+            if (!IsGameWindowReady()) return false;
+            FocusTTRWindow();
             return true;
         }
 
-        /// <summary>
-        /// Gets the offset that needs to be added to window-relative coordinates to get screen coordinates.
-        /// </summary>
-        public static Point GetGameWindowOffset()
-        {
-            nint hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero)
-                return Point.Empty;
-
-            RECT rect;
-            if (GetWindowRect(hwnd, out rect))
-            {
-                return new Point(rect.Left, rect.Top);
-            }
-            return Point.Empty;
-        }
+        /// <summary>Screen origin of the playable client area used by all captures.</summary>
+        public static Point GetGameWindowOffset() => GetGameWindowRect().Location;
 
         /// <summary>
         /// Checks if the Toontown window is running and visible.
@@ -271,7 +239,7 @@ namespace ToonTown_Rewritten_Bot.Services
             return IsWindowVisible(hwnd);
         }
 
-        private const string GameWindowNotFoundMessage = "Toontown Rewritten window not found. Please make sure the game is running.";
+        private static string GameWindowNotFoundMessage => GameProfile.WindowNotFoundMessage;
 
         /// <summary>
         /// Ensures the game window is ready, throwing an exception if not.
@@ -302,43 +270,26 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
-        /// Gets the current position and size of the Toontown window.
+        /// Gets the playable client area in screen coordinates, excluding window decorations.
         /// </summary>
         public static Rectangle GetGameWindowRect()
         {
-            nint hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero)
-                return Rectangle.Empty;
-
-            RECT rect;
-            if (GetWindowRect(hwnd, out rect))
-            {
-                return new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
-            }
-            return Rectangle.Empty;
+            return GameWindowGeometry.TryRead(FindToontownWindow(), out var geometry)
+                ? geometry.ClientBounds : Rectangle.Empty;
         }
+
+        [DllImport("user32.dll")]
+        private static extern bool IsIconic(IntPtr handle);
 
         // Window show commands
         private const int SW_RESTORE = 9;
-        private const int SW_MAXIMIZE = 3;
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct RECT
-        {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
-        }
 
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
         private static extern bool IsWindowVisible(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
         /// <summary>
         /// Brings the Toontown Rewritten Bot window to the foreground.
@@ -382,7 +333,7 @@ namespace ToonTown_Rewritten_Bot.Services
             };
 
             // Get the directory where the executable is running
-            string exePath = AppPaths.ExeDirectory;
+            string exePath = AppPaths.GameDataDirectory;
 
             // Combine the executable path with the specific folder name
             string customActionsFolderPath = Path.Combine(exePath, folderName);
@@ -430,6 +381,8 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static void EnsureAllEmbeddedJsonFilesExist()
         {
+            if (GameProfile.IsClash) return;
+
             // Handle Fishing Actions
             string fishingFolderPath = (string)ManageCustomActionsFolder("Fishing", false);
             var fishingResources = GetFishingResourceDictionary();
@@ -553,15 +506,7 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static void PostBackgroundKeyDown(int virtualKeyCode)
         {
-            IntPtr hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero) return;
-
-            int lParam = 1; // repeat count = 1
-            // Extended key flag (bit 24) for arrow keys, Home, End
-            if (virtualKeyCode is 0x25 or 0x26 or 0x27 or 0x28 or 0x23 or 0x24)
-                lParam |= 1 << 24;
-
-            PostMessageW(hwnd, WM_KEYDOWN, (IntPtr)virtualKeyCode, (IntPtr)lParam);
+            PostBackgroundKeyMessage(FindToontownWindow(), virtualKeyCode, false);
         }
 
         /// <summary>
@@ -570,16 +515,38 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static void PostBackgroundKeyUp(int virtualKeyCode)
         {
-            IntPtr hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero) return;
+            PostBackgroundKeyMessage(FindToontownWindow(), virtualKeyCode, true);
+        }
 
-            int lParam = 1; // repeat count = 1
-            lParam |= 3 << 30; // previous key state (bit 30) + transition state (bit 31)
-            // Extended key flag (bit 24) for arrow keys, Home, End
-            if (virtualKeyCode is 0x25 or 0x26 or 0x27 or 0x28 or 0x23 or 0x24)
-                lParam |= 1 << 24;
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hwnd, out uint processId);
 
-            PostMessageW(hwnd, WM_KEYUP, (IntPtr)virtualKeyCode, (IntPtr)lParam);
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetKeyboardLayout(uint threadId);
+
+        [DllImport("user32.dll")]
+        private static extern uint MapVirtualKeyExW(uint code, uint mapType, IntPtr layout);
+
+        internal static void PostBackgroundKeyMessage(IntPtr hwnd, int virtualKeyCode, bool keyUp)
+        {
+            if (hwnd == IntPtr.Zero)
+                throw new InvalidOperationException(GameProfile.WindowNotFoundMessage);
+
+            uint thread = GetWindowThreadProcessId(hwnd, out _);
+            uint scanCode = MapVirtualKeyExW((uint)virtualKeyCode, 4, GetKeyboardLayout(thread));
+            // Include the scan code for games that bind movement to physical keys.
+            uint lParam = 1 | ((scanCode & 0xFF) << 16);
+            // Some keyboard layouts map navigation keys to their unprefixed numpad scan code.
+            bool extended = (scanCode & 0xFF00) == 0xE000 ||
+                virtualKeyCode is >= 0x21 and <= 0x28 or 0x2D or 0x2E or 0x6F or 0xA3 or 0xA5;
+            if (extended) lParam |= 1u << 24;
+            if (keyUp) lParam |= 3u << 30;
+
+            bool posted = PostMessageW(hwnd, keyUp ? WM_KEYUP : WM_KEYDOWN,
+                (IntPtr)virtualKeyCode, (IntPtr)unchecked((int)lParam));
+            if (!posted)
+                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error(),
+                    "Could not send a background key event to the game.");
         }
 
         /// <summary>
@@ -610,17 +577,29 @@ namespace ToonTown_Rewritten_Bot.Services
             WindowsInput.InputSimulator.SimulateKeyUp(keyCode);
         }
 
+        protected System.Threading.Tasks.Task HoldMovementKeyAsync(WindowsInput.VirtualKeyCode keyCode,
+            int milliseconds, CancellationToken token)
+        {
+            // Release the same binding through the same input path even if settings change.
+            var binding = Models.GameControls.Remap(keyCode);
+            bool background = UseBackgroundInput;
+            var window = background ? FindToontownWindow() : IntPtr.Zero;
+            return HeldInput.RunAsync(
+                () => { if (background) PostBackgroundKeyMessage(window, (int)binding, false);
+                    else WindowsInput.InputSimulator.SimulateKeyDown(binding); },
+                () => { if (background) PostBackgroundKeyMessage(window, (int)binding, true);
+                    else WindowsInput.InputSimulator.SimulateKeyUp(binding); },
+                milliseconds, token);
+        }
+
         //ignore .dll imports below
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(ref Point lpPoint);
 
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
         public static IntPtr FindToontownWindow()
         {
             // Attempt to find the Toontown window by its title
-            return FindWindow(null, "Toontown Rewritten");
+            return GameProfile.FindWindow();
         }
 
         [DllImport("user32.dll")]

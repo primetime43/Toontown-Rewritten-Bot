@@ -1246,7 +1246,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// </summary>
         public static List<string> GetAvailableActionFiles()
         {
-            string exePath = AppPaths.ExeDirectory;
+            string exePath = AppPaths.GameDataDirectory;
             string golfActionsPath = Path.Combine(exePath, "Custom Golf Actions");
 
             if (!Directory.Exists(golfActionsPath))
@@ -1264,7 +1264,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// </summary>
         public static bool ActionFileExists(string courseFileName)
         {
-            string exePath = AppPaths.ExeDirectory;
+            string exePath = AppPaths.GameDataDirectory;
             string filePath = Path.Combine(exePath, "Custom Golf Actions", courseFileName + ".json");
             return File.Exists(filePath);
         }

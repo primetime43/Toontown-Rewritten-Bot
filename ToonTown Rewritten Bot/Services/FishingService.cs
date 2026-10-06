@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Threading;
@@ -37,8 +37,12 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </remarks>
         public async Task StartFishing(string locationName, int casts, int sells, bool variance, CancellationToken cancellationToken, string customFishingFilePath = "", bool autoDetectFish = false)
         {
+            if (!GameProfile.SupportsFishingLocation(GameProfile.Current, locationName))
+                throw new InvalidOperationException("Corporate Clash supports Fish Anywhere and custom fishing routes. Rewritten's built-in routes cannot be used.");
+
             int totalExpectedCasts = locationName == FishingLocationNames.FishAnywhere ? casts : casts * sells;
-            Logger.Info("Fishing", $"Session start: location={locationName}, casts per round={casts}, sell rounds={sells}, total expected casts={totalExpectedCasts}, variance={variance}, autoDetect={autoDetectFish}");
+            Logger.Info("Fishing", $"Game profile: {GameProfile.DisplayName}");
+            Logger.Info("Fishing", $"Session start: location={locationName}, casts per round={casts}, sell rounds={sells}, total expected casts={totalExpectedCasts}, variance={variance}, autoDetect={autoDetectFish}, background={CoreFunctionality.UseBackgroundInput}, overlay={FishingStrategyBase.Overlay != null}");
 
             // Set the fishing location for proper bubble detection configuration
             _engine.SetFishingLocation(locationName);
@@ -52,6 +56,7 @@ namespace ToonTown_Rewritten_Bot.Services
                 _engine.UpdateOverlayRoundProgress(currentRound, totalRounds);
 
                 await _engine.PrepareForFishing(cancellationToken).ConfigureAwait(false);
+                Logger.Info("Fishing", $"Game preparation complete; starting fishing round {currentRound}/{totalRounds}.");
                 await _engine.StartFishingActionsAsync(casts, variance, autoDetectFish, isFirstCycle, cancellationToken).ConfigureAwait(false);
                 isFirstCycle = false;
 
@@ -102,7 +107,7 @@ namespace ToonTown_Rewritten_Bot.Services
                         }
                         await Task.Delay(3000, cancellationToken).ConfigureAwait(false);
 
-                        string estateSellPath = Path.Combine(AppPaths.ExeDirectory, "Custom Fishing Actions", "EstateFishing Far Left Dock.json");
+                        string estateSellPath = Path.Combine(AppPaths.GameDataDirectory, "Custom Fishing Actions", "EstateFishing Far Left Dock.json");
                         Logger.Debug("Fishing", $"Estate sell path: {estateSellPath}, exists: {System.IO.File.Exists(estateSellPath)}");
                         CustomActionsFishing estateFishing = new CustomActionsFishing(estateSellPath);
                         await estateFishing.LeaveDockAndSellAsync(cancellationToken).ConfigureAwait(false);
@@ -138,36 +143,13 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
-        /// Runs a sell trip (walk to the fisherman, sell, walk back) with foreground input.
-        /// Walking relies on held movement keys, which Toontown's engine only registers from a
-        /// focused window via real input — background mode's PostMessage keystrokes are ignored,
-        /// leaving the toon standing still on the dock. When background mode is on, this temporarily
-        /// focuses the game window and switches to foreground input for the duration of the sell
-        /// trip, then restores background mode so the next fishing round stays hands-free.
+        /// Runs walking and selling with the same input mode as the fishing session.
         /// </summary>
         private static async Task RunSellTripAsync(Func<Task> sellTrip)
         {
-            bool wasBackground = CoreFunctionality.UseBackgroundInput;
-            if (wasBackground)
-            {
-                Logger.Info("Fishing", "Background mode: switching to foreground input for sell trip (walking needs a focused game window).");
-                CoreFunctionality.UseBackgroundInput = false;
-                CoreFunctionality.FocusTTRWindow();
-                await Task.Delay(500).ConfigureAwait(false);
-            }
-
-            try
-            {
-                await sellTrip().ConfigureAwait(false);
-            }
-            finally
-            {
-                if (wasBackground)
-                {
-                    CoreFunctionality.UseBackgroundInput = true;
-                    Logger.Info("Fishing", "Sell trip complete: restored background input mode.");
-                }
-            }
+            Logger.Info("Fishing", $"Sell trip starting: background={CoreFunctionality.UseBackgroundInput}.");
+            await sellTrip().ConfigureAwait(false);
+            Logger.Info("Fishing", "Sell trip complete.");
         }
 
         /// <summary>
@@ -221,6 +203,8 @@ namespace ToonTown_Rewritten_Bot.Services
 
             public async Task PrepareForFishing(CancellationToken cancellationToken)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+                Logger.Info("Fishing", "Preparing game window for fishing...");
                 FocusTTRWindow();
                 await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
             }

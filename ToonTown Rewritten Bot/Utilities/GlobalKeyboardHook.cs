@@ -25,6 +25,9 @@ namespace ToonTown_Rewritten_Bot.Utilities
         public bool IsRunning => _hookId != IntPtr.Zero;
         public int LastErrorCode { get; private set; }
 
+        // Metadata for the event currently being dispatched, including injected input.
+        public bool CurrentKeyIsInjected { get; private set; }
+
         /// <summary>
         /// When true, the next handled key press will be suppressed (not passed to the game).
         /// Set by the event handler to consume the key.
@@ -114,6 +117,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             {
                 int vkCode = Marshal.ReadInt32(lParam);
                 Keys key = (Keys)vkCode;
+                CurrentKeyIsInjected = (Marshal.ReadInt32(lParam, 8) & 0x10) != 0;
 
                 try
                 {

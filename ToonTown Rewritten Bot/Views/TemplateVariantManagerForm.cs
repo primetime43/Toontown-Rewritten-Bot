@@ -164,7 +164,7 @@ namespace ToonTown_Rewritten_Bot.Views
             {
                 if (ctrl is GroupBox gb)
                 {
-                    gb.BackColor = (int)gb.Tag == index ? Color.LightBlue : SystemColors.Control;
+                    gb.BackColor = (int)gb.Tag == index ? UiColors.InfoSurface : SystemColors.Control;
                 }
             }
 

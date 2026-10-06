@@ -22,14 +22,53 @@ namespace ToonTown_Rewritten_Bot
         private FishingService _fishingService = new FishingService();
         private FishingOverlayForm _fishingOverlay;
         private GlobalKeyboardHook _globalKeyboardHook;
+        private readonly AutomationSessionGate _automationSessions = new();
+
+        private IDisposable TryBeginAutomation(string name)
+        {
+            var lockedControls = new Control[] { Settings, Dev, backgroundModeCheckBox, customBackgroundMode,
+                editScanAreaBtn, calibrateColorsBtn, createCustomFishingActionsBtn, wizardCustomFishingBtn,
+                createCustomGolfActionsBtn, wizardCustomGolfBtn, wizardCustomGardeningBtn,
+                editCustomGardeningBtn, calibrateGardeningBtn }
+                .Concat(Controls.Find("customScanAreaButton", true))
+                .Concat(Controls.Find("customPondColorsButton", true))
+                .ToDictionary(control => control, control => control.Enabled);
+            var session = _automationSessions.TryEnter(name, () =>
+            {
+                foreach (var entry in lockedControls) entry.Key.Enabled = entry.Value;
+                UpdateGardeningControls();
+            });
+            if (session == null)
+            {
+                MessageBox.Show(this, $"{_automationSessions.ActiveName} is still running or stopping. Stop it and wait for cleanup before starting another activity.",
+                    "Activity in progress", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return null;
+            }
+            foreach (var control in lockedControls.Keys) control.Enabled = false;
+            return session;
+        }
+        private string _cancellationReason;
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
 
         /// <summary>
         /// Gets the fishing overlay form if it's active.
         /// </summary>
         public FishingOverlayForm FishingOverlay => _fishingOverlay;
-        public MainForm()
+        public MainForm() : this(true) { }
+
+        // Allows layout checks without installing hooks, checking updates, or loading user files.
+        internal MainForm(bool initializeRuntime)
         {
             InitializeComponent();
+            InitializeFishingLayout();
+            InitializeHomeLayout();
+            InitializeGardeningLayout();
+            InitializeActivityLayouts();
+            InitializeSettingsLayout();
+            InitializeDevLayout();
+            ApplyGameProfile();
 
             // Set version and author from global settings
             mainVersionLabel.Text = $"v{GlobalSettings.ApplicationInfo.Version}";
@@ -37,6 +76,8 @@ namespace ToonTown_Rewritten_Bot
 
             // Hide Racing tab
             tabControl1.TabPages.Remove(Racing);
+            UpdateShortcutLabels();
+            if (!initializeRuntime) return;
 
             // Enable keyboard shortcuts (local - when bot has focus)
             this.KeyPreview = true;
@@ -82,6 +123,7 @@ namespace ToonTown_Rewritten_Bot
 
             // Load saved user preferences
             LoadUserPreferences();
+            UpdateFishingWaitControls();
 
             // Populate the Settings tab preferences display
             RefreshPreferencesDisplay();
@@ -115,13 +157,13 @@ namespace ToonTown_Rewritten_Bot
             // Custom Fishing preferences
             if (!string.IsNullOrEmpty(prefs.CustomFishingFile))
             {
-                int customFishingIndex = customFishingFilesComboBox.FindStringExact(prefs.CustomFishingFile);
-                if (customFishingIndex >= 0) customFishingFilesComboBox.SelectedIndex = customFishingIndex;
+                SelectFishingRouteFile(prefs.CustomFishingFile);
             }
             numericUpDownCustomCasts.Value = Math.Max(numericUpDownCustomCasts.Minimum, Math.Min(numericUpDownCustomCasts.Maximum, prefs.CustomFishingCasts));
             numericUpDownCustomSells.Value = Math.Max(numericUpDownCustomSells.Minimum, Math.Min(numericUpDownCustomSells.Maximum, prefs.CustomFishingSells));
             customAutoDetectFishCheckBox.Checked = prefs.CustomAutoDetectFish;
             customWaitForFishCheckBox.Checked = prefs.CustomWaitForFish;
+            customNumericUpDownWait.Value = Math.Max(customNumericUpDownWait.Minimum, Math.Min(customNumericUpDownWait.Maximum, prefs.CustomMaxFishWaitSeconds));
             customShowOverlayCheckBox.Checked = prefs.CustomShowOverlay;
             customNumericUpDownBiteTimeout.Value = Math.Max(customNumericUpDownBiteTimeout.Minimum, Math.Min(customNumericUpDownBiteTimeout.Maximum, prefs.CustomBiteTimeoutSeconds));
 
@@ -201,12 +243,16 @@ namespace ToonTown_Rewritten_Bot
             string stopKeys = Models.Hotkeys.AllowEscToStop ? $"{stop} or Esc" : stop;
 
             shortcutsLabel.Text = $"{pause,-10} Pause / Resume\r\n{stopKeys,-10} Stop task";
-            fishingShortcutsLabel.Text = $"Keyboard Shortcuts:\n{pause} - Pause/Resume\n{stopKeys} - Stop";
+            fishingShortcutsLabel.Text = $"{pause}  Pause / Resume\n{stopKeys}  Stop";
+            customFishingShortcutsLabel.Text = fishingShortcutsLabel.Text;
+            gardeningShortcutsLabel.Text = $"{stopKeys}  Stop gardening";
+            golfShortcutsLabel.Text = $"{stopKeys}  Stop";
+            doodleShortcutsLabel.Text = $"{stopKeys}  Stop";
+            awakeShortcutsLabel.Text = $"{stopKeys}  Stop keeping awake";
             labelKeyboardShortcuts.Text =
-                "Global shortcuts (work in-game):\n\n" +
                 $"{pause} - Pause/Resume fishing\n" +
-                $"{stopKeys} - Stop current task\n\n" +
-                "These work even when TTR\nhas focus.";
+                $"{stopKeys} - Stop current task\n" +
+                "Works while the game has focus.";
         }
 
         /// <summary>
@@ -230,11 +276,12 @@ namespace ToonTown_Rewritten_Bot
             prefs.BackgroundMode = backgroundModeCheckBox.Checked;
 
             // Custom Fishing preferences
-            prefs.CustomFishingFile = customFishingFilesComboBox.SelectedItem?.ToString() ?? "";
+            prefs.CustomFishingFile = SelectedFishingRoute?.FileName ?? "";
             prefs.CustomFishingCasts = (int)numericUpDownCustomCasts.Value;
             prefs.CustomFishingSells = (int)numericUpDownCustomSells.Value;
             prefs.CustomAutoDetectFish = customAutoDetectFishCheckBox.Checked;
             prefs.CustomWaitForFish = customWaitForFishCheckBox.Checked;
+            prefs.CustomMaxFishWaitSeconds = (int)customNumericUpDownWait.Value;
             prefs.CustomShowOverlay = customShowOverlayCheckBox.Checked;
             prefs.CustomBiteTimeoutSeconds = (int)customNumericUpDownBiteTimeout.Value;
 
@@ -281,7 +328,7 @@ namespace ToonTown_Rewritten_Bot
             // Configured stop hotkey stops fishing and other active tasks
             if (Models.Hotkeys.IsStop(e.KeyCode))
             {
-                StopAllActiveTasks();
+                StopAllActiveTasks($"Bot window key: {Models.Hotkeys.GetDisplayName(e.KeyCode)}");
                 e.Handled = true;
             }
         }
@@ -289,12 +336,19 @@ namespace ToonTown_Rewritten_Bot
         /// <summary>
         /// Stops all active tasks (fishing, training, etc.) by cancelling the token.
         /// </summary>
-        private void StopAllActiveTasks()
+        private void StopAllActiveTasks(
+            [System.Runtime.CompilerServices.CallerMemberName] string source = null)
         {
             if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
             {
+                _cancellationReason = source;
+                var foreground = GetForegroundWindow();
+                string focus = foreground == Handle ? "bot" :
+                    foreground != IntPtr.Zero && foreground == CoreFunctionality.FindToontownWindow() ? "game" : "other window";
+                Logger.Info("Input", $"Cancellation requested: {source}; focus={focus}; " +
+                    $"background={CoreFunctionality.UseBackgroundInput}; fishing={_fishingSessionActive}; " +
+                    $"simulated-key guard={FishingStrategyBase.IsSimulatedKeyPress}");
                 _cancellationTokenSource.Cancel();
-                System.Diagnostics.Debug.WriteLine("[MainForm] Tasks stopped via keyboard shortcut");
             }
         }
 
@@ -316,25 +370,33 @@ namespace ToonTown_Rewritten_Bot
                 // Only swallow the key (so it doesn't reach the game/other apps) when there is
                 // actually a task to stop. Otherwise a stop key rebound to a normal character
                 // would be eaten globally even while the bot is idle.
-                bool taskActive = _cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested;
+                bool taskActive = _automationSessions.ActiveName != null &&
+                    _cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested;
                 if (!taskActive)
                 {
                     return;
                 }
 
                 _globalKeyboardHook.SuppressKey = true;
+                string source = $"Global stop key: {Models.Hotkeys.GetDisplayName(key)}; " +
+                    $"injected={_globalKeyboardHook.CurrentKeyIsInjected}";
 
                 // Stop all active tasks — catch blocks in start handlers show the feedback
                 if (this.InvokeRequired)
                 {
-                    this.BeginInvoke(new Action(StopAllActiveTasks));
+                    var requestedSession = _cancellationTokenSource;
+                    this.BeginInvoke(new Action(() =>
+                    {
+                        if (ReferenceEquals(requestedSession, _cancellationTokenSource))
+                            StopAllActiveTasks(source);
+                    }));
                 }
                 else
                 {
-                    StopAllActiveTasks();
+                    StopAllActiveTasks(source);
                 }
             }
-            else if (Models.Hotkeys.IsPause(key))
+            else if (Models.Hotkeys.IsPause(key) && _fishingSessionActive)
             {
                 // Toggle pause for fishing
                 FishingStrategyBase.TogglePause();
@@ -347,6 +409,7 @@ namespace ToonTown_Rewritten_Bot
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _globalKeyboardHook?.Dispose();
+            GameGraphicsCapture.Stop();
 
             // Save user preferences on close
             SaveUserPreferences();
@@ -361,6 +424,12 @@ namespace ToonTown_Rewritten_Bot
 
             // Clear the items from the ComboBox passed as a parameter.
             comboBox.Items.Clear();
+
+            if (actionType == "Fishing")
+            {
+                comboBox.Items.AddRange(CustomFishingActionFileManager.GetRouteListItems(files).ToArray());
+                return;
+            }
 
             // Iterate through the files, adding them to the ComboBox if they are JSON files.
             foreach (string file in files)

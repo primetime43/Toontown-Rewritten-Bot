@@ -17,10 +17,26 @@ namespace ToonTown_Rewritten_Bot.Utilities
     public static class CustomFishingActionFileManager
     {
         private static readonly string CustomActionsFolder = Path.Combine(
-            AppPaths.ExeDirectory, "Custom Fishing Actions");
+            AppPaths.GameDataDirectory, "Custom Fishing Actions");
 
         private static readonly string TemplatesFolder = Path.Combine(
-            AppPaths.ExeDirectory, "Templates", "CustomFishingTemplates");
+            AppPaths.GameDataDirectory, "Templates", "CustomFishingTemplates");
+
+        public static List<CustomFishingRouteItem> GetRouteListItems(IEnumerable<string> paths)
+        {
+            var routes = paths.Where(path => string.Equals(Path.GetExtension(path), ".json", StringComparison.OrdinalIgnoreCase))
+                .Select(path =>
+                {
+                    var loaded = Load(path);
+                    string name = loaded.Success ? loaded.File?.Name?.Trim() : null;
+                    return new CustomFishingRouteItem(path, string.IsNullOrWhiteSpace(name) ? Path.GetFileNameWithoutExtension(path) : name);
+                }).ToList();
+            var duplicateNames = routes.GroupBy(route => route.Name, StringComparer.OrdinalIgnoreCase)
+                .Where(group => group.Count() > 1).Select(group => group.Key).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            return routes.Select(route => duplicateNames.Contains(route.Name)
+                    ? route with { DisplayName = $"{route.Name} ({route.FileName})" } : route)
+                .OrderBy(route => route.DisplayName, StringComparer.CurrentCultureIgnoreCase).ToList();
+        }
 
         /// <summary>
         /// Result of loading an action file.

@@ -13,28 +13,16 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public override async Task LeaveDockAndSellAsync(CancellationToken cancellationToken)
         {
             // Simulation of leaving the fishing dock & walking over to the fisherman to sell
-            SendKeyDown(VirtualKeyCode.DOWN);
-            await Task.Delay(600, cancellationToken);
-            SendKeyUp(VirtualKeyCode.DOWN);
-            SendKeyDown(VirtualKeyCode.RIGHT);
-            await Task.Delay(850, cancellationToken);
-            SendKeyUp(VirtualKeyCode.RIGHT);
-            SendKeyDown(VirtualKeyCode.UP);
-            await Task.Delay(1000, cancellationToken);
-            SendKeyUp(VirtualKeyCode.UP);
+            await HoldMovementKeyAsync(VirtualKeyCode.DOWN, 600, cancellationToken);
+            await HoldMovementKeyAsync(VirtualKeyCode.RIGHT, 850, cancellationToken);
+            await HoldMovementKeyAsync(VirtualKeyCode.UP, 1000, cancellationToken);
 
             await SellFishAsync(cancellationToken);
 
             // Simulation of going back to the dock
-            SendKeyDown(VirtualKeyCode.DOWN);
-            await Task.Delay(1700, cancellationToken);
-            SendKeyUp(VirtualKeyCode.DOWN);
-            SendKeyDown(VirtualKeyCode.LEFT);
-            await Task.Delay(850, cancellationToken);
-            SendKeyUp(VirtualKeyCode.LEFT);
-            SendKeyDown(VirtualKeyCode.UP);
-            await Task.Delay(600, cancellationToken);
-            SendKeyUp(VirtualKeyCode.UP);
+            await HoldMovementKeyAsync(VirtualKeyCode.DOWN, 1700, cancellationToken);
+            await HoldMovementKeyAsync(VirtualKeyCode.LEFT, 850, cancellationToken);
+            await HoldMovementKeyAsync(VirtualKeyCode.UP, 600, cancellationToken);
         }
     }
 }
