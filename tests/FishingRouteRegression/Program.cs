@@ -24,6 +24,11 @@ internal static class Program
             Directory.SetCurrentDirectory(AppContext.BaseDirectory);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
+            if (args.Contains("--background-input-only"))
+            {
+                BackgroundFishingChecks.Run();
+                return 0;
+            }
             if (args.Contains("--live-clash-window")) return GameProfileChecks.CheckLiveClashWindow();
             if (args.Contains("--profile-probe")) return GameProfileChecks.Probe(args.Last());
             GameProfileChecks.Run();

@@ -17,6 +17,7 @@ namespace ToonTown_Rewritten_Bot
 
         private void SetFishingSessionActive(bool active)
         {
+            if (active) _cancellationReason = null;
             if (!active) GameGraphicsCapture.Stop();
             _fishingSessionActive = active;
             startFishing.Enabled = !active;
@@ -109,7 +110,7 @@ namespace ToonTown_Rewritten_Bot
             }
             catch (OperationCanceledException) when (token.IsCancellationRequested)
             {
-                Logger.Info("Fishing", "Session end: reason=\"User cancelled\", casts completed=" + _fishingService.SessionCastCount);
+                Logger.Info("Fishing", $"Session end: reason=\"Cancelled: {_cancellationReason ?? "unknown source"}\", casts completed=" + _fishingService.SessionCastCount);
                 fishingStatusLabel.Text = "Status: Idle";
                 fishingStatusLabel.ForeColor = System.Drawing.Color.Gray;
                 SetFishingOverlay(false, null, null);
@@ -148,7 +149,7 @@ namespace ToonTown_Rewritten_Bot
 
             // Signal the cancellation
             Logger.Info("Fishing", "User pressed Stop button");
-            _cancellationTokenSource.Cancel();
+            StopAllActiveTasks();
             fishingStatusLabel.Text = "Status: Stopping...";
             fishingStatusLabel.ForeColor = System.Drawing.Color.DarkOrange;
             customFishingStatusLabel.Text = fishingStatusLabel.Text;

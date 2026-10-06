@@ -89,7 +89,7 @@ namespace ToonTown_Rewritten_Bot
             // Check if the cancellation token source is created and not yet cancelled and the function is active
             if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested && isToonAwakeActive)
             {
-                _cancellationTokenSource.Cancel();  // Request cancellation
+                StopAllActiveTasks();  // Request cancellation
                 _cancellationTokenSource.Dispose();  // Dispose the token source
                 _cancellationTokenSource = null;     // Reset the source to ensure it's fresh when restarted
                 isToonAwakeActive = false;  // Clear the flag

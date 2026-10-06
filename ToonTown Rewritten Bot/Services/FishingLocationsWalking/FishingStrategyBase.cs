@@ -1180,40 +1180,40 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             // Find the red fishing button
             var (btnX, btnY) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
 
-            // Click and hold the button
             MoveCursor(btnX, btnY);
             await Task.Delay(100, cancellationToken);
-            DoMouseClickDown(new Point(btnX, btnY));
-            await Task.Delay(200, cancellationToken);
-
-            // Drag straight down (this makes the toon face forward/center)
-            int straightY = btnY + 150; // Drag down 150 pixels
-            SimulateDragMove(btnX, straightY);
-            await Task.Delay(300, cancellationToken);
-
-            // Press ESC to cancel the cast WHILE still holding the mouse button
-            // Set flag to prevent global keyboard hook from treating this as a user-initiated cancel
-            IsSimulatedKeyPress = true;
+            int straightY = btnY + 150;
             try
             {
-                if (UseBackgroundInput)
+                DoMouseClickDown(new Point(btnX, btnY));
+                await Task.Delay(200, cancellationToken);
+                SimulateDragMove(btnX, straightY);
+                await Task.Delay(300, cancellationToken);
+
+                // Cancel the cast before releasing the rod.
+                IsSimulatedKeyPress = true;
+                try
                 {
-                    PostBackgroundKeyDown(0x1B); // VK_ESCAPE
-                    PostBackgroundKeyUp(0x1B);
+                    if (UseBackgroundInput)
+                    {
+                        PostBackgroundKeyDown(0x1B);
+                        PostBackgroundKeyUp(0x1B);
+                    }
+                    else
+                    {
+                        SendKeys.SendWait("{ESC}");
+                    }
                 }
-                else
+                finally
                 {
-                    SendKeys.SendWait("{ESC}");
+                    IsSimulatedKeyPress = false;
                 }
+                await Task.Delay(200, cancellationToken);
             }
             finally
             {
-                IsSimulatedKeyPress = false;
+                DoMouseClickUp(new Point(btnX, straightY));
             }
-            await Task.Delay(200, cancellationToken);
-
-            // Now release the mouse (cast is already cancelled)
-            DoMouseClickUp(new Point(btnX, straightY));
             await Task.Delay(300, cancellationToken);
 
             Logger.Debug("Fishing", "Toon straightened.");
@@ -1231,11 +1231,30 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         protected async Task SellFishAsync(CancellationToken cancellationToken)
         {
             await Task.Delay(2100, cancellationToken);
-            // Use image recognition to find sell button (will prompt for template capture if needed)
-            var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.BlueSellAllButton);
-            cancellationToken.ThrowIfCancellationRequested();
-            MoveCursor(x, y);
-            DoMouseClick();
+            const string elementName = "Blue Sell All Button";
+            if (!UIElementManager.Instance.HasTemplate(elementName))
+                throw new InvalidOperationException("The Sell All button template is missing. Capture it in Dev before selling fish.");
+
+            await FishingSellInteraction.RunAsync(
+                token => UIElementManager.Instance.FindElementBoundsAsync(elementName, token),
+                async (target, token) =>
+                {
+                    var offset = GetGameWindowOffset();
+                    var screenTarget = new Point(offset.X + target.X, offset.Y + target.Y);
+                    Logger.Info("Fishing", $"Clicking visible Sell All button at screen {screenTarget}; background={UseBackgroundInput}.");
+                    MoveCursor(screenTarget.X, screenTarget.Y);
+                    // Let the game's UI register hover before pressing the confirmation button.
+                    await Task.Delay(300, token);
+                    try
+                    {
+                        DoMouseClickDown(screenTarget);
+                        await Task.Delay(300, token);
+                    }
+                    finally
+                    {
+                        DoMouseClickUp(screenTarget);
+                    }
+                }, cancellationToken);
             await Task.Delay(2000, cancellationToken);
         }
 

@@ -17,6 +17,26 @@ if (args.Length > 0 && args[0] == "--capture-clash-background")
     ClashCaptureProbe.CaptureBackground(args[1]);
     return;
 }
+if (args.Length > 0 && args[0] == "--capture-ttr-background")
+{
+    ClashCaptureProbe.CaptureBackground(args[1], "Rewritten");
+    return;
+}
+if (args.Length > 0 && args[0] == "--watch-ttr-sell")
+{
+    SellButtonProbe.Watch(args[1], args[2]);
+    return;
+}
+if (args.Length > 0 && args[0] == "--check-sell")
+{
+    await FishingSellChecks.Run((ok, name) =>
+    {
+        if (!ok) throw new Exception(name);
+        Console.WriteLine("PASS: " + name);
+    });
+    if (args.Length > 2) FishingSellChecks.CheckScreenshot(args[1], args[2]);
+    return;
+}
 if (args.Length > 0 && args[0] == "--check-clash-input")
 {
     var access = typeof(FishingStrategyBase).Assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameInputAccess");
@@ -82,6 +102,7 @@ using (var graphics = Graphics.FromImage(frame))
 FishTargetSelectorChecks.Run(Check);
 FallbackShadowChecks.Run(Check);
 LowContrastShadowChecks.Run(Check);
+await FishingSellChecks.Run(Check);
 
 if (args.Length > 0 && args[0] == "--clash")
 {

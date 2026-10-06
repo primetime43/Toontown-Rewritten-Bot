@@ -143,36 +143,13 @@ namespace ToonTown_Rewritten_Bot.Services
         }
 
         /// <summary>
-        /// Runs a sell trip (walk to the fisherman, sell, walk back) with foreground input.
-        /// Walking relies on held movement keys, which Toontown's engine only registers from a
-        /// focused window via real input — background mode's PostMessage keystrokes are ignored,
-        /// leaving the toon standing still on the dock. When background mode is on, this temporarily
-        /// focuses the game window and switches to foreground input for the duration of the sell
-        /// trip, then restores background mode so the next fishing round stays hands-free.
+        /// Runs walking and selling with the same input mode as the fishing session.
         /// </summary>
         private static async Task RunSellTripAsync(Func<Task> sellTrip)
         {
-            bool wasBackground = CoreFunctionality.UseBackgroundInput;
-            if (wasBackground)
-            {
-                Logger.Info("Fishing", "Background mode: switching to foreground input for sell trip (walking needs a focused game window).");
-                CoreFunctionality.UseBackgroundInput = false;
-                CoreFunctionality.FocusTTRWindow();
-                await Task.Delay(500).ConfigureAwait(false);
-            }
-
-            try
-            {
-                await sellTrip().ConfigureAwait(false);
-            }
-            finally
-            {
-                if (wasBackground)
-                {
-                    CoreFunctionality.UseBackgroundInput = true;
-                    Logger.Info("Fishing", "Sell trip complete: restored background input mode.");
-                }
-            }
+            Logger.Info("Fishing", $"Sell trip starting: background={CoreFunctionality.UseBackgroundInput}.");
+            await sellTrip().ConfigureAwait(false);
+            Logger.Info("Fishing", "Sell trip complete.");
         }
 
         /// <summary>

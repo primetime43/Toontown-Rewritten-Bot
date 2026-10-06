@@ -506,15 +506,7 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static void PostBackgroundKeyDown(int virtualKeyCode)
         {
-            IntPtr hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero) return;
-
-            int lParam = 1; // repeat count = 1
-            // Extended key flag (bit 24) for arrow keys, Home, End
-            if (virtualKeyCode is 0x25 or 0x26 or 0x27 or 0x28 or 0x23 or 0x24)
-                lParam |= 1 << 24;
-
-            PostMessageW(hwnd, WM_KEYDOWN, (IntPtr)virtualKeyCode, (IntPtr)lParam);
+            PostBackgroundKeyMessage(FindToontownWindow(), virtualKeyCode, false);
         }
 
         /// <summary>
@@ -523,16 +515,38 @@ namespace ToonTown_Rewritten_Bot.Services
         /// </summary>
         public static void PostBackgroundKeyUp(int virtualKeyCode)
         {
-            IntPtr hwnd = FindToontownWindow();
-            if (hwnd == IntPtr.Zero) return;
+            PostBackgroundKeyMessage(FindToontownWindow(), virtualKeyCode, true);
+        }
 
-            int lParam = 1; // repeat count = 1
-            lParam |= 3 << 30; // previous key state (bit 30) + transition state (bit 31)
-            // Extended key flag (bit 24) for arrow keys, Home, End
-            if (virtualKeyCode is 0x25 or 0x26 or 0x27 or 0x28 or 0x23 or 0x24)
-                lParam |= 1 << 24;
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hwnd, out uint processId);
 
-            PostMessageW(hwnd, WM_KEYUP, (IntPtr)virtualKeyCode, (IntPtr)lParam);
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetKeyboardLayout(uint threadId);
+
+        [DllImport("user32.dll")]
+        private static extern uint MapVirtualKeyExW(uint code, uint mapType, IntPtr layout);
+
+        internal static void PostBackgroundKeyMessage(IntPtr hwnd, int virtualKeyCode, bool keyUp)
+        {
+            if (hwnd == IntPtr.Zero)
+                throw new InvalidOperationException(GameProfile.WindowNotFoundMessage);
+
+            uint thread = GetWindowThreadProcessId(hwnd, out _);
+            uint scanCode = MapVirtualKeyExW((uint)virtualKeyCode, 4, GetKeyboardLayout(thread));
+            // Include the scan code for games that bind movement to physical keys.
+            uint lParam = 1 | ((scanCode & 0xFF) << 16);
+            // Some keyboard layouts map navigation keys to their unprefixed numpad scan code.
+            bool extended = (scanCode & 0xFF00) == 0xE000 ||
+                virtualKeyCode is >= 0x21 and <= 0x28 or 0x2D or 0x2E or 0x6F or 0xA3 or 0xA5;
+            if (extended) lParam |= 1u << 24;
+            if (keyUp) lParam |= 3u << 30;
+
+            bool posted = PostMessageW(hwnd, keyUp ? WM_KEYUP : WM_KEYDOWN,
+                (IntPtr)virtualKeyCode, (IntPtr)unchecked((int)lParam));
+            if (!posted)
+                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error(),
+                    "Could not send a background key event to the game.");
         }
 
         /// <summary>

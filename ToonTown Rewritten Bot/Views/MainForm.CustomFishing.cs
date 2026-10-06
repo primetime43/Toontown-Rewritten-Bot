@@ -119,7 +119,7 @@ namespace ToonTown_Rewritten_Bot
             }
             catch (OperationCanceledException) when (token.IsCancellationRequested)
             {
-                Logger.Info("Fishing", "Session end: reason=\"User cancelled\", casts completed=" + _fishingService.SessionCastCount);
+                Logger.Info("Fishing", $"Session end: reason=\"Cancelled: {_cancellationReason ?? "unknown source"}\", casts completed=" + _fishingService.SessionCastCount);
                 SetFishingOverlay(false, null, null);
                 MessageBox.Show("Custom fishing was cancelled.");
             }
@@ -148,7 +148,7 @@ namespace ToonTown_Rewritten_Bot
             }
 
             Logger.Info("Fishing", "User pressed Stop button (custom fishing)");
-            _cancellationTokenSource.Cancel();
+            StopAllActiveTasks();
             customFishingStatusLabel.Text = "Status: Stopping...";
             customFishingStatusLabel.ForeColor = System.Drawing.Color.DarkOrange;
             fishingStatusLabel.Text = customFishingStatusLabel.Text;

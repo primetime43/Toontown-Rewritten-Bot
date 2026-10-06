@@ -119,7 +119,7 @@ namespace ToonTown_Rewritten_Bot
 
             if (_cancellationTokenSource != null)
             {
-                _cancellationTokenSource.Cancel();
+                StopAllActiveTasks();
                 _cancellationTokenSource.Dispose();
             }
 
@@ -152,7 +152,7 @@ namespace ToonTown_Rewritten_Bot
             if (_isAutoGolfRunning)
             {
                 // Cancel running auto-golf
-                _cancellationTokenSource?.Cancel();
+                StopAllActiveTasks();
                 startAutoGolfBtn.Text = "Auto Golf";
                 autoGolfStatusLabel.Text = "Cancelled";
                 _isAutoGolfRunning = false;
@@ -198,7 +198,7 @@ namespace ToonTown_Rewritten_Bot
 
             if (_cancellationTokenSource != null)
             {
-                _cancellationTokenSource.Cancel();
+                StopAllActiveTasks();
                 _cancellationTokenSource.Dispose();
             }
 

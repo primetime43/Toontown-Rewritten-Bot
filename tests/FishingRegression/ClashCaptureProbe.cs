@@ -8,19 +8,19 @@ using ToonTown_Rewritten_Bot.Services.FishingLocationsWalking;
 
 internal static class ClashCaptureProbe
 {
-    internal static void CaptureBackground(string outputPath)
+    internal static void CaptureBackground(string outputPath, string gameKind = "CorporateClash")
     {
         var assembly = typeof(FishingStrategyBase).Assembly;
         var flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
         var profile = assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameProfile");
         var kind = assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameKind");
         var find = profile.GetMethod("FindWindow", flags, null, new[] { kind }, null);
-        var window = (IntPtr)find.Invoke(null, new[] { Enum.Parse(kind, "CorporateClash") });
-        if (window == IntPtr.Zero) throw new Exception("Start Clash before capturing.");
+        var window = (IntPtr)find.Invoke(null, new[] { Enum.Parse(kind, gameKind) });
+        if (window == IntPtr.Zero) throw new Exception($"Start {gameKind} before capturing.");
         var geometry = assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameWindowGeometry");
         object[] readArgs = { window, null };
         if (!(bool)geometry.GetMethod("TryRead", flags).Invoke(null, readArgs))
-            throw new Exception("Could not read Clash window bounds.");
+            throw new Exception("Could not read game window bounds.");
         var capture = assembly.GetType("ToonTown_Rewritten_Bot.Utilities.GameGraphicsCapture");
         try
         {

@@ -290,6 +290,19 @@ namespace ToonTown_Rewritten_Bot.Utilities
         /// </summary>
         public async Task<Point?> FindElementAsync(string elementName, CancellationToken cancellationToken = default)
         {
+            try
+            {
+                var bounds = await FindElementBoundsAsync(elementName, cancellationToken);
+                return bounds.HasValue
+                    ? new Point(bounds.Value.X + bounds.Value.Width / 2, bounds.Value.Y + bounds.Value.Height / 2)
+                    : null;
+            }
+            catch (Exception) { return null; } // Preserve silent lookup behavior for existing callers.
+        }
+
+        // Unlike the silent point lookup, verification callers must distinguish capture errors from absence.
+        public async Task<Rectangle?> FindElementBoundsAsync(string elementName, CancellationToken cancellationToken = default)
+        {
             var allPaths = GetAllTemplatePaths(elementName);
             if (allPaths.Count == 0)
                 return null;
@@ -314,7 +327,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
                             if (result.Found)
                             {
                                 Logger.Debug("TemplateMatch", $"'{elementName}' matched variant {i} ({Path.GetFileName(allPaths[i])}) at {result.Confidence:P1}");
-                                return result.Center;
+                                return result.Bounds;
                             }
 
                             if (result.Confidence > bestConfidence)
@@ -331,6 +344,7 @@ namespace ToonTown_Rewritten_Bot.Utilities
             catch (Exception ex)
             {
                 Logger.Error("TemplateMatch", $"Error finding '{elementName}': {ex.Message}");
+                throw;
             }
 
             return null;

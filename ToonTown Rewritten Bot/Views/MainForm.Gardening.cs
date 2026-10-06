@@ -170,7 +170,7 @@ namespace ToonTown_Rewritten_Bot
                 return;
             }
 
-            _cancellationTokenSource.Cancel();
+            StopAllActiveTasks();
             SetPlantStatus("Stopping gardening...", UiColors.Warning);
             stopPlantingBtn.Enabled = false;
         }

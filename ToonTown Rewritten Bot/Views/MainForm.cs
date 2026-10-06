@@ -22,6 +22,10 @@ namespace ToonTown_Rewritten_Bot
         private FishingService _fishingService = new FishingService();
         private FishingOverlayForm _fishingOverlay;
         private GlobalKeyboardHook _globalKeyboardHook;
+        private string _cancellationReason;
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
 
         /// <summary>
         /// Gets the fishing overlay form if it's active.
@@ -299,7 +303,7 @@ namespace ToonTown_Rewritten_Bot
             // Configured stop hotkey stops fishing and other active tasks
             if (Models.Hotkeys.IsStop(e.KeyCode))
             {
-                StopAllActiveTasks();
+                StopAllActiveTasks($"Bot window key: {Models.Hotkeys.GetDisplayName(e.KeyCode)}");
                 e.Handled = true;
             }
         }
@@ -307,12 +311,19 @@ namespace ToonTown_Rewritten_Bot
         /// <summary>
         /// Stops all active tasks (fishing, training, etc.) by cancelling the token.
         /// </summary>
-        private void StopAllActiveTasks()
+        private void StopAllActiveTasks(
+            [System.Runtime.CompilerServices.CallerMemberName] string source = null)
         {
             if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
             {
+                _cancellationReason = source;
+                var foreground = GetForegroundWindow();
+                string focus = foreground == Handle ? "bot" :
+                    foreground != IntPtr.Zero && foreground == CoreFunctionality.FindToontownWindow() ? "game" : "other window";
+                Logger.Info("Input", $"Cancellation requested: {source}; focus={focus}; " +
+                    $"background={CoreFunctionality.UseBackgroundInput}; fishing={_fishingSessionActive}; " +
+                    $"simulated-key guard={FishingStrategyBase.IsSimulatedKeyPress}");
                 _cancellationTokenSource.Cancel();
-                System.Diagnostics.Debug.WriteLine("[MainForm] Tasks stopped via keyboard shortcut");
             }
         }
 
@@ -341,15 +352,22 @@ namespace ToonTown_Rewritten_Bot
                 }
 
                 _globalKeyboardHook.SuppressKey = true;
+                string source = $"Global stop key: {Models.Hotkeys.GetDisplayName(key)}; " +
+                    $"injected={_globalKeyboardHook.CurrentKeyIsInjected}";
 
                 // Stop all active tasks — catch blocks in start handlers show the feedback
                 if (this.InvokeRequired)
                 {
-                    this.BeginInvoke(new Action(StopAllActiveTasks));
+                    var requestedSession = _cancellationTokenSource;
+                    this.BeginInvoke(new Action(() =>
+                    {
+                        if (ReferenceEquals(requestedSession, _cancellationTokenSource))
+                            StopAllActiveTasks(source);
+                    }));
                 }
                 else
                 {
-                    StopAllActiveTasks();
+                    StopAllActiveTasks(source);
                 }
             }
             else if (Models.Hotkeys.IsPause(key))
