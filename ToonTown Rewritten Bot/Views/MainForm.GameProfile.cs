@@ -20,25 +20,41 @@ namespace ToonTown_Rewritten_Bot
             };
             gameProfileComboBox.Items.AddRange(new object[] { "Toontown Rewritten", "Corporate Clash (experimental)" });
             gameProfileComboBox.SelectedIndex = (int)GameProfile.Current;
-            gameProfileHint = ActivityHelp($"Current: {GameProfile.DisplayName}. Changes apply when you restart the bot.");
+            gameProfileHint = ActivityHelp($"Current: {GameProfile.DisplayName}. Changing games automatically restarts the bot.");
             gameProfileComboBox.SelectionChangeCommitted += (_, _) =>
             {
                 var selected = (GameKind)gameProfileComboBox.SelectedIndex;
+                if (selected == GameProfile.Current) return;
+
                 try
                 {
                     GameProfile.SaveSelection(selected);
-                    gameProfileHint.Text = selected == GameProfile.Current
-                        ? $"Current: {GameProfile.DisplayName}. Changes apply when you restart the bot."
-                        : $"Restart the bot to use {GameProfile.GetDisplayName(selected)}. Current: {GameProfile.DisplayName}.";
                 }
                 catch (Exception ex)
                 {
                     gameProfileComboBox.SelectedIndex = (int)GameProfile.Current;
                     MessageBox.Show(this, $"Could not save the game choice: {ex.Message}", "Game selection",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                gameProfileComboBox.Enabled = false;
+                gameProfileHint.Text = $"Restarting to use {GameProfile.GetDisplayName(selected)}...";
+                try
+                {
+                    Logger.Info("Settings", $"Restarting to switch from {GameProfile.DisplayName} to {GameProfile.GetDisplayName(selected)}.");
+                    // Normal form closing saves the current profile's preferences and releases resources.
+                    Application.Restart();
+                }
+                catch (Exception ex)
+                {
+                    gameProfileComboBox.Enabled = true;
+                    gameProfileHint.Text = $"Restart the bot to use {GameProfile.GetDisplayName(selected)}. Current: {GameProfile.DisplayName}.";
+                    MessageBox.Show(this, $"The game choice was saved, but the bot could not restart automatically. Please restart it manually.\n\n{ex.Message}",
+                        "Game selection", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             };
-            toolTip1.SetToolTip(gameProfileComboBox, "Each game has its own settings, templates, calibration, and routes. Restart after changing games.");
+            toolTip1.SetToolTip(gameProfileComboBox, "Each game has its own settings, templates, calibration, and routes. Changing games automatically restarts the bot.");
             return CreateSettingsSection("Game", gameProfileComboBox, gameProfileHint);
         }
 
