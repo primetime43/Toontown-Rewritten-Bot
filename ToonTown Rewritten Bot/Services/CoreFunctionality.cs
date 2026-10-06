@@ -577,6 +577,21 @@ namespace ToonTown_Rewritten_Bot.Services
             WindowsInput.InputSimulator.SimulateKeyUp(keyCode);
         }
 
+        protected System.Threading.Tasks.Task HoldMovementKeyAsync(WindowsInput.VirtualKeyCode keyCode,
+            int milliseconds, CancellationToken token)
+        {
+            // Release the same binding through the same input path even if settings change.
+            var binding = Models.GameControls.Remap(keyCode);
+            bool background = UseBackgroundInput;
+            var window = background ? FindToontownWindow() : IntPtr.Zero;
+            return HeldInput.RunAsync(
+                () => { if (background) PostBackgroundKeyMessage(window, (int)binding, false);
+                    else WindowsInput.InputSimulator.SimulateKeyDown(binding); },
+                () => { if (background) PostBackgroundKeyMessage(window, (int)binding, true);
+                    else WindowsInput.InputSimulator.SimulateKeyUp(binding); },
+                milliseconds, token);
+        }
+
         //ignore .dll imports below
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(ref Point lpPoint);

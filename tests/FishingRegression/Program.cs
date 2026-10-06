@@ -103,6 +103,7 @@ FishTargetSelectorChecks.Run(Check);
 FallbackShadowChecks.Run(Check);
 LowContrastShadowChecks.Run(Check);
 await FishingSellChecks.Run(Check);
+await FishingLifecycleChecks.Run(Check);
 
 if (args.Length > 0 && args[0] == "--clash")
 {

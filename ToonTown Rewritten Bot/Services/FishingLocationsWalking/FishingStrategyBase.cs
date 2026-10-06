@@ -186,9 +186,23 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public int SessionCastCount => _sessionCastCount;
 
         /// <summary>
-        /// Cached red fishing button screen position, used to check dock state after a bite timeout.
+        /// Cached red fishing button client position, used to check dock state after a bite timeout.
         /// </summary>
         private Point? _cachedRedButtonPos;
+
+        internal void ResetRoundState()
+        {
+            BucketWasFull = false;
+            _fishCaught = 0;
+            _castCount = 0;
+            _cachedRedButtonPos = null;
+        }
+
+        private void CacheRedButtonPosition(int screenX, int screenY)
+        {
+            var offset = GetGameWindowOffset();
+            _cachedRedButtonPos = new Point(screenX - offset.X, screenY - offset.Y);
+        }
 
         /// <summary>
         /// Sets the fishing location for proper bubble detection configuration.
@@ -199,9 +213,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
             // Reset state from any previous fishing session
             shouldStopFishing = false;
             stopReasonMessage = null;
-            BucketWasFull = false;
-            _fishCaught = 0;
-            _castCount = 0;
+            ResetRoundState();
             _sessionFishCaught = 0;
             _sessionCastCount = 0;
             ResetPause(); // Ensure not paused when starting new session
@@ -374,8 +386,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         {
             // Reset cycle counts for this fishing round (session totals keep accumulating)
             cancellationToken.ThrowIfCancellationRequested();
-            _fishCaught = 0;
-            _castCount = 0;
+            ResetRoundState();
 
             // Check if game window is available
             EnsureGameWindowReady();
@@ -489,11 +500,8 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
                                 Convert.ToInt32(FishingCoordinatesEnum.RedFishingButton).ToString())
                                 ?? $"Element_{Convert.ToInt32(FishingCoordinatesEnum.RedFishingButton)}";
 
-                            var windowOffset = GetGameWindowOffset();
-                            var buttonInWindow = new Point(_cachedRedButtonPos.Value.X - windowOffset.X,
-                                _cachedRedButtonPos.Value.Y - windowOffset.Y);
                             bool redButtonStillVisible = await UIElementManager.Instance
-                                .VerifyElementAtLocationAsync(redButtonName, buttonInWindow);
+                                .VerifyElementAtLocationAsync(redButtonName, _cachedRedButtonPos.Value);
 
                             if (!redButtonStillVisible)
                             {
@@ -547,7 +555,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         {
             // Use image recognition to find the red fishing button (will prompt for template capture if needed)
             var (x, y) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
-            _cachedRedButtonPos = new Point(x, y);
+            CacheRedButtonPosition(x, y);
 
             Logger.Debug("Fishing", $"CastLine: Red button at screen ({x}, {y})");
 
@@ -680,7 +688,7 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
 
             // Find the cast button using image recognition — use the actual detected position
             var (btnX, btnY) = await CoordinatesManager.GetCoordsWithImageRecAsync(FishingCoordinatesEnum.RedFishingButton);
-            _cachedRedButtonPos = new Point(btnX, btnY);
+            CacheRedButtonPosition(btnX, btnY);
 
             Logger.Debug("Fishing", $"Red button found at screen ({btnX}, {btnY}), window rect: {windowRect}");
 

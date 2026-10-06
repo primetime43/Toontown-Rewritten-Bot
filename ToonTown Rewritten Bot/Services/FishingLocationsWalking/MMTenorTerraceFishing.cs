@@ -13,19 +13,13 @@ namespace ToonTown_Rewritten_Bot.Services.FishingLocationsWalking
         public override async Task LeaveDockAndSellAsync(CancellationToken cancellationToken)
         {
             // Simulation of leaving the fishing dock & walking over to the fisherman to sell
-            SendKeyDown(VirtualKeyCode.LEFT);
-            await Task.Delay(1090, cancellationToken);
-            SendKeyUp(VirtualKeyCode.LEFT);
-            SendKeyDown(VirtualKeyCode.UP); ;
-            await Task.Delay(2200, cancellationToken);
-            SendKeyUp(VirtualKeyCode.UP);
+            await HoldMovementKeyAsync(VirtualKeyCode.LEFT, 1090, cancellationToken);
+            await HoldMovementKeyAsync(VirtualKeyCode.UP, 2200, cancellationToken);
 
             await SellFishAsync(cancellationToken);
 
             // Simulation of going back to the dock
-            SendKeyDown(VirtualKeyCode.DOWN);
-            await Task.Delay(3000, cancellationToken);
-            SendKeyUp(VirtualKeyCode.DOWN);
+            await HoldMovementKeyAsync(VirtualKeyCode.DOWN, 3000, cancellationToken);
         }
     }
 }

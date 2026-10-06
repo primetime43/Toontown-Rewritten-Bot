@@ -22,6 +22,31 @@ namespace ToonTown_Rewritten_Bot
         private FishingService _fishingService = new FishingService();
         private FishingOverlayForm _fishingOverlay;
         private GlobalKeyboardHook _globalKeyboardHook;
+        private readonly AutomationSessionGate _automationSessions = new();
+
+        private IDisposable TryBeginAutomation(string name)
+        {
+            var lockedControls = new Control[] { Settings, Dev, backgroundModeCheckBox, customBackgroundMode,
+                editScanAreaBtn, calibrateColorsBtn, createCustomFishingActionsBtn, wizardCustomFishingBtn,
+                createCustomGolfActionsBtn, wizardCustomGolfBtn, wizardCustomGardeningBtn,
+                editCustomGardeningBtn, calibrateGardeningBtn }
+                .Concat(Controls.Find("customScanAreaButton", true))
+                .Concat(Controls.Find("customPondColorsButton", true))
+                .ToDictionary(control => control, control => control.Enabled);
+            var session = _automationSessions.TryEnter(name, () =>
+            {
+                foreach (var entry in lockedControls) entry.Key.Enabled = entry.Value;
+                UpdateGardeningControls();
+            });
+            if (session == null)
+            {
+                MessageBox.Show(this, $"{_automationSessions.ActiveName} is still running or stopping. Stop it and wait for cleanup before starting another activity.",
+                    "Activity in progress", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return null;
+            }
+            foreach (var control in lockedControls.Keys) control.Enabled = false;
+            return session;
+        }
         private string _cancellationReason;
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -345,7 +370,8 @@ namespace ToonTown_Rewritten_Bot
                 // Only swallow the key (so it doesn't reach the game/other apps) when there is
                 // actually a task to stop. Otherwise a stop key rebound to a normal character
                 // would be eaten globally even while the bot is idle.
-                bool taskActive = _cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested;
+                bool taskActive = _automationSessions.ActiveName != null &&
+                    _cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested;
                 if (!taskActive)
                 {
                     return;
@@ -370,7 +396,7 @@ namespace ToonTown_Rewritten_Bot
                     StopAllActiveTasks(source);
                 }
             }
-            else if (Models.Hotkeys.IsPause(key))
+            else if (Models.Hotkeys.IsPause(key) && _fishingSessionActive)
             {
                 // Toggle pause for fishing
                 FishingStrategyBase.TogglePause();

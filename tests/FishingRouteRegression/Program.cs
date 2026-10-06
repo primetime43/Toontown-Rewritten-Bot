@@ -24,6 +24,11 @@ internal static class Program
             Directory.SetCurrentDirectory(AppContext.BaseDirectory);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
+            if (args.Contains("--automation-only"))
+            {
+                AutomationUiChecks.Run();
+                return 0;
+            }
             if (args.Contains("--background-input-only"))
             {
                 BackgroundFishingChecks.Run();
@@ -35,6 +40,7 @@ internal static class Program
             if (args.Contains("--profiles-only")) return 0;
             WindowedModeChecks.Run();
             if (args.Contains("--windowed-only")) return 0;
+            AutomationUiChecks.Run();
             string root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../ToonTown Rewritten Bot"));
             foreach (string path in Directory.GetFiles(Path.Combine(root, "Services/CustomFishingActions"), "*.json")
                 .Concat(Directory.GetFiles(Path.Combine(root, "Templates/CustomFishingTemplates"), "*.json")))

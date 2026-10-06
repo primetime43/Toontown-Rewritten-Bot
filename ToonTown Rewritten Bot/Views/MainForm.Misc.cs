@@ -11,6 +11,8 @@ namespace ToonTown_Rewritten_Bot
         //important functions for bot
         private void startSpamButton_Click(object sender, EventArgs e)//spam message on screen
         {//if the user presses ALT key, it will break the loop
+            using var activity = TryBeginAutomation("Sending messages");
+            if (activity == null) return;
             bool loopBroken = BotFunctions.SendMessage(messageToType.Text, Convert.ToInt32(numericUpDownSpamCount.Value), spamMessageCheckBox.Checked, numericUpDownSpamCount);
         }
 
@@ -18,6 +20,8 @@ namespace ToonTown_Rewritten_Bot
         private bool isToonAwakeActive = false;  // Flag to track if the function is active
         private async void startKeepToonAwakeButton_Click(object sender, EventArgs e)
         {
+            using var activity = TryBeginAutomation("Keep awake");
+            if (activity == null) return;
             if (_cancellationTokenSource != null)
             {
                 _cancellationTokenSource.Dispose();  // Dispose any existing token source

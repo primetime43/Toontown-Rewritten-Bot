@@ -31,6 +31,8 @@ namespace ToonTown_Rewritten_Bot
 
         private async void startDoodleTrainingBtn_Click(object sender, EventArgs e)
         {
+            using var activity = TryBeginAutomation("Doodle training");
+            if (activity == null) return;
             // Guard against re-entry: this is an async void handler, so a second click before the
             // first session finishes would launch a parallel training run (two threads posting
             // interleaved clicks). Ignore clicks while a session is already active.

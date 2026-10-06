@@ -43,6 +43,8 @@ namespace ToonTown_Rewritten_Bot
 
         private async void startGolfBtn_Click(object sender, EventArgs e)
         {
+            using var activity = TryBeginAutomation("Golf");
+            if (activity == null) return;
             string selectedFileName = customGolfFilesComboBox.SelectedItem?.ToString();
             if (string.IsNullOrEmpty(selectedFileName))
             {
@@ -158,6 +160,9 @@ namespace ToonTown_Rewritten_Bot
                 _isAutoGolfRunning = false;
                 return;
             }
+
+            using var activity = TryBeginAutomation("Auto golf");
+            if (activity == null) return;
 
             if (CoreFunctionality.FindToontownWindow() == IntPtr.Zero)
             {

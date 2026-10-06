@@ -115,7 +115,13 @@ namespace ToonTown_Rewritten_Bot.Utilities
                 }
                 finally
                 {
-                    foreach (string key in held) keyUp(key);
+                    Exception releaseError = null;
+                    foreach (string key in held)
+                    {
+                        try { keyUp(key); }
+                        catch (Exception ex) { releaseError ??= ex; }
+                    }
+                    if (releaseError != null) throw releaseError;
                 }
             }
         }

@@ -109,6 +109,8 @@ namespace ToonTown_Rewritten_Bot
 
         private async void plantFlowerBtn_Click(object sender, EventArgs e)
         {
+            using var activity = TryBeginAutomation("Planting");
+            if (activity == null) return;
             if (_gardeningTaskActive) return;
             string selectedFlower = flowerComboBox.SelectedItem?.ToString();
             if (string.IsNullOrEmpty(selectedFlower) || !_plantComboDictionary.ContainsKey(selectedFlower))
@@ -179,6 +181,8 @@ namespace ToonTown_Rewritten_Bot
 
         private async void waterPlantBtn_Click(object sender, EventArgs e)
         {
+            using var activity = TryBeginAutomation("Watering");
+            if (activity == null) return;
             if (_gardeningTaskActive || waterPlantNumericUpDown.Value == 0) return;
             SetGardeningTaskActive(true);
             SetPlantStatus("Watering plant...", UiColors.MutedText);
@@ -209,6 +213,8 @@ namespace ToonTown_Rewritten_Bot
 
         private async void removePlantBtn_Click(object sender, EventArgs e)
         {
+            using var activity = TryBeginAutomation("Removing a plant");
+            if (activity == null) return;
             if (_gardeningTaskActive) return;
             SetGardeningTaskActive(true);
             SetPlantStatus("Removing plant...", UiColors.MutedText);
@@ -286,6 +292,8 @@ namespace ToonTown_Rewritten_Bot
 
         private async void startCustomGardeningBtn_Click(object sender, EventArgs e)
         {
+            using var activity = TryBeginAutomation("Gardening routine");
+            if (activity == null) return;
             if (_gardeningTaskActive) return;
             string selectedFileName = customGardeningFilesComboBox.SelectedItem?.ToString();
             if (string.IsNullOrEmpty(selectedFileName))

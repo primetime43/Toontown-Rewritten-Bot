@@ -59,6 +59,8 @@ namespace ToonTown_Rewritten_Bot
         /// </summary>
         private async void startCustomFishingBtn_Click(object sender, EventArgs e)
         {
+            using var activity = TryBeginAutomation("Custom fishing");
+            if (activity == null) return;
             if (_fishingSessionActive) return;
             if (!CheckClashFishingSetup()) return;
             // Reset the CancellationTokenSource if it's null or was previously cancelled

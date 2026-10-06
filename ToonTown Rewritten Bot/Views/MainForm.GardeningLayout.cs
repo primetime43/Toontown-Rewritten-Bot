@@ -119,7 +119,7 @@ namespace ToonTown_Rewritten_Bot
 
         private void UpdateGardeningControls()
         {
-            bool idle = !_gardeningTaskActive;
+            bool idle = !_gardeningTaskActive && _automationSessions.ActiveName == null;
             bool flowerSelected = flowerComboBox.SelectedItem != null;
             bool routineSelected = customGardeningFilesComboBox.SelectedItem != null;
             beanCountComboBox.Enabled = idle;
@@ -132,7 +132,7 @@ namespace ToonTown_Rewritten_Bot
             startCustomGardeningBtn.Enabled = idle && routineSelected;
             editCustomGardeningBtn.Enabled = idle && routineSelected;
             wizardCustomGardeningBtn.Enabled = calibrateGardeningBtn.Enabled = idle;
-            stopPlantingBtn.Enabled = !idle;
+            stopPlantingBtn.Enabled = _gardeningTaskActive;
             if (gardeningSelectionHint != null)
             {
                 gardeningSelectionHint.Text = flowerSelected ? "Jellybeans in planting order:" : beanCountComboBox.SelectedIndex < 0
